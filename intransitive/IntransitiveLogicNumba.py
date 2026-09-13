@@ -206,6 +206,24 @@ class Board:
     def get_board(self):
         return self.state[:, :, 0].copy()
 
+    def swap_players(self, player):
+        """Relabel player as 0 at fixed coordinates, including the full history."""
+        if player != int(player) or not 0 <= player <= 1:
+            raise ValueError("Player must be 0 or 1")
+        if player == 0:
+            return
+        # Detach borrowed states, just as make_move/record_position do.
+        state = self.state.copy()
+        meta = state[:, :, METADATA_PLANE]
+        length = int(meta.flat[META_HISTORY_LENGTH])
+        for plane in range(length + 1):
+            state[:, :, plane] = -state[:, :, plane]
+        meta.flat[META_NEXT_PLAYER] = 1 - meta.flat[META_NEXT_PLAYER]
+        meta.flat[META_A1_DEFENDER] = 1 - meta.flat[META_A1_DEFENDER]
+        for i in range(length):
+            meta.flat[META_HISTORY_PLAYERS + i] = 1 - meta.flat[META_HISTORY_PLAYERS + i]
+        self.state = state
+
     def get_history(self, index):
         if index != int(index) or not 0 <= index < self.get_history_length():
             raise ValueError("History index out of range")
