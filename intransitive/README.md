@@ -470,8 +470,71 @@ finite losses/gradients and parameter changes, canonical value/Q labels, actual
 shared-wrapper training, version-1 and version-minus-1 checkpoint loading, and
 single/batched ONNX parity within `2e-6` absolute tolerance. The tested inference
 stack uses ONNX 1.22.0 and ONNX Runtime 1.30.0 with the shared wrapper's legacy
-PyTorch 2.8 exporter. Broader persistence/resume/export verification remains #12;
-shared self-play integration is covered by `test_pipeline`.
+PyTorch 2.8 exporter. Persistence/resume/export verification is covered by
+`test_checkpoints`; shared self-play integration is covered by `test_pipeline`.
+
+### Checkpoint compatibility, resume, and export
+
+Intransitive checkpoint format **1** retains the shared `state_dict` and
+`full_model` keys and adds the following metadata:
+
+| Key | Contents |
+| --- | --- |
+| `intransitive_checkpoint` | Format version, game identifier, `(9,9,33)` input shape, 648 actions, two players, and optimizer/scheduler recreation policy |
+| `intransitive_config` | State/network versions, complete feature and action ordering, normalization definitions, and architecture settings |
+| `nn_args` | Saved training settings, with `nn_version` set to the actual loaded architecture |
+| `nn_version` | Actual network version (1), including when the wrapper was initialized with -1 |
+
+Coach's additional run/search settings remain at the top level, including
+temperature and cpuct. The loader reconstructs version 1 from its validated
+configuration and strictly loads all weights and BatchNorm statistics. It checks
+the fixed piece/history/corner/ply-normalization buffers too. `full_model` is
+retained for compatibility but is not the source of Intransitive reconstruction.
+Earlier issue-#10 checkpoints without the format envelope are accepted only
+with their matching `intransitive_config` and complete compatible `state_dict`.
+Other formats need an explicit migration: incompatible metadata, missing weights,
+or corrupt files raise descriptive errors, and a failed Intransitive load leaves
+the current network intact. Missing paths raise `FileNotFoundError` through the
+shared wrapper. Checkpoints use PyTorch pickle loading and must be trusted files.
+
+Both `nn_version=1` and the `pit.py`/inference placeholder `nn_version=-1` work.
+Reloading invalidates an existing ONNX session so inference uses the new weights.
+A bare wrapper checkpoint can be played using pit's default search settings;
+Coach checkpoints retain their stored settings (CLI overrides still apply):
+
+```sh
+python pit.py intransitive checkpoints/best.pt random -n 2
+python chkpt_to_onnx.py -i checkpoints/best.pt -o /tmp/intransitive.onnx
+python -m unittest intransitive.tests.test_checkpoints -v
+```
+
+The exported inputs are float32 `board` of shape `(batch,9,9,33)` in canonical
+player perspective and boolean `valid_actions` of shape `(batch,648)`. Outputs
+are `pi` **log probabilities** `(batch,648)` and `v` values `(batch,2)` in canonical
+player order. Exponentiate `pi` to obtain probabilities. Illegal actions remain
+exactly zero, legal policies sum to one, and terminal all-false masks yield zero
+policy mass. The standalone converter uses opset 16; the shared wrapper uses its
+existing runtime export path. Both explicitly use the legacy TorchScript exporter.
+
+The checkpoint acceptance suite compares CPU PyTorch single and batched
+predictions, the reloaded model, shared ONNX inference, and the standalone CLI
+export at dynamic batch sizes **1, 2, 5**, with `atol=2e-6, rtol=1e-5` for policy
+probabilities and values. Fixtures include the opening, 5/29/31-slot histories,
+both canonical corner assignments, large total-ply counters, and terminal masks.
+Weights and decoded features round-trip exactly. Real pit checkpoint opponents
+complete games as both colours, starting from the official Blue-first position,
+with every chosen action checked for legality.
+
+Resume restores **network parameters and BatchNorm statistics only**. Each
+`GenericNNetWrapper.train()` call constructs a fresh AdamW optimizer and OneCycleLR
+scheduler; optimizer moments, step counts, scheduler progress, and RNG state are
+not restored. Current caller training arguments remain in effect; saved `nn_args`
+are provenance rather than automatic overrides. This is continued training, not
+bit-exact continuation. The acceptance suite performs one optimizer update,
+saves/reloads, performs one further update after ONNX inference, verifies fresh
+optimizer state, finite gradients/parameters and changed weights, then checks
+the regenerated ONNX predictions against PyTorch. Replay restoration is separate
+and remains the responsibility of Coach's `loadTrainExamples()` path.
 
 ### Human play and baseline opponents
 
