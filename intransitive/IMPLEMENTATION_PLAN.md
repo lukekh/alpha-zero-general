@@ -487,6 +487,12 @@ updates weights, evaluates a candidate, saves/reloads a checkpoint, and predicts
 through both PyTorch and ONNX. A rejected candidate is a valid smoke-test outcome;
 failure to save or reload the relevant checkpoint is not.
 
+The #13 gate is recorded in [smoke/README.md](smoke/README.md): a bounded
+ONNX cycle, source-backed CPU and ONNX continuations, checkpoint games on both
+paths, acceptance/rejection handling, and retained candidate weights. Exact
+commands, pinned dependencies, reports and logs accompany the run. This completes
+the playable training gate; measured resource use and baseline budgets remain #14.
+
 ### Milestone C: measured baseline
 
 Begin with one inference worker, deterministic game transitions, a small search

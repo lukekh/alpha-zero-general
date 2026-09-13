@@ -339,7 +339,9 @@ python pit.py intransitive random greedy -n 4
 python pit.py intransitive human ./temp/intransitive/best.pt -n 1
 ```
 
-The training command uses the normal training defaults, not a bounded smoke run.
+The training command uses the normal training defaults. For the verified bounded
+cycle, exact dependencies, seeds, budgets, logs and source-backed resume commands,
+use the [training smoke gate](smoke/README.md).
 Every new physical game uses the official setup and Blue moves first. Arena
 alternates which agent controls Blue; augmentation never changes initialization.
 Sequential self-play starts each episode with a new MCTS tree. Parallel self-play
@@ -363,6 +365,10 @@ accounting for the colour assignment. The existing candidate gate accepts when
 Draws are excluded from the denominator; an all-draw comparison **rejects** the
 candidate and restores the previous network. For example, 3 wins, 2 losses, and
 5 draws meet 0.60. This integration does not change the threshold or scoring.
+Coach saves each trained `candidate_<iteration>.pt` before arena so a rejected
+candidate remains inspectable and reloadable. `temp.pt` retains the pre-update
+incumbent; `best.pt` and `checkpoint_<iteration>.pt` are written on acceptance.
+Use a new checkpoint directory for resumed invocations to preserve prior files.
 
 To save a position for `pit.py --state`, use
 `Arena.serialize_state(state, next_player, turn)`. It retains the existing raw
@@ -384,8 +390,9 @@ replay formats and compression conversions, real training from replay, restored
 draw decisions, terminal MCTS without inference, Arena colour assignment,
 candidate acceptance, two actual ONNX workers with independent legal game
 trajectories, and an unrelated Santorini import/move/serialization smoke path.
-The `main.py` test bounds learning to one real self-play episode; full training
-lifecycle and resume/export verification remain #12/#13.
+The `main.py` test bounds learning to one real self-play episode. Full checkpoint,
+resume/export tests are in `test_checkpoints`; the complete training lifecycle and
+resumed CPU/ONNX runs are recorded in the [smoke evidence](smoke/README.md).
 
 ### History-aware policy and value network (version 1)
 

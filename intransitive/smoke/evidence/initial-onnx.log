@@ -1,0 +1,38 @@
+Self Play:   0%|                                                                                  | 0/2 [00:00<?, ?it/s]Self Play:  50%|█████████████████████████████████████                                     | 1/2 [00:05<00:05,  5.79s/it]Self Play: 100%|██████████████████████████████████████████████████████████████████████████| 2/2 [00:05<00:00,  2.50s/it]Self Play: 100%|██████████████████████████████████████████████████████████████████████████| 2/2 [00:05<00:00,  2.99s/it]
+INFO:Coach:Iter #1 - new vs previous: 1-0  (1 draws) --> ACCEPTED
+{
+  "passed": true,
+  "self_play_positions": 60,
+  "augmented_examples": 720,
+  "training": [
+    {
+      "examples": 720,
+      "updates": 11,
+      "max_parameter_delta": 0.001460075844079256,
+      "seconds": 2.568610499962233
+    }
+  ],
+  "arena": {
+    "candidate_wins": 1,
+    "candidate_losses": 0,
+    "draws": 1,
+    "accepted": true,
+    "retained": "best.pt"
+  },
+  "checkpoint_games": [
+    {
+      "backend": "cpu",
+      "wins": 1,
+      "losses": 0,
+      "draws": 1
+    },
+    {
+      "backend": "onnx",
+      "wins": 1,
+      "losses": 0,
+      "draws": 1
+    }
+  ],
+  "elapsed_seconds": 12.937351499916986
+}
+Report: /Users/work/orca/workspaces/alpha-zero-general/issue-13-intransitive-complete-bounded/checkpoints/issue13/initial-onnx/report.json

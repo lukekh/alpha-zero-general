@@ -200,6 +200,9 @@ class Coach():
 			pmcts = MCTS(self.game, self.pnet, self.args)
 
 			self.nnet.train(trainExamples)
+			# Preserve trained weights even if arena rejects them or evaluation fails.
+			self.nnet.save_checkpoint(folder=self.args.checkpoint, filename=f'candidate_{i}.pt',
+				additional_keys=dict(vars(self.args), candidate_iteration=i))
 			nmcts = MCTS(self.game, self.nnet, self.args)
 
 			# log.info('PITTING AGAINST PREVIOUS VERSION')
@@ -210,10 +213,10 @@ class Coach():
 			if pwins + nwins == 0 or float(nwins) / (pwins + nwins) < self.args.updateThreshold:
 				self.consecutive_failures += 1
 				log.info(f'Iter #{i} - new vs previous: {nwins}-{pwins}  ({draws} draws) --> REJECTED ({self.consecutive_failures})')
+				self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.pt')
 				if self.consecutive_failures >= self.args.stop_after_N_fail and i < self.args.numIters:
 					log.error('Exceeded threshold number of consecutive fails, stopping process')
 					exit()
-				self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.pt')
 			else:
 				log.info(f'Iter #{i} - new vs previous: {nwins}-{pwins}  ({draws} draws) --> ACCEPTED')
 				self.nnet.save_checkpoint(folder=self.args.checkpoint, filename=self.getCheckpointFile(i), additional_keys=vars(self.args))
