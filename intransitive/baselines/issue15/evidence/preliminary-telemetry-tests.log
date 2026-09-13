@@ -1,0 +1,50 @@
+............./Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/GenericNNetWrapper.py:308: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+..../Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/GenericNNetWrapper.py:308: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+/Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/GenericNNetWrapper.py:308: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+../Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/GenericNNetWrapper.py:308: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+..../Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/GenericNNetWrapper.py:308: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+/Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/chkpt_to_onnx.py:33: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+................................./Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/GenericNNetWrapper.py:308: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+.........2026-09-13 21:54:27 Octavius main[57279] INFO Saved run sources and settings to /private/var/folders/9s/b0plnkhx1bz465j5xqhr3mw80000gr/T/tmpf_n68_6q/source_backups/20260913T122427.360406Z-9d44575bca2846d790afa48a6507fbad
+.F..2026-09-13 21:54:56 Octavius Coach[57279] INFO Iter #1 - new vs previous: 0-0  (2 draws) --> REJECTED (1)
+.NN version: 88, network i/o shape: (5, 5, 3) -> 1782, total nb of nnet params: 456924
+MCTS seed=17: plies=54, reason=no-capture limit
+MCTS seed=170: plies=30, reason=no-capture limit
+Random seed=4: plies=47, reason=no-capture limit
+Random seed=7: plies=30, reason=no-capture limit
+Random seed=11: plies=46, reason=no-capture limit
+Generated gate: states=11, transformed branches=6072, captures=2
+Self Play:   0%|                                                                                  | 0/2 [00:00<?, ?it/s]Self Play: 100%|███████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00, 26296.58it/s]
+.................................................
+======================================================================
+FAIL: test_parallel_real_onnx_workers_have_independent_complete_states (test_pipeline.SharedPipeline.test_parallel_real_onnx_workers_have_independent_complete_states) (games=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/intransitive/tests/test_pipeline.py", line 318, in test_parallel_real_onnx_workers_have_independent_complete_states
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: -11 != 0 : 1 independent workers verified; 360 replay examples
+
+
+----------------------------------------------------------------------
+Ran 119 tests in 57.268s
+
+FAILED (failures=1)
