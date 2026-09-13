@@ -269,9 +269,33 @@ separate from physical repetition's exact piece-array-plus-turn comparison.
 `getRound()` decodes the five base-128 total-ply digits; captures reset the draw
 clock but never reset the round used for MCTS memory cleanup.
 
-`getSymmetries(state, policy, valid_actions)` currently returns one owned identity
-triple with float32 policy and boolean mask, using Coach's triple interface.
-Full 12-way augmentation, recanonicalization, and deduplication belong to #6.
+`getSymmetries(state, policy, valid_actions)` accepts a player-0 canonical state
+and materializes all 12 transformations through Coach's triple interface. Each
+output owns its full state, float32 policy, and boolean mask. After transforming
+the full history, it colour-only canonicalizes the transformed next player back
+to 0. E's reflected coordinates and action permutation survive this step; its
+canonical A1 defender flips. Policy and mask use the identical action permutation,
+preserving probability mass and zero probabilities on illegal actions.
+
+Deduplication is local to one call and compares the complete serialized state,
+policy, and mask. The first occurrence in symmetry-ID order is retained. An
+asymmetric complete example yields 12 triples; the official opening with a
+uniform legal policy yields six because D leaves the complete example unchanged.
+Equal current boards with different histories, policies, or masks remain distinct.
+Every populated historical position receives the same transform in a common
+player frame, preserving exact repetitions, history order, and capture clocks.
+
+Coach already supplies Q in current-player order and rolls the eventual absolute
+outcome into that order. All augmented triples retain that same relative outcome
+and Q without an additional E swap. In contrast, `transform_player_vector` is an
+absolute-player API and swaps both entries for E. Augmentation only creates
+training examples; self-play still starts from the official setup with Blue first.
+
+Materializing up to 12 examples increases replay storage and training work.
+Augmentation does not guarantee exact CNN equivariance or a 12× speedup; throughput
+and learning efficiency need measurement at matched compute budgets. Minibatch
+augmentation and group-averaged inference remain possible later optimizations.
+
 `moveToString` formats fixed coordinates such as `B5->C5`; `printBoard` prints
 rows 9 through 1 and identifies player and goal ownership. Human/baseline players
 and richer display remain in #8; registration, neural inference, and full
@@ -279,7 +303,7 @@ self-play integration remain in #10/#11.
 
 ### Validation
 
-From the repository root, using Python 3.11 with NumPy and Numba installed:
+From the repository root, using Python 3.11 with NumPy, Numba, and tqdm installed:
 
 ```sh
 python -m unittest discover -s intransitive/tests -v
@@ -287,7 +311,7 @@ python -m unittest discover -s intransitive/tests -v
 
 Validated with Python 3.11.4, NumPy 2.4.6, Numba 0.67.0, and llvmlite 0.49.0.
 An isolated environment can be prepared with `python3.11 -m venv /tmp/intransitive-venv`
-and `/tmp/intransitive-venv/bin/python -m pip install numpy==2.4.6 numba==0.67.0`.
+and `/tmp/intransitive-venv/bin/python -m pip install numpy==2.4.6 numba==0.67.0 tqdm`.
 Use that environment's Python executable for the test command above.
 
 The tests exhaust all coordinates and action slots, compare the setup to explicit
@@ -347,7 +371,7 @@ E sends it to E8→E7.
 `out[p[a]] = vector[a]`, preserving dtype and policy mass.
 `transform_player_vector(vector, id)` maps a two-entry **absolute-player** value
 or Q vector, swapping entries exactly when E occurs. Relative current-player
-training targets belong to the later augmentation integration (#6).
+training targets instead stay unchanged through the augmentation hook above.
 Apply the inverse ID to undo any mapping. Every transform returns fresh storage,
 including identity, and never mutates its input.
 
@@ -355,3 +379,10 @@ The test command above also runs exhaustive group laws (all 12³ triples), all
 12×648 action mappings and inverses, independent coordinate fixtures, full-state
 composition/round trips with 1/5/31 history entries and both corner assignments,
 policy/mask/value mapping, unchanged initialization, and an actual compiled caller.
+Augmentation tests cover all 12 full-state outputs with 1/5/31 history entries,
+both goal assignments, E's explicit B5→C5 / E8→E7 action fixture, inverse policies,
+legal masks, exact repetitions, independent output ownership, and deduplication
+that distinguishes histories, policies, and masks. Real `Coach.executeEpisode`
+runs with scripted legal search policies verify both winner perspectives, nonzero
+relative Q targets, and compressed draw examples from an official Blue-first
+episode. Network-backed training integration remains in #10/#11.
