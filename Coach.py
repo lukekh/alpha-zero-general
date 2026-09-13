@@ -36,16 +36,16 @@ class Coach():
 
 	def executeEpisode(self, my_mcts=None, my_game=None):
 		"""
-		This function executes one episode of self-play, starting with player 1.
+		This function executes one episode of self-play, starting with player 0.
 		As the game is played, each turn is added as a training example to
 		trainExamples. The game is played till the game ends. After the game
 		ends, the outcome of the game is used to assign values to each example
 		in trainExamples.
 
 		Returns:
-			trainExamples: a list of examples of the form (canonicalBoard, currPlayer, pi,v)
-						   pi is the MCTS informed policy vector, v is +1 if
-						   the player eventually won the game, else -1.
+			trainExamples: (canonicalBoard, pi, outcome, valids, q) tuples,
+				or compressed pickles of those tuples. Outcome and Q vectors
+				use current-player order for every symmetry of that example.
 		"""
 		if my_mcts is None:
 			my_mcts = self.mcts
@@ -65,6 +65,7 @@ class Coach():
 			if is_full_search:
 				valids = my_game.getValidMoves(canonicalBoard, 0)
 				sym = my_game.getSymmetries(canonicalBoard, pi, valids)
+				# Symmetry triples retain the current-player frame, including Q.
 				for b, p, v in sym:
 					trainExamples.append([b, p, curPlayer, v, q])
 
