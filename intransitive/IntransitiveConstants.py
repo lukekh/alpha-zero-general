@@ -9,6 +9,8 @@ EMPTY, ROCK, SCISSORS, PAPER = 0, 1, 2, 3
 ACTION_SIZE = 648
 HISTORY_CAPACITY = 31
 NO_CAPTURE_LIMIT = 30
+# Equal nonzero terminal utility: shared search/self-play checks result.any().
+DRAW_VALUE = 1e-4
 STATE_VERSION = 1
 STATE_SHAPE = (9, 9, 33)
 STATE_BYTES = 2673

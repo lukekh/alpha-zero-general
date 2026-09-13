@@ -1,14 +1,14 @@
-"""Compiled state storage, movement, captures, and official win rules."""
+"""Compiled state, official rules, and modelling-only termination."""
 
 import numpy as np
 from numba import int8, njit
 from numba.experimental import jitclass
 
 from .IntransitiveConstants import (
-    ACTION_SIZE, HISTORY_CAPACITY, HISTORY_START, MAX_TOTAL_PLY,
+    ACTION_SIZE, DRAW_VALUE, HISTORY_CAPACITY, HISTORY_START, MAX_TOTAL_PLY,
     METADATA_PLANE, META_A1_DEFENDER, META_HISTORY_LENGTH,
     META_HISTORY_PLAYERS, META_NEXT_PLAYER, META_NO_CAPTURE,
-    META_RESERVED, META_TOTAL_PLY, META_VERSION, NUMBER_PLAYERS,
+    META_RESERVED, META_TOTAL_PLY, META_VERSION, NO_CAPTURE_LIMIT, NUMBER_PLAYERS,
     STATE_BYTES, STATE_SHAPE, STATE_VERSION, TOTAL_PLY_DIGITS,
     DIRECTIONS, decode_action, on_board,
 )
@@ -69,6 +69,47 @@ def _corner_winner(pieces, a1_defender):
     if a1_winner >= 0 and i9_winner >= 0:
         return -2
     return a1_winner if a1_winner >= 0 else i9_winner
+
+
+@njit(cache=True)
+def _repetition_count(state):
+    """Count exact current board-plus-turn occurrences, including the latest."""
+    meta = state[:, :, METADATA_PLANE]
+    count = 0
+    for i in range(int(meta.flat[META_HISTORY_LENGTH])):
+        if meta.flat[META_HISTORY_PLAYERS + i] != meta.flat[META_NEXT_PLAYER]:
+            continue
+        equal = True
+        for y in range(9):
+            for x in range(9):
+                if state[y, x, HISTORY_START + i] != state[y, x, 0]:
+                    equal = False
+                    break
+            if not equal:
+                break
+        if equal:
+            count += 1
+    return count
+
+
+@njit(cache=True)
+def _terminal_status(state):
+    """Return (winner or -1, reason) without consulting terminal-aware legality."""
+    pieces = state[:, :, 0]
+    meta = state[:, :, METADATA_PLANE]
+    next_player = int(meta.flat[META_NEXT_PLAYER])
+    winner = _corner_winner(pieces, int(meta.flat[META_A1_DEFENDER]))
+    if winner == -2:
+        raise ValueError("Both players cannot occupy their winning corners")
+    if winner >= 0:
+        return winner, "corner"
+    if not raw_movement_mask(pieces, next_player).any():
+        return 1 - next_player, "stalemate"
+    if _repetition_count(state) >= 3:
+        return -1, "repetition"
+    if meta.flat[META_NO_CAPTURE] >= NO_CAPTURE_LIMIT:
+        return -1, "no-capture limit"
+    return -1, "ongoing"
 
 
 @njit(cache=True)
@@ -198,19 +239,10 @@ class Board:
         if player != int(player) or not 0 <= player <= 1:
             raise ValueError("Player must be 0 or 1")
         player = int(player)
-        pieces = self.state[:, :, 0]
-        corner_winner = _corner_winner(pieces, self.get_a1_defender())
-        if corner_winner == -2:
-            raise ValueError("Both players cannot occupy their winning corners")
-        # A corner win, or a stuck current player, ends the state for everyone.
-        if corner_winner >= 0:
+        _, reason = _terminal_status(self.state)
+        if reason != "ongoing":
             return np.zeros(ACTION_SIZE, dtype=np.bool_)
-        current_moves = raw_movement_mask(pieces, self.get_next_player())
-        if not current_moves.any():
-            return np.zeros(ACTION_SIZE, dtype=np.bool_)
-        if player == self.get_next_player():
-            return current_moves
-        return raw_movement_mask(pieces, player)
+        return raw_movement_mask(self.state[:, :, 0], player)
 
     def make_move(self, move, player, random_seed=0):
         """Apply one legal action atomically and return the next player."""
@@ -238,22 +270,29 @@ class Board:
         return next_player
 
     def check_end_game(self, next_player):
+        """Return absolute-player wins, zero ongoing, or equal DRAW_VALUE draws."""
         if next_player != int(next_player) or not 0 <= next_player <= 1:
             raise ValueError("Player must be 0 or 1")
         next_player = int(next_player)
         if next_player != self.get_next_player():
             raise ValueError("Player does not match state")
-        pieces = self.state[:, :, 0]
-        winner = _corner_winner(pieces, self.get_a1_defender())
-        if winner == -2:
-            raise ValueError("Both players cannot occupy their winning corners")
-        if winner < 0 and not raw_movement_mask(pieces, next_player).any():
-            winner = 1 - next_player
+        winner, reason = _terminal_status(self.state)
         result = np.zeros(2, dtype=np.float32)
         if winner >= 0:
             result[winner] = 1.0
             result[1 - winner] = -1.0
+        elif reason != "ongoing":
+            result[:] = DRAW_VALUE
         return result
+
+    def get_repetition_count(self):
+        """Exact board-plus-turn count; piece identities/symmetry are not keys."""
+        return _repetition_count(self.state)
+
+    def get_terminal_reason(self):
+        """Return ongoing, corner, stalemate, repetition, or no-capture limit."""
+        _, reason = _terminal_status(self.state)
+        return reason
 
     def get_score(self, player):
         """Return remaining piece count for diagnostics; this is not a reward."""
