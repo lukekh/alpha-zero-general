@@ -43,8 +43,10 @@ def create_player(name, args):
 	net = NNet(game, nn_args)
 	cpt_dir, cpt_file = os.path.split(name)
 	additional_keys = net.load_checkpoint(cpt_dir, cpt_file)
+	if additional_keys is None:
+		raise ValueError(f'Could not load checkpoint opponent {name}')
 
-	cpuct = additional_keys.get('cpuct')
+	cpuct = additional_keys.get('cpuct', 1.)
 	cpuct = float(cpuct[0]) if isinstance(cpuct, list) else cpuct
 	mcts_args = dotdict({
 		'numMCTSSims'     : args.numMCTSSims if args.numMCTSSims else additional_keys.get('numMCTSSims', 100),
@@ -57,7 +59,7 @@ def create_player(name, args):
 	})
 	mcts = MCTS(game, net, mcts_args)
 	def temp_for_game(n):
-		t_begin, t_end, half_life = 0.5, 0.0, (additional_keys['temperature'][2:3] or [10])[0]
+		t_begin, t_end, half_life = 0.5, 0.0, (additional_keys.get('temperature', [])[2:3] or [10])[0]
 		return t_end + (t_begin - t_end) * (0.5 ** (n / half_life))
 		# return t_begin if n < half_life else t_end
 	player = lambda x, n: np.argmax(mcts.getActionProb(x, temp=temp_for_game(n), force_full_search=True)[0])

@@ -208,14 +208,12 @@ class GenericNNetWrapper(NeuralNet):
 		# https://github.com/pytorch/examples/blob/master/imagenet/main.py#L98
 		filepath = os.path.join(folder, filename)
 		if not os.path.exists(filepath):
-			print("No model in path {}".format(filepath))
-			return			
+			raise FileNotFoundError("No model in path {}".format(filepath))
 		try:
 			checkpoint = torch.load(filepath, map_location='cpu', weights_only=False)
 			self.load_network(checkpoint, strict=(self.args['nn_version']>0))
-		except:
-			print("MODEL {} CAN'T BE READ but file exists".format(filepath))
-			return
+		except Exception as error:
+			raise ValueError("Cannot load checkpoint {}: {}".format(filepath, error)) from error
 		self.switch_target('just_loaded')
 		return checkpoint
 			
@@ -308,6 +306,7 @@ class GenericNNetWrapper(NeuralNet):
 			self.nnet,
 			(dummy_board, dummy_valid_actions),
 			temporary_file,
+			dynamo=False,
 			input_names = ['board', 'valid_actions'],
 			output_names = ['pi', 'v'],
 			dynamic_axes={

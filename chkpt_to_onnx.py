@@ -7,17 +7,19 @@ import argparse
 
 
 def load_checkpoint(filepath):
-	try:
-		checkpoint = torch.load(filepath, map_location='cpu', weights_only=False)
-		# print("NN training info:", ", ".join(f"{k} = {checkpoint.get(k)}" for k in ['nn_version', 'numMCTSSims', 'fpu', 'cpuct', 'forced_playouts', 'universes']))
-		print("NN full info:", ", ".join(f"{k} = {v}" for k, v in checkpoint.items() if k not in ['state_dict', 'full_model']))
+	checkpoint = torch.load(filepath, map_location='cpu', weights_only=False)
+	if 'intransitive_config' in checkpoint or 'intransitive_checkpoint' in checkpoint:
+		from intransitive.IntransitiveGame import IntransitiveGame
+		from intransitive.NNet import NNetWrapper
+		wrapper = NNetWrapper(IntransitiveGame(), {'nn_version': -1})
+		wrapper.load_network(checkpoint)
+		nnet = wrapper.nnet
+	else:
 		nnet = checkpoint['full_model']
-		nn_shape = f'{nnet.nb_vect}x{nnet.vect_dim}' if 'vect_dim' in nnet.__dict__ else f'{nnet.board_size}'
-		print(f'NN version: {checkpoint["nn_version"]}, network i/o shape: {nn_shape} -> {nnet.action_size}, total nb of nnet params: {sum(p.numel() for p in nnet.parameters())}')
-		return nnet
-	except:
-		print("MODEL {} CAN'T BE READ".format(filepath))
-		return None
+		nnet.load_state_dict(checkpoint['state_dict'])
+	nn_shape = f'{nnet.nb_vect}x{nnet.vect_dim}' if 'vect_dim' in nnet.__dict__ else f'{nnet.board_size}'
+	print(f'NN version: {nnet.version}, network i/o shape: {nn_shape} -> {nnet.action_size}, total nb of nnet params: {sum(p.numel() for p in nnet.parameters())}')
+	return nnet
 
 def export_onnx(nnet, output_filepath):
 	if 'vect_dim' in nnet.__dict__:
@@ -33,6 +35,7 @@ def export_onnx(nnet, output_filepath):
 		(dummy_board, dummy_valid_actions),
 		output_filepath,
 		opset_version=16,
+		dynamo=False,
 		input_names = ['board', 'valid_actions'],
 		output_names = ['pi', 'v'],
 		dynamic_axes={
@@ -53,4 +56,5 @@ def main():
 	export_onnx(nnet, args.output)
 
 
-main()
+if __name__ == '__main__':
+	main()

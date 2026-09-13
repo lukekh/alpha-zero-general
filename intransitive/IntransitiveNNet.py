@@ -54,8 +54,10 @@ class IntransitiveNNet(nn.Module):
                 or game.num_players != NUMBER_PLAYERS):
             raise ValueError('Intransitive network requires state v1, 648 actions and two players')
         self.version = args['nn_version']
+        self.board_size = STATE_SHAPE
+        self.action_size = ACTION_SIZE
         self.feature_config = dict(FEATURE_CONFIG)
-        # GenericNNetWrapper replaces this placeholder with checkpoint.full_model.
+        # The wrapper reconstructs a validated network from checkpoint metadata.
         if self.version == -1:
             return
         if self.version != NETWORK_VERSION:
