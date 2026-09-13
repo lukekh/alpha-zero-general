@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "delivery_revision": "bd4914e39d4e963cbdd2c6d60840c733f4be6f85",
+  "training_revision": "e34a1cf7b3ee3275c5a609ef3f0a085b7b9bb348",
+  "tests": {
+    "intransitive": 119,
+    "repository": 7,
+    "accounting": 3
+  },
+  "archive_sha256_verified": true,
+  "extracted_file_count": 70,
+  "source_files_verified_against_training_revision": 44,
+  "requirements_match_pins": true,
+  "candidates": {
+    "candidate_1.pt": {
+      "max_trainable_parameter_delta_from_initial": 0.006875578314065933,
+      "reload_metadata_valid": true
+    },
+    "candidate_2.pt": {
+      "max_trainable_parameter_delta_from_initial": 0.009516734629869461,
+      "reload_metadata_valid": true
+    },
+    "candidate_3.pt": {
+      "max_trainable_parameter_delta_from_initial": 0.009852321818470955,
+      "reload_metadata_valid": true
+    },
+    "candidate_4.pt": {
+      "max_trainable_parameter_delta_from_initial": 0.012556340545415878,
+      "reload_metadata_valid": true
+    }
+  },
+  "incumbent_restored_to_initial": true,
+  "baseline_selection": "final rejected candidate_4.pt; no best.pt",
+  "representative_games_reproduced": 2,
+  "archive_representative_games_reproduced": 2,
+  "archive_reload_max_abs": [
+    7.078051567077637e-08,
+    1.7136335372924805e-07
+  ],
+  "pit": {
+    "command": [
+      "/tmp/intransitive-issue10-venv/bin/python",
+      "pit.py",
+      "intransitive",
+      "checkpoints/issue15-delivered-final/baseline.pt",
+      "greedy",
+      "-n",
+      "2",
+      "-m",
+      "32"
+    ],
+    "environment": {
+      "ORT_DISABLE_TELEMETRY": "1"
+    },
+    "seconds": 9.577792458003387,
+    "exit_code": 0,
+    "games": 2
+  },
+  "review": "Local code, accounting, source/checkpoint provenance, archive extraction, report tables and whitespace review; no independent reviewer claimed.",
+  "validation_excluded_from_strength_counts": true
+}

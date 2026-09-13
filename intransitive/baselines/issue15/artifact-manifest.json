@@ -1,0 +1,290 @@
+{
+  "archive": {
+    "path": "baseline-artifacts.tar.gz",
+    "bytes": 13991070,
+    "sha256": "416008c287fccd4727ca18f5a9bf91da48d4cc0994a41f10a1813a31281849e1"
+  },
+  "original_directory": "/Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/checkpoints/issue15-baseline",
+  "files": {
+    "baseline.pt": {
+      "bytes": 1358592,
+      "sha256": "c4eca4769284b57ee17dfee7e22b83e9a8315f0a7b7311af5f1c027faa8e4e7b"
+    },
+    "budget.json": {
+      "bytes": 3059,
+      "sha256": "2c2a573d68374230b660ff1254d7110867b442a473cbcfe39c6a3d35dbd58341"
+    },
+    "candidate_1.pt": {
+      "bytes": 1358592,
+      "sha256": "40b8fc6eecc606e4cfaaa45b0af23cf7f5d1fc89d2ad21cfb27aa80dd0b50e14"
+    },
+    "candidate_2.pt": {
+      "bytes": 1358592,
+      "sha256": "b59d789e41b75fd72e2bf3272be3a5b8b77c5460596b3a8a5ddb6960ff483456"
+    },
+    "candidate_3.pt": {
+      "bytes": 1358592,
+      "sha256": "dc792f8479de09fa5678bf54b7f318768ffaf6047629469d0ce3aaf20806c534"
+    },
+    "candidate_4.pt": {
+      "bytes": 1358592,
+      "sha256": "c4eca4769284b57ee17dfee7e22b83e9a8315f0a7b7311af5f1c027faa8e4e7b"
+    },
+    "checkpoint.examples": {
+      "bytes": 4392561,
+      "sha256": "b6b668462ff9337ef47b001a327808517817b54fc27256266ab4109e75b6fb3a"
+    },
+    "earlier.pt": {
+      "bytes": 1358592,
+      "sha256": "40b8fc6eecc606e4cfaaa45b0af23cf7f5d1fc89d2ad21cfb27aa80dd0b50e14"
+    },
+    "evaluation/evaluation-progress.json": {
+      "bytes": 24492,
+      "sha256": "5ebf2f623f1c1f071bfd0dc6ecfb353b3a5a99ae2c8b3434cbe96873ed312b9a"
+    },
+    "evaluation/evaluation.json": {
+      "bytes": 37248,
+      "sha256": "d6749424e4f6d8f6c8e074a1fed6079e18a1677ffac891fc7522f7507be2afe1"
+    },
+    "initial.pt": {
+      "bytes": 1358100,
+      "sha256": "2ae1b5af1dfc316c3cce067516c0ded3df3af15a126bd785280c155c1b38d046"
+    },
+    "preliminary-verification/evaluation-progress.json": {
+      "bytes": 1035,
+      "sha256": "15b08d0aa486421e10d4620534e989f9b0cc635cb5a6db7a3cabd3f30a86363c"
+    },
+    "preliminary-verification/evaluation.json": {
+      "bytes": 5435,
+      "sha256": "c97696a53370fadf3ee262ff7c3bf0c681daba71711d485690ab7d2add3fedc7"
+    },
+    "preliminary-verification/process-status.json": {
+      "bytes": 141,
+      "sha256": "91863e4dd4cc9a4a9e0fdc95b8fd1370e73e6a387ab41519c24ea7debaac60bb"
+    },
+    "requirements.txt": {
+      "bytes": 416,
+      "sha256": "e4582b1e91098c26e609b296636cca314745decce855bf7e24c6b9bf7a3524d4"
+    },
+    "settings.json": {
+      "bytes": 942,
+      "sha256": "c8498f460e5fd816551214d2d5f3161821b4be136c15ea885f8c6fbc24de1aa6"
+    },
+    "settings.txt": {
+      "bytes": 753,
+      "sha256": "b8fb459873a76638fd75cc02804af4981277af1f5c30c56eeda7346dd7a23729"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/Arena.py": {
+      "bytes": 7037,
+      "sha256": "a748cab813b1378d9bf317b9c2149eda42dd8a1f15d2fd5a8d35b3fd1155710b"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/Coach.py": {
+      "bytes": 15500,
+      "sha256": "2cc8795c755f77692bbfed0a493a905f8e6b785f0a36a15f0b8dade4010d2583"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/Game.py": {
+      "bytes": 4646,
+      "sha256": "9ceebd7eba1af2506966a7c2b9d43be9b3dc2373ebc65353c89879af660ed504"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/GameSwitcher.py": {
+      "bytes": 1426,
+      "sha256": "5ac4fc6007664a273e6f1b585037d96b1dbf40bd4377d57398b28cd15bae9da9"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/GenericNNetWrapper.py": {
+      "bytes": 17978,
+      "sha256": "f3a0a5fbadb3b9cc92bb49e9cefd9bfb889c0d49fb1ba0ec96d83bd4d3594fe4"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/MCTS.py": {
+      "bytes": 10188,
+      "sha256": "e3fcae38580733a8d2edfe7cc82d85de5278609df52c1618f6d593556c18441c"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/NeuralNet.py": {
+      "bytes": 1550,
+      "sha256": "34a6a54910b0929793f5f7481871c035d7c873af3bc347c1600372cb6c49d5ed"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/budget.json": {
+      "bytes": 3059,
+      "sha256": "2c2a573d68374230b660ff1254d7110867b442a473cbcfe39c6a3d35dbd58341"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/chkpt_to_onnx.py": {
+      "bytes": 2046,
+      "sha256": "248fdb083be36e7636d7eb47dd5448f2a0f2ee027b139893edcb81997f990da5"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/IntransitiveConstants.py": {
+      "bytes": 2576,
+      "sha256": "5653399a3395346cbcdbfacf6b7e1a82ba7d4e942195bc47f034444b309c1886"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/IntransitiveDisplay.py": {
+      "bytes": 2853,
+      "sha256": "0f282ce2212e6c0c7927196662106f7da47bab199dd5cc481320fcf1668c65d1"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/IntransitiveGame.py": {
+      "bytes": 3716,
+      "sha256": "c310a6213fee866e99a0cece89fcf9d547017bdaef94ccfaf200ae1617d9f953"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/IntransitiveLogicNumba.py": {
+      "bytes": 15197,
+      "sha256": "8670196dd6501bbb7cdc11a33433b0c4e93cf6f48e7cc44042bf8c0dcbd24b12"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/IntransitiveNNet.py": {
+      "bytes": 7301,
+      "sha256": "841d6bbee0eb19ae8007c50446577b142f01fe2dd4d008464517b872df1ef35b"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/IntransitivePlayers.py": {
+      "bytes": 3395,
+      "sha256": "b472a76febe34aea32672c3e6c180084c3eb2ad985ca8ef84ea3bb0c9e225c3b"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/IntransitiveSymmetries.py": {
+      "bytes": 4971,
+      "sha256": "8adb1b089d29350a602d3c2f2532c2c2655e5ffa23a5ab351f3cec241859f130"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/NNet.py": {
+      "bytes": 3975,
+      "sha256": "d5c293dd71cfbe6d04cdadd9953a6afc633ecd078b481917b582375fc7646604"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/__init__.py": {
+      "bytes": 40,
+      "sha256": "1dc948149fe3637b3bccc9332a4a17dfcc15f6ba3033d6932f6a97bf8d961705"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/baseline.py": {
+      "bytes": 15302,
+      "sha256": "ba8d8a8b042f6e567ca9d10d1551749312e40444b2eef6f2f5fe25b7f99922eb"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/benchmark_network.py": {
+      "bytes": 2368,
+      "sha256": "887bd1315b3bab151fcb97f5760913599c722381ab01946f7d23c6d9c0f042da"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/benchmark_training.py": {
+      "bytes": 18872,
+      "sha256": "ba92904cbd41257de6e4294474078e2b87b57f76d738667f012dba2488fad78e"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/play.py": {
+      "bytes": 5471,
+      "sha256": "d97f5c7994438a02541e353ce1c659194862c289db6ed8b326987e164fe8a542"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/smoke.py": {
+      "bytes": 14003,
+      "sha256": "331546ef5b6769a81b6210ab7e9c73b660353c20421568d08525b8fde65989d1"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/reference_rules.py": {
+      "bytes": 7479,
+      "sha256": "e79a85b4f128cdb20b8edbf0920bae6f27ec5db8dc916ce829fb30c9799117df"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_augmentation.py": {
+      "bytes": 13798,
+      "sha256": "95488ccba7a19550a2437254b2b0ace96130bb7efe7315a8974c2aacf3d9da82"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_baseline.py": {
+      "bytes": 1789,
+      "sha256": "fd60bd665cf139cde00c7f56daa9a1d45e77981ff9b9d90c99c8b99605136070"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_benchmark_training.py": {
+      "bytes": 1746,
+      "sha256": "13cc020e12f67e2959b0d3dc7f978396d0ac0747c67e080870fdecaa92bccbab"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_checkpoints.py": {
+      "bytes": 15791,
+      "sha256": "890ac56d992a104a2375bf938ff9fe7e2b09a80610d09124b173f8e1ec8020ab"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_draws.py": {
+      "bytes": 17184,
+      "sha256": "81de6a3578366a78addeaae061daa7a1994e2f211dec07c42ddd865d14b2fc84"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_equivalence.py": {
+      "bytes": 16640,
+      "sha256": "2dad9b0da4dc39a351ffc001b38ed3a1083e7e8df075faba60f25dc777d6377e"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_game.py": {
+      "bytes": 13314,
+      "sha256": "b00fd3df15bf7c1e8a77aec3f381f70bbc0fcb918beccaebc67fa6be1811f521"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_network.py": {
+      "bytes": 10562,
+      "sha256": "83a9b0806e32ac98f5e0985b32e10339860f9a8cc5506a92967d9b465f0ef020"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_pipeline.py": {
+      "bytes": 19885,
+      "sha256": "25046d8a4c7fdec22831c9b17209dfa0201aef9bc94c243a0df3b4894cad3725"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_play.py": {
+      "bytes": 2712,
+      "sha256": "1e04cd7fdb3fbe6858627b41741df4f85c6c795edf87618ac22605ad92e94472"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_players.py": {
+      "bytes": 12065,
+      "sha256": "7d457a8fc3e1f6070ddd83c41c15b98584616fb4b34de99968d2eb978d6ca54e"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_rules.py": {
+      "bytes": 10280,
+      "sha256": "cb08e5161fbdcb918279d470dcca1adf2d7973ea58f5e38eacb5842487d4b1ce"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_state.py": {
+      "bytes": 11803,
+      "sha256": "d5576030cde0ee7466f528d9317ac54b80e3ece0c512456456eb78a56f373839"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/intransitive/tests/test_symmetries.py": {
+      "bytes": 9816,
+      "sha256": "2449c077d7459852b6fb5f3bc5142c708e1ca4b878ef30d45dd9641e22ae3da4"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/launcher.py": {
+      "bytes": 5856,
+      "sha256": "225cfc7af52bd9216de4a84c6f7b207ed103c81f8a6c903b36014d60707b49fc"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/main.py": {
+      "bytes": 8754,
+      "sha256": "150e8e9fb37c72fde9fa865e5ffc3b60c7c9446c078f4136e8aa0b82fda76e8b"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/pit.py": {
+      "bytes": 9925,
+      "sha256": "9849e4b4a9b664c0c17188f6306e132c63af57da33aed926833064dc8048a1ba"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/rayConfig.py": {
+      "bytes": 3686,
+      "sha256": "f4fcc100d1f856552069943ce09a6d5e68f9a8bbab03a958a19d0419f20af3e5"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/requirements.txt": {
+      "bytes": 416,
+      "sha256": "e4582b1e91098c26e609b296636cca314745decce855bf7e24c6b9bf7a3524d4"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/settings.json": {
+      "bytes": 942,
+      "sha256": "c8498f460e5fd816551214d2d5f3161821b4be136c15ea885f8c6fbc24de1aa6"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/settings.txt": {
+      "bytes": 753,
+      "sha256": "b8fb459873a76638fd75cc02804af4981277af1f5c30c56eeda7346dd7a23729"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/source_backup.py": {
+      "bytes": 3009,
+      "sha256": "ee3ba884a61112db645ed0b6c5ccded976967191df0a72331d50ce8e509b7d67"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/useRay.py": {
+      "bytes": 3069,
+      "sha256": "568fe752ae2ee50aa1939c92bfaa99c731117567d5fe43895384acb461ca09b7"
+    },
+    "source_backups/20260913T122634.312381Z-9dfc94ef725941598f55aa5e560584c4/utils.py": {
+      "bytes": 508,
+      "sha256": "3ab888292e0e6ca8eb21a0c521d1e1527d1992f63813c572b46da896f5a3749f"
+    },
+    "temp.pt": {
+      "bytes": 1354803,
+      "sha256": "5271a15a4214c859a843b37fb4185d2d5d7343469e9d28bafef5e186360fa53c"
+    },
+    "training-progress.json": {
+      "bytes": 42533,
+      "sha256": "fb2f52a8b0eeba2d334c87cc29a38056e6fa6ae112a884ea0a4fc9173570576a"
+    },
+    "training.json": {
+      "bytes": 60841,
+      "sha256": "ca78d8c211d474457f879caee6e81311a155127b759ab90ff7bc392b31c62bc7"
+    },
+    "verification/evaluation-progress.json": {
+      "bytes": 1035,
+      "sha256": "15b08d0aa486421e10d4620534e989f9b0cc635cb5a6db7a3cabd3f30a86363c"
+    },
+    "verification/evaluation.json": {
+      "bytes": 5538,
+      "sha256": "421f1d5d29029c84f427181645d7232e68b44cfd53682f1a4de71d1aa9a50578"
+    }
+  }
+}

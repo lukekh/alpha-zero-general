@@ -6,6 +6,15 @@ See the [state contract](#state-contract-version-1) below for storage, action
 encoding, and tests, and the [implementation plan](IMPLEMENTATION_PLAN.md) for
 the delivery sequence.
 
+## Trained baseline
+
+The [issue #15 baseline report](baselines/issue15/README.md) provides measured
+results against random, greedy and an earlier checkpoint, split by model colour,
+with draw diagnostics and uncertainty. It includes the committed model/replay/source
+archive, checksum manifest, bounded reproduction commands and `pit.py` human-play
+instructions. Candidate rejection remains explicit; losses alone are not strength
+evidence. The official rules and modelling-only appendix below still apply.
+
 ## Play in a browser
 
 From the repository root, with Python 3.11, NumPy, and Numba installed:

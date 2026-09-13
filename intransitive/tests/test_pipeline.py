@@ -4,6 +4,7 @@ import base64
 from collections import deque
 from contextlib import redirect_stdout
 import io
+import os
 from pathlib import Path
 import pickle
 import subprocess
@@ -15,7 +16,13 @@ import unittest
 from unittest.mock import patch
 import zlib
 
+os.environ['ORT_DISABLE_TELEMETRY'] = '1'
 import numpy as np
+import onnxruntime as ort
+
+# Disable telemetry immediately on import, before slow Torch/Numba initialization.
+# ORT 1.30's macOS uploader can race with shutdown even after assertions pass.
+ort.disable_telemetry_events()
 import torch
 
 from Arena import Arena

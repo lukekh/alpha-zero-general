@@ -1,0 +1,67 @@
+{
+  "exception": {
+    "codes": "0x0000000000000001, 0x0000000000000000",
+    "rawCodes": [
+      1,
+      0
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGSEGV",
+    "subtype": "KERN_INVALID_ADDRESS at 0x0000000000000000"
+  },
+  "triggered_frames": [
+    {
+      "symbol": "std::__1::pair<std::__1::__tree_iterator<std::__1::__value_type<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, Microsoft::Applications::Events::Variant>, std::__1::__tree_node<std::__1::__value_type<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, Microsoft::Applications::Events::Variant>, void*>*, long>, bool> std::__1::__tree<std::__1::__value_type<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, Microsoft::Applications::Events::Variant>, std::__1::__map_value_compare<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::__value_type<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, Microsoft::Applications::Events::Variant>, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>, true>, std::__1::allocator<std::__1::__value_type<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, Microsoft::Applications::Events::Variant>>>::__emplace_unique_key_args<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::piecewise_construct_t const&, std::__1::tuple<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>&&>, std::__1::tuple<>>(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, std::__1::piecewise_construct_t const&, std::__1::tuple<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>&&>&&, std::__1::tuple<>&&)",
+      "image": "onnxruntime_pybind11_state.so"
+    },
+    {
+      "symbol": "Microsoft::Applications::Events::ILogConfiguration::operator[](char const*)",
+      "image": "onnxruntime_pybind11_state.so"
+    },
+    {
+      "symbol": "Microsoft::Applications::Events::RuntimeConfig_Default::GetMaximumUploadSizeBytes()",
+      "image": "onnxruntime_pybind11_state.so"
+    },
+    {
+      "symbol": "Microsoft::Applications::Events::Packager::handleAddEventToPackage(std::__1::shared_ptr<Microsoft::Applications::Events::EventsUploadContext> const&, Microsoft::Applications::Events::StorageRecord const&, bool&)",
+      "image": "onnxruntime_pybind11_state.so"
+    },
+    {
+      "symbol": "std::__1::__function::__func<Microsoft::Applications::Events::StorageObserver::handleRetrieveEvents(std::__1::shared_ptr<Microsoft::Applications::Events::EventsUploadContext> const&)::$_0, std::__1::allocator<Microsoft::Applications::Events::StorageObserver::handleRetrieveEvents(std::__1::shared_ptr<Microsoft::Applications::Events::EventsUploadContext> const&)::$_0>, bool (Microsoft::Applications::Events::StorageRecord&&)>::operator()(Microsoft::Applications::Events::StorageRecord&&)",
+      "image": "onnxruntime_pybind11_state.so"
+    },
+    {
+      "symbol": "Microsoft::Applications::Events::OfflineStorage_SQLite::GetAndReserveRecords(std::__1::function<bool (Microsoft::Applications::Events::StorageRecord&&)> const&, unsigned int, Microsoft::Applications::Events::EventLatency, unsigned int)",
+      "image": "onnxruntime_pybind11_state.so"
+    },
+    {
+      "symbol": "Microsoft::Applications::Events::OfflineStorageHandler::GetAndReserveRecords(std::__1::function<bool (Microsoft::Applications::Events::StorageRecord&&)> const&, unsigned int, Microsoft::Applications::Events::EventLatency, unsigned int)",
+      "image": "onnxruntime_pybind11_state.so"
+    },
+    {
+      "symbol": "Microsoft::Applications::Events::StorageObserver::handleRetrieveEvents(std::__1::shared_ptr<Microsoft::Applications::Events::EventsUploadContext> const&)",
+      "image": "onnxruntime_pybind11_state.so"
+    },
+    {
+      "symbol": "Microsoft::Applications::Events::TransmissionPolicyManager::uploadAsync(Microsoft::Applications::Events::EventLatency)",
+      "image": "onnxruntime_pybind11_state.so"
+    },
+    {
+      "symbol": "Microsoft::Applications::Events::PlatformAbstraction::WorkerThread::threadFunc(void*)",
+      "image": "onnxruntime_pybind11_state.so"
+    },
+    {
+      "symbol": "void* std::__1::__thread_proxy[abi:ne200100]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)(void*), void*>>(void*)",
+      "image": "onnxruntime_pybind11_state.so"
+    },
+    {
+      "symbol": "_pthread_start",
+      "image": "libsystem_pthread.dylib"
+    },
+    {
+      "symbol": "thread_start",
+      "image": "libsystem_pthread.dylib"
+    }
+  ],
+  "note": "Worker reported passing assertions, then crashed in ORT telemetry upload. Disable telemetry immediately on import before Torch initialization; prior late disabling still failed."
+}

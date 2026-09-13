@@ -1,0 +1,11 @@
+libc++abi: terminating due to uncaught exception of type std::__1::system_error: recursive_mutex lock failed: Invalid argument
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/intransitive/baseline.py", line 315, in <module>
+    main()
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/intransitive/baseline.py", line 305, in main
+    require(result.returncode == 0, f'{cli.phase} failed with exit code {result.returncode}')
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-15-intransitive-train-evaluate/intransitive/smoke.py", line 35, in require
+    raise RuntimeError(message)
+RuntimeError: verify failed with exit code -6
