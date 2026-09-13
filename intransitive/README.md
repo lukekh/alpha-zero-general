@@ -377,6 +377,66 @@ An isolated environment can be prepared with `python3.11 -m venv /tmp/intransiti
 and `/tmp/intransitive-venv/bin/python -m pip install numpy==2.4.6 numba==0.67.0 tqdm==4.70.1`.
 Use that environment's Python executable for the test command above.
 
+### Independent engine-equivalence gate
+
+Issue #7 adds `tests/reference_rules.py`, an immutable tuple-based Python model
+with no production imports. It implements the explicit capture table, legal
+transitions, corner ownership, stalemate, exact board-plus-turn repetition,
+capture clock, complete history, and all 12 transforms independently. NumPy is
+used only to encode/decode the documented state storage. It is a test oracle for
+legal play, not a second public engine or a malformed-input validator.
+
+Run the focused rules and bounded generated/metamorphic gate in compiled mode:
+
+```sh
+NUMBA_DISABLE_JIT=0 python -m unittest \
+  intransitive.tests.test_rules \
+  intransitive.tests.test_draws \
+  intransitive.tests.test_equivalence -v
+```
+
+For just the independent gate, run
+`NUMBA_DISABLE_JIT=0 python -m unittest intransitive.tests.test_equivalence -v`.
+It rejects disabled JIT and asserts actual nopython signatures for inspection,
+transitions, and the shared MCTS helper. No trained network, GPU, or training
+performance is involved; MCTS uses eight simulations and a uniform legal policy
+with zero value predictions.
+
+Three complete random games use Python `random.Random` seeds **4, 7, 11** and
+sorted legal action IDs. Every played transition is checked against the oracle.
+Every legal action at plies **0, 7, 19**, plus each game's first capture parent,
+is checked against the reference and commuted through **all 12 transforms**.
+The fixed seeds include captures, and coverage assertions prevent silently
+losing that case. Two complete MCTS games use NumPy `default_rng` seeds
+**17, 170** for both the search RNG and action sampling (temperature 1, no
+Dirichlet noise). They start from the official Blue-first setup, compare every
+physical/canonical state with the oracle, and reject any illegal policy support.
+
+Each comparison includes full serialized bytes, masks for both players, capture
+flags, goal ownership/coordinates, next players, terminal vectors/reasons,
+repetition counts, complete ordered histories, clocks, total plies, and padding.
+Borrowed/copied parents and retained sibling/game snapshots must stay unchanged
+after transformations, queries, moves, and actual MCTS searches.
+
+Independent hand-built fixtures cover quiet/capturing moves 29/30, the total-ply
+carry 127→128, every piece entering empty/occupied goals with both goal assignments
+and player labels, canonical player 0 defending I9, last-piece elimination,
+blocked-army stalemate, legal second/third repetitions, and official-win/draw
+precedence. Synthetic threshold histories are explicitly separate from reachable
+generated games. Every nonidentity symmetry supplies an unequal orbit member
+that must not count as an exact physical repetition; the entire resulting
+history is then checked under every uniform transform.
+
+All games must terminate within **600 plies**: at most 19 captures can remove the
+initial 20 pieces, each capture can follow at most 29 quiet plies, and a final
+30 quiet plies forces a modelling draw. The bound is an assertion, not an extra
+game rule. Failures include seed, ply, serialized `state_hex`, and action/symmetry
+subtest diagnostics. Reconstruct a failing state with
+`np.frombuffer(bytes.fromhex(state_hex), dtype=np.int8).reshape(9, 9, 33).copy()`.
+The gate prints actual game lengths/reasons and generated branch counts.
+
+### Focused feature coverage
+
 The tests exhaust all coordinates and action slots, compare the setup to explicit
 Blue and Red fixtures, assert exact metadata/padding, exercise history capacity
 and capture reset, round-trip mutable and immutable serialized buffers, check
