@@ -126,17 +126,18 @@ def rates(metrics):
     return metrics.phases
 
 
-def train(folder):
+def train(folder, budget=None, game_class=BaselineGame, net_class=MeasuredNet,
+          earlier_checkpoint=None):
     start = time.perf_counter()
-    budget = json.loads(BUDGET.read_text())
+    budget = json.loads(BUDGET.read_text()) if budget is None else budget
     args = argparse.Namespace(**dict(budget['settings'], checkpoint=str(folder)))
     seed_all(args.seed)
     metrics = Metrics()
     MeasuredGame.metrics = MeasuredNet.metrics = metrics
-    game = BaselineGame()
+    game = game_class()
     nn_args = {k: getattr(args, k) for k in ('learn_rate', 'dropout', 'epochs',
         'batch_size', 'nn_version', 'no_compression', 'q_weight')}
-    net = MeasuredNet(game, nn_args)
+    net = net_class(game, nn_args)
     coach = MeasuredCoach(game, net, args)
     snapshot = backup_run_sources(args)
     for target in (folder, snapshot):
@@ -155,6 +156,10 @@ def train(folder):
         accepted = wins + losses > 0 and wins/(wins+losses) >= args.updateThreshold
         arenas.append(dict(iteration=len(arenas)+1, wins=wins, draws=draws,
             losses=losses, accepted=accepted, all_draw_rejection=wins+losses == 0))
+        arenas[-1].update(cumulative_original_positions=len(metrics.legal),
+            cumulative_training_wall_seconds=time.perf_counter()-tick,
+            cumulative_process_cpu_seconds=time.process_time(),
+            cumulative_updates=sum(row['updates'] for row in net.training))
         # Retain progress even if the supervisor terminates a later phase.
         write_json(folder / 'training-progress.json', dict(arena=arenas, games=metrics.games,
                    training=net.training, losses=net.losses))
@@ -165,7 +170,8 @@ def train(folder):
         coach.learn()
     learn_seconds = time.perf_counter() - tick
     require(len(arenas) == 4 and len(metrics.games) == 64, 'Incomplete training budget')
-    require(set(metrics.symmetries) == {12}, 'Missing augmentation coverage')
+    symmetry_count = getattr(args, 'symmetry_count', 12)
+    require(set(metrics.symmetries) == {symmetry_count}, 'Missing augmentation coverage')
     require(sum(g['plies'] for g in metrics.games if g['phase'] == 'self_play') == len(metrics.legal),
             'Position count mismatch')
     for phase in ('self_play', 'candidate_arena'):
@@ -177,7 +183,7 @@ def train(folder):
     selected, selection = select_checkpoint(arenas)
     shutil.copyfile(folder / selected, folder / 'baseline.pt')
     # Fixed earlier trained opponent, even if its candidate arena rejected it.
-    shutil.copyfile(folder / 'candidate_1.pt', folder / 'earlier.pt')
+    shutil.copyfile(earlier_checkpoint or folder / 'candidate_1.pt', folder / 'earlier.pt')
     offset = 0
     for row in net.training:
         end = offset + row['updates']
@@ -192,12 +198,14 @@ def train(folder):
         source_sha256={str(p.relative_to(snapshot)): digest(p) for p in sorted(snapshot.rglob('*.py'))},
         format=net.checkpoint_format(), feature_config=net.nnet.feature_config,
         torch_threads=torch.get_num_threads(), onnx_providers=net.ort_session.get_providers(),
-        original_positions=len(metrics.legal), augmented_examples=len(metrics.legal)*12,
+        original_positions=len(metrics.legal), augmented_examples=len(metrics.legal)*symmetry_count,
         symmetry_counts=dict(metrics.symmetries), legal_actions=distribution(metrics.legal),
+        original_replay=metrics.original_replay,
         training=net.training, losses=net.losses, arena=arenas, games=metrics.games,
         phases=rates(metrics), learn_seconds=learn_seconds, replay=replay,
         selected_checkpoint=selected, selection_reason=selection,
-        earlier_checkpoint='candidate_1.pt',
+        earlier_checkpoint=str(earlier_checkpoint or 'candidate_1.pt'),
+        process_cpu_seconds=time.process_time(),
         process_peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * (1 if sys.platform == 'darwin' else 1024),
         artifacts={p.name: dict(bytes=p.stat().st_size, sha256=digest(p))
                    for p in sorted(folder.iterdir()) if p.is_file()},
@@ -212,7 +220,8 @@ def load_net(game, path, nn_args):
     return net
 
 
-def evaluate(folder, model_folder, representative=False):
+def evaluate(folder, model_folder, representative=False, checkpoint='baseline.pt',
+             expected_report=None):
     folder.mkdir(parents=True)
     start = time.perf_counter()
     training = json.loads((model_folder / 'training.json').read_text())
@@ -222,9 +231,9 @@ def evaluate(folder, model_folder, representative=False):
     MeasuredGame.metrics = MeasuredNet.metrics = metrics
     game = BaselineGame()
     args = argparse.Namespace(**training['settings'])
-    model = load_net(game, model_folder / 'baseline.pt', training['nn_args'])
+    model = load_net(game, model_folder / checkpoint, training['nn_args'])
     earlier = load_net(game, model_folder / 'earlier.pt', training['nn_args'])
-    for name in ('baseline.pt', 'earlier.pt'):
+    for name in (checkpoint, 'earlier.pt'):
         require(digest(model_folder / name) == training['artifacts'][name]['sha256'],
                 'Checkpoint hash mismatch')
     with (model_folder / 'checkpoint.examples').open('rb') as stream:
@@ -270,12 +279,14 @@ def evaluate(folder, model_folder, representative=False):
         by_colour={c: summarize([r for r in rows if r['opponent'] == name and r['model_colour'] == c])
                    for c in ('Blue', 'Red')}) for name in names}
     if representative:
-        expected = json.loads((model_folder / 'evaluation/evaluation.json').read_text())['games'][:2]
+        expected = json.loads((expected_report or model_folder / 'evaluation/evaluation.json').read_text())['games'][:2]
         require(rows == expected, 'Representative game trajectories/results did not reproduce')
     report = dict(passed=True, representative=representative, command=sys.argv,
-        checkpoint_sha256={n: digest(model_folder / n) for n in ('baseline.pt', 'earlier.pt')},
+        checkpoint_sha256={n: digest(model_folder / n) for n in (checkpoint, 'earlier.pt')},
         reload_parity_max_abs=parity, games=rows, comparisons=comparisons,
         phases=rates(metrics), elapsed_seconds=time.perf_counter()-start,
+        process_cpu_seconds=time.process_time(),
+        process_peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * (1 if sys.platform == 'darwin' else 1024),
         seed_policy='SeedSequence([opponent_seed, game_index]) -> NumPy/Python/Torch, model MCTS, random opponent, earlier MCTS',
         action_policy='32 full simulations; maximum visits; seeded random tie breaking; fresh trees each game',
         uncertainty='Marginal Wilson win/draw intervals; distribution-free Hoeffding score interval. Independent seeded games conditional on these fixed agents/opening only; no training-seed or opening generalization.')

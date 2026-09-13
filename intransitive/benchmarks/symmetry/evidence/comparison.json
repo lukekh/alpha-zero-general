@@ -1,0 +1,3222 @@
+{
+  "passed": true,
+  "protocol": {
+    "augmentation": "on",
+    "updates_per_iteration": [
+      60,
+      105,
+      101,
+      107
+    ],
+    "optimizer_seed": "SeedSequence([150, iteration_1_based, 16])",
+    "fixed_earlier_sha256": "40b8fc6eecc606e4cfaaa45b0af23cf7f5d1fc89d2ad21cfb27aa80dd0b50e14",
+    "selection": "Evaluate every candidate, including rejected ones; no selection by opponent scores",
+    "evaluation_games_per_arm": 192,
+    "training_seed_replicates": 1
+  },
+  "identical_self_play_trajectories": true,
+  "identical_original_training_examples": true,
+  "points": [
+    {
+      "iteration": 1,
+      "arms": {
+        "on": {
+          "iteration": 1,
+          "wins": 0,
+          "draws": 8,
+          "losses": 0,
+          "accepted": false,
+          "all_draw_rejection": true,
+          "cumulative_original_positions": 325,
+          "cumulative_training_wall_seconds": 41.17580258403905,
+          "cumulative_process_cpu_seconds": 42.286498,
+          "cumulative_updates": 60,
+          "optimization": {
+            "examples": 3900,
+            "updates": 60,
+            "sampled_examples": 3840,
+            "seconds": 12.010646749986336,
+            "updates_per_second": 4.9955677865613906,
+            "iteration": 1,
+            "optimizer_seed": 1444335209,
+            "parameter_sha256_before": "46b2b570951a414af54c432ea034bb67a9c48f90a780c95ddeacc22a1e1bb127",
+            "parameter_sha256_after": "e4e772863d04d4433de1a009f3101a5cc7e1be21805e7aa15f46e06cac64fcbc",
+            "policy_loss_mean": 0.5237294534842173,
+            "value_loss_mean": 0.00493220011315619
+          },
+          "strength": {
+            "random": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 37.8125,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 57.5,
+                  "max": 62.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 30.0,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 30.0,
+                    "max": 30.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 45.625,
+                    "min": 30.0,
+                    "median": 52.0,
+                    "p95": 59.9,
+                    "max": 62.0
+                  }
+                }
+              }
+            },
+            "greedy": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 0,
+                "losses": 16,
+                "score": 0.0,
+                "score_95_hoeffding": [
+                  0.0,
+                  0.3395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 16,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 0
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 17.625,
+                  "min": 15.0,
+                  "median": 18.0,
+                  "p95": 19.25,
+                  "max": 20.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 17.5,
+                    "min": 16.0,
+                    "median": 18.0,
+                    "p95": 19.299999999999997,
+                    "max": 20.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 17.75,
+                    "min": 15.0,
+                    "median": 19.0,
+                    "p95": 19.0,
+                    "max": 19.0
+                  }
+                }
+              }
+            },
+            "earlier_checkpoint": {
+              "overall": {
+                "games": 16,
+                "wins": 1,
+                "draws": 15,
+                "losses": 0,
+                "score": 0.53125,
+                "score_95_hoeffding": [
+                  0.1917246210648451,
+                  0.8707753789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.01111934476464252,
+                  0.28328737570298945
+                ],
+                "draw_probability_95_wilson": [
+                  0.7167126242970107,
+                  0.9888806552353576
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 1,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 15
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 42.75,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 87.25,
+                  "max": 97.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 39.25,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 72.09999999999998,
+                    "max": 84.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 1,
+                  "draws": 7,
+                  "losses": 0,
+                  "score": 0.5625,
+                  "score_95_hoeffding": [
+                    0.08233860434003965,
+                    1.0
+                  ],
+                  "win_probability_95_wilson": [
+                    0.02241749145005667,
+                    0.4708881822128535
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.5291118177871464,
+                    0.9775825085499433
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 1,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 7
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 46.25,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 85.44999999999999,
+                    "max": 97.0
+                  }
+                }
+              }
+            }
+          },
+          "evaluation_process_seconds": 46.56562316697091
+        },
+        "off": {
+          "iteration": 1,
+          "wins": 0,
+          "draws": 8,
+          "losses": 0,
+          "accepted": false,
+          "all_draw_rejection": true,
+          "cumulative_original_positions": 325,
+          "cumulative_training_wall_seconds": 39.0196756250225,
+          "cumulative_process_cpu_seconds": 40.329364,
+          "cumulative_updates": 60,
+          "optimization": {
+            "examples": 325,
+            "updates": 60,
+            "sampled_examples": 3840,
+            "seconds": 12.260421541053802,
+            "updates_per_second": 4.893795845362337,
+            "iteration": 1,
+            "optimizer_seed": 1444335209,
+            "parameter_sha256_before": "46b2b570951a414af54c432ea034bb67a9c48f90a780c95ddeacc22a1e1bb127",
+            "parameter_sha256_after": "9d478fbee9b12bc310f11ebd6f513c6f97de4471bfaff659ae5fd74c5a6d9639",
+            "policy_loss_mean": 0.22500718732674915,
+            "value_loss_mean": 0.004161640025752907
+          },
+          "strength": {
+            "random": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 34.625,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 55.0,
+                  "max": 61.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 30.0,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 30.0,
+                    "max": 30.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 39.25,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 58.199999999999996,
+                    "max": 61.0
+                  }
+                }
+              }
+            },
+            "greedy": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 0,
+                "losses": 16,
+                "score": 0.0,
+                "score_95_hoeffding": [
+                  0.0,
+                  0.3395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 16,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 0
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 19.625,
+                  "min": 13.0,
+                  "median": 17.0,
+                  "p95": 31.25,
+                  "max": 38.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 21.5,
+                    "min": 14.0,
+                    "median": 19.0,
+                    "p95": 34.49999999999999,
+                    "max": 38.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 17.75,
+                    "min": 13.0,
+                    "median": 17.0,
+                    "p95": 25.499999999999993,
+                    "max": 29.0
+                  }
+                }
+              }
+            },
+            "earlier_checkpoint": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 39.4375,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 80.75,
+                  "max": 155.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 45.625,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 111.24999999999994,
+                    "max": 155.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 33.25,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 46.899999999999984,
+                    "max": 56.0
+                  }
+                }
+              }
+            }
+          },
+          "evaluation_process_seconds": 45.83437066699844
+        }
+      },
+      "paired_differences": {
+        "random": {
+          "games": 16,
+          "on_minus_off": 0.0,
+          "difference_95_hoeffding": [
+            -0.6790507578703098,
+            0.6790507578703098
+          ]
+        },
+        "greedy": {
+          "games": 16,
+          "on_minus_off": 0.0,
+          "difference_95_hoeffding": [
+            -0.6790507578703098,
+            0.6790507578703098
+          ]
+        },
+        "earlier_checkpoint": {
+          "games": 16,
+          "on_minus_off": 0.03125,
+          "difference_95_hoeffding": [
+            -0.6478007578703098,
+            0.7103007578703098
+          ]
+        }
+      }
+    },
+    {
+      "iteration": 2,
+      "arms": {
+        "on": {
+          "iteration": 2,
+          "wins": 0,
+          "draws": 8,
+          "losses": 0,
+          "accepted": false,
+          "all_draw_rejection": true,
+          "cumulative_original_positions": 565,
+          "cumulative_training_wall_seconds": 79.30364075000398,
+          "cumulative_process_cpu_seconds": 78.891976,
+          "cumulative_updates": 165,
+          "optimization": {
+            "examples": 6780,
+            "updates": 105,
+            "sampled_examples": 6720,
+            "seconds": 20.446849541040137,
+            "updates_per_second": 5.135265449537739,
+            "iteration": 2,
+            "optimizer_seed": 2957867568,
+            "parameter_sha256_before": "46b2b570951a414af54c432ea034bb67a9c48f90a780c95ddeacc22a1e1bb127",
+            "parameter_sha256_after": "2f50b89b1700451d0da2316c42be160c2a9565abae38c28830caa250a8da4707",
+            "policy_loss_mean": 0.4453335696742648,
+            "value_loss_mean": 0.0038079471222036295
+          },
+          "strength": {
+            "random": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 37.1875,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 66.25,
+                  "max": 88.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 40.75,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 77.49999999999999,
+                    "max": 88.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 33.625,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 48.84999999999998,
+                    "max": 59.0
+                  }
+                }
+              }
+            },
+            "greedy": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 0,
+                "losses": 16,
+                "score": 0.0,
+                "score_95_hoeffding": [
+                  0.0,
+                  0.3395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 16,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 0
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 18.0,
+                  "min": 16.0,
+                  "median": 17.0,
+                  "p95": 22.75,
+                  "max": 25.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 17.75,
+                    "min": 16.0,
+                    "median": 18.0,
+                    "p95": 20.599999999999998,
+                    "max": 22.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 18.25,
+                    "min": 17.0,
+                    "median": 17.0,
+                    "p95": 22.9,
+                    "max": 25.0
+                  }
+                }
+              }
+            },
+            "earlier_checkpoint": {
+              "overall": {
+                "games": 16,
+                "wins": 1,
+                "draws": 15,
+                "losses": 0,
+                "score": 0.53125,
+                "score_95_hoeffding": [
+                  0.1917246210648451,
+                  0.8707753789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.01111934476464252,
+                  0.28328737570298945
+                ],
+                "draw_probability_95_wilson": [
+                  0.7167126242970107,
+                  0.9888806552353576
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 1,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 15
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 44.5625,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 85.75,
+                  "max": 109.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 1,
+                  "draws": 7,
+                  "losses": 0,
+                  "score": 0.5625,
+                  "score_95_hoeffding": [
+                    0.08233860434003965,
+                    1.0
+                  ],
+                  "win_probability_95_wilson": [
+                    0.02241749145005667,
+                    0.4708881822128535
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.5291118177871464,
+                    0.9775825085499433
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 1,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 7
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 47.75,
+                    "min": 30.0,
+                    "median": 35.5,
+                    "p95": 91.49999999999997,
+                    "max": 109.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 41.375,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 76.25,
+                    "max": 78.0
+                  }
+                }
+              }
+            }
+          },
+          "evaluation_process_seconds": 47.32826733298134
+        },
+        "off": {
+          "iteration": 2,
+          "wins": 0,
+          "draws": 8,
+          "losses": 0,
+          "accepted": false,
+          "all_draw_rejection": true,
+          "cumulative_original_positions": 565,
+          "cumulative_training_wall_seconds": 78.83027545805089,
+          "cumulative_process_cpu_seconds": 79.686239,
+          "cumulative_updates": 165,
+          "optimization": {
+            "examples": 565,
+            "updates": 105,
+            "sampled_examples": 6720,
+            "seconds": 19.26769391610287,
+            "updates_per_second": 5.449536434261436,
+            "iteration": 2,
+            "optimizer_seed": 2957867568,
+            "parameter_sha256_before": "46b2b570951a414af54c432ea034bb67a9c48f90a780c95ddeacc22a1e1bb127",
+            "parameter_sha256_after": "af13598d83f8ba1ad01ae6801419428fd51190207c08b021f75624f6102bb910",
+            "policy_loss_mean": 0.2020943895691917,
+            "value_loss_mean": 0.003379129800235941
+          },
+          "strength": {
+            "random": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 32.75,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 41.0,
+                  "max": 74.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 30.0,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 30.0,
+                    "max": 30.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 35.5,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 58.59999999999998,
+                    "max": 74.0
+                  }
+                }
+              }
+            },
+            "greedy": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 0,
+                "losses": 16,
+                "score": 0.0,
+                "score_95_hoeffding": [
+                  0.0,
+                  0.3395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 16,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 0
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 22.875,
+                  "min": 13.0,
+                  "median": 17.0,
+                  "p95": 43.75,
+                  "max": 79.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 22.0,
+                    "min": 14.0,
+                    "median": 21.0,
+                    "p95": 30.599999999999998,
+                    "max": 32.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 23.75,
+                    "min": 13.0,
+                    "median": 17.0,
+                    "p95": 57.29999999999997,
+                    "max": 79.0
+                  }
+                }
+              }
+            },
+            "earlier_checkpoint": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 32.875,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 52.5,
+                  "max": 54.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 35.75,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 53.3,
+                    "max": 54.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 30.0,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 30.0,
+                    "max": 30.0
+                  }
+                }
+              }
+            }
+          },
+          "evaluation_process_seconds": 41.45537533296738
+        }
+      },
+      "paired_differences": {
+        "random": {
+          "games": 16,
+          "on_minus_off": 0.0,
+          "difference_95_hoeffding": [
+            -0.6790507578703098,
+            0.6790507578703098
+          ]
+        },
+        "greedy": {
+          "games": 16,
+          "on_minus_off": 0.0,
+          "difference_95_hoeffding": [
+            -0.6790507578703098,
+            0.6790507578703098
+          ]
+        },
+        "earlier_checkpoint": {
+          "games": 16,
+          "on_minus_off": 0.03125,
+          "difference_95_hoeffding": [
+            -0.6478007578703098,
+            0.7103007578703098
+          ]
+        }
+      }
+    },
+    {
+      "iteration": 3,
+      "arms": {
+        "on": {
+          "iteration": 3,
+          "wins": 0,
+          "draws": 8,
+          "losses": 0,
+          "accepted": false,
+          "all_draw_rejection": true,
+          "cumulative_original_positions": 866,
+          "cumulative_training_wall_seconds": 119.06512150005437,
+          "cumulative_process_cpu_seconds": 116.673898,
+          "cumulative_updates": 266,
+          "optimization": {
+            "examples": 6492,
+            "updates": 101,
+            "sampled_examples": 6464,
+            "seconds": 19.170730083948,
+            "updates_per_second": 5.268448283279995,
+            "iteration": 3,
+            "optimizer_seed": 4195746849,
+            "parameter_sha256_before": "46b2b570951a414af54c432ea034bb67a9c48f90a780c95ddeacc22a1e1bb127",
+            "parameter_sha256_after": "3a2e739ea631ec76d1fac7ef0e08871d598b9955de8b3a31ee8b506361fa4c48",
+            "policy_loss_mean": 0.4242091710024541,
+            "value_loss_mean": 0.003728255169641337
+          },
+          "strength": {
+            "random": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 34.8125,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 53.75,
+                  "max": 83.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 36.625,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 64.44999999999997,
+                    "max": 83.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 33.0,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 42.599999999999994,
+                    "max": 44.0
+                  }
+                }
+              }
+            },
+            "greedy": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 0,
+                "losses": 16,
+                "score": 0.0,
+                "score_95_hoeffding": [
+                  0.0,
+                  0.3395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 16,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 0
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 19.75,
+                  "min": 12.0,
+                  "median": 17.5,
+                  "p95": 32.25,
+                  "max": 54.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 21.75,
+                    "min": 12.0,
+                    "median": 18.0,
+                    "p95": 42.09999999999998,
+                    "max": 54.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 17.75,
+                    "min": 15.0,
+                    "median": 17.0,
+                    "p95": 22.9,
+                    "max": 25.0
+                  }
+                }
+              }
+            },
+            "earlier_checkpoint": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 45.6875,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 89.5,
+                  "max": 127.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 61.375,
+                    "min": 30.0,
+                    "median": 63.0,
+                    "p95": 109.49999999999997,
+                    "max": 127.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 30.0,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 30.0,
+                    "max": 30.0
+                  }
+                }
+              }
+            }
+          },
+          "evaluation_process_seconds": 48.117243833024986
+        },
+        "off": {
+          "iteration": 3,
+          "wins": 0,
+          "draws": 8,
+          "losses": 0,
+          "accepted": false,
+          "all_draw_rejection": true,
+          "cumulative_original_positions": 866,
+          "cumulative_training_wall_seconds": 123.14194137498271,
+          "cumulative_process_cpu_seconds": 123.863415,
+          "cumulative_updates": 266,
+          "optimization": {
+            "examples": 541,
+            "updates": 101,
+            "sampled_examples": 6464,
+            "seconds": 17.80366791691631,
+            "updates_per_second": 5.6729883118092745,
+            "iteration": 3,
+            "optimizer_seed": 4195746849,
+            "parameter_sha256_before": "46b2b570951a414af54c432ea034bb67a9c48f90a780c95ddeacc22a1e1bb127",
+            "parameter_sha256_after": "d650265466f9f9bbb9f64ae77cfe986e7fcfd40f9f3ead8c7afc84fbd800f459",
+            "policy_loss_mean": 0.20585902499975545,
+            "value_loss_mean": 0.003186016068056152
+          },
+          "strength": {
+            "random": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 44.0625,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 98.75,
+                  "max": 140.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 54.875,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 120.74999999999997,
+                    "max": 140.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 33.25,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 46.899999999999984,
+                    "max": 56.0
+                  }
+                }
+              }
+            },
+            "greedy": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 0,
+                "losses": 16,
+                "score": 0.0,
+                "score_95_hoeffding": [
+                  0.0,
+                  0.3395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 16,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 0
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 19.375,
+                  "min": 13.0,
+                  "median": 17.0,
+                  "p95": 28.5,
+                  "max": 48.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 23.0,
+                    "min": 16.0,
+                    "median": 20.0,
+                    "p95": 38.899999999999984,
+                    "max": 48.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 15.75,
+                    "min": 13.0,
+                    "median": 16.0,
+                    "p95": 17.0,
+                    "max": 17.0
+                  }
+                }
+              }
+            },
+            "earlier_checkpoint": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 15,
+                "losses": 1,
+                "score": 0.46875,
+                "score_95_hoeffding": [
+                  0.1292246210648451,
+                  0.8082753789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.7167126242970107,
+                  0.9888806552353576
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 1,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 15
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 52.3125,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 112.25,
+                  "max": 167.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 7,
+                  "losses": 1,
+                  "score": 0.4375,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.9176613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.5291118177871464,
+                    0.9775825085499433
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 1,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 7
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 59.375,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 141.44999999999996,
+                    "max": 167.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 45.25,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 81.44999999999999,
+                    "max": 93.0
+                  }
+                }
+              }
+            }
+          },
+          "evaluation_process_seconds": 53.538158208015375
+        }
+      },
+      "paired_differences": {
+        "random": {
+          "games": 16,
+          "on_minus_off": 0.0,
+          "difference_95_hoeffding": [
+            -0.6790507578703098,
+            0.6790507578703098
+          ]
+        },
+        "greedy": {
+          "games": 16,
+          "on_minus_off": 0.0,
+          "difference_95_hoeffding": [
+            -0.6790507578703098,
+            0.6790507578703098
+          ]
+        },
+        "earlier_checkpoint": {
+          "games": 16,
+          "on_minus_off": 0.03125,
+          "difference_95_hoeffding": [
+            -0.6478007578703098,
+            0.7103007578703098
+          ]
+        }
+      }
+    },
+    {
+      "iteration": 4,
+      "arms": {
+        "on": {
+          "iteration": 4,
+          "wins": 2,
+          "draws": 5,
+          "losses": 1,
+          "accepted": true,
+          "all_draw_rejection": false,
+          "cumulative_original_positions": 1139,
+          "cumulative_training_wall_seconds": 166.9759670420317,
+          "cumulative_process_cpu_seconds": 163.720188,
+          "cumulative_updates": 373,
+          "optimization": {
+            "examples": 6888,
+            "updates": 107,
+            "sampled_examples": 6848,
+            "seconds": 19.11655929207336,
+            "updates_per_second": 5.597241551954766,
+            "iteration": 4,
+            "optimizer_seed": 2745727856,
+            "parameter_sha256_before": "46b2b570951a414af54c432ea034bb67a9c48f90a780c95ddeacc22a1e1bb127",
+            "parameter_sha256_after": "a2f989d97a496dae13bbcdf29b11fae02d618343fcbf59f1477e320b812da549",
+            "policy_loss_mean": 0.4477456546275415,
+            "value_loss_mean": 0.0036620925894337835
+          },
+          "strength": {
+            "random": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 44.25,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 91.25,
+                  "max": 92.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 52.25,
+                    "min": 30.0,
+                    "median": 33.5,
+                    "p95": 91.65,
+                    "max": 92.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 36.25,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 56.199999999999996,
+                    "max": 59.0
+                  }
+                }
+              }
+            },
+            "greedy": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 0,
+                "losses": 16,
+                "score": 0.0,
+                "score_95_hoeffding": [
+                  0.0,
+                  0.3395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 16,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 0
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 17.625,
+                  "min": 12.0,
+                  "median": 17.0,
+                  "p95": 25.25,
+                  "max": 35.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 16.0,
+                    "min": 12.0,
+                    "median": 16.0,
+                    "p95": 20.599999999999998,
+                    "max": 22.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 19.25,
+                    "min": 13.0,
+                    "median": 17.0,
+                    "p95": 29.39999999999999,
+                    "max": 35.0
+                  }
+                }
+              }
+            },
+            "earlier_checkpoint": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 47.1875,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 115.0,
+                  "max": 121.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 64.375,
+                    "min": 30.0,
+                    "median": 60.0,
+                    "p95": 118.19999999999999,
+                    "max": 121.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 30.0,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 30.0,
+                    "max": 30.0
+                  }
+                }
+              }
+            }
+          },
+          "evaluation_process_seconds": 50.49116616696119
+        },
+        "off": {
+          "iteration": 4,
+          "wins": 0,
+          "draws": 8,
+          "losses": 0,
+          "accepted": false,
+          "all_draw_rejection": true,
+          "cumulative_original_positions": 1139,
+          "cumulative_training_wall_seconds": 159.67299608304165,
+          "cumulative_process_cpu_seconds": 159.949303,
+          "cumulative_updates": 373,
+          "optimization": {
+            "examples": 574,
+            "updates": 107,
+            "sampled_examples": 6848,
+            "seconds": 18.83883337501902,
+            "updates_per_second": 5.679757226468487,
+            "iteration": 4,
+            "optimizer_seed": 2745727856,
+            "parameter_sha256_before": "46b2b570951a414af54c432ea034bb67a9c48f90a780c95ddeacc22a1e1bb127",
+            "parameter_sha256_after": "58e8e141fdfe4fc2946034f45b156f387a15e07c3a075dfa630ba4142c79db1a",
+            "policy_loss_mean": 0.2008136608333231,
+            "value_loss_mean": 0.003152279824096814
+          },
+          "strength": {
+            "random": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 16,
+                "losses": 0,
+                "score": 0.5,
+                "score_95_hoeffding": [
+                  0.1604746210648451,
+                  0.8395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.8063923194655637,
+                  1.0
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 0,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 16
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 36.3125,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 67.0,
+                  "max": 76.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 32.625,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 43.64999999999999,
+                    "max": 51.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 40.0,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 71.8,
+                    "max": 76.0
+                  }
+                }
+              }
+            },
+            "greedy": {
+              "overall": {
+                "games": 16,
+                "wins": 0,
+                "draws": 0,
+                "losses": 16,
+                "score": 0.0,
+                "score_95_hoeffding": [
+                  0.0,
+                  0.3395253789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "draw_probability_95_wilson": [
+                  0.0,
+                  0.1936076805344365
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 16,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 0
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 19.875,
+                  "min": 14.0,
+                  "median": 17.0,
+                  "p95": 30.5,
+                  "max": 32.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 21.75,
+                    "min": 14.0,
+                    "median": 21.0,
+                    "p95": 31.299999999999997,
+                    "max": 32.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 0,
+                  "losses": 8,
+                  "score": 0.0,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.48016139565996035
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 8,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 0
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 18.0,
+                    "min": 15.0,
+                    "median": 17.0,
+                    "p95": 22.299999999999997,
+                    "max": 23.0
+                  }
+                }
+              }
+            },
+            "earlier_checkpoint": {
+              "overall": {
+                "games": 16,
+                "wins": 1,
+                "draws": 13,
+                "losses": 2,
+                "score": 0.46875,
+                "score_95_hoeffding": [
+                  0.1292246210648451,
+                  0.8082753789351549
+                ],
+                "win_probability_95_wilson": [
+                  0.01111934476464252,
+                  0.28328737570298945
+                ],
+                "draw_probability_95_wilson": [
+                  0.5699111903802586,
+                  0.9340840092857187
+                ],
+                "unique_trajectories": 16,
+                "reasons": {
+                  "corner": 3,
+                  "stalemate": 0,
+                  "repetition": 0,
+                  "no-capture limit": 13
+                },
+                "length_plies": {
+                  "count": 16,
+                  "mean": 59.6875,
+                  "min": 30.0,
+                  "median": 30.0,
+                  "p95": 133.75,
+                  "max": 139.0
+                }
+              },
+              "by_colour": {
+                "Blue": {
+                  "games": 8,
+                  "wins": 1,
+                  "draws": 5,
+                  "losses": 2,
+                  "score": 0.4375,
+                  "score_95_hoeffding": [
+                    0.0,
+                    0.9176613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.02241749145005667,
+                    0.4708881822128535
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.30574239460262737,
+                    0.8631557141764026
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 3,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 5
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 70.75,
+                    "min": 30.0,
+                    "median": 50.5,
+                    "p95": 132.35,
+                    "max": 139.0
+                  }
+                },
+                "Red": {
+                  "games": 8,
+                  "wins": 0,
+                  "draws": 8,
+                  "losses": 0,
+                  "score": 0.5,
+                  "score_95_hoeffding": [
+                    0.019838604340039645,
+                    0.9801613956599604
+                  ],
+                  "win_probability_95_wilson": [
+                    0.0,
+                    0.32440756488388023
+                  ],
+                  "draw_probability_95_wilson": [
+                    0.6755924351161198,
+                    1.0
+                  ],
+                  "unique_trajectories": 8,
+                  "reasons": {
+                    "corner": 0,
+                    "stalemate": 0,
+                    "repetition": 0,
+                    "no-capture limit": 8
+                  },
+                  "length_plies": {
+                    "count": 8,
+                    "mean": 48.625,
+                    "min": 30.0,
+                    "median": 30.0,
+                    "p95": 112.74999999999997,
+                    "max": 132.0
+                  }
+                }
+              }
+            }
+          },
+          "evaluation_process_seconds": 56.67250533297192
+        }
+      },
+      "paired_differences": {
+        "random": {
+          "games": 16,
+          "on_minus_off": 0.0,
+          "difference_95_hoeffding": [
+            -0.6790507578703098,
+            0.6790507578703098
+          ]
+        },
+        "greedy": {
+          "games": 16,
+          "on_minus_off": 0.0,
+          "difference_95_hoeffding": [
+            -0.6790507578703098,
+            0.6790507578703098
+          ]
+        },
+        "earlier_checkpoint": {
+          "games": 16,
+          "on_minus_off": 0.03125,
+          "difference_95_hoeffding": [
+            -0.6478007578703098,
+            0.7103007578703098
+          ]
+        }
+      }
+    }
+  ],
+  "totals": {
+    "on": {
+      "original_positions": 1139,
+      "materialized_examples": 13668,
+      "optimizer_updates": 373,
+      "sampled_examples": 23872,
+      "training_process_seconds": 172.16281045798678,
+      "process_cpu_seconds": 164.386984,
+      "peak_rss_bytes": 549355520,
+      "phases": {
+        "self_play": {
+          "seconds": 46.9015526259318,
+          "search_calls": 1139,
+          "simulations": 36448,
+          "search_worker_seconds": 43.83334344101604,
+          "inference_calls": 35436,
+          "inference_states": 35436,
+          "inference_seconds": 36.584731826442294,
+          "inference_batches": {
+            "1": 35436
+          },
+          "simulations_per_wall_second": 777.1171306565224,
+          "inference_states_per_wall_second": 755.540019807521
+        },
+        "training": {
+          "seconds": 70.7449865831295,
+          "search_calls": 0,
+          "simulations": 0,
+          "search_worker_seconds": 0.0,
+          "inference_calls": 0,
+          "inference_states": 0,
+          "inference_seconds": 0.0,
+          "inference_batches": {},
+          "simulations_per_wall_second": 0.0,
+          "inference_states_per_wall_second": 0.0
+        },
+        "candidate_arena": {
+          "seconds": 48.36806516710203,
+          "search_calls": 1326,
+          "simulations": 42432,
+          "search_worker_seconds": 47.34921300143469,
+          "inference_calls": 41271,
+          "inference_states": 41271,
+          "inference_seconds": 42.855738736339845,
+          "inference_batches": {
+            "1": 41271
+          },
+          "simulations_per_wall_second": 877.2730489302371,
+          "inference_states_per_wall_second": 853.269607899694
+        }
+      },
+      "replay": [
+        {
+          "examples": 3612,
+          "compressed_sample_bytes": {
+            "count": 3612,
+            "mean": 631.469822812846,
+            "min": 465.0,
+            "median": 647.0,
+            "p95": 726.0,
+            "max": 761.0
+          },
+          "pickle_sample_bytes": {
+            "count": 3612,
+            "mean": 6326.0,
+            "min": 6326.0,
+            "median": 6326.0,
+            "p95": 6326.0,
+            "max": 6326.0
+          },
+          "decoded_sample_owned_bytes": {
+            "count": 3612,
+            "mean": 6723.0,
+            "min": 6723.0,
+            "median": 6723.0,
+            "p95": 6723.0,
+            "max": 6723.0
+          },
+          "array_payload_bytes": {
+            "count": 3612,
+            "mean": 5921.0,
+            "min": 5921.0,
+            "median": 5921.0,
+            "p95": 5921.0,
+            "max": 5921.0
+          },
+          "history_length": {
+            "count": 3612,
+            "mean": 14.548172757475083,
+            "min": 1.0,
+            "median": 14.0,
+            "p95": 29.0,
+            "max": 30.0
+          },
+          "compressed_payload_bytes": 2280869,
+          "compressed_resident_bytes": 2430393,
+          "pickle_payload_bytes": 22849512,
+          "decoded_resident_upper_estimate_bytes": 24313804,
+          "encode_seconds": 0.15608802682254463,
+          "decode_seconds": 0.046798987314105034
+        },
+        {
+          "examples": 3276,
+          "compressed_sample_bytes": {
+            "count": 3276,
+            "mean": 631.7753357753357,
+            "min": 465.0,
+            "median": 646.0,
+            "p95": 725.0,
+            "max": 767.0
+          },
+          "pickle_sample_bytes": {
+            "count": 3276,
+            "mean": 6326.0,
+            "min": 6326.0,
+            "median": 6326.0,
+            "p95": 6326.0,
+            "max": 6326.0
+          },
+          "decoded_sample_owned_bytes": {
+            "count": 3276,
+            "mean": 6723.0,
+            "min": 6723.0,
+            "median": 6723.0,
+            "p95": 6723.0,
+            "max": 6723.0
+          },
+          "array_payload_bytes": {
+            "count": 3276,
+            "mean": 5921.0,
+            "min": 5921.0,
+            "median": 5921.0,
+            "p95": 5921.0,
+            "max": 5921.0
+          },
+          "history_length": {
+            "count": 3276,
+            "mean": 14.758241758241759,
+            "min": 1.0,
+            "median": 14.0,
+            "p95": 29.0,
+            "max": 30.0
+          },
+          "compressed_payload_bytes": 2069696,
+          "compressed_resident_bytes": 2205492,
+          "pickle_payload_bytes": 20723976,
+          "decoded_resident_upper_estimate_bytes": 22052236,
+          "encode_seconds": 0.16923210734967142,
+          "decode_seconds": 0.041852985974401236
+        }
+      ],
+      "selection": "latest accepted candidate",
+      "evaluation_process_seconds": 192.50230049993843
+    },
+    "off": {
+      "original_positions": 1139,
+      "materialized_examples": 1139,
+      "optimizer_updates": 373,
+      "sampled_examples": 23872,
+      "training_process_seconds": 164.98819483304396,
+      "process_cpu_seconds": 160.182378,
+      "peak_rss_bytes": 460783616,
+      "phases": {
+        "self_play": {
+          "seconds": 43.704696209868416,
+          "search_calls": 1139,
+          "simulations": 36448,
+          "search_worker_seconds": 41.49810494913254,
+          "inference_calls": 35436,
+          "inference_states": 35436,
+          "inference_seconds": 34.869847264606506,
+          "inference_batches": {
+            "1": 35436
+          },
+          "simulations_per_wall_second": 833.9607218633436,
+          "inference_states_per_wall_second": 810.8053155166111
+        },
+        "training": {
+          "seconds": 68.17072679218836,
+          "search_calls": 0,
+          "simulations": 0,
+          "search_worker_seconds": 0.0,
+          "inference_calls": 0,
+          "inference_states": 0,
+          "inference_seconds": 0.0,
+          "inference_batches": {},
+          "simulations_per_wall_second": 0.0,
+          "inference_states_per_wall_second": 0.0
+        },
+        "candidate_arena": {
+          "seconds": 47.55731070798356,
+          "search_calls": 1359,
+          "simulations": 43488,
+          "search_worker_seconds": 46.49799714295659,
+          "inference_calls": 42076,
+          "inference_states": 42076,
+          "inference_seconds": 42.444283189601265,
+          "inference_batches": {
+            "1": 42076
+          },
+          "simulations_per_wall_second": 914.43354034524,
+          "inference_states_per_wall_second": 884.7430473594168
+        }
+      },
+      "replay": [
+        {
+          "examples": 301,
+          "compressed_sample_bytes": {
+            "count": 301,
+            "mean": 626.6378737541528,
+            "min": 472.0,
+            "median": 642.0,
+            "p95": 724.0,
+            "max": 753.0
+          },
+          "pickle_sample_bytes": {
+            "count": 301,
+            "mean": 6292.0,
+            "min": 6292.0,
+            "median": 6292.0,
+            "p95": 6292.0,
+            "max": 6292.0
+          },
+          "decoded_sample_owned_bytes": {
+            "count": 301,
+            "mean": 6723.0,
+            "min": 6723.0,
+            "median": 6723.0,
+            "p95": 6723.0,
+            "max": 6723.0
+          },
+          "array_payload_bytes": {
+            "count": 301,
+            "mean": 5921.0,
+            "min": 5921.0,
+            "median": 5921.0,
+            "p95": 5921.0,
+            "max": 5921.0
+          },
+          "history_length": {
+            "count": 301,
+            "mean": 14.548172757475083,
+            "min": 1.0,
+            "median": 14.0,
+            "p95": 29.0,
+            "max": 30.0
+          },
+          "compressed_payload_bytes": 188618,
+          "compressed_resident_bytes": 201423,
+          "pickle_payload_bytes": 1893892,
+          "decoded_resident_upper_estimate_bytes": 2026495,
+          "encode_seconds": 0.013045877451077104,
+          "decode_seconds": 0.004015630693174899
+        },
+        {
+          "examples": 273,
+          "compressed_sample_bytes": {
+            "count": 273,
+            "mean": 627.8901098901099,
+            "min": 472.0,
+            "median": 640.0,
+            "p95": 723.4,
+            "max": 757.0
+          },
+          "pickle_sample_bytes": {
+            "count": 273,
+            "mean": 6292.0,
+            "min": 6292.0,
+            "median": 6292.0,
+            "p95": 6292.0,
+            "max": 6292.0
+          },
+          "decoded_sample_owned_bytes": {
+            "count": 273,
+            "mean": 6723.0,
+            "min": 6723.0,
+            "median": 6723.0,
+            "p95": 6723.0,
+            "max": 6723.0
+          },
+          "array_payload_bytes": {
+            "count": 273,
+            "mean": 5921.0,
+            "min": 5921.0,
+            "median": 5921.0,
+            "p95": 5921.0,
+            "max": 5921.0
+          },
+          "history_length": {
+            "count": 273,
+            "mean": 14.758241758241759,
+            "min": 1.0,
+            "median": 14.0,
+            "p95": 29.0,
+            "max": 30.0
+          },
+          "compressed_payload_bytes": 171414,
+          "compressed_resident_bytes": 183295,
+          "pickle_payload_bytes": 1717716,
+          "decoded_resident_upper_estimate_bytes": 1838251,
+          "encode_seconds": 0.011598173528909683,
+          "decode_seconds": 0.0035286659840494394
+        }
+      ],
+      "selection": "final rejected candidate; no accepted trained incumbent",
+      "evaluation_process_seconds": 197.50040954095311
+    }
+  },
+  "limits": "One paired training seed; one opening; fixed earlier opponent. Marginal conditional game intervals, not training-seed uncertainty. Repeated checkpoint evaluations share seeds: do not pool them as independent replicates. Equal optimizer updates do not imply equal wall time; self-play/arena simulations and CPU time are reported separately."
+}

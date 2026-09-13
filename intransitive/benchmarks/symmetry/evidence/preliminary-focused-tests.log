@@ -1,0 +1,27 @@
+test_actual_optimizer_steps_are_independent_of_replay_length (intransitive.tests.test_symmetry_efficiency.SymmetryEfficiency.test_actual_optimizer_steps_are_independent_of_replay_length) ... ok
+test_enabled_covers_all_ids_and_disabled_is_owned_identity (intransitive.tests.test_symmetry_efficiency.SymmetryEfficiency.test_enabled_covers_all_ids_and_disabled_is_owned_identity) ... /Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/intransitive/tests/test_symmetry_efficiency.py:27: RuntimeWarning: invalid value encountered in divide
+  policy /= policy.sum()
+ok
+test_invalid_update_budgets_and_short_replay_fail (intransitive.tests.test_symmetry_efficiency.SymmetryEfficiency.test_invalid_update_budgets_and_short_replay_fail) ... ok
+test_pairing_rejects_changed_seeds_and_accounts_for_draws (intransitive.tests.test_symmetry_efficiency.SymmetryEfficiency.test_pairing_rejects_changed_seeds_and_accounts_for_draws) ... ERROR
+test_protocol_caps_equal_original_positions_and_fixed_updates (intransitive.tests.test_symmetry_efficiency.SymmetryEfficiency.test_protocol_caps_equal_original_positions_and_fixed_updates) ... ok
+test_colour_swap_and_nonzero_draw_reward (intransitive.tests.test_baseline.BaselineAccounting.test_colour_swap_and_nonzero_draw_reward) ... ok
+test_draws_remain_in_denominator_and_intervals_are_nonzero (intransitive.tests.test_baseline.BaselineAccounting.test_draws_remain_in_denominator_and_intervals_are_nonzero) ... ok
+test_selection_keeps_rejection_visible (intransitive.tests.test_baseline.BaselineAccounting.test_selection_keeps_rejection_visible) ... ok
+
+======================================================================
+ERROR: test_pairing_rejects_changed_seeds_and_accounts_for_draws (intransitive.tests.test_symmetry_efficiency.SymmetryEfficiency.test_pairing_rejects_changed_seeds_and_accounts_for_draws)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/intransitive/tests/test_symmetry_efficiency.py", line 82, in test_pairing_rejects_changed_seeds_and_accounts_for_draws
+    experiment.score_difference(on, off)
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/intransitive/symmetry_efficiency.py", line 94, in score_difference
+    require(a[key] == b[key], 'Evaluation protocols differ')
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/intransitive/smoke.py", line 35, in require
+    raise RuntimeError(message)
+RuntimeError: Evaluation protocols differ
+
+----------------------------------------------------------------------
+Ran 8 tests in 6.720s
+
+FAILED (errors=1)

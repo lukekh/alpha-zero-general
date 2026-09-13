@@ -1,0 +1,21 @@
+{
+  "on": {
+    "initial_parameter_sha256": "46b2b570951a414af54c432ea034bb67a9c48f90a780c95ddeacc22a1e1bb127",
+    "candidate_parameter_audits": 4,
+    "source_files_verified": 46,
+    "initial_incumbent_retained": false,
+    "verification": true
+  },
+  "off": {
+    "initial_parameter_sha256": "46b2b570951a414af54c432ea034bb67a9c48f90a780c95ddeacc22a1e1bb127",
+    "candidate_parameter_audits": 4,
+    "source_files_verified": 46,
+    "initial_incumbent_retained": true,
+    "verification": true
+  },
+  "archive": {
+    "files_verified": 154,
+    "bytes": 26787075,
+    "sha256": "a8b85e3f4f3bf32d43d0a3e44407e298c9c51e3ca160941f5e43c9eeb181bfe9"
+  }
+}

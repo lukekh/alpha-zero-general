@@ -1,0 +1,370 @@
+{
+  "settings": {
+    "game": "intransitive",
+    "numMCTSSims": 4,
+    "prob_fullMCTS": 1.0,
+    "ratio_fullMCTS": 1,
+    "forced_playouts": false,
+    "universes": 0,
+    "cpuct": 1.25,
+    "fpu": 0.0,
+    "no_mem_optim": false,
+    "dirichletAlpha": 0.0,
+    "parallel_inferences": 1,
+    "temperature": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "tempThreshold": 10,
+    "no_compression": false,
+    "numEps": 2,
+    "maxlenOfQueue": 14400,
+    "numIters": 1,
+    "numItersHistory": 2,
+    "profile": false,
+    "arenaCompare": 2,
+    "updateThreshold": 0.6,
+    "stop_after_N_fail": 2,
+    "useray": false,
+    "forget_examples": false,
+    "learn_rate": 0.0003,
+    "dropout": 0.0,
+    "epochs": 1,
+    "batch_size": 64,
+    "nn_version": 1,
+    "q_weight": 0.5,
+    "checkpoint": "/Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/checkpoints/quickstart/initial",
+    "seed": 13,
+    "inference_backend": "onnx",
+    "load_model": false,
+    "load_folder_file": null
+  },
+  "nn_args": {
+    "learn_rate": 0.0003,
+    "dropout": 0.0,
+    "epochs": 1,
+    "batch_size": 64,
+    "nn_version": 1,
+    "no_compression": false,
+    "q_weight": 0.5,
+    "inference_backend": "onnx"
+  },
+  "command": [
+    "/Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/intransitive/smoke.py",
+    "--checkpoint",
+    "checkpoints/quickstart/initial",
+    "--seed",
+    "13",
+    "--backend",
+    "onnx"
+  ],
+  "git_revision": "b748cc39c65ad0e133005ab5d1e625ad0fcb8ca2",
+  "python": "3.11.4 (main, Nov 30 2023, 10:49:11) [Clang 15.0.0 (clang-1500.0.40.1)]",
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "onnx_telemetry": false,
+  "machine": "arm64",
+  "torch_threads": 1,
+  "dependencies": {
+    "numpy": "2.4.6",
+    "numba": "0.67.0",
+    "llvmlite": "0.49.0",
+    "torch": "2.8.0",
+    "onnx": "1.22.0",
+    "onnxruntime": "1.30.0",
+    "tqdm": "4.70.1"
+  },
+  "source_backup": "/Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/checkpoints/quickstart/initial/source_backups/20260913T130520.752718Z-bed06f1c76b9403ab5df74ecf8407b2f",
+  "source_sha256": {
+    "Arena.py": "a748cab813b1378d9bf317b9c2149eda42dd8a1f15d2fd5a8d35b3fd1155710b",
+    "Coach.py": "2cc8795c755f77692bbfed0a493a905f8e6b785f0a36a15f0b8dade4010d2583",
+    "Game.py": "9ceebd7eba1af2506966a7c2b9d43be9b3dc2373ebc65353c89879af660ed504",
+    "GameSwitcher.py": "5ac4fc6007664a273e6f1b585037d96b1dbf40bd4377d57398b28cd15bae9da9",
+    "GenericNNetWrapper.py": "d07a995ad8ce6939bb79d35447e798f79498c1b18dca89d71275fe435a3f8c1d",
+    "MCTS.py": "e3fcae38580733a8d2edfe7cc82d85de5278609df52c1618f6d593556c18441c",
+    "NeuralNet.py": "34a6a54910b0929793f5f7481871c035d7c873af3bc347c1600372cb6c49d5ed",
+    "chkpt_to_onnx.py": "248fdb083be36e7636d7eb47dd5448f2a0f2ee027b139893edcb81997f990da5",
+    "intransitive/IntransitiveConstants.py": "5653399a3395346cbcdbfacf6b7e1a82ba7d4e942195bc47f034444b309c1886",
+    "intransitive/IntransitiveDisplay.py": "0f282ce2212e6c0c7927196662106f7da47bab199dd5cc481320fcf1668c65d1",
+    "intransitive/IntransitiveGame.py": "c310a6213fee866e99a0cece89fcf9d547017bdaef94ccfaf200ae1617d9f953",
+    "intransitive/IntransitiveLogicNumba.py": "8670196dd6501bbb7cdc11a33433b0c4e93cf6f48e7cc44042bf8c0dcbd24b12",
+    "intransitive/IntransitiveNNet.py": "841d6bbee0eb19ae8007c50446577b142f01fe2dd4d008464517b872df1ef35b",
+    "intransitive/IntransitivePlayers.py": "b472a76febe34aea32672c3e6c180084c3eb2ad985ca8ef84ea3bb0c9e225c3b",
+    "intransitive/IntransitiveSymmetries.py": "8adb1b089d29350a602d3c2f2532c2c2655e5ffa23a5ab351f3cec241859f130",
+    "intransitive/NNet.py": "d5c293dd71cfbe6d04cdadd9953a6afc633ecd078b481917b582375fc7646604",
+    "intransitive/__init__.py": "1dc948149fe3637b3bccc9332a4a17dfcc15f6ba3033d6932f6a97bf8d961705",
+    "intransitive/baseline.py": "e8a3ae146da0f0e3a783b6945b2066aa4d6ceedca4a0df12d1adfcdc996b073a",
+    "intransitive/benchmark_network.py": "887bd1315b3bab151fcb97f5760913599c722381ab01946f7d23c6d9c0f042da",
+    "intransitive/benchmark_training.py": "24ab58471c988a247305021f546e6c63c6cf9517804d52839dfb1a13530ed855",
+    "intransitive/play.py": "d97f5c7994438a02541e353ce1c659194862c289db6ed8b326987e164fe8a542",
+    "intransitive/smoke.py": "331546ef5b6769a81b6210ab7e9c73b660353c20421568d08525b8fde65989d1",
+    "intransitive/symmetry_efficiency.py": "c7c025d415a3e9f1cfa05bb54003634c78a2927ab1f67ba0eb3ad5908bbfb72c",
+    "intransitive/tests/reference_rules.py": "e79a85b4f128cdb20b8edbf0920bae6f27ec5db8dc916ce829fb30c9799117df",
+    "intransitive/tests/test_augmentation.py": "95488ccba7a19550a2437254b2b0ace96130bb7efe7315a8974c2aacf3d9da82",
+    "intransitive/tests/test_baseline.py": "fd60bd665cf139cde00c7f56daa9a1d45e77981ff9b9d90c99c8b99605136070",
+    "intransitive/tests/test_benchmark_training.py": "13cc020e12f67e2959b0d3dc7f978396d0ac0747c67e080870fdecaa92bccbab",
+    "intransitive/tests/test_checkpoints.py": "890ac56d992a104a2375bf938ff9fe7e2b09a80610d09124b173f8e1ec8020ab",
+    "intransitive/tests/test_draws.py": "81de6a3578366a78addeaae061daa7a1994e2f211dec07c42ddd865d14b2fc84",
+    "intransitive/tests/test_equivalence.py": "2dad9b0da4dc39a351ffc001b38ed3a1083e7e8df075faba60f25dc777d6377e",
+    "intransitive/tests/test_game.py": "b00fd3df15bf7c1e8a77aec3f381f70bbc0fcb918beccaebc67fa6be1811f521",
+    "intransitive/tests/test_network.py": "83a9b0806e32ac98f5e0985b32e10339860f9a8cc5506a92967d9b465f0ef020",
+    "intransitive/tests/test_pipeline.py": "bcb13eba677120e138e04d5120d84a07ca4dfc3fed78f4f0941f942e0cc18aef",
+    "intransitive/tests/test_play.py": "1e04cd7fdb3fbe6858627b41741df4f85c6c795edf87618ac22605ad92e94472",
+    "intransitive/tests/test_players.py": "7d457a8fc3e1f6070ddd83c41c15b98584616fb4b34de99968d2eb978d6ca54e",
+    "intransitive/tests/test_rules.py": "cb08e5161fbdcb918279d470dcca1adf2d7973ea58f5e38eacb5842487d4b1ce",
+    "intransitive/tests/test_state.py": "d5576030cde0ee7466f528d9317ac54b80e3ece0c512456456eb78a56f373839",
+    "intransitive/tests/test_symmetries.py": "2449c077d7459852b6fb5f3bc5142c708e1ca4b878ef30d45dd9641e22ae3da4",
+    "intransitive/tests/test_symmetry_efficiency.py": "ad97fa525baa6c582184cbafb3a901f64998e4e692c89826ced7d40096146354",
+    "launcher.py": "225cfc7af52bd9216de4a84c6f7b207ed103c81f8a6c903b36014d60707b49fc",
+    "main.py": "150e8e9fb37c72fde9fa865e5ffc3b60c7c9446c078f4136e8aa0b82fda76e8b",
+    "pit.py": "9849e4b4a9b664c0c17188f6306e132c63af57da33aed926833064dc8048a1ba",
+    "rayConfig.py": "f4fcc100d1f856552069943ce09a6d5e68f9a8bbab03a958a19d0419f20af3e5",
+    "source_backup.py": "ee3ba884a61112db645ed0b6c5ccded976967191df0a72331d50ce8e509b7d67",
+    "useRay.py": "568fe752ae2ee50aa1939c92bfaa99c731117567d5fe43895384acb461ca09b7",
+    "utils.py": "3ab888292e0e6ca8eb21a0c521d1e1527d1992f63813c572b46da896f5a3749f"
+  },
+  "resumed_from_sha256": null,
+  "loaded_replay_histories": 0,
+  "training": [
+    {
+      "examples": 720,
+      "updates": 11,
+      "max_parameter_delta": 0.001460075844079256,
+      "seconds": 2.5832599999848753
+    }
+  ],
+  "losses": {
+    "policy": [
+      3.048459768295288,
+      2.943382740020752,
+      2.938372850418091,
+      2.6150898933410645,
+      2.291344404220581,
+      2.206866979598999,
+      1.9967825412750244,
+      1.981083869934082,
+      1.8506214618682861,
+      1.8723071813583374,
+      1.8823165893554688
+    ],
+    "value": [
+      0.0292688999325037,
+      0.02758435159921646,
+      0.018838059157133102,
+      0.015013666823506355,
+      0.00966320838779211,
+      0.011473855003714561,
+      0.010515413247048855,
+      0.009932308457791805,
+      0.010354725643992424,
+      0.009665358811616898,
+      0.012164446525275707
+    ]
+  },
+  "self_play_positions": 60,
+  "augmented_examples": 720,
+  "symmetry_counts": {
+    "12": 60
+  },
+  "max_history": 30,
+  "arena": {
+    "candidate_wins": 1,
+    "candidate_losses": 0,
+    "draws": 1,
+    "accepted": true,
+    "retained": "best.pt"
+  },
+  "checkpoint_metadata": {
+    "intransitive_checkpoint": {
+      "format_version": 1,
+      "game": "intransitive",
+      "board_size": [
+        9,
+        9,
+        33
+      ],
+      "action_size": 648,
+      "num_players": 2,
+      "optimizer_state": "recreated",
+      "scheduler_state": "recreated"
+    },
+    "intransitive_config": {
+      "state_version": 1,
+      "network_version": 1,
+      "piece_order": [
+        "own rock",
+        "own scissors",
+        "own paper",
+        "opponent rock",
+        "opponent scissors",
+        "opponent paper"
+      ],
+      "current_order": [
+        "six piece planes",
+        "own defended corner",
+        "opponent defended corner",
+        "noncapture / 30",
+        "current occurrences / 3",
+        "log1p(total ply) / log1p(max ply)"
+      ],
+      "history_order": "oldest first, including current position; 31 slots",
+      "history_slot_order": [
+        "six piece planes",
+        "valid",
+        "side to move (0 own, 1 opponent)"
+      ],
+      "history_channels": 4,
+      "trunk_channels": 64,
+      "residual_blocks": 4,
+      "action_order": "8 * (9*y + x) + direction; N, NE, E, SE, S, SW, W, NW",
+      "value_order": [
+        "canonical player 0",
+        "canonical player 1"
+      ],
+      "total_ply_max": 34359738367
+    },
+    "nn_args": {
+      "learn_rate": 0.0003,
+      "dropout": 0.0,
+      "epochs": 1,
+      "batch_size": 64,
+      "nn_version": 1,
+      "no_compression": false,
+      "q_weight": 0.5,
+      "inference_backend": "onnx"
+    }
+  },
+  "reload_parity_max_abs": [
+    1.4901161193847656e-08,
+    5.587935447692871e-08
+  ],
+  "checkpoint_games": [
+    {
+      "backend": "cpu",
+      "wins": 1,
+      "losses": 0,
+      "draws": 1
+    },
+    {
+      "backend": "onnx",
+      "wins": 1,
+      "losses": 0,
+      "draws": 1
+    }
+  ],
+  "games": [
+    {
+      "phase": "self_play",
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ]
+    },
+    {
+      "phase": "self_play",
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ]
+    },
+    {
+      "phase": "candidate_arena",
+      "plies": 77,
+      "reason": "corner",
+      "reward": [
+        1.0,
+        -1.0
+      ]
+    },
+    {
+      "phase": "candidate_arena",
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ]
+    },
+    {
+      "phase": "checkpoint_cpu",
+      "plies": 65,
+      "reason": "corner",
+      "reward": [
+        1.0,
+        -1.0
+      ]
+    },
+    {
+      "phase": "checkpoint_cpu",
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ]
+    },
+    {
+      "phase": "checkpoint_onnx",
+      "plies": 65,
+      "reason": "corner",
+      "reward": [
+        1.0,
+        -1.0
+      ]
+    },
+    {
+      "phase": "checkpoint_onnx",
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ]
+    }
+  ],
+  "replay_histories": 1,
+  "elapsed_seconds": 12.724538875045255,
+  "artifacts": {
+    "best.pt": {
+      "bytes": 1354739,
+      "sha256": "f15b21c4c377e6acbee3ed1c9d9249f13b423342263fb354ce051fc8e0abe716"
+    },
+    "candidate_1.pt": {
+      "bytes": 1358592,
+      "sha256": "b6835d9f0b9b2730d868fcf544a283ca330cb6112fa3c63125b0618093c68236"
+    },
+    "checkpoint.examples": {
+      "bytes": 420602,
+      "sha256": "90b22c4c5f81cfefcc4ac10e98fc42826a3349d9a27ad56cba156645288c8728"
+    },
+    "checkpoint_1.pt": {
+      "bytes": 1358603,
+      "sha256": "9d77caa26eeae7ee11919e32f1c9f28bb6e8f099b07e94b6cdbb27395901547e"
+    },
+    "requirements.txt": {
+      "bytes": 416,
+      "sha256": "e4582b1e91098c26e609b296636cca314745decce855bf7e24c6b9bf7a3524d4"
+    },
+    "retained.pt": {
+      "bytes": 1358303,
+      "sha256": "bd26e6daf35e3337dff54950d783967eed0f323d86e74b5e026b2e45bb5669eb"
+    },
+    "settings.json": {
+      "bytes": 921,
+      "sha256": "5778728abc366804895a5b624d49fef070cd0886a69facc2bec03c1e3c7403fc"
+    },
+    "settings.txt": {
+      "bytes": 737,
+      "sha256": "3e04416bdd6350a161c390d14e36c6582f23b26da7616e53465db10755cba6f1"
+    },
+    "temp.pt": {
+      "bytes": 1354739,
+      "sha256": "ea7608ca8e01ada01f376e30feb75ddd7617b3607a37686948972d855cecb6a8"
+    }
+  },
+  "passed": true
+}

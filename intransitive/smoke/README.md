@@ -43,6 +43,7 @@ From the repository root:
 python3.11 -m venv /tmp/intransitive-smoke-venv
 /tmp/intransitive-smoke-venv/bin/python -m pip install -r intransitive/smoke/requirements.txt
 export SMOKE_PY=/tmp/intransitive-smoke-venv/bin/python
+export ORT_DISABLE_TELEMETRY=1
 export SMOKE_ROOT="$PWD/checkpoints/issue13"
 mkdir -p "$SMOKE_ROOT/logs"
 "$SMOKE_PY" -m unittest discover -s intransitive/tests -v > "$SMOKE_ROOT/logs/focused.log" 2>&1
