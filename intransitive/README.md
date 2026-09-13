@@ -240,8 +240,7 @@ for ongoing play, and `[1e-4, 1e-4]` for either draw (`DRAW_VALUE` in constants)
 This small equal nonzero sentinel makes `result.any()` distinguish terminal draws
 from ongoing play, as required by MCTS, Coach, and Arena. It approximates zero
 draw utility; it is neither a win nor a reward based on material. The Game adapter
-and compiled MCTS preserve these vectors; game registration and full training
-pipeline integration remain tracked in #11.
+and compiled MCTS preserve these vectors throughout the shared training pipeline.
 
 `Board.get_repetition_count()` counts the current exact signed piece array and
 next player among valid history slots, including the latest slot. Same-type,
@@ -326,8 +325,67 @@ augmentation and group-averaged inference remain possible later optimizations.
 
 `moveToString` and `printBoard` delegate to `IntransitiveDisplay` for fixed
 coordinates, rows 9 through 1, physical colours, piece types, and goal ownership.
-The history-aware network is documented below; registration and full self-play
-integration remain in #11.
+The shared training entry points and history-aware network are documented below.
+
+### Shared training, Arena, and replay
+
+`import_game('intransitive')` resolves `IntransitiveGame`, `NNetWrapper`,
+`IntransitivePlayers`, and `NUMBER_PLAYERS=2`; `import_logicnumba` resolves its
+compiled `Board`. The existing entry points accept the game directly:
+
+```sh
+python main.py intransitive --checkpoint ./temp/intransitive -V 1 -P 2
+python pit.py intransitive random greedy -n 4
+python pit.py intransitive human ./temp/intransitive/best.pt -n 1
+```
+
+The training command uses the normal training defaults, not a bounded smoke run.
+Every new physical game uses the official setup and Blue moves first. Arena
+alternates which agent controls Blue; augmentation never changes initialization.
+Sequential self-play starts each episode with a new MCTS tree. Parallel self-play
+constructs a separate Game, compiled Board, and search tree for each worker
+episode; the ONNX server batches copied observations, with no shared draw history.
+For small episode targets, Coach waits for a completed episode before requesting
+worker shutdown, allowing the first inference batch to initialize fully. It then
+keeps inference running until every worker finishes its current episode and
+collects all final replay examples before stopping the server.
+
+Coach ends an episode on any nonzero terminal vector. Outcome labels are rolled
+into each example's mover frame, including equal nonzero draw labels; Q labels
+retain that frame. Replay stores complete `(state, policy, outcome, valid, q)`
+tuples. Both `--no-compression` and compressed replay retain all 33 int8 planes,
+including every historical board and metadata byte. `checkpoint.examples`
+round-trips those tuples and can convert either compression mode at load time.
+
+Arena returns absolute player 0's reward and maps it to agent wins/losses after
+accounting for the colour assignment. The existing candidate gate accepts when
+`new_wins / (new_wins + previous_wins) >= updateThreshold` (default **0.60**).
+Draws are excluded from the denominator; an all-draw comparison **rejects** the
+candidate and restores the previous network. For example, 3 wins, 2 losses, and
+5 draws meet 0.60. This integration does not change the threshold or scoring.
+
+To save a position for `pit.py --state`, use
+`Arena.serialize_state(state, next_player, turn)`. It retains the existing raw
+DEFLATE/base64 format: all C-order int8 board bytes, one absolute-player byte,
+and a two-byte big-endian turn count (0–65535). `arena.restore_state(text)`
+returns an owned writable state plus player and turn; `playGame(initial_state=...)`
+uses that path. For Intransitive, pass the complete `(9,9,33)` state and its
+`getRound(state)` value, not only the piece plane. A restored penultimate
+repetition or noncapture-limit fixture reaches the same draw on its next move.
+
+Run the focused integration suite with:
+
+```sh
+python -m unittest intransitive.tests.test_pipeline -v
+```
+
+It covers registry and CLI selection, real Coach/MCTS/network self-play, both
+replay formats and compression conversions, real training from replay, restored
+draw decisions, terminal MCTS without inference, Arena colour assignment,
+candidate acceptance, two actual ONNX workers with independent legal game
+trajectories, and an unrelated Santorini import/move/serialization smoke path.
+The `main.py` test bounds learning to one real self-play episode; full training
+lifecycle and resume/export verification remain #12/#13.
 
 ### History-aware policy and value network (version 1)
 
@@ -413,7 +471,7 @@ shared-wrapper training, version-1 and version-minus-1 checkpoint loading, and
 single/batched ONNX parity within `2e-6` absolute tolerance. The tested inference
 stack uses ONNX 1.22.0 and ONNX Runtime 1.30.0 with the shared wrapper's legacy
 PyTorch 2.8 exporter. Broader persistence/resume/export verification remains #12;
-game registration and full self-play integration remain #11.
+shared self-play integration is covered by `test_pipeline`.
 
 ### Human play and baseline opponents
 
@@ -475,21 +533,28 @@ PY
 For seeded baseline evaluation, replace `HumanPlayer(game)` with
 `RandomPlayer(game, seed=8)` (import it from the same module), then call
 `arena.playGames(4)`. Agent assignments alternate while every physical game
-starts with Blue. The callbacks match `pit.create_player`; `pit.py --game
-intransitive` discovery and checkpoint opponents still require #10/#11.
+starts with Blue. The callbacks match `pit.create_player`; `pit.py
+intransitive` discovery and checkpoint opponents use the registered game and network.
 
 ### Validation
 
-From the repository root, using Python 3.11 with NumPy, Numba, and tqdm installed:
+From the repository root, using Python 3.11 with the engine and training
+dependencies installed:
 
 ```sh
 python -m unittest discover -s intransitive/tests -v
 ```
 
 Validated with Python 3.11.4, NumPy 2.4.6, Numba 0.67.0, llvmlite 0.49.0,
-and tqdm 4.70.1 (Arena).
-An isolated environment can be prepared with `python3.11 -m venv /tmp/intransitive-venv`
-and `/tmp/intransitive-venv/bin/python -m pip install numpy==2.4.6 numba==0.67.0 tqdm==4.70.1`.
+tqdm 4.70.1, PyTorch 2.8.0, torchvision 0.23.0 (Santorini smoke import),
+ONNX 1.22.0, ONNX Runtime 1.30.0, coloredlogs, and colorama.
+An isolated environment can be prepared with:
+
+```sh
+python3.11 -m venv /tmp/intransitive-venv
+/tmp/intransitive-venv/bin/python -m pip install numpy==2.4.6 numba==0.67.0 tqdm==4.70.1 torch==2.8.0 torchvision==0.23.0 onnx==1.22.0 onnxruntime==1.30.0 coloredlogs colorama
+```
+
 Use that environment's Python executable for the test command above.
 
 ### Independent engine-equivalence gate
@@ -632,4 +697,4 @@ legal masks, exact repetitions, independent output ownership, and deduplication
 that distinguishes histories, policies, and masks. Real `Coach.executeEpisode`
 runs with scripted legal search policies verify both winner perspectives, nonzero
 relative Q targets, and compressed draw examples from an official Blue-first
-episode. Network-backed training integration remains in #10/#11.
+episode. Network-backed shared pipeline checks are in `test_pipeline`.

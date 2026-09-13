@@ -5,6 +5,7 @@ import bisect
 from tqdm import trange
 import zlib
 import base64
+import numpy as np
 from os import environ
 
 from MCTS import MCTS
@@ -32,15 +33,38 @@ class Arena():
         self.display = display
         self.macos_terminal = (environ.get("TERM_PROGRAM", "") == "Apple_Terminal" and "ITERM_SESSION_ID" not in environ)
 
+    @staticmethod
+    def serialize_state(board, curPlayer, turn):
+        """Encode the complete int8 state in the existing pit.py --state format.
+
+        The trailer is one player byte and a two-byte big-endian turn count.
+        History and game metadata belong in board and are never stripped.
+        """
+        if board.dtype != np.int8:
+            raise ValueError("Arena state requires an int8 board")
+        data = (board.tobytes(order='C') + int(curPlayer).to_bytes(1, 'big')
+                + int(turn).to_bytes(2, 'big'))
+        return base64.b64encode(zlib.compress(data, level=9, wbits=-15)).decode('ascii')
+
+    def restore_state(self, initial_state):
+        """Restore an owned, writable board, absolute next player, and turn."""
+        data = zlib.decompress(base64.b64decode(initial_state, validate=True), wbits=-15)
+        shape = self.game.getBoardSize()
+        if len(data) != int(np.prod(shape)) + 3:
+            raise ValueError("Arena state has the wrong byte count")
+        player, turn = data[-3], int.from_bytes(data[-2:], 'big')
+        if player >= self.game.getNumberOfPlayers():
+            raise ValueError("Arena state has an invalid player")
+        board = np.frombuffer(data[:-3], dtype=np.int8).reshape(shape).copy()
+        return board, player, turn
+
     def playGame(self, initial_state="", verbose=False, other_way=False):
         """
         Executes one episode of a game.
 
         Returns:
-            either
-                winner: player who won the game (1 if player1, -1 if player2)
-            or
-                draw result returned from the game that is neither 1, -1, nor 0.
+            Absolute player 0's reward. playGames maps this to agent wins,
+            accounting for other_way; a nonzero reward other than +/-1 is a draw.
         """
         # if NUMBER_PLAYERS == 2:
         #     players = [self.player2, self.player1]                             if other_way else [self.player1, self.player2]
@@ -59,10 +83,7 @@ class Arena():
 
         # Load initial state
         if initial_state != "":
-            from numpy import frombuffer, int8
-            data = zlib.decompress(base64.b64decode(initial_state), wbits=-15)
-            board = frombuffer(data[:-3], dtype=int8).reshape(board.shape)
-            curPlayer, it = int(data[-3]), int.from_bytes(data[-2:])
+            board, curPlayer, it = self.restore_state(initial_state)
 
         while not self.game.getGameEnded(board, curPlayer).any():
             it += 1
@@ -85,9 +106,7 @@ class Arena():
             curPlayer = int(curPlayer)
 
             # if verbose:
-            #     data = board.tobytes() + curPlayer.to_bytes(1) + it.to_bytes(2)
-            #     compressed_board = base64.b64encode(zlib.compress(data, level=9, wbits=-15))
-            #     print(f'state = "{str(compressed_board, "UTF-8")}"')
+            #     print(f'state = "{self.serialize_state(board, curPlayer, it)}"')
         if verbose:
             if self.display:
                 self.display(board)
