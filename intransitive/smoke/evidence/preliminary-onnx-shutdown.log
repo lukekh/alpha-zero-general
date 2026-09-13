@@ -1,0 +1,41 @@
+INFO:Coach:File with trainExamples found. Loading it...
+INFO:Coach:Loading done!
+Self Play:   0%|                                                                                  | 0/2 [00:00<?, ?it/s]Self Play:  50%|█████████████████████████████████████                                     | 1/2 [00:07<00:07,  7.03s/it]Self Play: 100%|██████████████████████████████████████████████████████████████████████████| 2/2 [00:07<00:00,  3.06s/it]Self Play: 100%|██████████████████████████████████████████████████████████████████████████| 2/2 [00:07<00:00,  3.66s/it]
+INFO:Coach:Iter #1 - new vs previous: 0-1  (1 draws) --> REJECTED (1)
+{
+  "passed": true,
+  "self_play_positions": 151,
+  "augmented_examples": 1812,
+  "training": [
+    {
+      "examples": 2532,
+      "updates": 39,
+      "max_parameter_delta": 0.005008216947317123,
+      "seconds": 8.019737374968827
+    }
+  ],
+  "arena": {
+    "candidate_wins": 0,
+    "candidate_losses": 1,
+    "draws": 1,
+    "accepted": false,
+    "retained": "temp.pt"
+  },
+  "checkpoint_games": [
+    {
+      "backend": "cpu",
+      "wins": 1,
+      "losses": 0,
+      "draws": 1
+    },
+    {
+      "backend": "onnx",
+      "wins": 0,
+      "losses": 0,
+      "draws": 2
+    }
+  ],
+  "elapsed_seconds": 19.945561375003308
+}
+Report: /Users/work/orca/workspaces/alpha-zero-general/issue-13-intransitive-complete-bounded/checkpoints/issue13/resume-onnx/report.json
+libc++abi: terminating due to uncaught exception of type std::__1::system_error: recursive_mutex lock failed: Invalid argument

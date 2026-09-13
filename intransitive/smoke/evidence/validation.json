@@ -1,0 +1,17 @@
+{
+  "process_exit_codes": {
+    "initial-onnx": 0,
+    "resume-cpu": 0,
+    "resume-onnx": 0
+  },
+  "regression_tests": {
+    "intransitive": 113,
+    "repository": 7,
+    "failed": 0
+  },
+  "source_snapshots_match_final_python": true,
+  "games": 24,
+  "self_play_positions": 271,
+  "augmented_examples": 3252,
+  "optimizer_updates": 72
+}

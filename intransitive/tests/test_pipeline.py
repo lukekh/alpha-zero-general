@@ -258,6 +258,31 @@ class SharedPipeline(unittest.TestCase):
                 self.assertEqual('best.pt' in [c.kwargs['filename'] for c in save.call_args_list], accepted)
                 self.assertEqual(restore.called, not accepted)
 
+    def test_rejected_trained_candidate_survives_rollback_and_reload(self):
+        with tempfile.TemporaryDirectory() as folder:
+            coach = make_coach(checkpoint=folder)
+            state = coach.game.getInitBoard().copy()
+            mask = coach.game.getValidMoves(state, 0)
+            policy = mask.astype(np.float32) / mask.sum()
+            examples = [(b, p, DRAW, v, np.zeros(2))
+                        for b, p, v in coach.game.getSymmetries(state, policy, mask)]
+            coach.skipFirstSelfPlay = True
+            coach.trainExamplesHistory = [examples]
+            before = {k: v.clone() for k, v in coach.nnet.nnet.state_dict().items()}
+            with patch.object(Arena, 'playGames', return_value=(0, 0, 2)):
+                coach.learn()
+            for key, value in coach.nnet.nnet.state_dict().items():
+                torch.testing.assert_close(value, before[key], rtol=0, atol=0)
+            candidate = coach.pnet.load_checkpoint(folder, 'candidate_1.pt')
+            self.assertEqual(candidate['candidate_iteration'], 1)
+            self.assertTrue(any(not torch.equal(value, before[key])
+                                for key, value in coach.pnet.nnet.named_parameters()))
+            self.assertFalse((Path(folder) / 'best.pt').exists())
+            self.assertTrue((Path(folder) / 'checkpoint.examples').exists())
+            coach.pnet.device['inference'] = 'cpu'
+            policy, value = coach.pnet.predict(state, mask)
+            self.assertTrue(np.isfinite(policy).all() and np.isfinite(value).all())
+
     def test_sequential_episodes_receive_fresh_search_trees(self):
         coach = make_coach()
         searches = []
