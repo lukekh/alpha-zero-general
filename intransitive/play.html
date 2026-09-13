@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intransitive · Play</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f5f3ed; color: #242b2b; font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 1120px; margin: 40px auto; padding: 0 24px; }
+  header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+  h1 { margin: 0; font-size: 36px; letter-spacing: -1.5px; }
+  .muted, .eyebrow { color: #626966; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 2px; font-size: 12px; margin: 0 0 5px; }
+  .layout { display: grid; grid-template-columns: minmax(300px, 680px) minmax(240px, 1fr); gap: 32px; align-items: start; }
+  .board { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); grid-template-rows: repeat(9, minmax(0, 1fr)); border: 6px solid #344540; border-radius: 8px; overflow: hidden; aspect-ratio: 1; }
+  .square { position: relative; min-width: 0; border: 0; border-radius: 0; padding: 0; background: #e8ede2; display: grid; place-items: center; cursor: pointer; }
+  .square.dark { background: #cbd6c5; }
+  .square.goal-blue { background: #a5c3e3; }
+  .square.goal-red { background: #e3b5aa; }
+  .coordinate { position: absolute; top: 2px; left: 5px; font-size: clamp(9px, 1.1vw, 12px); color: #3f5047; }
+  .goal { font-size: 9px; position: absolute; bottom: 1px; letter-spacing: 1px; }
+  .piece { display: grid; place-items: center; width: 67%; aspect-ratio: 1; border-radius: 50%; box-shadow: 0 3px 0 #0003; font-size: clamp(14px, 2.5vw, 26px); font-weight: 800; border: 2px solid #ffffff9c; z-index: 1; }
+  .blue { background: #2864a5; color: white; }
+  .red { background: #b54837; color: white; }
+  .square.selected { box-shadow: inset 0 0 0 4px #b7790a; }
+  .square.legal::after { content: ''; position: absolute; width: 22%; aspect-ratio: 1; background: #2d6c45; border-radius: 50%; }
+  .square.capture { box-shadow: inset 0 0 0 4px #2d6c45; }
+  .square.last .coordinate { font-weight: 900; text-decoration: underline; }
+  button:focus-visible { outline: 3px solid #ca8a04; outline-offset: -3px; z-index: 2; }
+  .square:disabled { cursor: default; }
+  .card { background: #fffdf8; border: 1px solid #dedfd6; padding: 22px; border-radius: 12px; margin-bottom: 16px; }
+  h2 { font-size: 23px; margin: 0 0 8px; }
+  h3 { font-size: 16px; margin: 0 0 10px; }
+  p { margin: 8px 0 16px; }
+  .controls { display: flex; gap: 8px; }
+  .controls button { border: 1px solid #c8cec3; background: white; border-radius: 7px; font: inherit; padding: 8px 14px; cursor: pointer; }
+  .controls button:disabled { opacity: .45; cursor: default; }
+  .counts { display: flex; justify-content: space-between; font-weight: 600; margin: 16px 0; }
+  #hint { min-height: 48px; }
+  #error { color: #a33020; }
+  .rule { margin: 6px 0; font-size: 14px; }
+  .history { max-height: 160px; overflow: auto; font-size: 14px; margin-bottom: 0; padding-left: 26px; }
+  .history li { padding: 3px 0 3px 4px; }
+  .history li:nth-child(odd) { color: #2864a5; }
+  .history li:nth-child(even) { color: #a23d2e; }
+  @media (max-width: 760px) { main { margin: 20px auto; padding: 0 12px; } .layout { grid-template-columns: 1fr; gap: 16px; } header { align-items: start; } h1 { font-size: 30px; } .piece { font-size: clamp(16px, 4vw, 26px); } .coordinate { font-size: 9px; } }
+</style>
+<main>
+  <header><div><p class="eyebrow">The corner is the goal</p><h1>Intransitive</h1></div><span class="muted">Local · Play both sides</span></header>
+  <div class="layout">
+    <section><div id="board" class="board" aria-label="Intransitive board"></div><p class="muted">Blue targets I9 ↗ &nbsp; · &nbsp; Red targets A1 ↙</p></section>
+    <aside>
+      <div class="card">
+        <p class="eyebrow" id="turn">Loading game</p>
+        <h2 id="status" aria-live="polite">Getting the board ready…</h2>
+        <p id="hint">Select a piece, then a highlighted destination.</p>
+        <div class="counts"><span id="blue-count"></span><span id="red-count"></span></div>
+        <div class="controls"><button id="undo" disabled>Undo</button><button id="restart" disabled>New game</button></div>
+        <p id="error" role="alert" hidden></p>
+      </div>
+      <div class="card">
+        <h3>How to play</h3>
+        <p class="rule">Move one square in any direction. Reach the opposite corner to win. A player with no legal moves loses.</p>
+        <p class="rule"><b>R</b> Rock captures scissors<br><b>S</b> Scissors captures paper<br><b>P</b> Paper captures rock</p>
+        <p class="rule">Friendly pieces and enemies you cannot capture block their squares. Captures are optional.</p>
+        <details><summary class="rule">Training draw rules are active</summary><p class="rule">This engine also draws on threefold repetition or 30 total turns without a capture. These are modelling limits, not official game rules. A win takes precedence.</p></details>
+        <p class="rule muted" id="counters"></p>
+      </div>
+      <div class="card"><h3>Moves</h3><p id="empty-history" class="rule muted">Your first move starts the story.</p><ol id="history" class="history"></ol></div>
+    </aside>
+  </div>
+</main>
+<script>
+  let state, selected = null, busy = false;
+  const $ = id => document.getElementById(id);
+  const names = ['', 'rock', 'scissors', 'paper'];
+  const symbols = ['', 'R', 'S', 'P'];
+  const coord = (x, y) => 'ABCDEFGHI'[x] + (y + 1);
+  const same = (a, b) => a && b && a[0] === b[0] && a[1] === b[1];
+
+  async function request(command, extra = {}) {
+    if (busy) return;
+    busy = true;
+    if (state) render();
+    $('error').hidden = true;
+    try {
+      const response = await fetch(command ? '/api/' + command : '/api/state', command ? {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({revision: state.revision, ...extra})
+      } : {});
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Unable to update the board.');
+      state = data;
+      selected = null;
+    } catch (error) {
+      $('error').textContent = error.message + ' Reload the page to reconnect.';
+      $('error').hidden = false;
+    } finally {
+      busy = false;
+      if (state) render();
+    }
+  }
+
+  function choose(x, y) {
+    if (busy || state.reason !== 'ongoing') return;
+    const move = state.legal.find(m => same(m.source, selected) && same(m.target, [x, y]));
+    if (move) { request('move', {action: move.action}); return; }
+    const piece = state.board[y][x];
+    selected = same(selected, [x, y]) ? null :
+      (piece && (piece > 0 ? 0 : 1) === state.player ? [x, y] : null);
+    render();
+    $('square-' + coord(x, y)).focus();
+  }
+
+  function render() {
+    const player = state.player === 0 ? 'Blue' : 'Red';
+    const ongoing = state.reason === 'ongoing';
+    $('turn').textContent = ongoing ? 'Turn ' + (state.ply + 1) : 'Game complete';
+    $('status').textContent = ongoing ? player + ' to move' :
+      state.winner !== null ? (state.winner === 0 ? 'Blue' : 'Red') + ' wins!' : 'Draw';
+    const options = state.legal.filter(m => same(m.source, selected));
+    $('hint').textContent = ongoing ? selected ?
+      coord(...selected) + ' selected · ' + options.length + ' legal destinations.' :
+      'Select a ' + player.toLowerCase() + ' piece, then a highlighted destination.' :
+      ({corner: 'The opposite corner was reached.', stalemate: player + ' has no legal moves.',
+        repetition: 'This position occurred three times.', 'no-capture limit': '30 turns passed without a capture.'})[state.reason];
+    $('undo').disabled = busy || state.ply === 0;
+    $('restart').disabled = busy;
+    $('counters').textContent = state.noncapture + '/30 turns without capture · Position seen ' + state.repetition + ' time(s)';
+    $('blue-count').textContent = 'Blue · ' + state.board.flat().filter(p => p > 0).length + ' pieces';
+    $('red-count').textContent = 'Red · ' + state.board.flat().filter(p => p < 0).length + ' pieces';
+    $('board').replaceChildren();
+    for (let y = 8; y >= 0; y--) for (let x = 0; x < 9; x++) {
+      const piece = state.board[y][x], square = document.createElement('button');
+      const legal = options.some(m => same(m.target, [x, y]));
+      const goal = x === y && (x === 0 || x === 8);
+      const label = coord(x, y);
+      square.id = 'square-' + label;
+      square.className = 'square' + ((x + y) % 2 ? ' dark' : '') +
+        (goal ? x === 0 ? ' goal-blue' : ' goal-red' : '') +
+        (same(selected, [x, y]) ? ' selected' : '') + (legal ? piece ? ' capture' : ' legal' : '') +
+        (state.moves.at(-1)?.includes(label) ? ' last' : '');
+      square.setAttribute('aria-label', label + (piece ? ' ' + (piece > 0 ? 'Blue ' : 'Red ') + names[Math.abs(piece)] : ' empty') +
+        (goal ? x === 0 ? ', Red target' : ', Blue target' : '') + (legal ? ', legal destination' : ''));
+      square.setAttribute('aria-pressed', String(!!same(selected, [x, y])));
+      square.disabled = busy || !ongoing;
+      square.innerHTML = '<span class="coordinate">' + label + '</span>' +
+        (piece ? '<span class="piece ' + (piece > 0 ? 'blue' : 'red') + '">' + symbols[Math.abs(piece)] + '</span>' : '') +
+        (goal ? '<span class="goal">GOAL</span>' : '');
+      square.onclick = () => choose(x, y);
+      $('board').append(square);
+    }
+    $('empty-history').hidden = state.moves.length > 0;
+    $('history').replaceChildren(...state.moves.map(move => {
+      const item = document.createElement('li'); item.textContent = move; return item;
+    }));
+    $('history').scrollTop = $('history').scrollHeight;
+  }
+  $('undo').onclick = () => request('undo');
+  $('restart').onclick = () => request('restart');
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && state) { selected = null; render(); }
+  });
+  request();
+</script>
+</html>

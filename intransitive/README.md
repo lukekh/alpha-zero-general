@@ -6,6 +6,34 @@ See the [state contract](#state-contract-version-1) below for storage, action
 encoding, and tests, and the [implementation plan](IMPLEMENTATION_PLAN.md) for
 the delivery sequence.
 
+## Play in a browser
+
+From the repository root, with Python 3.11, NumPy, and Numba installed:
+
+```sh
+python -m intransitive.play
+```
+
+Open <http://127.0.0.1:8765>. Use `--port 8766` if that port is busy.
+The first launch compiles the rules engine before printing the ready URL.
+Click a piece, then a highlighted destination. You control both Blue and Red;
+there is no AI opponent in this UI. Undo restores the complete position and
+draw history. New game restores the official setup.
+
+The board uses the existing compiled engine, including its modelling-only
+threefold repetition and 30-noncapture draw rules, which are explained in the UI.
+Each server has one shared game across browser tabs. Refresh keeps the current
+game; stopping the server discards it. The server listens only on localhost.
+Press Ctrl+C in its terminal to stop it.
+
+To prepare an isolated environment:
+
+```sh
+python3.11 -m venv /tmp/intransitive-ui-venv
+/tmp/intransitive-ui-venv/bin/python -m pip install numpy numba
+/tmp/intransitive-ui-venv/bin/python -m intransitive.play
+```
+
 ## Board and players
 
 - Play on a 9×9 grid with columns A–I and rows 1–9, labelled A1 through I9.
