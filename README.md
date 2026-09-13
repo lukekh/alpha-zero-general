@@ -140,6 +140,43 @@ them!
 
 ### Advanced details
 
+#### Training source backups
+
+Before learning begins, each non-Ray invocation of `main.py` saves a new snapshot
+under the checkpoint directory (`--checkpoint` / `-C`):
+
+```text
+checkpoint/
+  settings.txt                         # latest effective argparse Namespace
+  settings.<run-id>.txt                # previous settings, including legacy runs
+  source_backups/<run-id>/
+    settings.txt                       # effective settings for this invocation
+    main.py, Coach.py, ...              # all repository-root Python sources
+    <game>/                            # args.game, e.g. intransitive or santorini
+      NNet.py, ...                      # all game Python sources, recursively
+      <subdirectory>/...               # original relative paths retained
+```
+
+Run IDs combine a UTC timestamp and UUID. Resuming in the same checkpoint directory
+creates another snapshot, preserving earlier code/settings even for rapid restarts.
+Root `settings.txt` remains compatible with the existing resume-settings comparison.
+Settings are captured after CLI defaults, debug/profile overrides, and replay loading.
+Sources are located relative to `main.py`, so launching from another directory works;
+spaces and shell characters in checkpoint paths/settings are treated literally.
+Missing sources or copy/write errors stop the run with a visible exception; incomplete
+source snapshots are cleaned up rather than published. Ray's existing backup opt-out
+is unchanged.
+
+To reconstruct an invocation, copy that snapshot's root Python files and game tree
+into a working directory, install the [dependencies](#dependencies), and use its
+`settings.txt` to recover the game and CLI options. Retain the matching checkpoints
+and replay files separately: these snapshots contain Python sources and settings,
+not model weights, datasets, installed packages, or random-generator state. Legacy
+flat backups remain untouched; new snapshots live only under `source_backups/`.
+
+Run the focused backup checks (standard library only) with
+`python3 -m unittest discover -s tests -p 'test_source_backup.py' -v`.
+
 #### Recommended settings for training
 
 Compared to initial version, I target a smaller network but more MCTS simulations allowing to see further: this approach

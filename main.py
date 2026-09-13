@@ -3,11 +3,11 @@
 import argparse
 import logging
 import os
-import subprocess
 
 import coloredlogs
 
 from Coach import Coach
+from source_backup import backup_run_sources
 
 log = logging.getLogger(__name__)
 coloredlogs.install(level='INFO')  # Change this to DEBUG to see more info.
@@ -50,11 +50,8 @@ def run(args):
 
 	if not args.useray:
 		# Backup code used for this run
-		subprocess.run(f'mkdir -p "{args.checkpoint}/"', shell=True)
-		subprocess.run(f'cp *py santorini/*py "{args.checkpoint}/"', shell=True)
-		subprocess.run(
-			f'[ -f "{args.checkpoint}/settings.txt" ] && mv "{args.checkpoint}/settings.txt" "{args.checkpoint}/settings."`date +%s` ;   echo "{args}" > "{args.checkpoint}/settings.txt"',
-			shell=True)
+		backup_path = backup_run_sources(args)
+		log.info('Saved run sources and settings to %s', backup_path)
 
 	log.debug('Starting the learning process 🎉')
 	c.learn()
