@@ -47,7 +47,11 @@ class GenericNNetWrapper(NeuralNet):
 		"""
 		self.switch_target('training')
 		optimizer = optim.AdamW(self.nnet.parameters(), lr=self.args['learn_rate'])
-		batch_count = int(len(examples) / self.args['batch_size'])
+		batch_count = self.args.get('batches_per_epoch', int(len(examples) / self.args['batch_size']))
+		if isinstance(batch_count, bool) or not isinstance(batch_count, int) or batch_count < 1:
+			raise ValueError('batches_per_epoch must be a positive integer')
+		if len(examples) < self.args['batch_size']:
+			raise ValueError('Training needs at least one full batch of examples')
 		scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr=self.args['learn_rate'], steps_per_epoch=batch_count, epochs=self.args['epochs'])
 
 		t = tqdm(total=self.args['epochs'] * batch_count, desc='Train ep0', colour='blue', ncols=120, mininterval=0.5, disable=None)

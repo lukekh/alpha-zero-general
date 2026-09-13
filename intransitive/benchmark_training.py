@@ -99,6 +99,7 @@ class Metrics:
         self.games = []
         self.legal = []
         self.symmetries = Counter()
+        self.original_replay = []
         self.iteration = 0
 
     def bucket(self):
@@ -216,7 +217,18 @@ class MeasuredCoach(Coach):
         with self.game.metrics.timed('self_play'):
             examples = super().executeEpisodes()
         positions = len(self.game.metrics.legal) - before
-        require(len(examples) == positions * 12, 'Augmentation lost or replay truncated')
+        multiplicity = getattr(self.args, 'symmetry_count', 12)
+        require(len(examples) == positions * multiplicity,
+                'Augmentation lost or replay truncated')
+        fingerprint = hashlib.sha256()
+        for index, example in enumerate(examples):
+            if index % multiplicity == 0:
+                for value in decode(example):
+                    value = np.asarray(value)
+                    fingerprint.update(str((value.shape, value.dtype)).encode())
+                    fingerprint.update(value.tobytes())
+        self.game.metrics.original_replay.append(dict(positions=positions,
+            identity_examples_sha256=fingerprint.hexdigest()))
         return examples
 
 

@@ -15,6 +15,73 @@ archive, checksum manifest, bounded reproduction commands and `pit.py` human-pla
 instructions. Candidate rejection remains explicit; losses alone are not strength
 evidence. The official rules and modelling-only appendix below still apply.
 
+The [controlled symmetry comparison](benchmarks/symmetry/README.md) fixes the
+optimizer-update budget for augmentation on/off and reports strength against
+original positions and compute, with per-colour results and sample limitations.
+
+## Setup, training, evaluation and human play
+
+Run commands from the repository root. Use Python 3.11.4 and the pinned packages:
+
+```sh
+python3.11 -m venv /tmp/intransitive-venv
+. /tmp/intransitive-venv/bin/activate
+python -m pip install -r intransitive/smoke/requirements.txt
+export ORT_DISABLE_TELEMETRY=1
+python -m unittest discover -s intransitive/tests -v
+python -m unittest discover -s tests -v
+```
+
+Keep the telemetry environment setting before Python imports ONNX Runtime;
+it prevents the documented native macOS shutdown race. Training uses CPU and
+ONNX CPU inference; no GPU is needed. The recorded machine has 8 GiB RAM.
+
+For a bounded one-iteration smoke (two self-play games, two candidate games,
+four simulations per move), then a continuation with restored weights/replay:
+
+```sh
+python -m intransitive.smoke --checkpoint checkpoints/quickstart/initial --seed 13 --backend onnx
+python -m intransitive.smoke --settings checkpoints/quickstart/initial/settings.json --resume checkpoints/quickstart/initial/candidate_1.pt --checkpoint checkpoints/quickstart/resumed --seed 14 --backend cpu
+```
+
+Use new output directories. Resume requires the adjacent `checkpoint.examples`;
+it recreates AdamW and OneCycleLR and restarts iteration numbering. The command
+above deliberately resumes the saved candidate, whose acceptance is in
+`report.json`; use `retained.pt` for the post-arena incumbent. Both use all 12
+symmetries. The [smoke guide](smoke/README.md) also verifies continuation from
+the saved source snapshot and through ONNX. The smoke has bounded game/update
+counts; the full baseline below additionally enforces wall-clock deadlines.
+
+For the four-iteration measured baseline (600 seconds training, 300 evaluation):
+
+```sh
+python -m intransitive.baseline train --output checkpoints/my-baseline
+python -m intransitive.baseline evaluate --model-folder checkpoints/my-baseline --output checkpoints/my-baseline/evaluation
+python -m intransitive.baseline verify --model-folder checkpoints/my-baseline --output checkpoints/my-baseline/verification
+```
+
+To evaluate or play the delivered #15 checkpoint without retraining:
+
+```sh
+mkdir -p checkpoints/issue15-delivered
+tar -xzf intransitive/baselines/issue15/baseline-artifacts.tar.gz -C checkpoints/issue15-delivered
+python -m intransitive.baseline evaluate --model-folder checkpoints/issue15-delivered --output checkpoints/issue15-delivered/new-evaluation
+python pit.py intransitive human checkpoints/issue15-delivered/baseline.pt -n 2 -m 32
+```
+
+Enter moves such as `B5 C5`. Two games assign the human each colour; physical
+Blue always starts. Swap `human` and the checkpoint to play Red first. `pit.py`
+uses its casual-play temperature schedule, so use the evaluator for the seeded
+strength protocol. The delivered #15 `baseline.pt` is a rejected diagnostic
+candidate, with no accepted `best.pt` and no demonstrated improvement.
+
+Model and replay locations, checksums and source snapshots are in the
+[baseline artifact guide](baselines/issue15/README.md#artifact-and-human-play)
+and [symmetry comparison guide](benchmarks/symmetry/README.md). Local run outputs
+are under `checkpoints/`; reports distinguish every candidate from the incumbent.
+The comparison's [reproduction script](benchmarks/symmetry/reproduce.sh) runs
+both arms, all per-iteration evaluations and independent reload checks.
+
 ## Play in a browser
 
 From the repository root, with Python 3.11, NumPy, and Numba installed:

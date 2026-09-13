@@ -10,6 +10,7 @@ this [page](README_features.md).
 * [Abalone](#abalone)
 * [Azul](#azul)
 * [Botanik](#botanik)
+* [Intransitive](intransitive/README.md) — rules, setup, training, human play, and measured symmetry comparison
 * [Machi Koro (a.k.a. Minivilles)](#machi-koro--minivilles)
 * [Santorini (with basic gods)](#santorini)
 * [Small World](#small-world)
