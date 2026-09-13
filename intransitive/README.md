@@ -298,7 +298,94 @@ augmentation and group-averaged inference remain possible later optimizations.
 
 `moveToString` and `printBoard` delegate to `IntransitiveDisplay` for fixed
 coordinates, rows 9 through 1, physical colours, piece types, and goal ownership.
-Registration, neural inference, and full self-play integration remain in #10/#11.
+The history-aware network is documented below; registration and full self-play
+integration remain in #11.
+
+### History-aware policy and value network (version 1)
+
+`IntransitiveNNet.py` and `NNet.py` implement #10 through `GenericNNetWrapper`.
+Construct `NNetWrapper(game, nn_args)` with `nn_version=1` for new training or
+`nn_version=-1` before loading a checkpoint. Version -1 is an empty placeholder
+that the shared loader replaces with the saved full model. Other positive
+versions are rejected. The wrapper consumes raw canonical float32 batches shaped
+`(batch, 9, 9, 33)` and boolean legal masks shaped `(batch, 648)`.
+
+`extract_features` is the single mapping inside `forward`, used by training,
+single predictions, batched ONNX inference, and export. It expects validated
+state-v1 observations from the Game adapter. No Python preprocessing or spatial
+convolution of the packed metadata plane is used. Piece codes are categorical,
+never ordinal magnitudes. All history remains in the current canonical frame.
+
+| Current feature channels | Meaning |
+| --- | --- |
+| 0–5 | Own rock/scissors/paper, opponent rock/scissors/paper (codes 1,2,3,-1,-2,-3) |
+| 6–7 | Own and opponent defended-corner indicator planes, decoded from A1 defender |
+| 8 | Noncapture clock divided by 30, broadcast spatially |
+| 9 | Exact current board-plus-turn occurrences among valid slots, divided by 3 |
+| 10 | `log1p(total ply) / log1p(34359738367)`, broadcast spatially |
+
+Total ply is decoded from the five base-128 digits. Its float32 logarithmic
+feature is an approximate elapsed-game diagnostic; draw decisions continue to
+use exact engine history and counters. The version tag and reserved bytes are
+excluded from learned inputs. Feature order, normalizations, state/network
+versions, architecture sizes, and action/value order are recorded in
+`FEATURE_CONFIG`, the saved full model, and the checkpoint's
+`intransitive_config` key.
+
+Each of the 31 historical slots has eight input channels: six categorical piece
+planes in the same order, a broadcast validity flag, and a broadcast historical
+next-player label (0 own, 1 opponent). All eight channels are masked before a
+shared 3×3 convolution maps them to four ReLU channels. The output is masked
+again so convolution biases cannot leak padding. The four channels for slot 0,
+then slot 1, and so on are concatenated oldest first, including the current
+position. Padding is always zero, distinct from a valid empty board or player 0.
+
+The 11 current plus 124 history channels project through a 1×1 convolution to
+64 channels, followed by four residual blocks with two 3×3 convolutions each.
+The policy head emits eight direction logits per square, explicitly transposes
+to `(batch,y,x,direction)`, and flattens to `8*(9*y+x)+direction`. Illegal slots
+receive finite `-1e8` log probabilities and exponentiate to zero. Legal slots
+normalize to one. An all-false terminal mask yields an all-zero probability
+vector; it is not a playable policy. Finite masking keeps the existing KL loss
+and zero-target illegal entries numerically safe.
+
+The value head returns two independent tanh values in canonical player order
+`[mover, opponent]`. Shared policy and outcome/Q losses are unchanged; Coach's
+relative labels require no extra swap for E augmentation and no material,
+distance, or other heuristic reward is added. Batch normalization supports
+single-position training because each convolution retains the 9×9 grid.
+
+The baseline has **326,706 trainable parameters**, including **292** in the
+shared history encoder. Historical convolution costs **723,168 multiply-adds
+per state**. CPU measurements on macOS 15.6.1 arm64, Python 3.11.4, PyTorch 2.8.0,
+one thread, inference mode, 100 timed iterations after warmup:
+
+| Batch | Feature decoding | History encoding | Complete forward |
+| --- | --- | --- | --- |
+| 1 | 0.131 ms | 0.089 ms | 1.081 ms |
+| 32 | 1.785 ms | 2.618 ms | 34.811 ms |
+
+These are batch latencies, not training or MCTS throughput guarantees. The
+fixed-shape encoder computes all 31 slots even for the one-slot opening used
+in this benchmark. Decoded current/history tensors occupy 83,916 bytes per
+state; encoded history occupies another 40,176 bytes (excluding intermediates,
+autograd, and backend workspaces). Sizes remain the proposed baseline; no
+width/depth increase is justified by this measurement alone. Raw measurements
+are in [network-v1-cpu.json](benchmarks/network-v1-cpu.json). Reproduce with:
+
+```sh
+python -m intransitive.benchmark_network --repeats 100
+python -m unittest intransitive.tests.test_network -v
+```
+
+Network tests cover categorical/goal/counter fixtures, 1/5/31-slot histories,
+exact repetition with historical turns, padding and order, all 648 action slots,
+finite losses/gradients and parameter changes, canonical value/Q labels, actual
+shared-wrapper training, version-1 and version-minus-1 checkpoint loading, and
+single/batched ONNX parity within `2e-6` absolute tolerance. The tested inference
+stack uses ONNX 1.22.0 and ONNX Runtime 1.30.0 with the shared wrapper's legacy
+PyTorch 2.8 exporter. Broader persistence/resume/export verification remains #12;
+game registration and full self-play integration remain #11.
 
 ### Human play and baseline opponents
 

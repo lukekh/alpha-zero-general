@@ -1,0 +1,65 @@
+{
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "processor": "arm",
+  "python": "3.11.4",
+  "torch": "2.8.0",
+  "device": "cpu",
+  "threads": 1,
+  "repeats": 100,
+  "parameters": 326706,
+  "history_encoder_parameters": 292,
+  "history_conv_macs_per_state": 723168,
+  "feature_config": {
+    "state_version": 1,
+    "network_version": 1,
+    "piece_order": [
+      "own rock",
+      "own scissors",
+      "own paper",
+      "opponent rock",
+      "opponent scissors",
+      "opponent paper"
+    ],
+    "current_order": [
+      "six piece planes",
+      "own defended corner",
+      "opponent defended corner",
+      "noncapture / 30",
+      "current occurrences / 3",
+      "log1p(total ply) / log1p(max ply)"
+    ],
+    "history_order": "oldest first, including current position; 31 slots",
+    "history_slot_order": [
+      "six piece planes",
+      "valid",
+      "side to move (0 own, 1 opponent)"
+    ],
+    "history_channels": 4,
+    "trunk_channels": 64,
+    "residual_blocks": 4,
+    "action_order": "8 * (9*y + x) + direction; N, NE, E, SE, S, SW, W, NW",
+    "value_order": [
+      "canonical player 0",
+      "canonical player 1"
+    ],
+    "total_ply_max": 34359738367
+  },
+  "measurements": [
+    {
+      "batch_size": 1,
+      "extract_features_ms": 0.1311187504325062,
+      "encode_history_ms": 0.08867083000950515,
+      "forward_ms": 1.0806499992031604,
+      "decoded_features_bytes": 83916,
+      "encoded_history_bytes": 40176
+    },
+    {
+      "batch_size": 32,
+      "extract_features_ms": 1.785238329321146,
+      "encode_history_ms": 2.617604580009356,
+      "forward_ms": 34.81145582976751,
+      "decoded_features_bytes": 2685312,
+      "encoded_history_bytes": 1285632
+    }
+  ]
+}
