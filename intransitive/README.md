@@ -702,7 +702,8 @@ An isolated environment can be prepared with:
 
 ```sh
 python3.11 -m venv /tmp/intransitive-venv
-/tmp/intransitive-venv/bin/python -m pip install numpy==2.4.6 numba==0.67.0 tqdm==4.70.1 torch==2.8.0 torchvision==0.23.0 onnx==1.22.0 onnxruntime==1.30.0 coloredlogs colorama
+/tmp/intransitive-venv/bin/python -m pip install -r intransitive/smoke/requirements.txt
+export ORT_DISABLE_TELEMETRY=1
 ```
 
 Use that environment's Python executable for the test command above.

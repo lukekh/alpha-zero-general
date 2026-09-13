@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "source_revision": "b748cc3",
+  "test_counts": {
+    "intransitive": 124,
+    "repository": 7,
+    "focused_subset": 8
+  },
+  "measured_process_exit_codes": {
+    "train_on": 0,
+    "train_off": 0,
+    "evaluate_on_1": 0,
+    "evaluate_on_2": 0,
+    "evaluate_on_3": 0,
+    "evaluate_on_4": 0,
+    "evaluate_off_1": 0,
+    "evaluate_off_2": 0,
+    "evaluate_off_3": 0,
+    "evaluate_off_4": 0
+  },
+  "measured_game_counts": {
+    "self_play": 64,
+    "candidate_arena": 64,
+    "fixed_opponents": 384
+  },
+  "archive_verifications": {
+    "on": true,
+    "off": true
+  },
+  "quickstart": {
+    "initial": true,
+    "resumed": true
+  },
+  "issue15_representative_verification": true,
+  "pit": {
+    "command": "python pit.py intransitive checkpoints/issue16-delivered/on/candidate_4.pt greedy -n 2 -m 32",
+    "process_exit_code": 0,
+    "games_requested": 2,
+    "note": "The real pit CLI returns after Arena.playGames; this CLI prints the pairing but does not print the returned W/D/L."
+  },
+  "review": "Local code/evidence/whitespace and documentation-link review; no independent review claimed."
+}

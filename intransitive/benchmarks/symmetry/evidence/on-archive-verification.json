@@ -1,0 +1,214 @@
+{
+  "passed": true,
+  "representative": true,
+  "command": [
+    "/Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/intransitive/symmetry_efficiency.py",
+    "verify",
+    "--model-folder",
+    "checkpoints/issue16-delivered/on",
+    "--output",
+    "checkpoints/issue16-delivered/on/fresh-verification",
+    "--child"
+  ],
+  "checkpoint_sha256": {
+    "candidate_4.pt": "c428e867ee3a1cebe24355d1e4f5e526cd8449b8af8d96a76a1f4bb77ab9a22c",
+    "earlier.pt": "40b8fc6eecc606e4cfaaa45b0af23cf7f5d1fc89d2ad21cfb27aa80dd0b50e14"
+  },
+  "reload_parity_max_abs": [
+    1.4156103134155273e-07,
+    3.296881914138794e-07
+  ],
+  "games": [
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 92,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "a105c7490aab9da9ef52d4038cdf0a4b7098944418474addd98d60832ca672a2",
+      "captures": 4,
+      "opponent": "random",
+      "index": 0,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3670039628,
+        1253621200,
+        4107939116,
+        583403445
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 51,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "4701176bf80246daab1c3393a03c1ea5c168b15c816366e3e13c8818a297756a",
+      "captures": 1,
+      "opponent": "random",
+      "index": 1,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        823280048,
+        3733085331,
+        983294231,
+        2803064745
+      ],
+      "outcome": "draws"
+    }
+  ],
+  "comparisons": {
+    "random": {
+      "overall": {
+        "games": 2,
+        "wins": 0,
+        "draws": 2,
+        "losses": 0,
+        "score": 0.5,
+        "score_95_hoeffding": [
+          0.0,
+          1.0
+        ],
+        "win_probability_95_wilson": [
+          0.0,
+          0.6576197724933469
+        ],
+        "draw_probability_95_wilson": [
+          0.34238022750665303,
+          1.0
+        ],
+        "unique_trajectories": 2,
+        "reasons": {
+          "corner": 0,
+          "stalemate": 0,
+          "repetition": 0,
+          "no-capture limit": 2
+        },
+        "length_plies": {
+          "count": 2,
+          "mean": 71.5,
+          "min": 51.0,
+          "median": 71.5,
+          "p95": 89.95,
+          "max": 92.0
+        }
+      },
+      "by_colour": {
+        "Blue": {
+          "games": 1,
+          "wins": 0,
+          "draws": 1,
+          "losses": 0,
+          "score": 0.5,
+          "score_95_hoeffding": [
+            0.0,
+            1.0
+          ],
+          "win_probability_95_wilson": [
+            0.0,
+            0.7934506856227626
+          ],
+          "draw_probability_95_wilson": [
+            0.20654931437723745,
+            1.0
+          ],
+          "unique_trajectories": 1,
+          "reasons": {
+            "corner": 0,
+            "stalemate": 0,
+            "repetition": 0,
+            "no-capture limit": 1
+          },
+          "length_plies": {
+            "count": 1,
+            "mean": 92.0,
+            "min": 92.0,
+            "median": 92.0,
+            "p95": 92.0,
+            "max": 92.0
+          }
+        },
+        "Red": {
+          "games": 1,
+          "wins": 0,
+          "draws": 1,
+          "losses": 0,
+          "score": 0.5,
+          "score_95_hoeffding": [
+            0.0,
+            1.0
+          ],
+          "win_probability_95_wilson": [
+            0.0,
+            0.7934506856227626
+          ],
+          "draw_probability_95_wilson": [
+            0.20654931437723745,
+            1.0
+          ],
+          "unique_trajectories": 1,
+          "reasons": {
+            "corner": 0,
+            "stalemate": 0,
+            "repetition": 0,
+            "no-capture limit": 1
+          },
+          "length_plies": {
+            "count": 1,
+            "mean": 51.0,
+            "min": 51.0,
+            "median": 51.0,
+            "p95": 51.0,
+            "max": 51.0
+          }
+        }
+      }
+    }
+  },
+  "phases": {
+    "setup": {
+      "seconds": 0.0,
+      "search_calls": 0,
+      "simulations": 0,
+      "search_worker_seconds": 0.0,
+      "inference_calls": 1,
+      "inference_states": 1,
+      "inference_seconds": 0.0011889999732375145,
+      "inference_batches": {
+        "1": 1
+      }
+    },
+    "random": {
+      "seconds": 7.650147458072752,
+      "search_calls": 71,
+      "simulations": 2272,
+      "search_worker_seconds": 5.527054536039941,
+      "inference_calls": 2249,
+      "inference_states": 2249,
+      "inference_seconds": 2.160490082926117,
+      "inference_batches": {
+        "1": 2249
+      },
+      "simulations_per_wall_second": 296.9877394457922,
+      "inference_states_per_wall_second": 293.98126144964203
+    }
+  },
+  "elapsed_seconds": 9.986449500080198,
+  "process_cpu_seconds": 10.701547,
+  "process_peak_rss_bytes": 440401920,
+  "seed_policy": "SeedSequence([opponent_seed, game_index]) -> NumPy/Python/Torch, model MCTS, random opponent, earlier MCTS",
+  "action_policy": "32 full simulations; maximum visits; seeded random tie breaking; fresh trees each game",
+  "uncertainty": "Marginal Wilson win/draw intervals; distribution-free Hoeffding score interval. Independent seeded games conditional on these fixed agents/opening only; no training-seed or opening generalization.",
+  "child_process_seconds": 11.349185082945041,
+  "process_exit_code": 0,
+  "hard_timeout_seconds": 300
+}

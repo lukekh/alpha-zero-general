@@ -1,0 +1,38 @@
+Self Play:   0%|                                                                                  | 0/2 [00:00<?, ?it/s]Self Play:  50%|█████████████████████████████████████                                     | 1/2 [00:05<00:05,  5.70s/it]Self Play: 100%|██████████████████████████████████████████████████████████████████████████| 2/2 [00:05<00:00,  2.45s/it]Self Play: 100%|██████████████████████████████████████████████████████████████████████████| 2/2 [00:05<00:00,  2.94s/it]
+INFO:Coach:Iter #1 - new vs previous: 1-0  (1 draws) --> ACCEPTED
+{
+  "passed": true,
+  "self_play_positions": 60,
+  "augmented_examples": 720,
+  "training": [
+    {
+      "examples": 720,
+      "updates": 11,
+      "max_parameter_delta": 0.001460075844079256,
+      "seconds": 2.5832599999848753
+    }
+  ],
+  "arena": {
+    "candidate_wins": 1,
+    "candidate_losses": 0,
+    "draws": 1,
+    "accepted": true,
+    "retained": "best.pt"
+  },
+  "checkpoint_games": [
+    {
+      "backend": "cpu",
+      "wins": 1,
+      "losses": 0,
+      "draws": 1
+    },
+    {
+      "backend": "onnx",
+      "wins": 1,
+      "losses": 0,
+      "draws": 1
+    }
+  ],
+  "elapsed_seconds": 12.724538875045255
+}
+Report: /Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/checkpoints/quickstart/initial/report.json

@@ -1,0 +1,1514 @@
+{
+  "passed": true,
+  "representative": false,
+  "command": [
+    "/Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/intransitive/symmetry_efficiency.py",
+    "evaluate",
+    "--output",
+    "/Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/checkpoints/issue16-measured/comparison/off/evaluation-2",
+    "--model-folder",
+    "/Users/work/orca/workspaces/alpha-zero-general/issue-16-intransitive-evaluate-symmetry/checkpoints/issue16-measured/comparison/off",
+    "--iteration",
+    "2",
+    "--child"
+  ],
+  "checkpoint_sha256": {
+    "candidate_2.pt": "cdc8334f4c1d8bd5d6fd2b4d1db23d062ee9369379b4ed9dae5bde0cfcdb0c08",
+    "earlier.pt": "40b8fc6eecc606e4cfaaa45b0af23cf7f5d1fc89d2ad21cfb27aa80dd0b50e14"
+  },
+  "reload_parity_max_abs": [
+    1.564621925354004e-07,
+    5.438923835754395e-07
+  ],
+  "games": [
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "07fea6a698e5ebaef9b3b4e97df80959ec4aa7d7c27a9ec5aa9b4bb4624fd198",
+      "captures": 0,
+      "opponent": "random",
+      "index": 0,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3670039628,
+        1253621200,
+        4107939116,
+        583403445
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "e017db8045de41e0c7970b9a8a4d4e8c4c58bf67e7ac32820316fd90872399f9",
+      "captures": 0,
+      "opponent": "random",
+      "index": 1,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        823280048,
+        3733085331,
+        983294231,
+        2803064745
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "57915e84eeee891d7dcdda255d476ebf32088f39303073331eb33e4cbe170cc1",
+      "captures": 0,
+      "opponent": "random",
+      "index": 2,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        576724939,
+        3468537152,
+        1950163461,
+        3168790023
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "388eab32d8b68dd62d5e5eeddb3b65db06b2b05972f1cb37193d06a3e8b8cee2",
+      "captures": 0,
+      "opponent": "random",
+      "index": 3,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3041186645,
+        1682806424,
+        3056459995,
+        2902559075
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "a6c4997756902074291345b942fc78708beaf64bb2f9c3414ddc37d07b367ef5",
+      "captures": 0,
+      "opponent": "random",
+      "index": 4,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1590564024,
+        2138913055,
+        2931873960,
+        16992857
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "28b479a8cd95e66393c86a2b5e6bd347563344fdd792a190f28966d33eec6401",
+      "captures": 0,
+      "opponent": "random",
+      "index": 5,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3310472500,
+        3364189232,
+        4257505819,
+        1675139902
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "aa803b6bc6c7143da01b35ffc532e1670db0eca24173338219c713c278dda694",
+      "captures": 0,
+      "opponent": "random",
+      "index": 6,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        355159368,
+        988544932,
+        1455523753,
+        1976589515
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "6ef5a6a20756a90a375d95811e84e1e75fd7761fe804e2ea8e42e4e2300ca628",
+      "captures": 0,
+      "opponent": "random",
+      "index": 7,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        2245669138,
+        104001330,
+        1477773746,
+        2140823175
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "53e2a1a915bdb7b5432401d1b77338e2805f4f6ffc1dffe0ed5e32782151af7d",
+      "captures": 0,
+      "opponent": "random",
+      "index": 8,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1771804802,
+        1421393109,
+        1488321028,
+        2891730906
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 74,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "a80cffad150aabc30ead81c5168f34db314e1d5c63f5fe8a2db835a04acb187d",
+      "captures": 2,
+      "opponent": "random",
+      "index": 9,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3355714859,
+        3455839205,
+        1827746566,
+        225279289
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "642723582754e70c3e4c10ad5cdc3524e47ecf0cdd4d2c78948187038b7c56e1",
+      "captures": 0,
+      "opponent": "random",
+      "index": 10,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3018966796,
+        78370451,
+        1292272103,
+        224429873
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "bae614e6dd31b2a9a4bb52fb37bb4fff265e93476162168e04d5faa98efb741a",
+      "captures": 0,
+      "opponent": "random",
+      "index": 11,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        2218821707,
+        163283066,
+        3563168310,
+        3488308530
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "2caeed08e0e8daf0bf280354fca3f1cf19d81f57ff5967b064b6843f44016d6c",
+      "captures": 0,
+      "opponent": "random",
+      "index": 12,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        2186039021,
+        2809693320,
+        3964788510,
+        2601525747
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "238c5c9b33c84e186136f96dd6ffe89319c83990b1bf2a41ecafd551d5897cac",
+      "captures": 0,
+      "opponent": "random",
+      "index": 13,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3300164882,
+        4072965369,
+        553888667,
+        3758458945
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "19d6c1efd0b7584bc36dc02a1acdd11d0a904e6c9c6604526b4b6b21b0fd6fc9",
+      "captures": 0,
+      "opponent": "random",
+      "index": 14,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1856270881,
+        805191055,
+        736858997,
+        1867177290
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "random",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "a99b833588e8c36a30c2f91e7a358ecdee678c770cc5f38c0a068cbbdcebfd59",
+      "captures": 0,
+      "opponent": "random",
+      "index": 15,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1037951708,
+        2102605729,
+        3922378772,
+        186425975
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 14,
+      "reason": "corner",
+      "reward": [
+        -1.0,
+        1.0
+      ],
+      "trajectory_sha256": "c27a54fe8bf0918bb6e0fec5b43b639b13c4ab7de4fb5c8e63208360e4a2495c",
+      "captures": 2,
+      "opponent": "greedy",
+      "index": 0,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3874343268,
+        762184532,
+        686272600,
+        3540165999
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 17,
+      "reason": "corner",
+      "reward": [
+        1.0,
+        -1.0
+      ],
+      "trajectory_sha256": "672e574cae5535aa688245a2e74956f6199ff0991bff7f830a3c78953c46f8ad",
+      "captures": 3,
+      "opponent": "greedy",
+      "index": 1,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1350927907,
+        3426236083,
+        2334784699,
+        2551019410
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 17,
+      "reason": "corner",
+      "reward": [
+        1.0,
+        -1.0
+      ],
+      "trajectory_sha256": "a069d86ebbfa3a17303f68669ce0f32f5da156c27d68e0e48fb8efb7effd4e8d",
+      "captures": 3,
+      "opponent": "greedy",
+      "index": 2,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1351274957,
+        2812232761,
+        3773099479,
+        2031895583
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 22,
+      "reason": "corner",
+      "reward": [
+        -1.0,
+        1.0
+      ],
+      "trajectory_sha256": "89f620b5ca75631e8e5e64a0420ddc115843df1350ee355e183cd9e52dd71ab8",
+      "captures": 4,
+      "opponent": "greedy",
+      "index": 3,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        4025465517,
+        4101142185,
+        1805929172,
+        2301528731
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 28,
+      "reason": "corner",
+      "reward": [
+        -1.0,
+        1.0
+      ],
+      "trajectory_sha256": "4c251d9573c591c0e5f14dc3079160329fea2d757964beb2bf5c25e131af0f14",
+      "captures": 7,
+      "opponent": "greedy",
+      "index": 4,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3321495779,
+        3935820156,
+        2531141755,
+        2107192270
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 17,
+      "reason": "corner",
+      "reward": [
+        1.0,
+        -1.0
+      ],
+      "trajectory_sha256": "a90bf6c0b2a08f140f88a43c24fc7f42f7f2c0e9691d76b534acf2d91d541eb7",
+      "captures": 3,
+      "opponent": "greedy",
+      "index": 5,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        162254599,
+        4106497718,
+        4271004479,
+        2685387079
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 13,
+      "reason": "corner",
+      "reward": [
+        1.0,
+        -1.0
+      ],
+      "trajectory_sha256": "8e6db0c7e39704346c3ac7458fc2fcea7c0f91176a7fdba730b7e7e1159d08a2",
+      "captures": 2,
+      "opponent": "greedy",
+      "index": 6,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        712149104,
+        2470070582,
+        3094455908,
+        2801033570
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 28,
+      "reason": "corner",
+      "reward": [
+        -1.0,
+        1.0
+      ],
+      "trajectory_sha256": "826bd03dbdc077dc994c9fe87de0cb9fddbad1958dc0761b7110041455decc05",
+      "captures": 5,
+      "opponent": "greedy",
+      "index": 7,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3795295825,
+        1413559538,
+        807077412,
+        1069857889
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 32,
+      "reason": "corner",
+      "reward": [
+        -1.0,
+        1.0
+      ],
+      "trajectory_sha256": "f39b99e863c1b071ffba7437a51031ab23b504e5b03ccbf87ede447ff21990e8",
+      "captures": 7,
+      "opponent": "greedy",
+      "index": 8,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        722390839,
+        3236407646,
+        2683063021,
+        2665359115
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 79,
+      "reason": "corner",
+      "reward": [
+        1.0,
+        -1.0
+      ],
+      "trajectory_sha256": "5d3df6be4ee6a6c9b8608fcb1192851d28431c03dfc650aa877a12f1ce743690",
+      "captures": 10,
+      "opponent": "greedy",
+      "index": 9,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        4161675477,
+        3289460309,
+        530824317,
+        1700177549
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 13,
+      "reason": "corner",
+      "reward": [
+        1.0,
+        -1.0
+      ],
+      "trajectory_sha256": "f949d7b1c591d6325ee9307ba445d976cb212c263a44a9c4a00dc284642ea442",
+      "captures": 2,
+      "opponent": "greedy",
+      "index": 10,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3544050022,
+        2921116272,
+        2458776009,
+        3820374578
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 20,
+      "reason": "corner",
+      "reward": [
+        -1.0,
+        1.0
+      ],
+      "trajectory_sha256": "9e37c8f72c087a58d063458167c16d51de27f7af40c8e4c5845c6bb62d76e031",
+      "captures": 3,
+      "opponent": "greedy",
+      "index": 11,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        13774642,
+        1275449625,
+        3347870133,
+        1050757974
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 18,
+      "reason": "corner",
+      "reward": [
+        -1.0,
+        1.0
+      ],
+      "trajectory_sha256": "50d03304ea654fc03ca687d8b3158c0dda817353711563f3f8545f6a3fa5ec9d",
+      "captures": 3,
+      "opponent": "greedy",
+      "index": 12,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        2173753672,
+        3148834390,
+        2768319386,
+        2091085594
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 17,
+      "reason": "corner",
+      "reward": [
+        1.0,
+        -1.0
+      ],
+      "trajectory_sha256": "c7cea6ed41ddef035bb5c4f82296fa2c700cbda1c41e885dc45e93ad0000dc5f",
+      "captures": 3,
+      "opponent": "greedy",
+      "index": 13,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1815226269,
+        1507754184,
+        1055472176,
+        395654298
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 17,
+      "reason": "corner",
+      "reward": [
+        1.0,
+        -1.0
+      ],
+      "trajectory_sha256": "93dfcf49daebe86fffa09f8e0dd8f0385de945f944785a4a63bd6139870cc217",
+      "captures": 3,
+      "opponent": "greedy",
+      "index": 14,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        409309681,
+        2271497718,
+        1242126081,
+        1063717238
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "greedy",
+      "iteration": 0,
+      "plies": 14,
+      "reason": "corner",
+      "reward": [
+        -1.0,
+        1.0
+      ],
+      "trajectory_sha256": "59487d90d461c838a3f367be086b2b8c6345b8fd533db0c45c3b1285c7bb2361",
+      "captures": 2,
+      "opponent": "greedy",
+      "index": 15,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1823651329,
+        274158655,
+        151410683,
+        280492843
+      ],
+      "outcome": "losses"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "ec308a954649aac02a33a9b2ef2b8999513f434a929f64fc85743821faa260ea",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 0,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3320073142,
+        3019871655,
+        2710555745,
+        3292659462
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "d89aaadf89bdb0952917f78e7531626f17f8753904d8ef475a4417b5b1afdb8c",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 1,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        927157497,
+        2215879996,
+        1079640546,
+        432141737
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "4bc34b970f55dc586edc53211f87051dcaac039b264288a73439db299f1b5d1a",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 2,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3296804984,
+        1525211508,
+        1414695698,
+        3362873007
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 54,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "4842c4fa7c29c7712859e52f250bc5af07185c7b683301a64f857dbf09476336",
+      "captures": 1,
+      "opponent": "earlier_checkpoint",
+      "index": 3,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1138133622,
+        4051868800,
+        1108874107,
+        1900294256
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 52,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "9eca131400e6511c99f82534ff37086766e6ac4a088cb0a181c337829a8cd7ac",
+      "captures": 1,
+      "opponent": "earlier_checkpoint",
+      "index": 4,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        956387200,
+        2786594172,
+        3035631693,
+        2119712251
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "96d93559c794a93d4fba0d31bb425e5b4518c978829f5edb97a72c92a88621a5",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 5,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        3862779821,
+        3244581328,
+        3290155188,
+        599987753
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "dbb4a1894dcffa97aaaff3af8cab05da63a0267705b06df5dec69721741a8005",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 6,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        2467427939,
+        363145415,
+        1278605418,
+        3750004353
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "f4c3ec6f907707492d19df102bb0283d4653ad8c55647c64b4c778d773086e47",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 7,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        750001134,
+        2763985849,
+        4074787547,
+        1388308242
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "05381542f1cc753a7a8063dc2befb31056b8721e2e467883ffefd485ee4f60b5",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 8,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        450001851,
+        2892271895,
+        170932047,
+        3252613902
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "3818971dfaee96eb88276114149401f58dc3e4dafeae450ae1d6784862e921e5",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 9,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        2834674454,
+        1247584947,
+        921432225,
+        3680189661
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "43abe171d372d914104ce02c8e044f58955db888a22d15feb62f85c02d5c536c",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 10,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1027543663,
+        1772167124,
+        2009030016,
+        3392838708
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "4176570cddc07a4546b96bf295d090ee0eb7ed845f92152cfe4b5a3c8494d08e",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 11,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        2364872703,
+        711827042,
+        4255494266,
+        1761005283
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "03f446a88e1dcdd0df91542ac987f02e3c635e5acca1c0344fd0692e99abfd39",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 12,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1844311551,
+        4271742601,
+        1198423725,
+        1892307581
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "1a29585fe0a5b4289ca6ea2cbaa51044e3a5994a3d61c9d9174bfdf4e5958358",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 13,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1242322758,
+        1615341060,
+        2861187152,
+        1581284667
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "7ce1b8051835b76350b2a5001c7567c9219313e4852e0c964a550ff1526dacaf",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 14,
+      "model_colour": "Red",
+      "physical_first_player": "Blue",
+      "seeds": [
+        613685555,
+        4023913337,
+        296094055,
+        933542
+      ],
+      "outcome": "draws"
+    },
+    {
+      "phase": "earlier_checkpoint",
+      "iteration": 0,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "ff4a34a1afe242593cc60ebc515dfbce0ed73f7819b09c475c78880340501fce",
+      "captures": 0,
+      "opponent": "earlier_checkpoint",
+      "index": 15,
+      "model_colour": "Blue",
+      "physical_first_player": "Blue",
+      "seeds": [
+        1223509652,
+        2999762113,
+        1853303686,
+        1392827565
+      ],
+      "outcome": "draws"
+    }
+  ],
+  "comparisons": {
+    "random": {
+      "overall": {
+        "games": 16,
+        "wins": 0,
+        "draws": 16,
+        "losses": 0,
+        "score": 0.5,
+        "score_95_hoeffding": [
+          0.1604746210648451,
+          0.8395253789351549
+        ],
+        "win_probability_95_wilson": [
+          0.0,
+          0.1936076805344365
+        ],
+        "draw_probability_95_wilson": [
+          0.8063923194655637,
+          1.0
+        ],
+        "unique_trajectories": 16,
+        "reasons": {
+          "corner": 0,
+          "stalemate": 0,
+          "repetition": 0,
+          "no-capture limit": 16
+        },
+        "length_plies": {
+          "count": 16,
+          "mean": 32.75,
+          "min": 30.0,
+          "median": 30.0,
+          "p95": 41.0,
+          "max": 74.0
+        }
+      },
+      "by_colour": {
+        "Blue": {
+          "games": 8,
+          "wins": 0,
+          "draws": 8,
+          "losses": 0,
+          "score": 0.5,
+          "score_95_hoeffding": [
+            0.019838604340039645,
+            0.9801613956599604
+          ],
+          "win_probability_95_wilson": [
+            0.0,
+            0.32440756488388023
+          ],
+          "draw_probability_95_wilson": [
+            0.6755924351161198,
+            1.0
+          ],
+          "unique_trajectories": 8,
+          "reasons": {
+            "corner": 0,
+            "stalemate": 0,
+            "repetition": 0,
+            "no-capture limit": 8
+          },
+          "length_plies": {
+            "count": 8,
+            "mean": 30.0,
+            "min": 30.0,
+            "median": 30.0,
+            "p95": 30.0,
+            "max": 30.0
+          }
+        },
+        "Red": {
+          "games": 8,
+          "wins": 0,
+          "draws": 8,
+          "losses": 0,
+          "score": 0.5,
+          "score_95_hoeffding": [
+            0.019838604340039645,
+            0.9801613956599604
+          ],
+          "win_probability_95_wilson": [
+            0.0,
+            0.32440756488388023
+          ],
+          "draw_probability_95_wilson": [
+            0.6755924351161198,
+            1.0
+          ],
+          "unique_trajectories": 8,
+          "reasons": {
+            "corner": 0,
+            "stalemate": 0,
+            "repetition": 0,
+            "no-capture limit": 8
+          },
+          "length_plies": {
+            "count": 8,
+            "mean": 35.5,
+            "min": 30.0,
+            "median": 30.0,
+            "p95": 58.59999999999998,
+            "max": 74.0
+          }
+        }
+      }
+    },
+    "greedy": {
+      "overall": {
+        "games": 16,
+        "wins": 0,
+        "draws": 0,
+        "losses": 16,
+        "score": 0.0,
+        "score_95_hoeffding": [
+          0.0,
+          0.3395253789351549
+        ],
+        "win_probability_95_wilson": [
+          0.0,
+          0.1936076805344365
+        ],
+        "draw_probability_95_wilson": [
+          0.0,
+          0.1936076805344365
+        ],
+        "unique_trajectories": 16,
+        "reasons": {
+          "corner": 16,
+          "stalemate": 0,
+          "repetition": 0,
+          "no-capture limit": 0
+        },
+        "length_plies": {
+          "count": 16,
+          "mean": 22.875,
+          "min": 13.0,
+          "median": 17.0,
+          "p95": 43.75,
+          "max": 79.0
+        }
+      },
+      "by_colour": {
+        "Blue": {
+          "games": 8,
+          "wins": 0,
+          "draws": 0,
+          "losses": 8,
+          "score": 0.0,
+          "score_95_hoeffding": [
+            0.0,
+            0.48016139565996035
+          ],
+          "win_probability_95_wilson": [
+            0.0,
+            0.32440756488388023
+          ],
+          "draw_probability_95_wilson": [
+            0.0,
+            0.32440756488388023
+          ],
+          "unique_trajectories": 8,
+          "reasons": {
+            "corner": 8,
+            "stalemate": 0,
+            "repetition": 0,
+            "no-capture limit": 0
+          },
+          "length_plies": {
+            "count": 8,
+            "mean": 22.0,
+            "min": 14.0,
+            "median": 21.0,
+            "p95": 30.599999999999998,
+            "max": 32.0
+          }
+        },
+        "Red": {
+          "games": 8,
+          "wins": 0,
+          "draws": 0,
+          "losses": 8,
+          "score": 0.0,
+          "score_95_hoeffding": [
+            0.0,
+            0.48016139565996035
+          ],
+          "win_probability_95_wilson": [
+            0.0,
+            0.32440756488388023
+          ],
+          "draw_probability_95_wilson": [
+            0.0,
+            0.32440756488388023
+          ],
+          "unique_trajectories": 8,
+          "reasons": {
+            "corner": 8,
+            "stalemate": 0,
+            "repetition": 0,
+            "no-capture limit": 0
+          },
+          "length_plies": {
+            "count": 8,
+            "mean": 23.75,
+            "min": 13.0,
+            "median": 17.0,
+            "p95": 57.29999999999997,
+            "max": 79.0
+          }
+        }
+      }
+    },
+    "earlier_checkpoint": {
+      "overall": {
+        "games": 16,
+        "wins": 0,
+        "draws": 16,
+        "losses": 0,
+        "score": 0.5,
+        "score_95_hoeffding": [
+          0.1604746210648451,
+          0.8395253789351549
+        ],
+        "win_probability_95_wilson": [
+          0.0,
+          0.1936076805344365
+        ],
+        "draw_probability_95_wilson": [
+          0.8063923194655637,
+          1.0
+        ],
+        "unique_trajectories": 16,
+        "reasons": {
+          "corner": 0,
+          "stalemate": 0,
+          "repetition": 0,
+          "no-capture limit": 16
+        },
+        "length_plies": {
+          "count": 16,
+          "mean": 32.875,
+          "min": 30.0,
+          "median": 30.0,
+          "p95": 52.5,
+          "max": 54.0
+        }
+      },
+      "by_colour": {
+        "Blue": {
+          "games": 8,
+          "wins": 0,
+          "draws": 8,
+          "losses": 0,
+          "score": 0.5,
+          "score_95_hoeffding": [
+            0.019838604340039645,
+            0.9801613956599604
+          ],
+          "win_probability_95_wilson": [
+            0.0,
+            0.32440756488388023
+          ],
+          "draw_probability_95_wilson": [
+            0.6755924351161198,
+            1.0
+          ],
+          "unique_trajectories": 8,
+          "reasons": {
+            "corner": 0,
+            "stalemate": 0,
+            "repetition": 0,
+            "no-capture limit": 8
+          },
+          "length_plies": {
+            "count": 8,
+            "mean": 35.75,
+            "min": 30.0,
+            "median": 30.0,
+            "p95": 53.3,
+            "max": 54.0
+          }
+        },
+        "Red": {
+          "games": 8,
+          "wins": 0,
+          "draws": 8,
+          "losses": 0,
+          "score": 0.5,
+          "score_95_hoeffding": [
+            0.019838604340039645,
+            0.9801613956599604
+          ],
+          "win_probability_95_wilson": [
+            0.0,
+            0.32440756488388023
+          ],
+          "draw_probability_95_wilson": [
+            0.6755924351161198,
+            1.0
+          ],
+          "unique_trajectories": 8,
+          "reasons": {
+            "corner": 0,
+            "stalemate": 0,
+            "repetition": 0,
+            "no-capture limit": 8
+          },
+          "length_plies": {
+            "count": 8,
+            "mean": 30.0,
+            "min": 30.0,
+            "median": 30.0,
+            "p95": 30.0,
+            "max": 30.0
+          }
+        }
+      }
+    }
+  },
+  "phases": {
+    "setup": {
+      "seconds": 0.0,
+      "search_calls": 0,
+      "simulations": 0,
+      "search_worker_seconds": 0.0,
+      "inference_calls": 1,
+      "inference_states": 1,
+      "inference_seconds": 0.0011867920402437449,
+      "inference_batches": {
+        "1": 1
+      }
+    },
+    "random": {
+      "seconds": 13.783894750056788,
+      "search_calls": 262,
+      "simulations": 8384,
+      "search_worker_seconds": 11.39184186339844,
+      "inference_calls": 8008,
+      "inference_states": 8008,
+      "inference_seconds": 7.791966724675149,
+      "inference_batches": {
+        "1": 8008
+      },
+      "simulations_per_wall_second": 608.2460837105173,
+      "inference_states_per_wall_second": 580.967871941057
+    },
+    "greedy": {
+      "seconds": 6.62177374784369,
+      "search_calls": 179,
+      "simulations": 5728,
+      "search_worker_seconds": 5.858226461568847,
+      "inference_calls": 5697,
+      "inference_states": 5697,
+      "inference_seconds": 5.569041347131133,
+      "inference_batches": {
+        "1": 5697
+      },
+      "simulations_per_wall_second": 865.0250247322724,
+      "inference_states_per_wall_second": 860.3434996333373
+    },
+    "earlier_checkpoint": {
+      "seconds": 17.156345000956208,
+      "search_calls": 526,
+      "simulations": 16832,
+      "search_worker_seconds": 16.846106948214583,
+      "inference_calls": 16180,
+      "inference_states": 16180,
+      "inference_seconds": 15.851486557396129,
+      "inference_batches": {
+        "1": 16180
+      },
+      "simulations_per_wall_second": 981.0947494388735,
+      "inference_states_per_wall_second": 943.0913168916928
+    }
+  },
+  "elapsed_seconds": 39.97361483401619,
+  "process_cpu_seconds": 40.582549,
+  "process_peak_rss_bytes": 523436032,
+  "seed_policy": "SeedSequence([opponent_seed, game_index]) -> NumPy/Python/Torch, model MCTS, random opponent, earlier MCTS",
+  "action_policy": "32 full simulations; maximum visits; seeded random tie breaking; fresh trees each game",
+  "uncertainty": "Marginal Wilson win/draw intervals; distribution-free Hoeffding score interval. Independent seeded games conditional on these fixed agents/opening only; no training-seed or opening generalization.",
+  "child_process_seconds": 41.45537533296738,
+  "process_exit_code": 0,
+  "hard_timeout_seconds": 300
+}
