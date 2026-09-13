@@ -105,8 +105,9 @@ official win or one of these two limits is reached.
 
 The compiled foundation implements coordinates, action slots, official setup,
 serialized storage, snapshot ownership, legal movement, captures, and official
-wins. Reversible symmetries (#4) are implemented in the module documented below.
-Draw detection (#3) and the Game adapter (#5) are separate work.
+wins, plus the modelling-only repetition and noncapture draws (#3).
+Reversible symmetries (#4) are implemented in the module documented below.
+The Game adapter (#5) is separate work.
 The rules authority is the [project overview](https://github.com/users/lukekh/projects/1).
 
 ### Coordinates and actions
@@ -158,7 +159,9 @@ No parity relationship with absolute player labels is required, since future
 canonicalization can exchange player labels without changing total plies.
 
 Initialization records one position with next player Blue. A capture discards
-earlier history and records its resulting position as slot 0. Each noncapture
+earlier history and records its resulting position as slot 0. This is safe:
+each legal capture permanently removes exactly one piece, so no position before
+that capture can recur. Each noncapture
 appends one resulting position. This fits the capture/initial position plus all
 30 subsequent noncapture plies. The current board and next player equal the last
 valid history entry, historical players alternate, and history length equals
@@ -198,13 +201,34 @@ to the game engine. A capture resets history even at that storage boundary.
 `raw_movement_mask(pieces, player)` computes piece mobility without consulting
 terminal state. `Board.valid_moves(player)` uses that helper to return all legal
 one-square moves and returns an all-false mask after a corner win or when the
-current player is stuck. `Board.make_move(action, player, random_seed=0)` rejects
+current player is stuck, or after either modelling draw.
+`Board.make_move(action, player, random_seed=0)` rejects
 out-of-range, out-of-turn, and illegal actions before mutation, moves the attacker
 without changing its type, and records whether the defender was captured.
-`Board.check_end_game(next_player)` checks corner wins first, then stalemate, and
-returns `[1, -1]`, `[-1, 1]`, or `[0, 0]`. Draw rules remain the responsibility of
-issue #3. `Board.get_score(player)` reports remaining piece count for diagnostics;
-piece count is not an official score or win condition.
+`Board.check_end_game(next_player)` checks corner wins, next-player stalemate,
+threefold repetition, and the 30-noncapture limit, in that order. It returns
+`float32` absolute-player vectors: `[1, -1]` or `[-1, 1]` for wins, `[0, 0]`
+for ongoing play, and `[1e-4, 1e-4]` for either draw (`DRAW_VALUE` in constants).
+This small equal nonzero sentinel makes `result.any()` distinguish terminal draws
+from ongoing play, as required by MCTS, Coach, and Arena. It approximates zero
+draw utility; it is neither a win nor a reward based on material. End-to-end
+integration through the future Game adapter is tracked separately in #5/#11.
+
+`Board.get_repetition_count()` counts the current exact signed piece array and
+next player among valid history slots, including the latest slot. Same-type,
+same-colour pieces have no individual identity. Physical positions related only
+by symmetry do not match; neither counters nor total ply participate in position
+equality. No history or repetition cache exists outside the serialized state.
+
+`Board.get_terminal_reason()` returns `"ongoing"`, `"corner"`, `"stalemate"`,
+`"repetition"`, or `"no-capture limit"`. It shares the same terminal decision as
+rewards and legal masks, so official wins take precedence and simultaneous draws
+consistently report repetition. Queries do not mutate state, and public moves
+from any terminal state are rejected before mutation.
+
+`Board.get_score(player)` (the source for the future adapter's `getScore`)
+reports remaining piece count for diagnostics only. It is not reward shaping,
+an official score, or an additional win condition.
 
 All transitions preserve the storage invariants and detach borrowed storage
 before writes. Goal/player transformations must transform the whole history and
@@ -232,6 +256,14 @@ Rule fixtures cover edges, diagonal clearance, every type pairing for both
 colours, optional captures, conservation, occupied goals, own corners, corner
 wins, empty and blocked armies, terminal masks, and invalid actions. Both storage
 and legal transitions run through actual `njit` callers.
+
+Draw fixtures cover legal nonconsecutive repetitions, exchange of same-type
+pieces, exact type/colour/square/turn comparisons, symmetry distinctions, all
+30 individual noncaptures, captures on moves 29/30, terminal precedence and
+diagnostics, and rejection of moves after draws. Serialized midgame histories
+retain their future draw decisions, and all 12 uniform symmetries preserve both
+draw reasons. Compiled sibling transitions exercise copying and borrowing the
+same parent while retaining independent histories, counters, and results.
 
 ## Reversible symmetries
 
