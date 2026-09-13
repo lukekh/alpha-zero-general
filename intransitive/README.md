@@ -103,10 +103,10 @@ official win or one of these two limits is reached.
 
 ## State contract (version 1)
 
-This foundation implements issue #1: coordinates, action slots, official setup,
-serialized storage, and snapshot ownership. Movement/official wins (#2), draw
-detection (#3), and the Game adapter (#5) are separate work. Reversible
-symmetries (#4) are implemented in the module documented below.
+The compiled foundation implements coordinates, action slots, official setup,
+serialized storage, snapshot ownership, legal movement, captures, and official
+wins. Reversible symmetries (#4) are implemented in the module documented below.
+Draw detection (#3) and the Game adapter (#5) are separate work.
 The rules authority is the [project overview](https://github.com/users/lukekh/projects/1).
 
 ### Coordinates and actions
@@ -169,8 +169,10 @@ padding using the valid length. Total plies must be at least the capture clock.
 `serialize_state` validates and writes exact C-order bytes. `deserialize_state`
 requires the exact byte count, returns an owned writable array, and rejects
 unsupported versions, invalid codes/metadata, inconsistent history, and nonzero
-padding. `validate_state` checks these same storage invariants in compiled code.
-It does not validate legal reachability, inventory, corner winners, or repetition.
+padding. `validate_state` checks these same storage invariants in compiled code
+and rejects the malformed case where both players already occupy their winning
+corners. It does not validate legal reachability, inventory, a single corner
+winner, or repetition.
 
 ### Board ownership and extension points
 
@@ -193,10 +195,21 @@ does not infer or enforce captures, stop on repetition, or determine terminal wi
 At full history, a further noncapture is rejected; terminal enforcement belongs
 to the game engine. A capture resets history even at that storage boundary.
 
-Future transition methods must preserve these invariants and detach borrowed
-storage before writes. Goal/player transformations must transform the whole
-history and its next-player metadata consistently. `get_total_ply()` is the
-monotonic source for the future adapter's `getRound()`.
+`raw_movement_mask(pieces, player)` computes piece mobility without consulting
+terminal state. `Board.valid_moves(player)` uses that helper to return all legal
+one-square moves and returns an all-false mask after a corner win or when the
+current player is stuck. `Board.make_move(action, player, random_seed=0)` rejects
+out-of-range, out-of-turn, and illegal actions before mutation, moves the attacker
+without changing its type, and records whether the defender was captured.
+`Board.check_end_game(next_player)` checks corner wins first, then stalemate, and
+returns `[1, -1]`, `[-1, 1]`, or `[0, 0]`. Draw rules remain the responsibility of
+issue #3. `Board.get_score(player)` reports remaining piece count for diagnostics;
+piece count is not an official score or win condition.
+
+All transitions preserve the storage invariants and detach borrowed storage
+before writes. Goal/player transformations must transform the whole history and
+its next-player metadata consistently. `get_total_ply()` is the monotonic source
+for the future adapter's `getRound()`.
 
 ### Validation
 
@@ -214,9 +227,11 @@ Use that environment's Python executable for the test command above.
 The tests exhaust all coordinates and action slots, compare the setup to explicit
 Blue and Red fixtures, assert exact metadata/padding, exercise history capacity
 and capture reset, round-trip mutable and immutable serialized buffers, check
-128+ total plies and the maximum value, reject malformed states atomically, and
-run branch isolation through an actual `njit` caller. Storage fixtures deliberately
-do not substitute for legal-move or draw-detection tests in the dependent issues.
+128+ total plies and the maximum value, and reject malformed states atomically.
+Rule fixtures cover edges, diagonal clearance, every type pairing for both
+colours, optional captures, conservation, occupied goals, own corners, corner
+wins, empty and blocked armies, terminal masks, and invalid actions. Both storage
+and legal transitions run through actual `njit` callers.
 
 ## Reversible symmetries
 

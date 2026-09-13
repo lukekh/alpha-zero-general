@@ -34,6 +34,10 @@ def fixture(length, defender):
     state = Board().get_state()
     state[:, :, :32] = 0
     state[:, :, 1:length + 1] = rng.integers(-3, 4, (9, 9, length), dtype=np.int8)
+    # Random storage fixtures must not create simultaneous corner winners.
+    # Clear both goals throughout history for either defender assignment.
+    state[0, 0, :32] = 0
+    state[8, 8, :32] = 0
     # Repeated boards with equal and different movers must retain exact equality.
     if length > 4:
         state[:, :, 3] = state[:, :, 1]
