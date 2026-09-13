@@ -349,6 +349,16 @@ An architecture enforcing exact equivariance is also outside the first milestone
 
 ## 6. Network and replay design
 
+Implemented baseline (#10): `IntransitiveNNet.py` and `NNet.py`, network version 1.
+The [network contract in README.md](README.md#history-aware-policy-and-value-network-version-1)
+records exact feature order, normalizations, checkpoint metadata, and validation.
+The fixed 64-channel/four-block model has 326,706 parameters; measured history
+encoding and total inference costs are recorded in
+`benchmarks/network-v1-cpu.json` and reproducible with
+`python -m intransitive.benchmark_network`. The design below describes this
+baseline; full pipeline integration and expanded persistence checks remain
+#11 and #12.
+
 Keep compact game serialization separate from the network's feature meaning.
 Implement deterministic feature extraction inside the network so training,
 single predictions, batched inference, and ONNX export all use the same mapping.
