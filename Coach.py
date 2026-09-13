@@ -6,7 +6,7 @@ import pickle
 import zlib
 from tqdm import tqdm, trange
 from queue import SimpleQueue
-from threading import Thread, Lock
+from threading import Thread, Lock, Event
 from time import sleep
 
 from random import shuffle
@@ -84,7 +84,7 @@ class Coach():
 
 				return trainExamples if self.args.no_compression else [zlib.compress(pickle.dumps(x), level=1) for x in trainExamples]
 
-	def executeEpisodes_batch(self, i_thread, shared_memory, locks):
+	def executeEpisodes_batch(self, i_thread, shared_memory, locks, finished):
 		# Execute an episode in a thread until need to evaluate NN
 		# then unlock next threads, etc until batch of inferences to do is full
 		# then server runs inferences on batch.
@@ -98,6 +98,7 @@ class Coach():
 			episode = self.executeEpisode(my_mcts, my_game)
 			self.examplesQueue.put(episode)
 
+		finished[i_thread].set()
 		while shared_memory[-1] == 1: # We received signal 1, wait for other threads to complete
 			locks[i_thread+1].release()
 			locks[i_thread].acquire()
@@ -108,7 +109,7 @@ class Coach():
 		if self.nb_threads == 1:
 			for _ in trange(self.args.numEps, desc="Self Play", ncols=120):
 				iterationTrainExamples += self.executeEpisode()
-				self.MCTS = MCTS(self.game, self.nnet, self.args, dirichlet_noise=(self.args.dirichletAlpha!=0))
+				self.mcts = MCTS(self.game, self.nnet, self.args, dirichlet_noise=(self.args.dirichletAlpha!=0))
 				if len(iterationTrainExamples) == self.args.maxlenOfQueue:
 					log.warning(f'saturation of elements in iterationTrainExamples, think about decreasing numEps or increasing maxlenOfQueue')
 					break
@@ -121,27 +122,30 @@ class Coach():
 
 			self.examplesQueue = SimpleQueue()
 			[l.acquire() for l in locks]
-			threads_list = [Thread(target=self.executeEpisodes_batch, args=(i_thread, shared_memory, locks)) for i_thread in range(self.nb_threads)]
+			finished = [Event() for _ in range(self.nb_threads)]
+			threads_list = [Thread(target=self.executeEpisodes_batch, args=(i_thread, shared_memory, locks, finished)) for i_thread in range(self.nb_threads)]
 			threads_list.append(Thread(target=self.nnet.predict_server, args=(self.nb_threads, shared_memory, locks)))
 			[t.start() for t in threads_list]
 
 			progress = tqdm(total=self.args.numEps, desc="Self Play", ncols=120, smoothing=0.1, disable=None)
-			nb_examples, max_nb_episodes = 0, self.args.numEps
+			nb_examples = 0
 			while True:
 				sleep(1)
+				# Snapshot completion before draining, so every final episode is collected.
+				all_finished = all(event.is_set() for event in finished)
 				for _ in range(self.examplesQueue.qsize()):
 					iterationTrainExamples += self.examplesQueue.get_nowait()
 					nb_examples += 1
 					progress.update()
 				# Check if we have collected enough samples
-				if nb_examples >= self.args.numEps - self.nb_threads:
-					if nb_examples >= max_nb_episodes:
-						shared_memory[-1] = 2 # send signal 2 = all threads can be stopped
-						break
-					elif shared_memory[-1] == 0:
-						max_nb_episodes = nb_examples + self.nb_threads
-						progress.total = max_nb_episodes
-						shared_memory[-1] = 1 # send signal 1 = threads can stop after their current episode
+				# Wait for an episode before stopping, even when numEps <= workers.
+				# Otherwise slow first-time compilation can leave inference slots empty.
+				if shared_memory[-1] == 0 and nb_examples > 0 and nb_examples >= self.args.numEps - self.nb_threads:
+					progress.total = nb_examples + self.nb_threads
+					shared_memory[-1] = 1 # finish every in-flight episode first
+				elif all_finished:
+					shared_memory[-1] = 2 # no worker can need another inference
+					break
 			[t.join() for t in threads_list]
 			progress.close()
 
@@ -154,7 +158,8 @@ class Coach():
 		iteration. After every iteration, it retrains neural network with
 		examples in trainExamples (which has a maximum length of maxlenofQueue).
 		It then pits the new neural network against the old one and accepts it
-		only if it wins >= updateThreshold fraction of games.
+		only if it wins >= updateThreshold fraction of decisive games. Draws
+		are excluded from that ratio; an all-draw comparison rejects the candidate.
 		"""
 
 		for i in range(1, self.args.numIters + 1):
