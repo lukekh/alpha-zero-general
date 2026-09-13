@@ -67,7 +67,7 @@ class CanonicalGameIntegration(unittest.TestCase):
         validate_state(child)
         return child
 
-    def test_adapter_contract_and_owned_identity_hook(self):
+    def test_adapter_contract_and_owned_augmentation_hook(self):
         state = self.game.getInitBoard()
         saved = state.copy()
         self.assertEqual(self.game.getBoardSize(), (9, 9, 33))
@@ -80,7 +80,7 @@ class CanonicalGameIntegration(unittest.TestCase):
         valid = self.game.getValidMoves(state, 0)
         policy = valid.astype(np.float32) / valid.sum()
         triples = self.game.getSymmetries(state, policy.tolist(), valid)
-        self.assertEqual(len(triples), 1)
+        self.assertEqual(len(triples), 6)
         b, p, v = triples[0]
         np.testing.assert_array_equal(b, state)
         np.testing.assert_allclose(p, policy)

@@ -4,10 +4,13 @@ import numpy as np
 
 from Game import Game
 from .IntransitiveConstants import (
-    ACTION_SIZE, NUMBER_PLAYERS, STATE_SHAPE,
+    ACTION_SIZE, METADATA_PLANE, META_NEXT_PLAYER, NUMBER_PLAYERS, STATE_SHAPE,
 )
 from .IntransitiveDisplay import move_to_str, print_board
 from .IntransitiveLogicNumba import Board, serialize_state
+from .IntransitiveSymmetries import (
+    NUM_SYMMETRIES, transform_action_vector, transform_state,
+)
 
 
 class IntransitiveGame(Game):
@@ -57,13 +60,30 @@ class IntransitiveGame(Game):
         return self.board.get_state()
 
     def getSymmetries(self, board, pi, valid_actions):
-        """Identity training triple; full 12-way augmentation is tracked in #6."""
+        """Materialize distinct full triples in Coach's current-player frame.
+
+        E swaps absolute players; colour-only recanonicalization restores the
+        mover to 0 without undoing the spatial reflection or action mapping.
+        Coach can therefore reuse its relative outcome and Q targets unchanged.
+        """
         canonical = self.getCanonicalForm(board, 0)
         policy = np.array(pi, dtype=np.float32, copy=True)
         valid = np.array(valid_actions, dtype=np.bool_, copy=True)
         if policy.shape != (ACTION_SIZE,) or valid.shape != (ACTION_SIZE,):
             raise ValueError("Expected policy and mask vectors of 648 action slots")
-        return [(canonical, policy, valid)]
+        examples, seen = [], set()
+        for symmetry in range(NUM_SYMMETRIES):
+            transformed = transform_state(canonical, symmetry)
+            player = int(transformed[:, :, METADATA_PLANE].flat[META_NEXT_PLAYER])
+            transformed = self.getCanonicalForm(transformed, player)
+            transformed_policy = transform_action_vector(policy, symmetry)
+            transformed_valid = transform_action_vector(valid, symmetry)
+            key = (transformed.tobytes(), transformed_policy.tobytes(),
+                   transformed_valid.tobytes())
+            if key not in seen:
+                seen.add(key)
+                examples.append((transformed, transformed_policy, transformed_valid))
+        return examples
 
     def stringRepresentation(self, board):
         # Search identity includes goals, counters, and history, unlike repetition.
