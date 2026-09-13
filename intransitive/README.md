@@ -107,7 +107,7 @@ The compiled foundation implements coordinates, action slots, official setup,
 serialized storage, snapshot ownership, legal movement, captures, and official
 wins, plus the modelling-only repetition and noncapture draws (#3).
 Reversible symmetries (#4) are implemented in the module documented below.
-The Game adapter (#5) is separate work.
+The Game adapter (#5) supports canonical player perspective and compiled MCTS.
 The rules authority is the [project overview](https://github.com/users/lukekh/projects/1).
 
 ### Coordinates and actions
@@ -211,8 +211,9 @@ threefold repetition, and the 30-noncapture limit, in that order. It returns
 for ongoing play, and `[1e-4, 1e-4]` for either draw (`DRAW_VALUE` in constants).
 This small equal nonzero sentinel makes `result.any()` distinguish terminal draws
 from ongoing play, as required by MCTS, Coach, and Arena. It approximates zero
-draw utility; it is neither a win nor a reward based on material. End-to-end
-integration through the future Game adapter is tracked separately in #5/#11.
+draw utility; it is neither a win nor a reward based on material. The Game adapter
+and compiled MCTS preserve these vectors; game registration and full training
+pipeline integration remain tracked in #11.
 
 `Board.get_repetition_count()` counts the current exact signed piece array and
 next player among valid history slots, including the latest slot. Same-type,
@@ -226,14 +227,55 @@ rewards and legal masks, so official wins take precedence and simultaneous draws
 consistently report repetition. Queries do not mutate state, and public moves
 from any terminal state are rejected before mutation.
 
-`Board.get_score(player)` (the source for the future adapter's `getScore`)
+`Board.get_score(player)` (the source for the adapter's `getScore`)
 reports remaining piece count for diagnostics only. It is not reward shaping,
 an official score, or an additional win condition.
 
 All transitions preserve the storage invariants and detach borrowed storage
 before writes. Goal/player transformations must transform the whole history and
 its next-player metadata consistently. `get_total_ply()` is the monotonic source
-for the future adapter's `getRound()`.
+for the adapter's `getRound()`.
+
+### Game adapter and canonical search
+
+`IntransitiveGame` implements the shared `Game` interface with player IDs 0/1,
+`num_players = 2`, observation shape `(9, 9, 33)`, and 648 actions. It exposes
+initialization, transitions, legal masks, absolute-player reward vectors,
+remaining-piece diagnostics, total plies, canonicalization, state keys, a training
+triple hook, and basic coordinate display. `getInitBoard()` always restores the
+official Blue-first opening. `getBoardSize()` describes the complete serialized
+observation, including history and metadata, rather than only the 9×9 piece plane.
+
+`getCanonicalForm(state, player)` requires the state's next player and returns an
+owned snapshot whose mover is player 0. For player 1, compiled
+`Board.swap_players(1)` negates every current and populated historical piece
+plane, exchanges the next player, A1 defender, and each populated historical
+player label. Coordinates, piece types, history order, clocks, total plies,
+version, and zero padding stay intact. A second swap restores every byte.
+Canonical player 0 may therefore defend I9 and target A1. Labels in a canonical
+state are relative to its mover, not necessarily physical Blue/Red.
+
+Actions keep their source square and direction through canonicalization. Coach
+and Arena can apply a selected action directly to the original board. The shared
+MCTS helper calls `copy_state`, `make_move`, `swap_players`, and `get_state` on the
+Numba Board without a Python fallback. Its next canonical state agrees byte for
+byte with applying the action physically and then canonicalizing the next mover.
+All mutations detach borrowed states, and returned snapshots survive sibling
+searches and later adapter queries.
+
+`stringRepresentation` uses all 2673 versioned serialized bytes in C order,
+including history, turns, goals, and counters. This search key is deliberately
+separate from physical repetition's exact piece-array-plus-turn comparison.
+`getRound()` decodes the five base-128 total-ply digits; captures reset the draw
+clock but never reset the round used for MCTS memory cleanup.
+
+`getSymmetries(state, policy, valid_actions)` currently returns one owned identity
+triple with float32 policy and boolean mask, using Coach's triple interface.
+Full 12-way augmentation, recanonicalization, and deduplication belong to #6.
+`moveToString` formats fixed coordinates such as `B5->C5`; `printBoard` prints
+rows 9 through 1 and identifies player and goal ownership. Human/baseline players
+and richer display remain in #8; registration, neural inference, and full
+self-play integration remain in #10/#11.
 
 ### Validation
 
@@ -305,7 +347,7 @@ E sends it to E8→E7.
 `out[p[a]] = vector[a]`, preserving dtype and policy mass.
 `transform_player_vector(vector, id)` maps a two-entry **absolute-player** value
 or Q vector, swapping entries exactly when E occurs. Relative current-player
-training targets belong to the later canonicalization/augmentation integration.
+training targets belong to the later augmentation integration (#6).
 Apply the inverse ID to undo any mapping. Every transform returns fresh storage,
 including identity, and never mutates its input.
 
