@@ -31,7 +31,7 @@ def load_position(board, pieces, next_player=0, a1_defender=0):
 def compiled_rules(board, state, action):
     board.copy_state(state, True)
     legal_before = board.valid_moves(0)
-    next_player = board.make_move(action, 0, 17)
+    next_player = board.make_move(action, 0, random_seed=17)
     result = board.check_end_game(next_player)
     return legal_before, board.get_state(), next_player, result
 
