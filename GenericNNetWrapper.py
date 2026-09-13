@@ -146,13 +146,16 @@ class GenericNNetWrapper(NeuralNet):
 		while shared_memory[-1] <= 1:
 			locks[-1].acquire() # Wait for all inputs
 
-			# Batch inference
-			ort_outs = self.ort_session.run(None, {
-				'board'        : np.concatenate([x[0] for x in shared_memory[:nb_threads]]),
-				'valid_actions': np.concatenate([x[1] for x in shared_memory[:nb_threads]]),
-			})
-			for i in range(nb_threads):
-				shared_memory[i+nb_threads] = (ort_outs[0][i], ort_outs[1][i])
+			# Finished (or zero-quota) workers have no input. Never pad with
+			# another game's history or evaluate stale slots during shutdown.
+			active = [i for i in range(nb_threads) if shared_memory[i] is not None]
+			if active and shared_memory[-1] != 2:
+				ort_outs = self.ort_session.run(None, {
+					'board': np.concatenate([shared_memory[i][0] for i in active]),
+					'valid_actions': np.concatenate([shared_memory[i][1] for i in active]),
+				})
+				for row, i in enumerate(active):
+					shared_memory[i+nb_threads] = (ort_outs[0][row], ort_outs[1][row])
 
 			locks[0].release() # Unblock 1st thread
 

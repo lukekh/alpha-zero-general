@@ -1,0 +1,52 @@
+Self Play:   0%|                                                                                  | 0/8 [00:00<?, ?it/s]Self Play:  12%|█████████▎                                                                | 1/8 [00:01<00:13,  1.90s/it]Self Play:  25%|██████████████████▌                                                       | 2/8 [00:02<00:08,  1.37s/it]Self Play:  38%|███████████████████████████▊                                              | 3/8 [00:03<00:05,  1.18s/it]Self Play:  50%|█████████████████████████████████████                                     | 4/8 [00:04<00:04,  1.10s/it]Self Play:  62%|██████████████████████████████████████████████▎                           | 5/8 [00:05<00:03,  1.05s/it]Self Play:  75%|███████████████████████████████████████████████████████▌                  | 6/8 [00:06<00:02,  1.02s/it]Self Play:  88%|████████████████████████████████████████████████████████████████▊         | 7/8 [00:07<00:01,  1.00s/it]Self Play: 100%|██████████████████████████████████████████████████████████████████████████| 8/8 [00:08<00:00,  1.01it/s]Self Play: 100%|██████████████████████████████████████████████████████████████████████████| 8/8 [00:08<00:00,  1.09s/it]
+{
+  "passed": true,
+  "original_positions": 240,
+  "augmented_examples": 2880,
+  "training": [
+    {
+      "examples": 2880,
+      "updates": 45,
+      "sampled_examples": 2880,
+      "seconds": 8.615039417054504,
+      "updates_per_second": 5.223423576091492
+    }
+  ],
+  "game_summary": {
+    "self_play": {
+      "length_plies": {
+        "count": 8,
+        "mean": 30.0,
+        "min": 30.0,
+        "median": 30.0,
+        "p95": 30.0,
+        "max": 30.0
+      },
+      "reasons": {
+        "corner": 0,
+        "stalemate": 0,
+        "repetition": 0,
+        "no-capture limit": 8
+      }
+    },
+    "evaluation": {
+      "length_plies": {
+        "count": 8,
+        "mean": 43.0,
+        "min": 30.0,
+        "median": 43.0,
+        "p95": 56.0,
+        "max": 56.0
+      },
+      "reasons": {
+        "corner": 0,
+        "stalemate": 0,
+        "repetition": 0,
+        "no-capture limit": 8
+      }
+    }
+  },
+  "learn_seconds": 28.867629666929133,
+  "process_peak_rss_bytes": 528302080
+}
+Completed: /Users/work/orca/workspaces/alpha-zero-general/issue-14-intransitive-measure-training/checkpoints/issue14/calibration-w1-seed143/report.json

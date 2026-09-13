@@ -491,7 +491,8 @@ The #13 gate is recorded in [smoke/README.md](smoke/README.md): a bounded
 ONNX cycle, source-backed CPU and ONNX continuations, checkpoint games on both
 paths, acceptance/rejection handling, and retained candidate weights. Exact
 commands, pinned dependencies, reports and logs accompany the run. This completes
-the playable training gate; measured resource use and baseline budgets remain #14.
+the playable training gate. Resource measurements and the selected bounded
+configuration for #15 are recorded in the [#14 benchmark](benchmarks/training/README.md).
 
 ### Milestone C: measured baseline
 

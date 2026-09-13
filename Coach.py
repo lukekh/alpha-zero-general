@@ -5,9 +5,8 @@ from collections import deque
 import pickle
 import zlib
 from tqdm import tqdm, trange
-from queue import SimpleQueue
+from queue import SimpleQueue, Empty
 from threading import Thread, Lock, Event
-from time import sleep
 
 from random import shuffle
 import numpy as np
@@ -34,7 +33,7 @@ class Coach():
 		self.consecutive_failures = 0
 		self.nb_threads = self.args.parallel_inferences
 
-	def executeEpisode(self, my_mcts=None, my_game=None):
+	def executeEpisode(self, my_mcts=None, my_game=None, rng=None):
 		"""
 		This function executes one episode of self-play, starting with player 0.
 		As the game is played, each turn is added as a training example to
@@ -60,7 +59,7 @@ class Coach():
 			episodeStep += 1
 			canonicalBoard = my_game.getCanonicalForm(board, curPlayer)
 			pi, q, is_full_search = my_mcts.getActionProb(canonicalBoard, temp=1.)
-			action = random_pick(pi, temperature=self.temp_for_selfplay(episodeStep))
+			action = random_pick(pi, temperature=self.temp_for_selfplay(episodeStep), rng=rng)
 
 			if is_full_search:
 				valids = my_game.getValidMoves(canonicalBoard, 0)
@@ -88,34 +87,43 @@ class Coach():
 		# Execute an episode in a thread until need to evaluate NN
 		# then unlock next threads, etc until batch of inferences to do is full
 		# then server runs inferences on batch.
-		# Each thread loops until receiving a signal to stop
+		# Each worker has a fixed quota, including zero when numEps < workers.
 		locks[i_thread].acquire()
 		batch_info = (i_thread, i_thread+self.nb_threads, shared_memory, locks)
-		while shared_memory[-1] == 0: # Signal 0 means to continue computing
+		for episode_id in range(i_thread, self.args.numEps, self.nb_threads):
 			my_game = self.game.__class__()
 			my_game.getInitBoard()
 			my_mcts = MCTS(my_game, self.nnet, self.args, dirichlet_noise=(self.args.dirichletAlpha!=0), batch_info=batch_info)
-			episode = self.executeEpisode(my_mcts, my_game)
+			episode = self.executeEpisode(my_mcts, my_game, rng=self.episode_rng(episode_id))
 			self.examplesQueue.put(episode)
 
+		shared_memory[i_thread] = None # Do not infer stale inputs from a finished worker.
 		finished[i_thread].set()
-		while shared_memory[-1] == 1: # We received signal 1, wait for other threads to complete
+		while shared_memory[-1] != 2: # Pass the token until every worker has finished.
 			locks[i_thread+1].release()
 			locks[i_thread].acquire()
 		locks[i_thread+1].release()
 
+	def episode_rng(self, episode_id):
+		"""Optional per-episode seed, independent of worker scheduling."""
+		seed = getattr(self.args, 'selfplay_seed', None)
+		if seed is None:
+			return None
+		return np.random.default_rng(np.random.SeedSequence([seed, episode_id]))
+
 	def executeEpisodes(self):
 		iterationTrainExamples = deque([], maxlen=self.args.maxlenOfQueue)
 		if self.nb_threads == 1:
-			for _ in trange(self.args.numEps, desc="Self Play", ncols=120):
-				iterationTrainExamples += self.executeEpisode()
+			for episode_id in trange(self.args.numEps, desc="Self Play", ncols=120):
+				rng = self.episode_rng(episode_id)
+				iterationTrainExamples += self.executeEpisode(**({"rng": rng} if rng is not None else {}))
 				self.mcts = MCTS(self.game, self.nnet, self.args, dirichlet_noise=(self.args.dirichletAlpha!=0))
 				if len(iterationTrainExamples) == self.args.maxlenOfQueue:
 					log.warning(f'saturation of elements in iterationTrainExamples, think about decreasing numEps or increasing maxlenOfQueue')
 					break
 		else:
 			# N slots for NN inputs, N slots for NN ouputs, 1 slot for signaling
-			# signal: 0 = compute, 1 = stop after current episode, 2 = stop
+			# signal: 0 = compute assigned episodes, 2 = stop
 			shared_memory = [None] * (2*self.nb_threads) + [0]
 			# list of Locks: "0;n-1" are MCTSs and "n" is the batch NN processor
 			locks = [Lock() for _ in range(self.nb_threads+1)]
@@ -128,24 +136,17 @@ class Coach():
 			[t.start() for t in threads_list]
 
 			progress = tqdm(total=self.args.numEps, desc="Self Play", ncols=120, smoothing=0.1, disable=None)
-			nb_examples = 0
-			while True:
-				sleep(1)
-				# Snapshot completion before draining, so every final episode is collected.
-				all_finished = all(event.is_set() for event in finished)
-				for _ in range(self.examplesQueue.qsize()):
-					iterationTrainExamples += self.examplesQueue.get_nowait()
-					nb_examples += 1
+			while not all(event.is_set() for event in finished):
+				try:
+					iterationTrainExamples += self.examplesQueue.get(timeout=0.05)
 					progress.update()
-				# Check if we have collected enough samples
-				# Wait for an episode before stopping, even when numEps <= workers.
-				# Otherwise slow first-time compilation can leave inference slots empty.
-				if shared_memory[-1] == 0 and nb_examples > 0 and nb_examples >= self.args.numEps - self.nb_threads:
-					progress.total = nb_examples + self.nb_threads
-					shared_memory[-1] = 1 # finish every in-flight episode first
-				elif all_finished:
-					shared_memory[-1] = 2 # no worker can need another inference
-					break
+				except Empty:
+					pass
+			# Every producer has finished; collect any last episodes before shutdown.
+			while not self.examplesQueue.empty():
+				iterationTrainExamples += self.examplesQueue.get_nowait()
+				progress.update()
+			shared_memory[-1] = 2
 			[t.join() for t in threads_list]
 			progress.close()
 
@@ -284,20 +285,20 @@ class Coach():
 		t_begin, t_end, half_life = 0.5, 0.0, abs(self.args.tempThreshold)
 		return t_end + (t_begin - t_end) * (0.5 ** (n / half_life))
 
-def applyTemperatureAndNormalize(probs, temperature):
+def applyTemperatureAndNormalize(probs, temperature, rng=None):
 	if temperature == 0:
 		bests = np.array(np.argwhere(probs == np.max(probs))).flatten()
 		result = [0] * len(probs)
-		result[np.random.choice(bests)] = 1
+		result[(np.random if rng is None else rng).choice(bests)] = 1
 	else:
 		result = [x ** (1. / temperature) for x in probs]
 		result_sum = float(sum(result))
 		result = [x / result_sum for x in result]
 	return result
 
-def random_pick(probs, temperature=1.):
-	probs_with_temp = applyTemperatureAndNormalize(probs, temperature)
-	pick = np.random.choice(len(probs_with_temp), p=probs_with_temp)
+def random_pick(probs, temperature=1., rng=None):
+	probs_with_temp = applyTemperatureAndNormalize(probs, temperature, rng=rng)
+	pick = (np.random if rng is None else rng).choice(len(probs_with_temp), p=probs_with_temp)
 	return pick
 
 if __name__ == "__main__":

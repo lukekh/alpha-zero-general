@@ -295,12 +295,28 @@ class SharedPipeline(unittest.TestCase):
         self.assertIsNot(searches[0], searches[1])
         self.assertIsNot(searches[1], coach.mcts)
 
+    def test_episode_sampling_seed_is_independent_of_global_rng_and_worker(self):
+        from Coach import random_pick
+        coach = make_coach(selfplay_seed=14)
+        first = coach.episode_rng(3)
+        expected = [random_pick([0.5, 0.5], temperature=t, rng=first)
+                    for t in [0., 1.] * 20]
+        np.random.seed(999)
+        second = coach.episode_rng(3)
+        actual = [random_pick([0.5, 0.5], temperature=t, rng=second)
+                  for t in [0., 1.] * 20]
+        self.assertEqual(actual, expected)
+        self.assertNotEqual(coach.episode_rng(3).integers(2**32),
+                            coach.episode_rng(4).integers(2**32))
+
     def test_parallel_real_onnx_workers_have_independent_complete_states(self):
         # A subprocess bounds failures in the existing lock-based worker protocol.
-        result = subprocess.run([sys.executable, '-m', 'intransitive.tests.test_pipeline', '--workers'],
-                                cwd=ROOT, text=True, capture_output=True, timeout=180)
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn('independent workers verified', result.stdout)
+        for games in (1, 3):
+            with self.subTest(games=games):
+                result = subprocess.run([sys.executable, '-m', 'intransitive.tests.test_pipeline',
+                    '--workers', str(games)], cwd=ROOT, text=True, capture_output=True, timeout=180)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertIn('independent workers verified', result.stdout)
 
     def test_pit_cli_random_opponents(self):
         result = subprocess.run([sys.executable, 'pit.py', 'intransitive', 'random', 'random', '-n', '2'],
@@ -309,14 +325,14 @@ class SharedPipeline(unittest.TestCase):
         self.assertIn('random vs random', result.stdout)
 
 
-def check_workers():
+def check_workers(games=2):
     class WorkerGame(RecordingGame):
         instances = []
         def __init__(self):
             super().__init__()
             self.instances.append(self)
 
-    coach = make_coach(WorkerGame(), parallel_inferences=2, numEps=2)
+    coach = make_coach(WorkerGame(), parallel_inferences=2, numEps=games)
     untouched = coach.game.getInitBoard().copy()
     server = coach.nnet.predict_server
     def delayed_server(*args):
@@ -326,7 +342,7 @@ def check_workers():
     coach.nnet.predict_server = delayed_server
     examples = coach.executeEpisodes()
     workers = WorkerGame.instances[1:]
-    assert len(workers) >= 2
+    assert len(workers) == games
     assert examples
     assert coach.examplesQueue.empty()
     assert len(examples) == sum(len(triples) for w in workers for _, triples in w.batches)
@@ -364,6 +380,6 @@ def check_workers():
 
 if __name__ == '__main__':
     if '--workers' in sys.argv:
-        check_workers()
+        check_workers(int(sys.argv[-1]) if sys.argv[-1].isdigit() else 2)
     else:
         unittest.main()

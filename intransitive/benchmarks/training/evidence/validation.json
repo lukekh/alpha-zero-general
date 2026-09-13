@@ -1,0 +1,56 @@
+{
+  "reports": {
+    "final-w1-seed140.json": "72428b0c13d7ce2dc7c277a59191c788989da340f6dde5ad8d8a716f7a5e51a0",
+    "final-w1-seed141.json": "3e44b5145dd4d975e4f6fdc1d6f801176e002916b922b017d329b5b46be4c750",
+    "final-w1-seed142.json": "c2ba524932cb64cdf9166835242763d727a99b56c636bbbd0e417a8f33abd8b8",
+    "final-w2-seed140.json": "1e0a465968f9ced41e155cf4fd1351bcb2f73a05d325535e7084cf4f339e2a19",
+    "final-w2-seed141.json": "63135e1a128a8037721e7e81a5de79b3f724d088fe666f686cadbe3d9cf09527",
+    "final-w2-seed142.json": "f3ef1340d17ad3196e047fb49a51a70f84c70774341465da20fb1a046f81b8ef",
+    "calibration-w1-seed143.json": "195bfa71ae9fbb6c5372ed5419a8184a5c7fa44e8eabddb28c69f16915522897"
+  },
+  "passed": true,
+  "processes": 7,
+  "tests": {
+    "intransitive": 116,
+    "repository": 7,
+    "post_fix_accounting": 2
+  },
+  "original_positions": 960,
+  "augmented_examples": 11520,
+  "optimizer_updates": 177,
+  "games": 64,
+  "source_manifests_identical": true,
+  "worker_pairs": [
+    {
+      "seed": 140,
+      "self_play_trajectories_identical": true,
+      "one_worker_self_play_seconds": 2.666478583938442,
+      "two_worker_self_play_seconds": 2.595056665944867,
+      "self_play_speedup": 1.0275222961143202
+    },
+    {
+      "seed": 141,
+      "self_play_trajectories_identical": true,
+      "one_worker_self_play_seconds": 2.6886354580055922,
+      "two_worker_self_play_seconds": 2.705161250079982,
+      "self_play_speedup": 0.9938910140480901
+    },
+    {
+      "seed": 142,
+      "self_play_trajectories_identical": true,
+      "one_worker_self_play_seconds": 2.650645749992691,
+      "two_worker_self_play_seconds": 2.65035958297085,
+      "self_play_speedup": 1.000107972904386
+    }
+  ],
+  "source_snapshots_verified": true,
+  "local_artifact_hashes_verified": true,
+  "onnx_session_options_checked_after_trials": {
+    "intra_op_num_threads": 1,
+    "inter_op_num_threads": 0,
+    "execution_mode": "ExecutionMode.ORT_SEQUENTIAL",
+    "providers": [
+      "CPUExecutionProvider"
+    ]
+  }
+}

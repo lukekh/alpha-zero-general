@@ -1,0 +1,105 @@
+{
+  "purpose": "Recommended budget for issue #15; not a completed baseline or strength claim",
+  "settings": {
+    "game": "intransitive",
+    "numMCTSSims": 32,
+    "prob_fullMCTS": 1.0,
+    "ratio_fullMCTS": 1,
+    "forced_playouts": false,
+    "universes": 0,
+    "cpuct": 1.25,
+    "fpu": 0.0,
+    "no_mem_optim": false,
+    "dirichletAlpha": 0.0,
+    "parallel_inferences": 1,
+    "temperature": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "tempThreshold": 10,
+    "no_compression": false,
+    "numEps": 8,
+    "maxlenOfQueue": 57600,
+    "numIters": 4,
+    "numItersHistory": 2,
+    "profile": false,
+    "arenaCompare": 8,
+    "updateThreshold": 0.6,
+    "stop_after_N_fail": 4,
+    "useray": false,
+    "forget_examples": false,
+    "learn_rate": 0.0003,
+    "dropout": 0.0,
+    "epochs": 1,
+    "batch_size": 64,
+    "nn_version": 1,
+    "q_weight": 0.5,
+    "checkpoint": "checkpoints/intransitive-baseline",
+    "seed": 150,
+    "inference_backend": "onnx",
+    "load_model": false,
+    "load_folder_file": null,
+    "selfplay_seed": 150
+  },
+  "budgets": {
+    "training_wall_seconds": 600,
+    "evaluation_wall_seconds": 300,
+    "total_wall_seconds": 900,
+    "self_play_games": 32,
+    "candidate_arena_games": 32,
+    "post_training_games": 48,
+    "training_iterations": 4,
+    "epochs_per_iteration": 1,
+    "mcts_simulations_per_move": 32,
+    "batch_size": 64,
+    "replay_planning_bytes": 134217728,
+    "replay_histories": 2,
+    "examples_per_history": 57600,
+    "total_retained_examples": 115200
+  },
+  "replay_derivation": {
+    "observed_max_compressed_sample_bytes": 747,
+    "bytes_object_overhead": 33,
+    "reference_bytes": 8,
+    "safety_factor": 1.25,
+    "planning_bytes_per_example": 985,
+    "memory_capacity_per_history_multiple_of_12": 68124,
+    "rule_bound_plies_per_game": 600,
+    "rule_bound_examples_per_history": 57600,
+    "configured_examples_per_history": 57600
+  },
+  "seeds": {
+    "python_numpy_torch_initial": 150,
+    "self_play_iteration_seeds": [
+      150,
+      151,
+      152,
+      153
+    ],
+    "episode_generator": "numpy.random.default_rng(numpy.random.SeedSequence([iteration_seed, episode_id]))",
+    "evaluation_by_opponent": {
+      "random": 151,
+      "greedy": 152,
+      "earlier_checkpoint": 153
+    }
+  },
+  "evaluation": {
+    "games_per_opponent": 16,
+    "games_per_model_colour": 8,
+    "opponents": [
+      "random",
+      "greedy",
+      "earlier available checkpoint"
+    ],
+    "physical_first_player": "Blue",
+    "max_simulations_per_move": 32
+  },
+  "execution_notes": [
+    "Use a fresh checkpoint directory and save all candidates, including rejected ones.",
+    "Set selfplay_seed to the corresponding iteration seed before each self-play phase.",
+    "Enforce wall deadlines with a subprocess supervisor; a deadline hit is an incomplete run, not a modelling draw.",
+    "Review actual sizes and tails before extending the budget; the replay byte allowance is a measured planning estimate.",
+    "Keep updateThreshold=0.6 and both modelling draw rules unchanged."
+  ]
+}
