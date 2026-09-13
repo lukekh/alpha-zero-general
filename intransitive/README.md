@@ -105,7 +105,8 @@ official win or one of these two limits is reached.
 
 This foundation implements issue #1: coordinates, action slots, official setup,
 serialized storage, and snapshot ownership. Movement/official wins (#2), draw
-detection (#3), symmetries (#4), and the Game adapter (#5) are separate work.
+detection (#3), and the Game adapter (#5) are separate work. Reversible
+symmetries (#4) are implemented in the module documented below.
 The rules authority is the [project overview](https://github.com/users/lukekh/projects/1).
 
 ### Coordinates and actions
@@ -216,3 +217,52 @@ and capture reset, round-trip mutable and immutable serialized buffers, check
 128+ total plies and the maximum value, reject malformed states atomically, and
 run branch isolation through an actual `njit` caller. Storage fixtures deliberately
 do not substitute for legal-move or draw-detection tests in the dependent issues.
+
+## Reversible symmetries
+
+`IntransitiveSymmetries.py` implements issue #4. These are **continuation
+equivalences**: they preserve the future game from a transformed state, but may
+change the initial type inventory or starting player. Actual games still use
+`Board.init_game()` with the official 3/3/4 inventory and Blue first.
+
+The commuting generators are C (rock → scissors → paper → rock), D
+(`(x,y) → (y,x)`), and E (`(x,y) → (8-y,8-x)` plus swapping player labels).
+Only their 12 combinations are included; arbitrary two-type exchanges reverse
+the capture cycle and quarter-turn rotations move the defended corners.
+
+IDs are permanently `k + 3*d + 6*e` for `C^k D^d E^e`, with `k=0..2` and
+`d,e=0..1`. Identity/C/D/E have IDs 0/1/3/6. `symmetry_id` reduces integer
+exponents modulo their orders; `symmetry_components` decodes IDs.
+`compose_symmetries(first, second)` applies first then second;
+`inverse_symmetry` reverses a transform. All numeric helpers are callable from
+Numba `njit` code; permutation tables are read-only NumPy arrays.
+
+`transform_state(state, id)` validates storage and returns an owned copy,
+transforming current and every populated historical board with the same element.
+E also exchanges the current mover and every recorded historical mover. History
+ordering, counters, version, padding, and exact repetition equality are preserved.
+No historical entry is independently canonicalized. D fixes A1/I9, while E swaps
+both the corners and player labels: its new A1 defender is
+`1 - (1 - old_A1_defender)`, so the stored defender byte stays unchanged for
+all 12 elements, even when player 0 initially defends I9.
+
+`ACTION_PERMUTATIONS[id, a]` gives the forward action slot and
+`INVERSE_ACTION_PERMUTATIONS[id, transformed_a]` recovers the original. Both
+cover all 648 slots, including off-board destinations. `transform_action` maps
+one slot; `transform_coordinate` also accepts off-board destinations.
+D maps direction `(dx,dy)` to `(dy,dx)` and E maps it to `(-dy,-dx)`;
+C leaves action indices unchanged. For example, D sends B5→C5 to E2→E3;
+E sends it to E8→E7.
+
+`transform_action_vector(vector, id)` maps a NumPy policy or mask using
+`out[p[a]] = vector[a]`, preserving dtype and policy mass.
+`transform_player_vector(vector, id)` maps a two-entry **absolute-player** value
+or Q vector, swapping entries exactly when E occurs. Relative current-player
+training targets belong to the later canonicalization/augmentation integration.
+Apply the inverse ID to undo any mapping. Every transform returns fresh storage,
+including identity, and never mutates its input.
+
+The test command above also runs exhaustive group laws (all 12³ triples), all
+12×648 action mappings and inverses, independent coordinate fixtures, full-state
+composition/round trips with 1/5/31 history entries and both corner assignments,
+policy/mask/value mapping, unchanged initialization, and an actual compiled caller.
