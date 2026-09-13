@@ -1,4 +1,4 @@
-"""Compiled Board storage foundation. Movement and terminal rules follow separately."""
+"""Compiled state storage, movement, captures, and official win rules."""
 
 import numpy as np
 from numba import int8, njit
@@ -10,6 +10,7 @@ from .IntransitiveConstants import (
     META_HISTORY_PLAYERS, META_NEXT_PLAYER, META_NO_CAPTURE,
     META_RESERVED, META_TOTAL_PLY, META_VERSION, NUMBER_PLAYERS,
     STATE_BYTES, STATE_SHAPE, STATE_VERSION, TOTAL_PLY_DIGITS,
+    DIRECTIONS, decode_action, on_board,
 )
 
 
@@ -21,6 +22,53 @@ def observation_size():
 @njit(cache=True)
 def action_size():
     return ACTION_SIZE
+
+
+@njit(cache=True)
+def raw_movement_mask(pieces, player):
+    """Return moves allowed by pieces alone, without terminal-state checks."""
+    if player != 0 and player != 1:
+        raise ValueError("Player must be 0 or 1")
+    actions = np.zeros(ACTION_SIZE, dtype=np.bool_)
+    sign = 1 if player == 0 else -1
+    for y in range(9):
+        for x in range(9):
+            source = int(pieces[y, x])
+            if source * sign <= 0:
+                continue
+            attacker = abs(source)
+            for direction in range(8):
+                dx, dy = DIRECTIONS[direction]
+                destination_x = x + dx
+                destination_y = y + dy
+                if not on_board(destination_x, destination_y):
+                    continue
+                defender = int(pieces[destination_y, destination_x])
+                if defender == 0 or (
+                        defender * sign < 0
+                        and abs(defender) == attacker % 3 + 1):
+                    actions[8 * (9 * y + x) + direction] = True
+    return actions
+
+
+@njit(cache=True)
+def _corner_winner(pieces, a1_defender):
+    """Return winner, -1 for none, or -2 for a malformed double winner."""
+    a1_piece = int(pieces[0, 0])
+    i9_piece = int(pieces[8, 8])
+    a1_winner = -1
+    i9_winner = -1
+    if a1_piece != 0:
+        owner = 0 if a1_piece > 0 else 1
+        if owner != a1_defender:
+            a1_winner = owner
+    if i9_piece != 0:
+        owner = 0 if i9_piece > 0 else 1
+        if owner == a1_defender:
+            i9_winner = owner
+    if a1_winner >= 0 and i9_winner >= 0:
+        return -2
+    return a1_winner if a1_winner >= 0 else i9_winner
 
 
 @njit(cache=True)
@@ -72,6 +120,8 @@ def validate_state(state):
         for x in range(9):
             if state[y, x, 0] != state[y, x, length]:
                 raise ValueError("Latest history must match current board")
+    if _corner_winner(state[:, :, 0], int(meta.flat[META_A1_DEFENDER])) == -2:
+        raise ValueError("Both players cannot occupy their winning corners")
     for i in range(META_RESERVED, 81):
         if meta.flat[i] != 0:
             raise ValueError("Reserved metadata must be zero")
@@ -144,6 +194,78 @@ class Board:
             total = total * 128 + int(meta.flat[META_TOTAL_PLY + i])
         return total
 
+    def valid_moves(self, player):
+        if player != int(player) or not 0 <= player <= 1:
+            raise ValueError("Player must be 0 or 1")
+        player = int(player)
+        pieces = self.state[:, :, 0]
+        corner_winner = _corner_winner(pieces, self.get_a1_defender())
+        if corner_winner == -2:
+            raise ValueError("Both players cannot occupy their winning corners")
+        # A corner win, or a stuck current player, ends the state for everyone.
+        if corner_winner >= 0:
+            return np.zeros(ACTION_SIZE, dtype=np.bool_)
+        current_moves = raw_movement_mask(pieces, self.get_next_player())
+        if not current_moves.any():
+            return np.zeros(ACTION_SIZE, dtype=np.bool_)
+        if player == self.get_next_player():
+            return current_moves
+        return raw_movement_mask(pieces, player)
+
+    def make_move(self, move, player, random_seed=0):
+        """Apply one legal action atomically and return the next player."""
+        if player != int(player) or not 0 <= player <= 1:
+            raise ValueError("Player must be 0 or 1")
+        player = int(player)
+        if player != self.get_next_player():
+            raise ValueError("Player is not next to move")
+        if move != int(move) or not 0 <= move < ACTION_SIZE:
+            raise ValueError("Action must be an integer in [0, 648)")
+        move = int(move)
+        legal = self.valid_moves(player)
+        if not legal[move]:
+            raise ValueError("Illegal action")
+        source_x, source_y, direction = decode_action(move)
+        dx, dy = DIRECTIONS[direction]
+        destination_x = source_x + dx
+        destination_y = source_y + dy
+        pieces = self.state[:, :, 0].copy()
+        captured = pieces[destination_y, destination_x] != 0
+        pieces[destination_y, destination_x] = pieces[source_y, source_x]
+        pieces[source_y, source_x] = 0
+        next_player = 1 - player
+        self.record_position(pieces, next_player, captured)
+        return next_player
+
+    def check_end_game(self, next_player):
+        if next_player != int(next_player) or not 0 <= next_player <= 1:
+            raise ValueError("Player must be 0 or 1")
+        next_player = int(next_player)
+        if next_player != self.get_next_player():
+            raise ValueError("Player does not match state")
+        pieces = self.state[:, :, 0]
+        winner = _corner_winner(pieces, self.get_a1_defender())
+        if winner == -2:
+            raise ValueError("Both players cannot occupy their winning corners")
+        if winner < 0 and not raw_movement_mask(pieces, next_player).any():
+            winner = 1 - next_player
+        result = np.zeros(2, dtype=np.float32)
+        if winner >= 0:
+            result[winner] = 1.0
+            result[1 - winner] = -1.0
+        return result
+
+    def get_score(self, player):
+        """Return remaining piece count for diagnostics; this is not a reward."""
+        if player != int(player) or not 0 <= player <= 1:
+            raise ValueError("Player must be 0 or 1")
+        sign = 1 if int(player) == 0 else -1
+        count = 0
+        for piece in self.state[:, :, 0].flat:
+            if piece * sign > 0:
+                count += 1
+        return count
+
     def record_position(self, pieces, next_player, captured):
         """Store one already-validated transition; this is not a legal-move API."""
         if pieces.shape != (9, 9) or not (pieces.dtype == np.dtype(np.int8)):
@@ -154,6 +276,8 @@ class Board:
             for x in range(9):
                 if not -3 <= pieces[y, x] <= 3:
                     raise ValueError("Invalid piece code")
+        if _corner_winner(pieces, self.get_a1_defender()) == -2:
+            raise ValueError("Both players cannot occupy their winning corners")
         length = self.get_history_length()
         if not captured and length == HISTORY_CAPACITY:
             raise ValueError("Noncapture history is full")
