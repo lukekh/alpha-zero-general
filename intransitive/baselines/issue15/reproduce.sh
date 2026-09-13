@@ -1,5 +1,6 @@
 #!/bin/sh
 set -eu
+export ORT_DISABLE_TELEMETRY=1
 BASELINE_PY=${BASELINE_PY:-python3}
 BASELINE_ROOT=${BASELINE_ROOT:-checkpoints/issue15-reproduction}
 # Invoke from repository root. Each command refuses existing output directories.

@@ -4,6 +4,7 @@ import base64
 from collections import deque
 from contextlib import redirect_stdout
 import io
+import os
 from pathlib import Path
 import pickle
 import subprocess
@@ -15,6 +16,7 @@ import unittest
 from unittest.mock import patch
 import zlib
 
+os.environ['ORT_DISABLE_TELEMETRY'] = '1'
 import numpy as np
 import onnxruntime as ort
 

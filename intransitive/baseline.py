@@ -4,6 +4,7 @@ import argparse
 from collections import Counter
 import json
 import math
+import os
 from pathlib import Path
 import pickle
 import random
@@ -14,6 +15,9 @@ import sys
 import time
 from unittest.mock import patch
 
+# The API toggle runs after ORT's native environment has already initialized.
+# Prevent its telemetry uploader from starting at all (ORT 1.30 on macOS).
+os.environ['ORT_DISABLE_TELEMETRY'] = '1'
 import numpy as np
 import onnxruntime as ort
 
