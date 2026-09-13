@@ -270,8 +270,8 @@ class CanonicalGameIntegration(unittest.TestCase):
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
             self.game.printBoard(state)
-        self.assertIn("A B C D E F G H I", output.getvalue())
-        self.assertIn("A1 defender: 0", output.getvalue())
+        self.assertIn("A  B  C  D  E  F  G  H  I", output.getvalue())
+        self.assertIn("A1 defended by Blue", output.getvalue())
         for player in (1, -1, 0.5):
             with self.assertRaises(ValueError):
                 self.game.getCanonicalForm(state, player)
