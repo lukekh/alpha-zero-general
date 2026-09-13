@@ -5,8 +5,8 @@ import numpy as np
 from Game import Game
 from .IntransitiveConstants import (
     ACTION_SIZE, METADATA_PLANE, META_NEXT_PLAYER, NUMBER_PLAYERS, STATE_SHAPE,
-    action_destination, decode_action, format_coordinate, on_board,
 )
+from .IntransitiveDisplay import move_to_str, print_board
 from .IntransitiveLogicNumba import Board, serialize_state
 from .IntransitiveSymmetries import (
     NUM_SYMMETRIES, transform_action_vector, transform_state,
@@ -90,19 +90,7 @@ class IntransitiveGame(Game):
         return serialize_state(board)
 
     def moveToString(self, move, current_player):
-        x, y, _ = decode_action(move)
-        nx, ny = action_destination(move)
-        destination = format_coordinate(nx, ny) if on_board(nx, ny) else "off-board"
-        return f"{format_coordinate(x, y)}->{destination}"
+        return move_to_str(move, current_player)
 
     def printBoard(self, numpy_board):
-        self.board.copy_state(numpy_board, False)
-        pieces = self.board.get_board()
-        symbols = {0: ".", 1: "R", 2: "S", 3: "P", -1: "r", -2: "s", -3: "p"}
-        print("  A B C D E F G H I")
-        for y in range(8, -1, -1):
-            print(f"{y + 1} " + " ".join(symbols[int(piece)] for piece in pieces[y]))
-        print(f"Player {self.board.get_next_player()} to move; "
-              f"A1 defender: {self.board.get_a1_defender()}; "
-              f"ply: {self.board.get_total_ply()}")
-        print("Player 0: R/S/P; player 1: r/s/p")
+        print_board(numpy_board)

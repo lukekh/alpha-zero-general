@@ -296,10 +296,72 @@ Augmentation does not guarantee exact CNN equivariance or a 12× speedup; throug
 and learning efficiency need measurement at matched compute budgets. Minibatch
 augmentation and group-averaged inference remain possible later optimizations.
 
-`moveToString` formats fixed coordinates such as `B5->C5`; `printBoard` prints
-rows 9 through 1 and identifies player and goal ownership. Human/baseline players
-and richer display remain in #8; registration, neural inference, and full
-self-play integration remain in #10/#11.
+`moveToString` and `printBoard` delegate to `IntransitiveDisplay` for fixed
+coordinates, rows 9 through 1, physical colours, piece types, and goal ownership.
+Registration, neural inference, and full self-play integration remain in #10/#11.
+
+### Human play and baseline opponents
+
+`IntransitivePlayers` provides `RandomPlayer(game, seed=None)`,
+`HumanPlayer(game)`, and `GreedyPlayer(game)`. Each exposes the Arena/pit callback
+`play(canonical_state, nb_moves=0)` and returns an integer action in the original
+physical coordinates. Callbacks require a nonterminal canonical state with
+player 0 to move. Arena checks termination before calling a player; direct calls
+on terminal positions raise `ValueError` (human play does not prompt).
+
+The display uses tokens such as `BR` (Blue Rock), `BS` (Blue Scissors), `BP`
+(Blue Paper), and `RR`/`RS`/`RP` for Red. Empty squares are `..`. Both defended
+corners and their attackers are labelled below the board, even when occupied.
+Blue always defends A1 in physical games, so A1 defender metadata recovers
+physical colour after canonicalization swaps the player labels. A canonical Red
+turn therefore shows positive pieces as Red and prompts `Red move`. This colour
+interpretation applies to physical games and label-only canonical states;
+spatially transformed training examples are continuation equivalents, not
+physical game records.
+
+Human input consists of source and destination, for example `B5 B6`. Parsing also
+accepts `B5 C5` as coordinate syntax, but that move is illegal in the official
+opening because C5 contains a friendly piece. Input is case insensitive and
+allows surrounding whitespace. Malformed coordinates, nonadjacent destinations,
+empty sources, and illegal moves report an error and retry without changing any
+state/history bytes. EOF and Ctrl-C exit through their normal exceptions.
+
+Random samples uniformly from legal actions using its own NumPy generator; pass
+a seed for reproducible evaluation. Greedy uses the exact compiled rule engine
+and complete draw history to rank moves in this order:
+
+1. An immediate official win (corner or opponent stalemate).
+2. No legal opponent reply that immediately wins.
+3. A capture.
+4. Smaller Chebyshev distance from the moved piece's destination to its target.
+5. Lowest encoded action ID for deterministic ties.
+
+Terminal draws have no opponent reply. This is a bounded two-ply baseline, not
+a strength guarantee. Its ranking never changes rewards, rules, draw limits, or
+the official opening. Greedy evaluates branches in separate Board storage and
+does not alter the callback state or the Game adapter's state through lookahead.
+
+Run human versus greedy now through the shared Arena (install `numpy`, `numba`,
+and `tqdm` in the Python environment first):
+
+```sh
+python - <<'PY'
+from Arena import Arena
+from intransitive.IntransitiveGame import IntransitiveGame
+from intransitive.IntransitivePlayers import HumanPlayer, GreedyPlayer
+
+game = IntransitiveGame()
+arena = Arena(HumanPlayer(game).play, GreedyPlayer(game).play,
+              game, display=game.printBoard)
+arena.playGame(verbose=True)  # Human is Blue; use other_way=True to play Red.
+PY
+```
+
+For seeded baseline evaluation, replace `HumanPlayer(game)` with
+`RandomPlayer(game, seed=8)` (import it from the same module), then call
+`arena.playGames(4)`. Agent assignments alternate while every physical game
+starts with Blue. The callbacks match `pit.create_player`; `pit.py --game
+intransitive` discovery and checkpoint opponents still require #10/#11.
 
 ### Validation
 
@@ -309,9 +371,10 @@ From the repository root, using Python 3.11 with NumPy, Numba, and tqdm installe
 python -m unittest discover -s intransitive/tests -v
 ```
 
-Validated with Python 3.11.4, NumPy 2.4.6, Numba 0.67.0, and llvmlite 0.49.0.
+Validated with Python 3.11.4, NumPy 2.4.6, Numba 0.67.0, llvmlite 0.49.0,
+and tqdm 4.70.1 (Arena).
 An isolated environment can be prepared with `python3.11 -m venv /tmp/intransitive-venv`
-and `/tmp/intransitive-venv/bin/python -m pip install numpy==2.4.6 numba==0.67.0 tqdm`.
+and `/tmp/intransitive-venv/bin/python -m pip install numpy==2.4.6 numba==0.67.0 tqdm==4.70.1`.
 Use that environment's Python executable for the test command above.
 
 The tests exhaust all coordinates and action slots, compare the setup to explicit
@@ -322,6 +385,15 @@ Rule fixtures cover edges, diagonal clearance, every type pairing for both
 colours, optional captures, conservation, occupied goals, own corners, corner
 wins, empty and blocked armies, terminal masks, and invalid actions. Both storage
 and legal transitions run through actual `njit` callers.
+
+Display/player fixtures verify both physical colours, coordinate round trips,
+human retries and interrupts, seeded legal random choices, greedy tactical
+priorities and deterministic ties, and `pit.create_player` callback compatibility
+with game discovery supplied by the fixture. Four seeded greedy/random games
+(seeds 8 and 80, each colour assignment) run through the real Arena, checking
+official Blue-first setup, legal actions, immutable callback snapshots, and
+termination. Restored terminal corner/stalemate/repetition/noncapture fixtures
+verify Arena never calls a player after the game ends.
 
 Draw fixtures cover legal nonconsecutive repetitions, exchange of same-type
 pieces, exact type/colour/square/turn comparisons, symmetry distinctions, all
