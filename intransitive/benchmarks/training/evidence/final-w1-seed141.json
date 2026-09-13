@@ -1,0 +1,570 @@
+{
+  "passed": true,
+  "command": [
+    "/Users/work/orca/workspaces/alpha-zero-general/issue-14-intransitive-measure-training/intransitive/benchmark_training.py",
+    "--output",
+    "checkpoints/issue14/final-w1-seed141",
+    "--workers",
+    "1",
+    "--seed",
+    "141",
+    "--child"
+  ],
+  "hardware": {
+    "platform": "macOS-15.6.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "logical_cpus": 8,
+    "python": "3.11.4 (main, Nov 30 2023, 10:49:11) [Clang 15.0.0 (clang-1500.0.40.1)]",
+    "cpu": "Apple M1",
+    "ram_bytes": "8589934592"
+  },
+  "settings": {
+    "game": "intransitive",
+    "numMCTSSims": 16,
+    "prob_fullMCTS": 1.0,
+    "ratio_fullMCTS": 1,
+    "forced_playouts": false,
+    "universes": 0,
+    "cpuct": 1.25,
+    "fpu": 0.0,
+    "no_mem_optim": false,
+    "dirichletAlpha": 0.0,
+    "parallel_inferences": 1,
+    "temperature": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "tempThreshold": 10,
+    "no_compression": false,
+    "numEps": 4,
+    "maxlenOfQueue": 28800,
+    "numIters": 1,
+    "numItersHistory": 1,
+    "profile": false,
+    "arenaCompare": 4,
+    "updateThreshold": 0.6,
+    "stop_after_N_fail": 2,
+    "useray": false,
+    "forget_examples": false,
+    "learn_rate": 0.0003,
+    "dropout": 0.0,
+    "epochs": 1,
+    "batch_size": 64,
+    "nn_version": 1,
+    "q_weight": 0.5,
+    "checkpoint": "/Users/work/orca/workspaces/alpha-zero-general/issue-14-intransitive-measure-training/checkpoints/issue14/final-w1-seed141",
+    "seed": 141,
+    "inference_backend": "onnx",
+    "load_model": false,
+    "load_folder_file": null,
+    "selfplay_seed": 141
+  },
+  "nn_args": {
+    "learn_rate": 0.0003,
+    "dropout": 0.0,
+    "epochs": 1,
+    "batch_size": 64,
+    "nn_version": 1,
+    "no_compression": false,
+    "q_weight": 0.5
+  },
+  "git_revision": "91a4daa7cb49aabd86e86adb96e4e8c396ca06af",
+  "source_sha256": {
+    "Arena.py": "a748cab813b1378d9bf317b9c2149eda42dd8a1f15d2fd5a8d35b3fd1155710b",
+    "Coach.py": "2cc8795c755f77692bbfed0a493a905f8e6b785f0a36a15f0b8dade4010d2583",
+    "Game.py": "9ceebd7eba1af2506966a7c2b9d43be9b3dc2373ebc65353c89879af660ed504",
+    "GameSwitcher.py": "5ac4fc6007664a273e6f1b585037d96b1dbf40bd4377d57398b28cd15bae9da9",
+    "GenericNNetWrapper.py": "f3a0a5fbadb3b9cc92bb49e9cefd9bfb889c0d49fb1ba0ec96d83bd4d3594fe4",
+    "MCTS.py": "e3fcae38580733a8d2edfe7cc82d85de5278609df52c1618f6d593556c18441c",
+    "NeuralNet.py": "34a6a54910b0929793f5f7481871c035d7c873af3bc347c1600372cb6c49d5ed",
+    "chkpt_to_onnx.py": "248fdb083be36e7636d7eb47dd5448f2a0f2ee027b139893edcb81997f990da5",
+    "intransitive/IntransitiveConstants.py": "5653399a3395346cbcdbfacf6b7e1a82ba7d4e942195bc47f034444b309c1886",
+    "intransitive/IntransitiveDisplay.py": "0f282ce2212e6c0c7927196662106f7da47bab199dd5cc481320fcf1668c65d1",
+    "intransitive/IntransitiveGame.py": "c310a6213fee866e99a0cece89fcf9d547017bdaef94ccfaf200ae1617d9f953",
+    "intransitive/IntransitiveLogicNumba.py": "8670196dd6501bbb7cdc11a33433b0c4e93cf6f48e7cc44042bf8c0dcbd24b12",
+    "intransitive/IntransitiveNNet.py": "841d6bbee0eb19ae8007c50446577b142f01fe2dd4d008464517b872df1ef35b",
+    "intransitive/IntransitivePlayers.py": "b472a76febe34aea32672c3e6c180084c3eb2ad985ca8ef84ea3bb0c9e225c3b",
+    "intransitive/IntransitiveSymmetries.py": "8adb1b089d29350a602d3c2f2532c2c2655e5ffa23a5ab351f3cec241859f130",
+    "intransitive/NNet.py": "d5c293dd71cfbe6d04cdadd9953a6afc633ecd078b481917b582375fc7646604",
+    "intransitive/__init__.py": "1dc948149fe3637b3bccc9332a4a17dfcc15f6ba3033d6932f6a97bf8d961705",
+    "intransitive/benchmark_network.py": "887bd1315b3bab151fcb97f5760913599c722381ab01946f7d23c6d9c0f042da",
+    "intransitive/benchmark_training.py": "ba92904cbd41257de6e4294474078e2b87b57f76d738667f012dba2488fad78e",
+    "intransitive/play.py": "d97f5c7994438a02541e353ce1c659194862c289db6ed8b326987e164fe8a542",
+    "intransitive/smoke.py": "331546ef5b6769a81b6210ab7e9c73b660353c20421568d08525b8fde65989d1",
+    "intransitive/tests/reference_rules.py": "e79a85b4f128cdb20b8edbf0920bae6f27ec5db8dc916ce829fb30c9799117df",
+    "intransitive/tests/test_augmentation.py": "95488ccba7a19550a2437254b2b0ace96130bb7efe7315a8974c2aacf3d9da82",
+    "intransitive/tests/test_benchmark_training.py": "13cc020e12f67e2959b0d3dc7f978396d0ac0747c67e080870fdecaa92bccbab",
+    "intransitive/tests/test_checkpoints.py": "890ac56d992a104a2375bf938ff9fe7e2b09a80610d09124b173f8e1ec8020ab",
+    "intransitive/tests/test_draws.py": "81de6a3578366a78addeaae061daa7a1994e2f211dec07c42ddd865d14b2fc84",
+    "intransitive/tests/test_equivalence.py": "2dad9b0da4dc39a351ffc001b38ed3a1083e7e8df075faba60f25dc777d6377e",
+    "intransitive/tests/test_game.py": "b00fd3df15bf7c1e8a77aec3f381f70bbc0fcb918beccaebc67fa6be1811f521",
+    "intransitive/tests/test_network.py": "83a9b0806e32ac98f5e0985b32e10339860f9a8cc5506a92967d9b465f0ef020",
+    "intransitive/tests/test_pipeline.py": "a383d5170cac7c1e752ae1919b82a56d5ddc4602fb4e733abe3049997cb0a14e",
+    "intransitive/tests/test_play.py": "1e04cd7fdb3fbe6858627b41741df4f85c6c795edf87618ac22605ad92e94472",
+    "intransitive/tests/test_players.py": "7d457a8fc3e1f6070ddd83c41c15b98584616fb4b34de99968d2eb978d6ca54e",
+    "intransitive/tests/test_rules.py": "cb08e5161fbdcb918279d470dcca1adf2d7973ea58f5e38eacb5842487d4b1ce",
+    "intransitive/tests/test_state.py": "d5576030cde0ee7466f528d9317ac54b80e3ece0c512456456eb78a56f373839",
+    "intransitive/tests/test_symmetries.py": "2449c077d7459852b6fb5f3bc5142c708e1ca4b878ef30d45dd9641e22ae3da4",
+    "launcher.py": "225cfc7af52bd9216de4a84c6f7b207ed103c81f8a6c903b36014d60707b49fc",
+    "main.py": "150e8e9fb37c72fde9fa865e5ffc3b60c7c9446c078f4136e8aa0b82fda76e8b",
+    "pit.py": "9849e4b4a9b664c0c17188f6306e132c63af57da33aed926833064dc8048a1ba",
+    "rayConfig.py": "f4fcc100d1f856552069943ce09a6d5e68f9a8bbab03a958a19d0419f20af3e5",
+    "source_backup.py": "ee3ba884a61112db645ed0b6c5ccded976967191df0a72331d50ce8e509b7d67",
+    "useRay.py": "568fe752ae2ee50aa1939c92bfaa99c731117567d5fe43895384acb461ca09b7",
+    "utils.py": "3ab888292e0e6ca8eb21a0c521d1e1527d1992f63813c572b46da896f5a3749f"
+  },
+  "source_backup": "/Users/work/orca/workspaces/alpha-zero-general/issue-14-intransitive-measure-training/checkpoints/issue14/final-w1-seed141/source_backups/20260913T115452.277014Z-8903f392969648a3b2b7e501c9e6c618",
+  "requirements": [
+    "colorama==0.4.6",
+    "coloredlogs==15.0.1",
+    "filelock==3.32.6",
+    "flatbuffers==25.12.19",
+    "fsspec==2026.7.0",
+    "humanfriendly==10.0",
+    "Jinja2==3.1.6",
+    "llvmlite==0.49.0",
+    "MarkupSafe==3.0.3",
+    "ml_dtypes==0.6.0",
+    "mpmath==1.3.0",
+    "networkx==3.6.1",
+    "numba==0.67.0",
+    "numpy==2.4.6",
+    "onnx==1.22.0",
+    "onnxruntime==1.30.0",
+    "packaging==26.3",
+    "pillow==12.3.0",
+    "protobuf==7.36.1",
+    "scipy==1.17.1",
+    "sympy==1.14.0",
+    "torch==2.8.0",
+    "torchvision==0.23.0",
+    "tqdm==4.70.1",
+    "typing_extensions==4.16.0"
+  ],
+  "format": {
+    "format_version": 1,
+    "game": "intransitive",
+    "board_size": [
+      9,
+      9,
+      33
+    ],
+    "action_size": 648,
+    "num_players": 2,
+    "optimizer_state": "recreated",
+    "scheduler_state": "recreated"
+  },
+  "feature_config": {
+    "state_version": 1,
+    "network_version": 1,
+    "piece_order": [
+      "own rock",
+      "own scissors",
+      "own paper",
+      "opponent rock",
+      "opponent scissors",
+      "opponent paper"
+    ],
+    "current_order": [
+      "six piece planes",
+      "own defended corner",
+      "opponent defended corner",
+      "noncapture / 30",
+      "current occurrences / 3",
+      "log1p(total ply) / log1p(max ply)"
+    ],
+    "history_order": "oldest first, including current position; 31 slots",
+    "history_slot_order": [
+      "six piece planes",
+      "valid",
+      "side to move (0 own, 1 opponent)"
+    ],
+    "history_channels": 4,
+    "trunk_channels": 64,
+    "residual_blocks": 4,
+    "action_order": "8 * (9*y + x) + direction; N, NE, E, SE, S, SW, W, NW",
+    "value_order": [
+      "canonical player 0",
+      "canonical player 1"
+    ],
+    "total_ply_max": 34359738367
+  },
+  "torch_threads": 1,
+  "onnx_providers": [
+    "CPUExecutionProvider"
+  ],
+  "setup_seconds": 7.143228915985674,
+  "learn_seconds": 9.922511667013168,
+  "learn_other_seconds": 0.22427600098308176,
+  "phases": {
+    "self_play": {
+      "seconds": 2.6886354580055922,
+      "search_calls": 120,
+      "simulations": 1920,
+      "search_worker_seconds": 1.9372343312716112,
+      "inference_calls": 1858,
+      "inference_states": 1858,
+      "inference_seconds": 1.7883248903090134,
+      "inference_batches": {
+        "1": 1858
+      },
+      "simulations_per_wall_second": 714.1168931188017,
+      "inference_states_per_wall_second": 691.0568684451738,
+      "inference_states_per_session_second": 1038.9611026880843
+    },
+    "training": {
+      "seconds": 4.707382417051122,
+      "search_calls": 0,
+      "simulations": 0,
+      "search_worker_seconds": 0.0,
+      "inference_calls": 0,
+      "inference_states": 0,
+      "inference_seconds": 0.0,
+      "inference_batches": {},
+      "simulations_per_wall_second": 0.0,
+      "inference_states_per_wall_second": 0.0
+    },
+    "evaluation": {
+      "seconds": 2.3022177909733728,
+      "search_calls": 120,
+      "simulations": 1920,
+      "search_worker_seconds": 2.21379974973388,
+      "inference_calls": 1852,
+      "inference_states": 1852,
+      "inference_seconds": 1.7798368348740041,
+      "inference_batches": {
+        "1": 1852
+      },
+      "simulations_per_wall_second": 833.9784391937255,
+      "inference_states_per_wall_second": 804.4417028056143,
+      "inference_states_per_session_second": 1040.544820576828
+    }
+  },
+  "original_positions": 120,
+  "augmented_examples": 1440,
+  "symmetry_counts": {
+    "12": 120
+  },
+  "legal_actions": {
+    "count": 120,
+    "mean": 48.333333333333336,
+    "min": 36.0,
+    "median": 48.0,
+    "p95": 59.0,
+    "max": 63.0
+  },
+  "training": [
+    {
+      "examples": 1440,
+      "updates": 22,
+      "sampled_examples": 1408,
+      "seconds": 4.707320541958325,
+      "updates_per_second": 4.673571685612815
+    }
+  ],
+  "losses": {
+    "policy": [
+      1.6266169548034668,
+      1.6012195348739624,
+      1.5124677419662476,
+      1.434938669204712,
+      1.4109971523284912,
+      1.2646487951278687,
+      1.1377818584442139,
+      1.0746393203735352,
+      1.0287586450576782,
+      1.03300142288208,
+      0.9252688884735107,
+      0.8630580902099609,
+      0.8417867422103882,
+      0.8353732228279114,
+      0.8087074756622314,
+      0.8007175922393799,
+      0.7903256416320801,
+      0.7862553596496582,
+      0.8205214738845825,
+      0.7773864269256592,
+      0.8239644765853882,
+      0.7649937868118286
+    ],
+    "value": [
+      0.013078679330646992,
+      0.010343561880290508,
+      0.0097273550927639,
+      0.007583980448544025,
+      0.00832600612193346,
+      0.00675706472247839,
+      0.005472490098327398,
+      0.004897472448647022,
+      0.005677319597452879,
+      0.005178858060389757,
+      0.005980099551379681,
+      0.0031694923527538776,
+      0.004587599076330662,
+      0.003860676661133766,
+      0.0048327259719371796,
+      0.003658285364508629,
+      0.0035302601754665375,
+      0.0037900879979133606,
+      0.0037164315581321716,
+      0.003199575003236532,
+      0.003278749529272318,
+      0.0031153210438787937
+    ]
+  },
+  "arena": [
+    {
+      "wins": 0,
+      "losses": 0,
+      "draws": 4,
+      "accepted": false
+    }
+  ],
+  "games": [
+    {
+      "phase": "self_play",
+      "iteration": 1,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "75deb4aef4b0706bcf8d6f9b5ae77f432906948db712ee544acf8b21a8f42961"
+    },
+    {
+      "phase": "self_play",
+      "iteration": 1,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "b523b2a99a945f9720c8c217f8d03ebf6b5a6648b33efde2724e92c6e39b5126"
+    },
+    {
+      "phase": "self_play",
+      "iteration": 1,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "03c2381c838cd7c91b8110b168fe3a3c91004a9dba67718eb2f57f68d15924b5"
+    },
+    {
+      "phase": "self_play",
+      "iteration": 1,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "95a225409367ae8792550b874816c623dafa19e030b7c0ccafa03877feead393"
+    },
+    {
+      "phase": "evaluation",
+      "iteration": 1,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "0b7c23ad33689e0502b1ca72b44d6636d8a9b669b546a596f2f01d3fa9149ae7"
+    },
+    {
+      "phase": "evaluation",
+      "iteration": 1,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "cf0aca1328d020e98c11d8889a93bbdf3141b80db259ae8d5cd7f9edf419cddf"
+    },
+    {
+      "phase": "evaluation",
+      "iteration": 1,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "cf0aca1328d020e98c11d8889a93bbdf3141b80db259ae8d5cd7f9edf419cddf"
+    },
+    {
+      "phase": "evaluation",
+      "iteration": 1,
+      "plies": 30,
+      "reason": "no-capture limit",
+      "reward": [
+        9.999999747378752e-05,
+        9.999999747378752e-05
+      ],
+      "trajectory_sha256": "0b7c23ad33689e0502b1ca72b44d6636d8a9b669b546a596f2f01d3fa9149ae7"
+    }
+  ],
+  "game_summary": {
+    "self_play": {
+      "length_plies": {
+        "count": 4,
+        "mean": 30.0,
+        "min": 30.0,
+        "median": 30.0,
+        "p95": 30.0,
+        "max": 30.0
+      },
+      "reasons": {
+        "corner": 0,
+        "stalemate": 0,
+        "repetition": 0,
+        "no-capture limit": 4
+      }
+    },
+    "evaluation": {
+      "length_plies": {
+        "count": 4,
+        "mean": 30.0,
+        "min": 30.0,
+        "median": 30.0,
+        "p95": 30.0,
+        "max": 30.0
+      },
+      "reasons": {
+        "corner": 0,
+        "stalemate": 0,
+        "repetition": 0,
+        "no-capture limit": 4
+      }
+    }
+  },
+  "replay": {
+    "examples": 1440,
+    "compressed_sample_bytes": {
+      "count": 1440,
+      "mean": 622.0451388888889,
+      "min": 443.0,
+      "median": 642.5,
+      "p95": 715.0,
+      "max": 747.0
+    },
+    "pickle_sample_bytes": {
+      "count": 1440,
+      "mean": 6326.0,
+      "min": 6326.0,
+      "median": 6326.0,
+      "p95": 6326.0,
+      "max": 6326.0
+    },
+    "decoded_sample_owned_bytes": {
+      "count": 1440,
+      "mean": 6723.0,
+      "min": 6723.0,
+      "median": 6723.0,
+      "p95": 6723.0,
+      "max": 6723.0
+    },
+    "array_payload_bytes": {
+      "count": 1440,
+      "mean": 5921.0,
+      "min": 5921.0,
+      "median": 5921.0,
+      "p95": 5921.0,
+      "max": 5921.0
+    },
+    "history_length": {
+      "count": 1440,
+      "mean": 15.5,
+      "min": 1.0,
+      "median": 15.5,
+      "p95": 29.0,
+      "max": 30.0
+    },
+    "compressed_payload_bytes": 895745,
+    "compressed_resident_bytes": 955641,
+    "pickle_payload_bytes": 9109440,
+    "decoded_resident_upper_estimate_bytes": 9693496,
+    "encode_seconds": 0.05811067367903888,
+    "decode_seconds": 0.017562714754603803,
+    "file_bytes": 904553
+  },
+  "inference_microbenchmark": [
+    {
+      "batch": 1,
+      "repeats": 30,
+      "seconds": {
+        "count": 30,
+        "mean": 0.0009498458316860099,
+        "min": 0.0009425829630345106,
+        "median": 0.0009459370048716664,
+        "p95": 0.0009648248320445419,
+        "max": 0.0009880419820547104
+      },
+      "states_per_second": 1052.80243029015
+    },
+    {
+      "batch": 2,
+      "repeats": 30,
+      "seconds": {
+        "count": 30,
+        "mean": 0.001856575106891493,
+        "min": 0.0018208750989288092,
+        "median": 0.001854500500485301,
+        "p95": 0.0018849937303457409,
+        "max": 0.001899958006106317
+      },
+      "states_per_second": 1077.2524055590977
+    },
+    {
+      "batch": 32,
+      "repeats": 30,
+      "seconds": {
+        "count": 30,
+        "mean": 0.028996289137285202,
+        "min": 0.02882304205559194,
+        "median": 0.028946417034603655,
+        "p95": 0.02922338997013867,
+        "max": 0.029660750064067543
+      },
+      "states_per_second": 1103.5894920378773
+    }
+  ],
+  "process_peak_rss_bytes": 586399744,
+  "artifacts": {
+    "candidate_1.pt": {
+      "bytes": 1358592,
+      "sha256": "86d7651ad46a8f3010022f0a66d8352454b69ba6a6a23b9d1df04bd6b836d2e7"
+    },
+    "checkpoint.examples": {
+      "bytes": 904553,
+      "sha256": "fcb412b2383641033665e9597e8cea04f0f06670e29bc521a40ba3109635e277"
+    },
+    "requirements.txt": {
+      "bytes": 416,
+      "sha256": "e4582b1e91098c26e609b296636cca314745decce855bf7e24c6b9bf7a3524d4"
+    },
+    "settings.json": {
+      "bytes": 952,
+      "sha256": "8d24ac57c574207a9ab7dc9888f7b6eeb9f405224ac4ed528a969049424c30a0"
+    },
+    "settings.txt": {
+      "bytes": 763,
+      "sha256": "dd28ac52d18f5f5b6f84b9093b9a5b9c90271df08c090355b5afa6893cebf8fc"
+    },
+    "temp.pt": {
+      "bytes": 1354803,
+      "sha256": "3ad88e1f69aede679e3c47668b03fb5315278150e08e3b31caf025a5968ed557"
+    }
+  },
+  "elapsed_seconds": 18.431510707945563,
+  "process_exit_code": 0,
+  "child_process_seconds": 19.756232833024114,
+  "hard_timeout_seconds": 600
+}

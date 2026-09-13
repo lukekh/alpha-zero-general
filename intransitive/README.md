@@ -341,16 +341,20 @@ python pit.py intransitive human ./temp/intransitive/best.pt -n 1
 
 The training command uses the normal training defaults. For the verified bounded
 cycle, exact dependencies, seeds, budgets, logs and source-backed resume commands,
-use the [training smoke gate](smoke/README.md).
+use the [training smoke gate](smoke/README.md). For measured CPU/ONNX throughput,
+replay costs, worker comparisons and the budget recommended for #15, see the
+[training benchmark](benchmarks/training/README.md).
 Every new physical game uses the official setup and Blue moves first. Arena
 alternates which agent controls Blue; augmentation never changes initialization.
 Sequential self-play starts each episode with a new MCTS tree. Parallel self-play
 constructs a separate Game, compiled Board, and search tree for each worker
 episode; the ONNX server batches copied observations, with no shared draw history.
-For small episode targets, Coach waits for a completed episode before requesting
-worker shutdown, allowing the first inference batch to initialize fully. It then
-keeps inference running until every worker finishes its current episode and
-collects all final replay examples before stopping the server.
+Parallel workers receive fixed episode quotas, so `numEps` is an exact game
+budget, including targets smaller than the worker count. Finished workers clear
+their inference slots; the server only batches active observations. Coach drains
+every completed episode before joining all workers and the inference server.
+An optional `selfplay_seed` supplies an independent NumPy generator per episode
+(`SeedSequence([selfplay_seed, episode_id])`), including temperature-zero ties.
 
 Coach ends an episode on any nonzero terminal vector. Outcome labels are rolled
 into each example's mover frame, including equal nonzero draw labels; Q labels

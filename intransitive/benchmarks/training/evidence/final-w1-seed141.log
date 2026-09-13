@@ -1,0 +1,52 @@
+Self Play:   0%|                                                                                  | 0/4 [00:00<?, ?it/s]Self Play:  25%|██████████████████▌                                                       | 1/4 [00:01<00:03,  1.12s/it]Self Play:  50%|█████████████████████████████████████                                     | 2/4 [00:01<00:01,  1.31it/s]Self Play:  75%|███████████████████████████████████████████████████████▌                  | 3/4 [00:02<00:00,  1.54it/s]Self Play: 100%|██████████████████████████████████████████████████████████████████████████| 4/4 [00:02<00:00,  1.69it/s]Self Play: 100%|██████████████████████████████████████████████████████████████████████████| 4/4 [00:02<00:00,  1.51it/s]
+{
+  "passed": true,
+  "original_positions": 120,
+  "augmented_examples": 1440,
+  "training": [
+    {
+      "examples": 1440,
+      "updates": 22,
+      "sampled_examples": 1408,
+      "seconds": 4.707320541958325,
+      "updates_per_second": 4.673571685612815
+    }
+  ],
+  "game_summary": {
+    "self_play": {
+      "length_plies": {
+        "count": 4,
+        "mean": 30.0,
+        "min": 30.0,
+        "median": 30.0,
+        "p95": 30.0,
+        "max": 30.0
+      },
+      "reasons": {
+        "corner": 0,
+        "stalemate": 0,
+        "repetition": 0,
+        "no-capture limit": 4
+      }
+    },
+    "evaluation": {
+      "length_plies": {
+        "count": 4,
+        "mean": 30.0,
+        "min": 30.0,
+        "median": 30.0,
+        "p95": 30.0,
+        "max": 30.0
+      },
+      "reasons": {
+        "corner": 0,
+        "stalemate": 0,
+        "repetition": 0,
+        "no-capture limit": 4
+      }
+    }
+  },
+  "learn_seconds": 9.922511667013168,
+  "process_peak_rss_bytes": 586399744
+}
+Completed: /Users/work/orca/workspaces/alpha-zero-general/issue-14-intransitive-measure-training/checkpoints/issue14/final-w1-seed141/report.json

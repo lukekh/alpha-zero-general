@@ -1,0 +1,7 @@
+test_distribution_includes_empty_and_tail (intransitive.tests.test_benchmark_training.BenchmarkAccounting.test_distribution_includes_empty_and_tail) ... ok
+test_replay_accounting_includes_all_fields_and_compression (intransitive.tests.test_benchmark_training.BenchmarkAccounting.test_replay_accounting_includes_all_fields_and_compression) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.154s
+
+OK

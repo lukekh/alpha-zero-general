@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "original_positions": 120,
+  "augmented_examples": 1440,
+  "training": [
+    {
+      "examples": 1440,
+      "updates": 22,
+      "sampled_examples": 1408,
+      "seconds": 4.366125541040674,
+      "updates_per_second": 5.0387923556490914
+    }
+  ],
+  "game_summary": {
+    "self_play": {
+      "length_plies": {
+        "count": 4,
+        "mean": 30.0,
+        "min": 30.0,
+        "median": 30.0,
+        "p95": 30.0,
+        "max": 30.0
+      },
+      "reasons": {
+        "corner": 0,
+        "stalemate": 0,
+        "repetition": 0,
+        "no-capture limit": 4
+      }
+    },
+    "evaluation": {
+      "length_plies": {
+        "count": 4,
+        "mean": 30.0,
+        "min": 30.0,
+        "median": 30.0,
+        "p95": 30.0,
+        "max": 30.0
+      },
+      "reasons": {
+        "corner": 0,
+        "stalemate": 0,
+        "repetition": 0,
+        "no-capture limit": 4
+      }
+    }
+  },
+  "learn_seconds": 9.344565959065221,
+  "process_peak_rss_bytes": 665731072
+}
+Completed: /Users/work/orca/workspaces/alpha-zero-general/issue-14-intransitive-measure-training/checkpoints/issue14/final-w2-seed140/report.json
