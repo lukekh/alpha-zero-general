@@ -79,6 +79,19 @@ Search results, including those copied into game records, expose:
 selected-move result. Partial iterations do not prove all alternatives worse.
 A completed branch's heuristic evaluation is still limited by its horizon.
 
+## Optional search windows
+
+`pvs_enabled` and `aspiration_enabled` are independent configuration switches,
+both off by default. PVS uses adjacent binary64 endpoints and re-searches
+challengers before publishing an exact value. Aspiration retries retain exact
+siblings, widen failed windows at the same target depth, and share the original
+budget. An interrupted failed window never counts as a completed iteration.
+The result/record counters `pvs_probes`, `pvs_researches`,
+`aspiration_researches`, `aspiration_fail_highs` and `aspiration_fail_lows`
+make recovery work visible. See the [window experiment report](../benchmarks/windows/README.md)
+for numerical semantics, validation, repeated measurements and the recommendation
+to retain the comparison switches without enabling them by default.
+
 ## Verification
 
 ```sh

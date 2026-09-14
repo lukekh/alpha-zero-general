@@ -22,6 +22,11 @@ class Budget:
         self.nodes = 0
         self.proof_nodes = 0
         self.tt_hits = 0
+        self.pvs_probes = 0
+        self.pvs_researches = 0
+        self.aspiration_researches = 0
+        self.aspiration_fail_highs = 0
+        self.aspiration_fail_lows = 0
         self.module_seconds = defaultdict(float)
         self.module_calls = defaultdict(int)
 

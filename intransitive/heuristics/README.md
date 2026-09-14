@@ -9,6 +9,9 @@ and [measured ablation results](MEASUREMENTS.md). The default bounded proof uses
 with unchanged accounting and a reference fallback for larger proof budgets.
 Core scalar leaves use [incremental counts and exact material reuse](../benchmarks/material/README.md),
 preserving board-order floating-point sums and the public detailed evaluator.
+Independent [PVS and aspiration experiments](../benchmarks/windows/README.md)
+preserve exact-depth values and safe anytime selection. Both remain opt-in;
+the report includes the archived baseline and measured retain/reject decision.
 The original design follows below.
 
 Tracked in [implementation issue #34](https://github.com/lukekh/alpha-zero-general/issues/34),
