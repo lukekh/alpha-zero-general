@@ -24,6 +24,14 @@ torch.set_num_threads(1) # PyTorch more efficient this way
 class GenericNNetWrapper(NeuralNet):
 	def __init__(self, game, nn_args):
 		self.args = nn_args
+		# The established training loop recreates AdamW and OneCycleLR for every
+		# call.  Experiments that explicitly opt into continuous learning keep the
+		# optimizer (and its moments) here and serialize it through the game wrapper.
+		# A loaded persistent checkpoint defers optimizer construction until train()
+		# so inference-only consumers do not allocate optimizer state.
+		self.optimizer = None
+		self._pending_optimizer_state = None
+		self.optimizer_updates = 0
 		self.device = {
 			'training' : 'cpu', #'cuda' if torch.cuda.is_available() else 'cpu',
 			'inference': 'onnx',
@@ -43,16 +51,35 @@ class GenericNNetWrapper(NeuralNet):
 
 	def train(self, examples, validation_set=None, save_folder=None, every=0):
 		"""
-		examples: list of examples, each example is of form (board, pi, v)
+		examples: legacy ``(board, pi, v, legal, q)`` records or extended
+			``(board, pi, v, legal, q, value_mask, q_mask)`` records.  Masks
+			are per-player booleans.  They let policy-only/teacher examples omit
+			unknown value or search-Q targets without fabricating labels.
 		"""
 		self.switch_target('training')
-		optimizer = optim.AdamW(self.nnet.parameters(), lr=self.args['learn_rate'])
+		persistent = bool(self.args.get('persist_optimizer', False))
+		if persistent:
+			if self.optimizer is None:
+				self.optimizer = optim.AdamW(self.nnet.parameters(), lr=self.args['learn_rate'])
+				if self._pending_optimizer_state is not None:
+					self.optimizer.load_state_dict(self._pending_optimizer_state)
+					self._pending_optimizer_state = None
+			optimizer = self.optimizer
+			# A persistent OneCycle schedule cannot be extended safely after its
+			# predeclared horizon.  Continuous experiments therefore use constant
+			# learning rate and preserve AdamW state across bounded phases.
+			for group in optimizer.param_groups:
+				group['lr'] = self.args['learn_rate']
+		else:
+			optimizer = optim.AdamW(self.nnet.parameters(), lr=self.args['learn_rate'])
 		batch_count = self.args.get('batches_per_epoch', int(len(examples) / self.args['batch_size']))
 		if isinstance(batch_count, bool) or not isinstance(batch_count, int) or batch_count < 1:
 			raise ValueError('batches_per_epoch must be a positive integer')
 		if len(examples) < self.args['batch_size']:
 			raise ValueError('Training needs at least one full batch of examples')
-		scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr=self.args['learn_rate'], steps_per_epoch=batch_count, epochs=self.args['epochs'])
+		scheduler = (None if persistent else optim.lr_scheduler.OneCycleLR(
+			optimizer, max_lr=self.args['learn_rate'], steps_per_epoch=batch_count,
+			epochs=self.args['epochs']))
 
 		t = tqdm(total=self.args['epochs'] * batch_count, desc='Train ep0', colour='blue', ncols=120, mininterval=0.5, disable=None)
 		for epoch in range(self.args['epochs']):
@@ -62,7 +89,12 @@ class GenericNNetWrapper(NeuralNet):
 	
 			for i_batch in range(batch_count):
 				sample_ids = np.random.choice(len(examples), size=self.args['batch_size'], replace=False)
-				boards, pis, vs, valid_actions, qs = self.pick_examples(examples, sample_ids)
+				picked = self.pick_examples(examples, sample_ids)
+				boards, pis, vs, valid_actions, qs = picked[:5]
+				value_masks = q_masks = None
+				if len(picked) == 7:
+					value_masks = torch.BoolTensor(np.array(picked[5]).astype(np.bool_))
+					q_masks = torch.BoolTensor(np.array(picked[6]).astype(np.bool_))
 				boards = torch.FloatTensor(np.array(boards).astype(np.float32))
 				valid_actions = torch.BoolTensor(np.array(valid_actions).astype(np.bool_))
 				target_pis = torch.FloatTensor(np.array(pis).astype(np.float32))
@@ -72,7 +104,10 @@ class GenericNNetWrapper(NeuralNet):
 				# predict
 				optimizer.zero_grad(set_to_none=True)
 				out_pi, out_v = self.nnet(boards, valid_actions)
-				l_pi, l_v = self.loss_pi(target_pis, out_pi), self.loss_v(target_vs, target_qs, out_v)
+				l_pi = self.loss_pi(target_pis, out_pi)
+				l_v = (self.loss_v(target_vs, target_qs, out_v)
+						if value_masks is None else
+						self.loss_v(target_vs, target_qs, out_v, value_masks, q_masks))
 				total_loss = l_pi + 0.25*l_v # Weight 0.25 * value
 
 				# record loss
@@ -83,7 +118,9 @@ class GenericNNetWrapper(NeuralNet):
 				# compute gradient and do SGD step
 				total_loss.backward()
 				optimizer.step()
-				scheduler.step()
+				self.optimizer_updates += 1
+				if scheduler is not None:
+					scheduler.step()
 
 				t.update()
 
@@ -170,8 +207,14 @@ class GenericNNetWrapper(NeuralNet):
 		# Evaluation
 		self.nnet.eval()
 		with torch.no_grad():
-			picked_examples = [pickle.loads(zlib.decompress(e)) for e in validation_set]
-			boards, pis, vs, valid_actions, qs = list(zip(*picked_examples))
+			picked_examples = [pickle.loads(zlib.decompress(e)) if isinstance(e, bytes) else e
+							   for e in validation_set]
+			picked = self._split_fields(picked_examples)
+			boards, pis, vs, valid_actions, qs = picked[:5]
+			value_masks = q_masks = None
+			if len(picked) == 7:
+				value_masks = torch.BoolTensor(np.array(picked[5]).astype(np.bool_))
+				q_masks = torch.BoolTensor(np.array(picked[6]).astype(np.bool_))
 			boards = torch.FloatTensor(np.array(boards).astype(np.float32))
 			valid_actions = torch.BoolTensor(np.array(valid_actions).astype(np.bool_))
 			target_pis = torch.FloatTensor(np.array(pis).astype(np.float32))
@@ -180,7 +223,10 @@ class GenericNNetWrapper(NeuralNet):
 
 			# compute output
 			out_pi, out_v = self.nnet(boards, valid_actions)
-			total_loss = self.loss_pi(target_pis, out_pi) + self.loss_v(target_vs, target_qs, out_v)
+			value_loss = (self.loss_v(target_vs, target_qs, out_v)
+						  if value_masks is None else
+						  self.loss_v(target_vs, target_qs, out_v, value_masks, q_masks))
+			total_loss = self.loss_pi(target_pis, out_pi) + value_loss
 			return total_loss.item()
 
 	def loss_pi(self, targets, outputs):
@@ -192,9 +238,25 @@ class GenericNNetWrapper(NeuralNet):
 
 		# return -torch.sum(torch.log(targets) * torch.exp(outputs)) / targets.size()[0]
 
-	def loss_v(self, targets_V, targets_Q, outputs):
-		targets = (targets_V + self.args['q_weight'] * targets_Q) / (1+self.args['q_weight'])
-		return torch.sum((targets - outputs) ** 2) / (targets_V.size()[0] * targets_V.size()[-1]) # Normalize by batch size * nb of players
+	def loss_v(self, targets_V, targets_Q, outputs, value_mask=None, q_mask=None):
+		if value_mask is None and q_mask is None:
+			targets = (targets_V + self.args['q_weight'] * targets_Q) / (1+self.args['q_weight'])
+			return torch.sum((targets - outputs) ** 2) / (targets_V.size()[0] * targets_V.size()[-1]) # Normalize by batch size * nb of players
+		if value_mask is None or q_mask is None:
+			raise ValueError('value_mask and q_mask must be supplied together')
+		if value_mask.shape != targets_V.shape or q_mask.shape != targets_Q.shape:
+			raise ValueError('Target masks must match the per-player target shape')
+		value_weight = value_mask.to(outputs.dtype)
+		q_weight = q_mask.to(outputs.dtype) * self.args['q_weight']
+		weight = value_weight + q_weight
+		active = weight > 0
+		if not torch.any(active):
+			# Retain a differentiable zero: policy-only batches must not update the
+			# value head, but total_loss.backward() still has a single code path.
+			return outputs.sum() * 0
+		denominator = torch.where(active, weight, torch.ones_like(weight))
+		targets = (targets_V * value_weight + targets_Q * q_weight) / denominator
+		return torch.sum(((targets - outputs) ** 2)[active]) / active.sum()
 
 	def save_checkpoint(self, folder='checkpoint', filename='checkpoint.pth.tar', additional_keys={}):
 		filepath = os.path.join(folder, filename)
@@ -339,7 +401,23 @@ class GenericNNetWrapper(NeuralNet):
 			picked_examples = [examples[i] for i in sample_ids]
 		else: 
 			picked_examples = [pickle.loads(zlib.decompress(examples[i])) for i in sample_ids]
-		return list(zip(*picked_examples))
+		return self._split_fields(picked_examples)
+
+	def _split_fields(self, examples):
+		"""Validate one homogeneous legacy or masked-target batch."""
+		lengths = {len(example) for example in examples}
+		if not lengths or not lengths <= {5, 7}:
+			raise ValueError('Training examples must contain 5 or 7 fields')
+		if lengths == {5, 7}:
+			normalized = []
+			for example in examples:
+				if len(example) == 5:
+					players = np.asarray(example[2]).shape
+					example = tuple(example) + (np.ones(players, dtype=np.bool_),
+												 np.ones(players, dtype=np.bool_))
+				normalized.append(example)
+			examples = normalized
+		return list(zip(*examples))
 	
 	def reshape_boards(self, numpy_boards):
 		# Some game needs to reshape boards before being an input of NNet

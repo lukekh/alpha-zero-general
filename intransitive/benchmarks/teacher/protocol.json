@@ -1,0 +1,106 @@
+{
+  "schema": "intransitive-teacher-protocol-1",
+  "purpose": "Issue #33/#35 bounded teacher-learning and exploration pilot",
+  "teacher": {
+    "search": {
+      "evaluator_version": "intransitive-heuristics-v2",
+      "count_weight": 100.0,
+      "race_weight": 0.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": false,
+      "defence_enabled": false,
+      "overload_enabled": false,
+      "max_depth": 1,
+      "node_limit": 500000,
+      "time_limit": 60.0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "target": "one-hot action from a fully completed fixed-depth search",
+    "value": "eventual exact terminal outcome, never a heuristic score",
+    "q": "absent and masked"
+  },
+  "dataset": {
+    "seed": 350,
+    "split_seed": 351,
+    "split_fractions": {
+      "validation": 0.22,
+      "test": 0.22
+    },
+    "trajectories": [
+      {"id": "teacher-self-0", "seed": 0, "players": ["teacher", "teacher"]},
+      {"id": "teacher-random-1", "seed": 1, "players": ["teacher", "random"]},
+      {"id": "random-teacher-2", "seed": 2, "players": ["random", "teacher"]},
+      {"id": "teacher-greedy-3", "seed": 3, "players": ["teacher", "greedy"]},
+      {"id": "greedy-teacher-4", "seed": 4, "players": ["greedy", "teacher"]},
+      {"id": "teacher-random-5", "seed": 5, "players": ["teacher", "random"]},
+      {"id": "random-teacher-6", "seed": 6, "players": ["random", "teacher"]},
+      {"id": "teacher-greedy-7", "seed": 7, "players": ["teacher", "greedy"]},
+      {"id": "greedy-teacher-8", "seed": 8, "players": ["greedy", "teacher"]}
+    ]
+  },
+  "training": {
+    "seeds": [410, 411, 412],
+    "updates_per_phase": 4,
+    "anneal_teacher_fractions": [0.5, 0.25],
+    "network": {
+      "nn_version": 1,
+      "learn_rate": 0.0003,
+      "epochs": 1,
+      "batch_size": 16,
+      "no_compression": true,
+      "q_weight": 0.5,
+      "dropout": 0.0
+    },
+    "selection": "Within annealed_mix only, highest validation policy top-1; lowest seed breaks a tie"
+  },
+  "self_play": {
+    "games_per_phase": 1,
+    "root_noise": -1.0,
+    "settings": {
+      "numMCTSSims": 4,
+      "prob_fullMCTS": 1.0,
+      "ratio_fullMCTS": 1,
+      "forced_playouts": false,
+      "universes": 0,
+      "cpuct": 1.25,
+      "fpu": 0.0,
+      "no_mem_optim": false,
+      "parallel_inferences": 1,
+      "temperature": [1.0, 1.0, 1.0],
+      "tempThreshold": 10,
+      "maxlenOfQueue": 7200,
+      "numIters": 1,
+      "numItersHistory": 1,
+      "profile": false,
+      "arenaCompare": 2,
+      "updateThreshold": 0.6,
+      "stop_after_N_fail": 1,
+      "useray": false
+    }
+  },
+  "evaluation": {
+    "opponents": ["random", "greedy", "frozen_neural", "alpha_beta"],
+    "search_assisted_opponents": ["greedy", "alpha_beta"],
+    "games_per_agent_opponent_seed": 2,
+    "mcts_simulations": 4,
+    "tactical_cases": 100,
+    "physical_first_player": "Blue"
+  },
+  "budgets": {
+    "training_seeds": 3,
+    "teacher_trajectories": 9,
+    "optimizer_updates_pretrain": 4,
+    "optimizer_updates_continuation": 8,
+    "wall_seconds": 1800,
+    "peak_memory_bytes": 1073741824
+  },
+  "rules": "Official corner/stalemate wins and unchanged threefold/30-noncapture modelling draws"
+}
