@@ -85,7 +85,7 @@ class SharedPipeline(unittest.TestCase):
         game = Game()
         state = game.getInitBoard()
         np.testing.assert_array_equal(state, Board().get_state())
-        self.assertEqual(state[:, :, 32].flat[1], 0)
+        self.assertEqual(state[:, :, 82:84].flat[1], 0)
         self.assertEqual(np.count_nonzero(state[:, :, 0]), 20)
         self.assertEqual(Net(game, network_args()).num_players, 2)
         for name in ('RandomPlayer', 'GreedyPlayer', 'HumanPlayer'):

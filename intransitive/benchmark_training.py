@@ -80,7 +80,7 @@ def replay_metrics(examples):
         serialized.append(len(raw))
         decoded.append(deep_size(example))
         arrays.append(sum(x.nbytes for x in example if isinstance(x, np.ndarray)))
-        histories.append(int(example[0][:, :, METADATA_PLANE].flat[META_HISTORY_LENGTH]))
+        histories.append(int(example[0][:, :, METADATA_PLANE:].flat[META_HISTORY_LENGTH]))
     return dict(examples=len(examples), compressed_sample_bytes=distribution(compressed),
                 pickle_sample_bytes=distribution(serialized),
                 decoded_sample_owned_bytes=distribution(decoded),
@@ -272,8 +272,8 @@ def run_child(cli):
         seed=cli.seed, backend='onnx', resume=None))
     args.parallel_inferences, args.numEps = cli.workers, cli.games
     args.numMCTSSims, args.arenaCompare = cli.simulations, cli.arena_games
-    # 600 plies is a rule-derived upper bound, preserving every symmetry even in tails.
-    args.maxlenOfQueue = cli.games * 600 * 12
+    # 1600 plies is a rule-derived upper bound, preserving every symmetry even in tails.
+    args.maxlenOfQueue = cli.games * 1600 * 12
     args.numItersHistory = 1
     args.batch_size = cli.batch_size
     args.selfplay_seed = cli.seed

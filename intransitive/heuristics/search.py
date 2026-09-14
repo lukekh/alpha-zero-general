@@ -20,7 +20,7 @@ from ..IntransitiveConstants import action_destination
 @lru_cache(maxsize=1)
 def warm_route_kernels():
     from .geometry import distance_map
-    board = np.zeros((9, 9, 33), dtype=np.int8)[:, :, 0]
+    board = np.zeros((9, 9, 84), dtype=np.int8)[:, :, 0]
     distance_map(board, 0, 1)
     distance_map(board, 0, 1, 1)
 
@@ -33,7 +33,7 @@ def position_key(state):
     clock. Never merge by board alone or discard a mere second occurrence.
     Bytes are compared exactly by dict, so hash collisions cannot merge nodes.
     """
-    meta = state[:, :, 32].ravel()
+    meta = state[:, :, 82:84].ravel()
     length = int(meta[4])
     # Copy the strided planes once, rather than once per historical board.
     planes = state[:, :, :length + 1].transpose(2, 0, 1).tobytes()
@@ -122,7 +122,7 @@ def prove_reference(game, state, config, budget, *, compiled_order=False):
             raise ProofLimit
         used += 1
         budget.visit(proof=True)
-        side = int(position[:, :, 32].flat[1])
+        side = int(position[:, :, 82:84].flat[1])
         terminal = terminal_value(game, position, side, ply)
         if terminal is not None:
             return terminal, []
@@ -131,14 +131,14 @@ def prove_reference(game, state, config, budget, *, compiled_order=False):
         if ply == 0:
             budget.charge()
             if no_terminal_win_in_horizon(position[:, :, 0], side,
-                                           int(position[:, :, 32].flat[2]), depth):
+                                           int(position[:, :, 82:84].flat[2]), depth):
                 return 0., []
         best, pv = -inf, []
         mask = game.getValidMoves(position, side)
-        goal = 80 if side == int(position[:, :, 32].flat[2]) else 0
+        goal = 80 if side == int(position[:, :, 82:84].flat[2]) else 0
         if compiled_order:
             from .proof import order_legal_actions
-            actions = order_legal_actions(mask, side, int(position[:, :, 32].flat[2]))
+            actions = order_legal_actions(mask, side, int(position[:, :, 82:84].flat[2]))
         else:
             actions = list(map(int, np.flatnonzero(mask)))
             actions.sort(key=lambda a: action_destination(a) != (goal % 9, goal // 9))
@@ -256,7 +256,7 @@ class AlphaBetaPlayer:
 
     def _ordered(self, state, side, preferred, budget, root=False):
         actions = list(map(int, np.flatnonzero(self.game.getValidMoves(state, side))))
-        goal = 80 if side == int(state[:, :, 32].flat[2]) else 0
+        goal = 80 if side == int(state[:, :, 82:84].flat[2]) else 0
         own_goal = 80 - goal
         threats = []
         for y, x in np.argwhere(state[:, :, 0] * (1 if side == 0 else -1) < 0):
@@ -286,14 +286,14 @@ class AlphaBetaPlayer:
         budget.visit()
         if ply == 0 and self._material_root is not state:
             self._material_counts = count_pieces(state)
-        side = int(state[:, :, 32].flat[1])
+        side = int(state[:, :, 82:84].flat[1])
         terminal = terminal_value(self.game, state, side, ply)
         if terminal is not None:
             return terminal, []
         # Post-capture leaves commonly transpose. Quiet leaves usually carry
         # different repetition histories; avoid building a costly cache key
         # where reuse is rare. Internal nodes still use the full draw-safe key.
-        if depth == 0 and (not self.use_table or int(state[:, :, 32].flat[4]) != 1):
+        if depth == 0 and (not self.use_table or int(state[:, :, 82:84].flat[4]) != 1):
             return self._leaf(state, side, ply, budget)
         # Fold positions only when all future-play/draw information agrees.
         # Different-depth heuristic scores remain ordering hints, not values.
@@ -325,7 +325,7 @@ class AlphaBetaPlayer:
         best, pv = -inf, []
         for action, child in self._ordered(state, side, preferred, budget, root=progress is not None):
             counts = self._material_counts
-            if int(child[:, :, 32].flat[3]) == 0:
+            if int(child[:, :, 82:84].flat[3]) == 0:
                 x, y = action_destination(action)
                 self._material_counts = after_capture(counts, int(state[y, x, 0]))
             try:
@@ -365,7 +365,7 @@ class AlphaBetaPlayer:
     def analyze(self, state, budget=None):
         self._prepare(warm_proof=budget is None)
         budget = budget or Budget(self.config.node_limit, self.config.time_limit)
-        side = int(state[:, :, 32].flat[1])
+        side = int(state[:, :, 82:84].flat[1])
         # Validation/one legal fallback is required even for a zero budget.
         if terminal_value(self.game, state, side) is not None:
             raise ValueError('Cannot select a move from a terminal position')
@@ -464,12 +464,12 @@ class AlphaBetaPlayer:
         return result
 
     def choose(self, state, player):
-        if player != int(state[:, :, 32].flat[1]):
+        if player != int(state[:, :, 82:84].flat[1]):
             raise ValueError('Player does not match state')
         return self.analyze(state).action
 
     def play(self, board, nb_moves=0):
-        if int(board[:, :, 32].flat[1]) != 0:
+        if int(board[:, :, 82:84].flat[1]) != 0:
             raise ValueError('Expected canonical current player zero')
         return self.analyze(board).action
 
@@ -479,11 +479,11 @@ def exhaustive_minimax(game, state, depth, config=None, budget=None):
     config = config or SearchConfig()
     budget = budget or Budget(10**12, 3600.)
     evaluator = Evaluator(game, config)
-    root = int(state[:, :, 32].flat[1])
+    root = int(state[:, :, 82:84].flat[1])
 
     def visit(position, remaining, ply):
         budget.visit()
-        side = int(position[:, :, 32].flat[1])
+        side = int(position[:, :, 82:84].flat[1])
         terminal = terminal_value(game, position, root, ply)
         if terminal is not None:
             return terminal, []

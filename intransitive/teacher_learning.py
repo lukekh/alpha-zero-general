@@ -102,7 +102,7 @@ def optimizer_hash(net):
 
 def canonical_transform(game, state, policy, legal, symmetry):
     transformed = transform_state(state, symmetry)
-    mover = int(transformed[:, :, 32].flat[1])
+    mover = int(transformed[:, :, 82:84].flat[1])
     transformed = game.getCanonicalForm(transformed, mover)
     transformed_policy = transform_action_vector(policy, symmetry).astype(np.float32)
     transformed_legal = transform_action_vector(legal, symmetry).astype(np.bool_)
@@ -151,7 +151,7 @@ def decision_categories(game, canonical, action):
     safe = safe_actions(game, canonical)
     if action in safe and len(safe) < len(legal):
         result.append('avoids_immediate_loss')
-    goal = 80 if int(canonical[:, :, 32].flat[2]) == 0 else 0
+    goal = 80 if int(canonical[:, :, 82:84].flat[2]) == 0 else 0
     if max(abs(x - goal % 9), abs(y - goal // 9)) <= 1:
         result.append('goal_threat')
     return result or ['quiet']
@@ -228,7 +228,7 @@ def validate_dataset(data):
         groups = defaultdict(set)
         for row in examples:
             validate_state(row['state'])
-            require(int(row['state'][:, :, 32].flat[1]) == 0, 'Example is not canonical')
+            require(int(row['state'][:, :, 82:84].flat[1]) == 0, 'Example is not canonical')
             require(not game.getGameEnded(row['state'], 0).any(), 'Terminal training state')
             require(row['policy'].shape == row['legal'].shape == (game.getActionSize(),),
                     'Invalid action target shape')
@@ -920,7 +920,7 @@ def build_report(root, protocol, dataset_manifest, exploration, experiment, star
                      'conditional on one opening and fixed opponents; repeated deterministic agents can '
                      'repeat trajectories. No positive result is promoted without consistent seed-level '
                      'held-out and model-only evidence.'),
-        official_rules=('Exact corner/stalemate wins; exact threefold and 30-noncapture modelling draws. '
+        official_rules=('Exact corner/stalemate wins; exact threefold and 80-noncapture modelling draws. '
                         'No relabelled draws, adjudication, truncation or reward shaping.'),
         efficiency=dict(teacher_generation_one_time_seconds=dataset_manifest['elapsed_seconds'],
                         teacher_search_seconds=dataset_manifest['teacher_search_seconds'],

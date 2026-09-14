@@ -1,7 +1,7 @@
 """Compiled state, official rules, and modelling-only termination."""
 
 import numpy as np
-from numba import int8, njit
+from numba import boolean, int8, njit
 from numba.experimental import jitclass
 
 from .IntransitiveConstants import (
@@ -74,7 +74,7 @@ def _corner_winner(pieces, a1_defender):
 @njit(cache=True)
 def _repetition_count(state):
     """Count exact current board-plus-turn occurrences, including the latest."""
-    meta = state[:, :, METADATA_PLANE]
+    meta = state[:, :, METADATA_PLANE:]
     count = 0
     for i in range(int(meta.flat[META_HISTORY_LENGTH])):
         if meta.flat[META_HISTORY_PLAYERS + i] != meta.flat[META_NEXT_PLAYER]:
@@ -93,10 +93,10 @@ def _repetition_count(state):
 
 
 @njit(cache=True)
-def _terminal_status(state):
+def _terminal_status(state, modelling_draws=True):
     """Return (winner or -1, reason) without consulting terminal-aware legality."""
     pieces = state[:, :, 0]
-    meta = state[:, :, METADATA_PLANE]
+    meta = state[:, :, METADATA_PLANE:]
     next_player = int(meta.flat[META_NEXT_PLAYER])
     winner = _corner_winner(pieces, int(meta.flat[META_A1_DEFENDER]))
     if winner == -2:
@@ -105,21 +105,21 @@ def _terminal_status(state):
         return winner, "corner"
     if not raw_movement_mask(pieces, next_player).any():
         return 1 - next_player, "stalemate"
-    if _repetition_count(state) >= 3:
+    if modelling_draws and _repetition_count(state) >= 3:
         return -1, "repetition"
-    if meta.flat[META_NO_CAPTURE] >= NO_CAPTURE_LIMIT:
+    if modelling_draws and meta.flat[META_NO_CAPTURE] >= NO_CAPTURE_LIMIT:
         return -1, "no-capture limit"
     return -1, "ongoing"
 
 
 @njit(cache=True)
 def validate_state(state):
-    """Reject malformed version-1 storage, without changing any bytes."""
+    """Reject malformed version-2 storage, without changing any bytes."""
     if state.shape != STATE_SHAPE:
-        raise ValueError("Expected state shape (9, 9, 33)")
+        raise ValueError("Expected state shape (9, 9, 84)")
     if not (state.dtype == np.dtype(np.int8)):
         raise ValueError("Expected int8 state")
-    meta = state[:, :, METADATA_PLANE]
+    meta = state[:, :, METADATA_PLANE:]
     if meta.flat[META_VERSION] != STATE_VERSION:
         raise ValueError("Unsupported state version")
     if not 0 <= meta.flat[META_NEXT_PLAYER] <= 1:
@@ -163,16 +163,17 @@ def validate_state(state):
                 raise ValueError("Latest history must match current board")
     if _corner_winner(state[:, :, 0], int(meta.flat[META_A1_DEFENDER])) == -2:
         raise ValueError("Both players cannot occupy their winning corners")
-    for i in range(META_RESERVED, 81):
+    for i in range(META_RESERVED, 162):
         if meta.flat[i] != 0:
             raise ValueError("Reserved metadata must be zero")
 
 
-@jitclass([("state", int8[:, :, :])])
+@jitclass([("state", int8[:, :, :]), ("modelling_draws", boolean)])
 class Board:
-    def __init__(self, num_players=NUMBER_PLAYERS):
+    def __init__(self, num_players=NUMBER_PLAYERS, modelling_draws=True):
         if num_players != NUMBER_PLAYERS:
             raise ValueError("Intransitive requires two players")
+        self.modelling_draws = modelling_draws
         self.state = np.zeros(STATE_SHAPE, dtype=np.int8)
         self.init_game()
 
@@ -186,7 +187,7 @@ class Board:
             self.state[y, x, 0] = piece
             self.state[8 - x, 8 - y, 0] = -piece
         self.state[:, :, HISTORY_START] = self.state[:, :, 0]
-        meta = self.state[:, :, METADATA_PLANE]
+        meta = self.state[:, :, METADATA_PLANE:]
         meta.flat[META_VERSION] = STATE_VERSION
         meta.flat[META_HISTORY_LENGTH] = 1
         # Blue moves first and defends A1; both IDs are zero.
@@ -214,7 +215,7 @@ class Board:
             return
         # Detach borrowed states, just as make_move/record_position do.
         state = self.state.copy()
-        meta = state[:, :, METADATA_PLANE]
+        meta = state[:, :, METADATA_PLANE:]
         length = int(meta.flat[META_HISTORY_LENGTH])
         for plane in range(length + 1):
             state[:, :, plane] = -state[:, :, plane]
@@ -232,22 +233,22 @@ class Board:
     def get_history_player(self, index):
         if index != int(index) or not 0 <= index < self.get_history_length():
             raise ValueError("History index out of range")
-        return int(self.state[:, :, METADATA_PLANE].flat[META_HISTORY_PLAYERS + int(index)])
+        return int(self.state[:, :, METADATA_PLANE:].flat[META_HISTORY_PLAYERS + int(index)])
 
     def get_history_length(self):
-        return int(self.state[:, :, METADATA_PLANE].flat[META_HISTORY_LENGTH])
+        return int(self.state[:, :, METADATA_PLANE:].flat[META_HISTORY_LENGTH])
 
     def get_next_player(self):
-        return int(self.state[:, :, METADATA_PLANE].flat[META_NEXT_PLAYER])
+        return int(self.state[:, :, METADATA_PLANE:].flat[META_NEXT_PLAYER])
 
     def get_a1_defender(self):
-        return int(self.state[:, :, METADATA_PLANE].flat[META_A1_DEFENDER])
+        return int(self.state[:, :, METADATA_PLANE:].flat[META_A1_DEFENDER])
 
     def get_no_capture_count(self):
-        return int(self.state[:, :, METADATA_PLANE].flat[META_NO_CAPTURE])
+        return int(self.state[:, :, METADATA_PLANE:].flat[META_NO_CAPTURE])
 
     def get_total_ply(self):
-        meta = self.state[:, :, METADATA_PLANE]
+        meta = self.state[:, :, METADATA_PLANE:]
         total = 0
         for i in range(TOTAL_PLY_DIGITS - 1, -1, -1):
             total = total * 128 + int(meta.flat[META_TOTAL_PLY + i])
@@ -257,7 +258,7 @@ class Board:
         if player != int(player) or not 0 <= player <= 1:
             raise ValueError("Player must be 0 or 1")
         player = int(player)
-        _, reason = _terminal_status(self.state)
+        _, reason = _terminal_status(self.state, self.modelling_draws)
         if reason != "ongoing":
             return np.zeros(ACTION_SIZE, dtype=np.bool_)
         return raw_movement_mask(self.state[:, :, 0], player)
@@ -294,7 +295,7 @@ class Board:
         next_player = int(next_player)
         if next_player != self.get_next_player():
             raise ValueError("Player does not match state")
-        winner, reason = _terminal_status(self.state)
+        winner, reason = _terminal_status(self.state, self.modelling_draws)
         result = np.zeros(2, dtype=np.float32)
         if winner >= 0:
             result[winner] = 1.0
@@ -309,7 +310,7 @@ class Board:
 
     def get_terminal_reason(self):
         """Return ongoing, corner, stalemate, repetition, or no-capture limit."""
-        _, reason = _terminal_status(self.state)
+        _, reason = _terminal_status(self.state, self.modelling_draws)
         return reason
 
     def get_score(self, player):
@@ -336,19 +337,26 @@ class Board:
         if _corner_winner(pieces, self.get_a1_defender()) == -2:
             raise ValueError("Both players cannot occupy their winning corners")
         length = self.get_history_length()
-        if not captured and length == HISTORY_CAPACITY:
+        if self.modelling_draws and not captured and length == HISTORY_CAPACITY:
             raise ValueError("Noncapture history is full")
         total = self.get_total_ply()
         if total == MAX_TOTAL_PLY:
             raise ValueError("Total ply overflow")
         # Detach even when loaded in borrowed/query mode. Check errors first.
         state = self.state.copy()
-        meta = state[:, :, METADATA_PLANE]
+        meta = state[:, :, METADATA_PLANE:]
         if captured:
             state[:, :, HISTORY_START:METADATA_PLANE] = 0
             for i in range(HISTORY_CAPACITY):
                 meta.flat[META_HISTORY_PLAYERS + i] = 0
             length = 0
+        elif length == HISTORY_CAPACITY:
+            # Official play may continue indefinitely. Keep the version-2
+            # observation bounded, without changing its layout or validators.
+            for i in range(HISTORY_CAPACITY - 1):
+                state[:, :, HISTORY_START + i] = state[:, :, HISTORY_START + i + 1]
+                meta.flat[META_HISTORY_PLAYERS + i] = meta.flat[META_HISTORY_PLAYERS + i + 1]
+            length -= 1
         state[:, :, 0] = pieces
         state[:, :, HISTORY_START + length] = pieces
         meta.flat[META_HISTORY_PLAYERS + length] = next_player
@@ -362,15 +370,37 @@ class Board:
         self.state = state
 
 
+def search_observation(state):
+    """Start another modelling window if an official game outlives a cutoff.
+
+    Only the search copy is rebased. Preserve the physical position, turn,
+    goals, and total ply. Search descendants still use the modelling draws.
+    """
+    validate_state(state)
+    _, reason = _terminal_status(state)
+    if reason not in ('repetition', 'no-capture limit'):
+        return state.copy()
+    observation = state.copy()
+    observation[:, :, HISTORY_START:METADATA_PLANE] = 0
+    observation[:, :, HISTORY_START] = observation[:, :, 0]
+    meta = observation[:, :, METADATA_PLANE:]
+    meta.flat[META_HISTORY_LENGTH] = 1
+    meta.flat[META_NO_CAPTURE] = 0
+    for i in range(HISTORY_CAPACITY):
+        meta.flat[META_HISTORY_PLAYERS + i] = 0
+    meta.flat[META_HISTORY_PLAYERS] = meta.flat[META_NEXT_PLAYER]
+    return observation
+
+
 def serialize_state(state):
-    """Exact version-1 C-order wire bytes, including history and padding."""
+    """Exact version-2 C-order wire bytes, including history and padding."""
     validate_state(state)
     return state.tobytes(order="C")
 
 
 def deserialize_state(data):
     if len(data) != STATE_BYTES:
-        raise ValueError("Expected exactly 2673 serialized bytes")
+        raise ValueError("Expected exactly 6804 serialized bytes")
     state = np.frombuffer(data, dtype=np.int8).reshape(STATE_SHAPE).copy()
     validate_state(state)
     return state

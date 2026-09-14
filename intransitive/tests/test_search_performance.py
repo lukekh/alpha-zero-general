@@ -73,16 +73,16 @@ class SearchPerformanceTests(unittest.TestCase):
         # Include reached positions, captures, changing turn and history.
         state = self.game.getInitBoard()
         for _ in range(35):
-            side = int(state[:, :, 32].flat[1])
+            side = int(state[:, :, 82:84].flat[1])
             actions = np.flatnonzero(self.game.getValidMoves(state, side))
             if not len(actions):
                 break
             state, _ = self.game.getNextState(state, side, int(rng.choice(actions)))
             states.append(state)
         for state in states:
-            side = int(state[:, :, 32].flat[1])
+            side = int(state[:, :, 82:84].flat[1])
             actions = np.flatnonzero(self.game.getValidMoves(state, side))
-            goal = 80 if side == int(state[:, :, 32].flat[2]) else 0
+            goal = 80 if side == int(state[:, :, 82:84].flat[2]) else 0
             before = state.tobytes()
             wins = winning_actions(state[:, :, 0], actions, side, goal)
             for action, win in zip(actions, wins):
@@ -92,7 +92,7 @@ class SearchPerformanceTests(unittest.TestCase):
 
     def test_no_win_bound_against_complete_two_ply_trees(self):
         def check_tree(state, depth):
-            side = int(state[:, :, 32].flat[1])
+            side = int(state[:, :, 82:84].flat[1])
             value = terminal_value(self.game, state, side)
             self.assertIn(value, (None, 0.))
             if not depth or value is not None:
@@ -101,10 +101,10 @@ class SearchPerformanceTests(unittest.TestCase):
                 child, _ = self.game.getNextState(state, side, int(action))
                 check_tree(child, depth - 1)
 
-        canonical = [self.game.getCanonicalForm(s, int(s[:, :, 32].flat[1])) for s in self.states]
+        canonical = [self.game.getCanonicalForm(s, int(s[:, :, 82:84].flat[1])) for s in self.states]
         for state in self.states + canonical:
-            side = int(state[:, :, 32].flat[1])
-            a1 = int(state[:, :, 32].flat[2])
+            side = int(state[:, :, 82:84].flat[1])
+            a1 = int(state[:, :, 82:84].flat[2])
             self.assertTrue(no_terminal_win_in_horizon(state[:, :, 0], side, a1, 2))
             check_tree(state, 2)
         for state in (position({'H8': 3, 'B2': -1}), position({'D4': 1, 'E5': -2})):

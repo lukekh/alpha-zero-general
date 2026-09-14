@@ -187,7 +187,7 @@ class DisplayAndPlayers(unittest.TestCase):
 
     def test_terminal_players_fail_without_input_and_arena_skips_callbacks(self):
         for state in self.terminal_states():
-            player = int(state[:, :, 32].flat[1])
+            player = int(state[:, :, 82:84].flat[1])
             canonical = self.game.getCanonicalForm(state, player)
             with patch('builtins.input', side_effect=AssertionError('Must not prompt')):
                 for cls in (RandomPlayer, HumanPlayer, GreedyPlayer, ReferenceGreedyPlayer):
@@ -209,7 +209,7 @@ class DisplayAndPlayers(unittest.TestCase):
                 colours = []
                 def checked(agent):
                     def callback(state, turn):
-                        self.assertLessEqual(turn, 600)
+                        self.assertLessEqual(turn, 1600)
                         self.assertFalse(self.game.getGameEnded(state, 0).any())
                         colours.append(player_colour(state, 0))
                         if turn == 1:

@@ -33,13 +33,13 @@ def write_json(path, data):
 
 
 def fixture_state(fixture):
-    # Same version-1 format as the independently validated rule fixtures.
-    state = np.zeros((9, 9, 33), dtype=np.int8)
+    # Same version-2 format as the independently validated rule fixtures.
+    state = np.zeros((9, 9, 84), dtype=np.int8)
     for square, piece in fixture['pieces'].items():
         state[int(square[1]) - 1, ord(square[0]) - 65, 0] = piece
     state[:, :, 1] = state[:, :, 0]
-    meta = state[:, :, 32]
-    meta.flat[0] = 1
+    meta = state[:, :, 82:84]
+    meta.flat[0] = 2
     meta.flat[1] = fixture.get('turn', 0)
     meta.flat[4] = 1
     meta.flat[10] = fixture.get('turn', 0)
@@ -169,7 +169,7 @@ def run(args):
                   numpy=np.__version__, torch=torch.__version__, checkpoint_sha256=model_hash,
                   neural_simulations=args.simulations, seeds=args.seeds,
                   seed_policy='SeedSequence([3400, seed, opponent_index]); same stream for both colours and every variant/mode; fresh trees per game',
-                  rules='Official Blue opening; exact engine threefold/30-ply draw limits; no adjudicated/truncated draws',
+                  rules='Official Blue opening; exact engine threefold/80-ply draw limits; no adjudicated/truncated draws',
                   uncertainty='95% Hoeffding score intervals using colour-paired seed units; tiny conditional sample only. Deterministic opponents repeat trajectories; these are not independent strength evidence or opening/training-seed generalization.',
                   budgets={}, configurations={}, tuning=tuning, positions=[], games=[], summaries=[])
     start = perf_counter()

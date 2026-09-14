@@ -15,7 +15,7 @@ def benchmark(batch_sizes=(1, 32), repeats=100):
     torch.set_num_threads(1)
     torch.manual_seed(10)
     game = IntransitiveGame()
-    net = IntransitiveNNet(game, {'nn_version': 1}).eval()
+    net = IntransitiveNNet(game, {'nn_version': 2}).eval()
     state = torch.tensor(game.getInitBoard(), dtype=torch.float32)[None]
     valid = torch.tensor(game.getValidMoves(game.getInitBoard(), 0))[None]
     report = {
@@ -24,7 +24,7 @@ def benchmark(batch_sizes=(1, 32), repeats=100):
         'device': 'cpu', 'threads': 1, 'repeats': repeats,
         'parameters': sum(p.numel() for p in net.parameters()),
         'history_encoder_parameters': sum(p.numel() for p in net.history_encoder.parameters()),
-        'history_conv_macs_per_state': 31 * 9 * 9 * 8 * 4 * 3 * 3,
+        'history_conv_macs_per_state': 81 * 9 * 9 * 8 * 4 * 3 * 3,
         'feature_config': net.feature_config, 'measurements': [],
     }
     with torch.inference_mode():
@@ -43,7 +43,7 @@ def benchmark(batch_sizes=(1, 32), repeats=100):
             report['measurements'].append({
                 'batch_size': batch_size, **timings,
                 'decoded_features_bytes': (current.numel() + history.numel()) * 4,
-                'encoded_history_bytes': batch_size * 31 * 4 * 9 * 9 * 4,
+                'encoded_history_bytes': batch_size * 81 * 4 * 9 * 9 * 4,
             })
     return report
 

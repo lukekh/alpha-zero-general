@@ -14,7 +14,7 @@ MODULES = ('piece_count', 'clear_run', 'piece_advantage', 'attacking_position',
 
 
 def terminal_value(game, state, side, ply=0):
-    result = game.getGameEnded(state, int(state[:, :, 32].flat[1]))
+    result = game.getGameEnded(state, int(state[:, :, 82:84].flat[1]))
     if not result.any():
         return None
     if result[side] == 1:
@@ -180,7 +180,7 @@ class Evaluator:
             from .search import prove
             proof = prove(self.game, state, self.config, budget)
         if proof['status'] == 'proven':
-            turn = int(state[:, :, 32].flat[1])
+            turn = int(state[:, :, 82:84].flat[1])
             score = proof['score'] if side == turn else -proof['score']
             winner = side if score > 0 else 1 - side
             budget.check()

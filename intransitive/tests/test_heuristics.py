@@ -195,14 +195,8 @@ class HeuristicTests(unittest.TestCase):
     def test_draws_and_official_win_precedence(self):
         state = position({'H8': 3, 'D4': -1})
         pieces = state[:, :, 0]
-        history = []
-        for i in range(30):
-            other = pieces.copy()
-            if i != 29:
-                other[4, i % 9] = 2 if i < 9 else -2
-                other[5, i // 9] = 1
-            history.append(other)
-        state = load_history(Board(), history, first_player=1)
+        from intransitive.tests.test_draws import clock_history
+        state = load_history(Board(), clock_history(pieces, 79), first_player=1)
         self.assertIsNone(terminal_value(self.game, state, 0))
         child, _ = self.game.getNextState(state, 0, parse_move('H8 I9'))
         self.assertEqual(terminal_value(self.game, child, 0), MATE)
@@ -359,7 +353,7 @@ class HeuristicTests(unittest.TestCase):
         value = self.explain(s, config)['score']
         for symmetry in range(12):
             transformed = transform_state(s, symmetry)
-            side = int(transformed[:, :, 32].flat[1])
+            side = int(transformed[:, :, 82:84].flat[1])
             self.assertAlmostEqual(self.explain(transformed, config, side)['score'], value)
             p = AlphaBetaPlayer(config=replace(config, max_depth=1))
             result = p.analyze(transformed)

@@ -45,7 +45,7 @@ class ReferenceGreedyTests(unittest.TestCase):
             action = parse_move(move)
             for symmetry in range(12):
                 mapped = transform_state(state, symmetry)
-                player = int(mapped[:, :, 32].flat[1])
+                player = int(mapped[:, :, 82:84].flat[1])
                 canonical = self.game.getCanonicalForm(mapped, player)
                 mapped_action = int(transform_action(action, symmetry))
                 with self.subTest(move=move, symmetry=symmetry):

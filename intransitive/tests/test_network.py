@@ -16,7 +16,7 @@ from intransitive.tests.test_game import relabel, with_ply
 from intransitive.tests.test_symmetries import fixture
 
 
-def args(version=1):
+def args(version=2):
     return dict(nn_version=version, learn_rate=0.001, epochs=1, batch_size=2,
                 no_compression=True, q_weight=0.5)
 
@@ -35,12 +35,12 @@ class HistoryNetwork(unittest.TestCase):
         return self.net.extract_features(torch.tensor(np.stack(states), dtype=torch.float32))
 
     def test_categorical_goals_and_scalar_oracle_all_history_lengths(self):
-        for length in (1, 5, 31):
+        for length in (1, 5, 31, 81):
             for defender in (0, 1):
                 state = fixture(length, defender)
                 current, history = self.features(state)
                 self.assertEqual(tuple(current.shape), (1, 11, 9, 9))
-                self.assertEqual(tuple(history.shape), (1, 31, 8, 9, 9))
+                self.assertEqual(tuple(history.shape), (1, 81, 8, 9, 9))
                 for i, code in enumerate(PIECE_CODES):
                     np.testing.assert_array_equal(current[0, i], state[:, :, 0] == code)
                     for slot in range(length):
@@ -57,7 +57,7 @@ class HistoryNetwork(unittest.TestCase):
                 self.assertEqual(history[0, length:].count_nonzero(), 0)
                 board = Board()
                 board.copy_state(state, True)
-                np.testing.assert_allclose(current[0, 8], (length - 1) / 30)
+                np.testing.assert_allclose(current[0, 8], (length - 1) / 80)
                 np.testing.assert_allclose(current[0, 9], board.get_repetition_count() / 3)
                 np.testing.assert_allclose(current[0, 10],
                     np.log1p(board.get_total_ply()) / np.log1p(MAX_TOTAL_PLY), rtol=1e-6)
@@ -78,16 +78,16 @@ class HistoryNetwork(unittest.TestCase):
         torch.testing.assert_close(encoded[0, :4], encoded[1, 8:12])
         # Compare same slot with the same board but a different historical mover.
         turns = first.copy()
-        turns[:, :, 32].flat[10] = 1
+        turns[:, :, 82:84].flat[10] = 1
         c, h = self.features(first, turns)
         self.assertFalse(torch.equal(h[0], h[1]))
         goals = first.copy()
-        goals[:, :, 32].flat[2] = 1
+        goals[:, :, 82:84].flat[2] = 1
         counters = first.copy()
-        counters[:, :, 32].flat[3] = 20
+        counters[:, :, 82:84].flat[3] = 20
         c, _ = self.features(first, goals, counters, with_ply(first, 128))
         self.assertFalse(torch.equal(c[0, 6:8], c[1, 6:8]))
-        self.assertAlmostEqual(c[2, 8, 0, 0].item(), 20 / 30, places=6)
+        self.assertAlmostEqual(c[2, 8, 0, 0].item(), 20 / 80, places=6)
         self.assertNotEqual(c[0, 10, 0, 0], c[3, 10, 0, 0])
 
     def test_repetition_includes_turn_and_ignores_padding(self):
@@ -98,16 +98,16 @@ class HistoryNetwork(unittest.TestCase):
             self.assertAlmostEqual(current[0, 9, 0, 0].item(), count / 3, places=6)
         state = load_history(Board(), [pieces] * 5)
         changed = state.copy()
-        changed[:, :, 32].flat[10] = 1
+        changed[:, :, 82:84].flat[10] = 1
         current, _ = self.features(changed)
         self.assertAlmostEqual(current[0, 9, 0, 0].item(), 2 / 3, places=6)
 
     def test_padding_and_reserved_bytes_do_not_leak_through_encoder_bias(self):
         state = fixture(5, 0)
         noisy = state.copy()
-        noisy[:, :, 6:32] = 3
-        noisy[:, :, 32].flat[15:41] = 1
-        noisy[:, :, 32].flat[41:] = 99
+        noisy[:, :, 6:82] = 3
+        noisy[:, :, 82:84].flat[15:91] = 1
+        noisy[:, :, 82:84].flat[91:] = 99
         c, h = self.features(state, noisy)
         torch.testing.assert_close(c[0], c[1])
         torch.testing.assert_close(h[0], h[1])
@@ -184,11 +184,11 @@ class HistoryNetwork(unittest.TestCase):
         expected = [self.wrapper.predict(s, m) for s, m in zip(states, masks)]
         with tempfile.TemporaryDirectory() as directory:
             self.wrapper.save_checkpoint(directory, 'network.pt')
-            for version in (1, -1):
+            for version in (2, -1):
                 loaded = NNetWrapper(self.game, args(version))
                 checkpoint = loaded.load_checkpoint(directory, 'network.pt')
                 self.assertIsNotNone(checkpoint)
-                self.assertEqual(loaded.nnet.version, 1)
+                self.assertEqual(loaded.nnet.version, 2)
                 self.assertEqual(checkpoint['intransitive_config'], loaded.nnet.feature_config)
                 # Actual wrapper predict exports the same forward graph.
                 pi, v = loaded.predict(states[0], masks[0])
@@ -203,7 +203,11 @@ class HistoryNetwork(unittest.TestCase):
 
     def test_unsupported_version_fails_at_construction(self):
         with self.assertRaisesRegex(ValueError, 'Unsupported'):
-            NNetWrapper(self.game, args(2))
+            NNetWrapper(self.game, args(1))
+
+    def test_version_one_replay_has_a_clear_migration_error(self):
+        with self.assertRaisesRegex(ValueError, 'migrate version-1 replay'):
+            self.net.extract_features(torch.zeros(1, 9, 9, 33))
 
 
 if __name__ == '__main__':

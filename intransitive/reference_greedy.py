@@ -26,7 +26,7 @@ def features(state, action):
     pieces = state[:, :, 0]
     piece = int(pieces[y, x])
     player = 0 if piece > 0 else 1
-    defender = int(state[:, :, METADATA_PLANE].flat[META_A1_DEFENDER])
+    defender = int(state[:, :, METADATA_PLANE:].flat[META_A1_DEFENDER])
     target = 8 if player == defender else 0
     own_base = 8 - target
     goal = nx == target and ny == target

@@ -27,7 +27,7 @@ def triple_key(triple):
 def reference_augmentation(state, symmetry):
     """Array-operation oracle in the relative frame, independent of Board swaps."""
     out = state.copy()
-    length = int(state[:, :, 32].flat[4])
+    length = int(state[:, :, 82:84].flat[4])
     planes = state[:, :, :length + 1].copy()
     # Explicit type substitutions for C^0, C^1, C^2.
     types = np.array([[0, 1, 2, 3], [0, 2, 3, 1], [0, 3, 1, 2]])
@@ -36,7 +36,7 @@ def reference_augmentation(state, symmetry):
         planes = planes.transpose(1, 0, 2)
     if symmetry >= 6:
         planes = planes.transpose(1, 0, 2)[::-1, ::-1]
-        out[:, :, 32].flat[2] = 1 - out[:, :, 32].flat[2]
+        out[:, :, 82:84].flat[2] = 1 - out[:, :, 82:84].flat[2]
     out[:, :, :length + 1] = planes
     return out
 
@@ -68,7 +68,7 @@ class TrainingAugmentation(unittest.TestCase):
                     with self.subTest(length=length, defender=defender, symmetry=symmetry):
                         validate_state(b)
                         np.testing.assert_array_equal(b, reference_augmentation(state, symmetry))
-                        self.assertEqual(b[:, :, 32].flat[1], 0)
+                        self.assertEqual(b[:, :, 82:84].flat[1], 0)
                         np.testing.assert_array_equal(v, self.game.getValidMoves(b, 0))
                         np.testing.assert_array_equal(p[ACTION_PERMUTATIONS[symmetry]], policy)
                         np.testing.assert_array_equal(v[ACTION_PERMUTATIONS[symmetry]], valid)
@@ -81,7 +81,7 @@ class TrainingAugmentation(unittest.TestCase):
                         self.assertEqual(board.get_no_capture_count(), length - 1)
                         # Undo in the absolute API, then return to the original mover frame.
                         restored = transform_state(b, inverse_symmetry(symmetry))
-                        if restored[:, :, 32].flat[1]:
+                        if restored[:, :, 82:84].flat[1]:
                             restored = relabel(restored)
                         np.testing.assert_array_equal(restored, state)
                 for actual, saved in zip((state, policy, valid), original):
@@ -98,7 +98,7 @@ class TrainingAugmentation(unittest.TestCase):
         self.assertEqual(len(triples), 12)
         reflected, p, v = triples[6]
         self.assertEqual(reflected[7, 4, 0], 1)  # E8, same relative colour
-        self.assertEqual(reflected[:, :, 32].flat[2], 1)  # mover now defends I9
+        self.assertEqual(reflected[:, :, 82:84].flat[2], 1)  # mover now defends I9
         self.assertEqual(np.argmax(p), encode_action(4, 7, S))  # E8 -> E7
         self.assertTrue(v[np.argmax(p)])
         child, _ = self.game.getNextState(reflected, 0, int(np.argmax(p)))
@@ -246,7 +246,7 @@ class CoachAugmentation(unittest.TestCase):
                 offset += 1
                 for actual, target in zip(example, (b, p, expected if player == 0 else expected[::-1], v, q)):
                     np.testing.assert_array_equal(actual, target)
-                self.assertEqual(example[0][:, :, 32].flat[1], 0)
+                self.assertEqual(example[0][:, :, 82:84].flat[1], 0)
         self.assertEqual(offset, len(examples))
         return examples
 

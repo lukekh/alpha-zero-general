@@ -7,10 +7,10 @@ from unittest.mock import patch
 
 import numpy as np
 
-from intransitive.IntransitiveConstants import action_destination
+from intransitive.IntransitiveConstants import METADATA_PLANE, NO_CAPTURE_LIMIT, action_destination
 from intransitive.IntransitiveGame import IntransitiveGame
 from intransitive.IntransitiveLogicNumba import Board
-from intransitive.tests.test_draws import load_history
+from intransitive.tests.test_draws import clock_history, load_history
 from intransitive.IntransitiveSymmetries import transform_state
 from intransitive.IntransitiveDisplay import parse_move
 from intransitive.heuristics import AlphaBetaPlayer, SearchConfig
@@ -49,7 +49,7 @@ class MaterialTests(unittest.TestCase):
             for ply in range(80):
                 before = state.tobytes()
                 self.assert_score(evaluator, state, counts)
-                side = int(state[:, :, 32].flat[1])
+                side = int(state[:, :, METADATA_PLANE:].flat[1])
                 actions = np.flatnonzero(self.game.getValidMoves(state, side))
                 if not len(actions):
                     break
@@ -66,7 +66,7 @@ class MaterialTests(unittest.TestCase):
                     for symmetry in range(12):
                         transformed = transform_state(state, symmetry)
                         self.assert_score(evaluator, transformed, count_pieces(transformed))
-                        turn = int(transformed[:, :, 32].flat[1])
+                        turn = int(transformed[:, :, METADATA_PLANE:].flat[1])
                         canonical = self.game.getCanonicalForm(transformed, turn)
                         self.assert_score(evaluator, canonical, count_pieces(canonical))
                 state, counts = child, child_counts
@@ -101,7 +101,7 @@ class MaterialTests(unittest.TestCase):
             counts = count_pieces(state)
             for __ in range(10):
                 self.assert_score(evaluator, state, counts)
-                side = int(state[:, :, 32].flat[1])
+                side = int(state[:, :, METADATA_PLANE:].flat[1])
                 quiet = [int(a) for a in np.flatnonzero(self.game.getValidMoves(state, side))
                          if state[action_destination(int(a))[1], action_destination(int(a))[0], 0] == 0]
                 state, _ = self.game.getNextState(state, side, int(rng.choice(quiet)))
@@ -138,16 +138,10 @@ class MaterialTests(unittest.TestCase):
         self.assertEqual(evaluator.score(child, 0, unlimited(), counts=counts), MATE)
         repeated = load_history(Board(), [state[:, :, 0]] * 5)
         self.assertEqual(evaluator.score(repeated, 0, unlimited(), counts=counts), 0.)
-        history = []
-        for index in range(30):
-            plane = state[:, :, 0].copy()
-            if index != 29:
-                plane[4, index % 9] = 2 if index < 9 else -2
-                plane[5, index // 9] = 1
-            history.append(plane)
-        clock29 = load_history(Board(), history, first_player=1)
+        history = clock_history(state[:, :, 0], NO_CAPTURE_LIMIT - 1)
+        before_limit = load_history(Board(), history, first_player=1)
         for move, expected in (('H8 I9', MATE), ('H8 G8', 0.)):
-            child, _ = self.game.getNextState(clock29, 0, parse_move(move))
+            child, _ = self.game.getNextState(before_limit, 0, parse_move(move))
             self.assertEqual(evaluator.score(child, 0, unlimited(), counts=counts), expected)
         for score in (MATE - 3, -MATE + 3):
             self.assertEqual(evaluator.score(state, 0, unlimited(),

@@ -14,7 +14,7 @@ def player_colour(state, player):
     Actual play always has Blue defending A1. Spatial training symmetries are
     continuation equivalents, not physical game records.
     """
-    defender = int(state[:, :, METADATA_PLANE].flat[META_A1_DEFENDER])
+    defender = int(state[:, :, METADATA_PLANE:].flat[META_A1_DEFENDER])
     return "Blue" if player == defender else "Red"
 
 
@@ -41,7 +41,7 @@ def parse_move(text):
 def format_board(state):
     """Render text with explicit colour/type tokens, including occupied goals."""
     validate_state(state)
-    meta = state[:, :, METADATA_PLANE]
+    meta = state[:, :, METADATA_PLANE:]
     mover = int(meta.flat[META_NEXT_PLAYER])
     ply = sum(int(meta.flat[META_TOTAL_PLY + i]) * 128**i
               for i in range(TOTAL_PLY_DIGITS))

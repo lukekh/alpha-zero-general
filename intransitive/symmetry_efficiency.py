@@ -70,7 +70,7 @@ def budget_for(arm):
     budget['purpose'] = 'Issue #16 paired augmentation experiment; equal updates per iteration'
     budget['settings']['symmetry_count'] = 12 if arm == 'on' else 1
     # Equal capacity in original positions, preserving both complete histories.
-    budget['settings']['maxlenOfQueue'] = 8 * 600 * budget['settings']['symmetry_count']
+    budget['settings']['maxlenOfQueue'] = 8 * 1600 * budget['settings']['symmetry_count']
     budget['comparison'] = dict(augmentation=arm, updates_per_iteration=UPDATES,
         optimizer_seed='SeedSequence([150, iteration_1_based, 16])',
         fixed_earlier_sha256=EARLIER_SHA256,

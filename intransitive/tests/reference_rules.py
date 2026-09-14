@@ -2,7 +2,7 @@
 
 No production imports: tuples, explicit capture pairs, coordinate arithmetic,
 and board-plus-turn history implement play independently of the Numba engine.
-NumPy is used only at the version-1 storage boundary. Fixtures may supply
+NumPy is used only at the version-2 storage boundary. Fixtures may supply
 structurally valid histories that are not reachable; generated games never do.
 """
 
@@ -90,7 +90,7 @@ class Position:
 
     @classmethod
     def from_storage(cls, state):
-        meta = state[:, :, 32].ravel()
+        meta = state[:, :, 82:84].ravel()
         pieces = tuple(int(p) for p in state[:, :, 0].flat)
         history = tuple((tuple(int(p) for p in state[:, :, i + 1].flat),
                          int(meta[10 + i])) for i in range(int(meta[4])))
@@ -98,16 +98,16 @@ class Position:
                    sum(int(meta[5 + i]) * 128**i for i in range(5)))
 
     def storage(self):
-        state = np.zeros((9, 9, 33), dtype=np.int8)
+        state = np.zeros((9, 9, 84), dtype=np.int8)
         state[:, :, 0] = np.asarray(self.pieces).reshape(9, 9)
-        meta = np.zeros(81, dtype=np.int8)
-        meta[:5] = (1, self.player, self.a1_defender, self.clock, len(self.history))
+        meta = np.zeros(162, dtype=np.int8)
+        meta[:5] = (2, self.player, self.a1_defender, self.clock, len(self.history))
         for i in range(5):
             meta[5 + i] = (self.ply // 128**i) % 128
         for i, (pieces, player) in enumerate(self.history):
             state[:, :, i + 1] = np.asarray(pieces).reshape(9, 9)
             meta[10 + i] = player
-        state[:, :, 32] = meta.reshape(9, 9)
+        state[:, :, 82:84] = meta.reshape(9, 9, 2)
         return state
 
     def repetitions(self):
@@ -127,7 +127,7 @@ class Position:
             winner, reason = 1 - self.player, 'stalemate'
         else:
             reason = ('repetition' if self.repetitions() >= 3 else
-                      'no-capture limit' if self.clock >= 30 else 'ongoing')
+                      'no-capture limit' if self.clock >= 80 else 'ongoing')
             return reason, (0.0, 0.0) if reason == 'ongoing' else (1e-4, 1e-4)
         return reason, (1.0, -1.0) if winner == 0 else (-1.0, 1.0)
 

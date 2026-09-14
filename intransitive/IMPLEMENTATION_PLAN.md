@@ -1,3 +1,5 @@
+> Historical implementation plan. The current state/network format uses 81 history slots and an 80-turn no-capture limit; see [the version-2 contract](README.md#state-contract-version-2).
+
 # Intransitive implementation plan
 
 Implement the confirmed rules in README.md using Santorini's integration pattern.

@@ -14,12 +14,12 @@ from intransitive.IntransitiveSymmetries import transform_state
 
 def load_history(board, positions, first_player=0, a1_defender=0):
     """Hand-built storage fixture; historical moves need not be reachable."""
-    state = np.zeros((9, 9, 33), dtype=np.int8)
+    state = np.zeros((9, 9, 84), dtype=np.int8)
     for i, pieces in enumerate(positions):
         state[:, :, i + 1] = pieces
     state[:, :, 0] = positions[-1]
-    meta = state[:, :, 32]
-    meta.flat[0] = 1
+    meta = state[:, :, 82:84]
+    meta.flat[0] = 2
     meta.flat[1] = (first_player + len(positions) - 1) % 2
     meta.flat[2] = a1_defender
     meta.flat[3] = len(positions) - 1
@@ -38,8 +38,32 @@ def sparse_position():
     return pieces
 
 
-def noncapture_actions():
-    """Two separated, non-revisiting paths: exactly 15 moves per player."""
+def clock_history(pieces, clock):
+    """Unique synthetic earlier boards for isolating a draw-clock boundary."""
+    history = []
+    for i in range(clock):
+        earlier = pieces.copy()
+        earlier.flat[i] = 3 if pieces.flat[i] == 2 else 2
+        history.append(earlier)
+    return history + [pieces]
+
+
+def noncapture_actions(limit=80):
+    """Separated 14/16-step loops: no board-plus-turn repeats in 80 plies."""
+    if limit == 80:
+        blue = ([(x, 1) for x in range(1, 7)] + [(6, 2), (6, 3)]
+                + [(x, 3) for x in range(5, 0, -1)] + [(1, 2)])
+        red = ([(x, 7) for x in range(7, 0, -1)] + [(1, 6), (1, 5)]
+               + [(x, 5) for x in range(2, 8)] + [(7, 6)])
+        deltas = {(1, 0): E, (-1, 0): W, (0, 1): N, (0, -1): S}
+        result = []
+        for i in range(40):
+            for path in (blue, red):
+                x, y = path[i % len(path)]
+                nx, ny = path[(i + 1) % len(path)]
+                result.append(encode_action(x, y, deltas[nx-x, ny-y]))
+        return result
+    assert limit == 30
     blue = [(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1),
             (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (1, 2),
             (1, 3), (2, 3), (3, 3), (4, 3)]
@@ -164,7 +188,7 @@ class ModellingDraws(unittest.TestCase):
                 self.assertEqual(self.board.get_repetition_count(), 1)
                 self.assert_ongoing()
 
-    def test_29_and_30_individual_noncaptures(self):
+    def test_79_and_80_individual_noncaptures(self):
         load_history(self.board, [sparse_position()])
         actions = noncapture_actions()
         for ply, action in enumerate(actions, 1):
@@ -173,7 +197,7 @@ class ModellingDraws(unittest.TestCase):
             self.assertEqual(self.board.get_no_capture_count(), ply)
             self.assertEqual(self.board.get_history_length(), ply + 1)
             self.assertEqual(self.board.get_repetition_count(), 1)
-        self.assertEqual(self.board.get_total_ply(), 30)
+        self.assertEqual(self.board.get_total_ply(), 80)
         self.assert_draw("no-capture limit")
         validate_state(self.board.get_state())
 
@@ -186,7 +210,7 @@ class ModellingDraws(unittest.TestCase):
                 else:
                     pieces[5, 4] = 2  # Red's last west step captures.
                 load_history(self.board, [pieces])
-                actions = noncapture_actions()
+                actions = noncapture_actions(30)
                 play(self.board, actions[:capture_ply - 1])
                 before = self.board.get_state()
                 self.assertEqual(self.board.get_no_capture_count(), capture_ply - 1)
@@ -198,8 +222,8 @@ class ModellingDraws(unittest.TestCase):
                 self.assertEqual(np.count_nonzero(self.board.get_board()), 2)
                 after = self.board.get_state()
                 np.testing.assert_array_equal(after[:, :, 1], after[:, :, 0])
-                np.testing.assert_array_equal(after[:, :, 2:32], 0)
-                np.testing.assert_array_equal(after[:, :, 32].ravel()[11:41], 0)
+                np.testing.assert_array_equal(after[:, :, 2:82], 0)
+                np.testing.assert_array_equal(after[:, :, 82:84].ravel()[11:41], 0)
                 self.assertEqual(np.count_nonzero(before[:, :, 0]), 3)
                 self.assert_ongoing()
                 # The first subsequent noncapture counts from the capture result.
@@ -210,16 +234,40 @@ class ModellingDraws(unittest.TestCase):
                 self.assertEqual(self.board.get_total_ply(), capture_ply + 1)
                 validate_state(self.board.get_state())
 
+    def test_captures_on_79th_and_80th_move_reset_history(self):
+        for clock in (78, 79):
+            pieces = sparse_position()
+            player = clock % 2
+            x, y = (1, 1) if player == 0 else (7, 7)
+            pieces[y, x + (1 if player == 0 else -1)] = -2 if player == 0 else 2
+            load_history(self.board, clock_history(pieces, clock))
+            self.assert_ongoing()
+            self.board.make_move(encode_action(x, y, E if player == 0 else W), player)
+            self.assertEqual(self.board.get_no_capture_count(), 0)
+            self.assertEqual(self.board.get_history_length(), 1)
+            self.assertEqual(self.board.get_total_ply(), clock + 1)
+            self.assert_ongoing()
+            validate_state(self.board.get_state())
+
+    def test_threefold_retains_occurrences_more_than_31_positions_ago(self):
+        pieces = sparse_position()
+        history = clock_history(pieces, 70)
+        history[0] = pieces.copy()
+        history[34] = pieces.copy()
+        load_history(self.board, history)
+        self.assertEqual(self.board.get_repetition_count(), 3)
+        self.assert_draw('repetition')
+
     def test_repetition_precedes_simultaneous_capture_limit(self):
         pieces = sparse_position()
         different = pieces.copy()
         different[1, 1] = 2
-        history = [different.copy() for _ in range(31)]
-        for i in (0, 14, 30):
+        history = [different.copy() for _ in range(81)]
+        for i in (0, 40, 80):
             history[i] = pieces.copy()
         load_history(self.board, history)
         self.assertEqual(self.board.get_repetition_count(), 3)
-        self.assertEqual(self.board.get_no_capture_count(), 30)
+        self.assertEqual(self.board.get_no_capture_count(), 80)
         self.assert_draw("repetition")
 
     def test_official_wins_precede_both_draw_conditions(self):
@@ -233,53 +281,36 @@ class ModellingDraws(unittest.TestCase):
                         pieces[0, 0] = -1 if winner == 1 else 0
                     else:
                         pieces[4, 4] = 1 if winner == 0 else -1
-                    load_history(self.board, [pieces] * 31, first_player=1 - winner)
-                    self.assertEqual(self.board.get_repetition_count(), 16)
+                    load_history(self.board, [pieces] * 81, first_player=1 - winner)
+                    self.assertEqual(self.board.get_repetition_count(), 41)
                     self.assertEqual(self.board.get_terminal_reason(), reason)
                     expected = [1, -1] if winner == 0 else [-1, 1]
                     np.testing.assert_array_equal(self.board.check_end_game(1 - winner), expected)
                     self.assertFalse(self.board.valid_moves(0).any())
                     self.assertFalse(self.board.valid_moves(1).any())
 
-    def test_corner_on_30th_move_wins(self):
+    def test_corner_on_80th_move_wins(self):
         pieces = sparse_position()
         pieces[7, 7] = 0
         pieces[1, 0] = -1
-        # Populate 29 different earlier snapshots to isolate the clock boundary.
-        history = []
-        for i in range(29):
-            earlier = pieces.copy()
-            earlier[1, 1] = 0
-            earlier[3 + i // 9, i % 9] = 1
-            history.append(earlier)
-        load_history(self.board, history + [pieces])
+        load_history(self.board, clock_history(pieces, 79))
         self.assert_ongoing()
         self.board.make_move(encode_action(0, 1, S), 1)
-        self.assertEqual(self.board.get_no_capture_count(), 30)
+        self.assertEqual(self.board.get_no_capture_count(), 80)
         self.assertEqual(self.board.get_terminal_reason(), "corner")
         np.testing.assert_array_equal(self.board.check_end_game(0), [-1, 1])
 
-    def test_stalemate_on_30th_move_wins(self):
+    def test_stalemate_on_80th_move_wins(self):
         pieces = np.zeros((9, 9), dtype=np.int8)
         pieces[3:6, 3:6] = -1
         pieces[4, 4] = 1
         pieces[4, 3] = 0  # Blue's sole exit, which Red will close.
         pieces[4, 2] = -1
-        history = []
-        for y, x in np.argwhere(pieces == 0):
-            if (x, y) in ((0, 0), (8, 8)):
-                continue
-            earlier = pieces.copy()
-            earlier[4, 2] = 0
-            earlier[y, x] = -1
-            history.append(earlier)
-            if len(history) == 29:
-                break
-        load_history(self.board, history + [pieces])
+        load_history(self.board, clock_history(pieces, 79))
         self.assert_ongoing()
         self.assertTrue(raw_movement_mask(pieces, 0).any())
         self.board.make_move(encode_action(2, 4, E), 1)
-        self.assertEqual(self.board.get_no_capture_count(), 30)
+        self.assertEqual(self.board.get_no_capture_count(), 80)
         self.assertEqual(self.board.get_terminal_reason(), "stalemate")
         np.testing.assert_array_equal(self.board.check_end_game(0), [-1, 1])
 
@@ -309,32 +340,30 @@ class ModellingDraws(unittest.TestCase):
 
     def test_compiled_siblings_keep_independent_draws_and_counters(self):
         pieces = sparse_position()
-        pieces[4, 5] = 2  # Red can capture south or draw by moving west.
-        load_history(self.board, [pieces])
-        actions = noncapture_actions()
-        play(self.board, actions[:-1])
-        parent = self.board.get_state()
+        pieces[6, 7] = 2  # Red can capture south or draw by moving west.
+        parent = load_history(self.board, clock_history(pieces, 79))
+        quiet = encode_action(7, 7, W)
         original = parent.copy()
         for copy in (True, False):
             with self.subTest(copy=copy):
                 drawn, result, reason, count, blue, red = compiled_transition(
-                    self.board, parent, actions[-1], copy)
+                    self.board, parent, quiet, copy)
                 drawn_saved = drawn.copy()
                 self.assertEqual(reason, "no-capture limit")
                 self.assertEqual(count, 1)
                 self.assertTrue(result.any())
                 self.assertFalse(blue.any() or red.any())
                 captured, result, reason, count, _, _ = compiled_transition(
-                    self.board, parent, encode_action(5, 5, S), copy)
+                    self.board, parent, encode_action(7, 7, S), copy)
                 self.assertEqual(reason, "ongoing")
                 self.assertFalse(result.any())
                 self.assertEqual(count, 1)
-                self.assertEqual(captured[:, :, 32].flat[3], 0)
-                self.assertEqual(drawn[:, :, 32].flat[3], 30)
+                self.assertEqual(captured[:, :, 82:84].flat[3], 0)
+                self.assertEqual(drawn[:, :, 82:84].flat[3], 80)
                 np.testing.assert_array_equal(parent, original)
                 np.testing.assert_array_equal(drawn, drawn_saved)
                 self.board.copy_state(parent, copy)
-                self.assertEqual(self.board.get_no_capture_count(), 29)
+                self.assertEqual(self.board.get_no_capture_count(), 79)
                 self.assert_ongoing()
         self.assertTrue(compiled_transition.nopython_signatures)
 
@@ -356,7 +385,7 @@ class ModellingDraws(unittest.TestCase):
             self.assertEqual(reason, "ongoing")
             self.assertEqual(count, 1)
             self.assertFalse(result.any())
-            self.assertEqual(ongoing[:, :, 32].flat[3], 8)
+            self.assertEqual(ongoing[:, :, 82:84].flat[3], 8)
             np.testing.assert_array_equal(parent, original)
             np.testing.assert_array_equal(drawn, saved)
 

@@ -39,17 +39,35 @@ class RecordTests(unittest.TestCase):
         self.update('restart')
         self.assertEqual(load_record(self.session.snapshot()['pgn']).actions, [])
 
-    def test_repetition_and_terminal_analysis(self):
+    def test_repetition_continues_and_analysis_gets_fresh_window(self):
         for move in ('B5-B6', 'H5-H4', 'B6-B5', 'H4-H5') * 2:
             self.move(move)
         pgn = self.session.snapshot()['pgn']
         record = load_record(pgn)
-        self.assertEqual(record.tags['Result'], '1/2-1/2')
+        self.assertEqual(record.tags['Result'], '*')
         self.assertEqual(record.states[-1].tobytes(), self.session.board.get_state().tobytes())
         report = analyze_record(pgn)
-        self.assertTrue(report['evaluation']['terminal'])
-        self.assertEqual(report['evaluation']['score'], 0)
-        self.assertIsNone(report['search'])
+        self.assertFalse(report['evaluation']['terminal'])
+        self.assertIsNotNone(report['search'])
+        self.assertNotEqual(report['state_sha256'], report['search_state_sha256'])
+
+    def test_long_official_record_and_legacy_draw_record(self):
+        from intransitive.IntransitiveLogicNumba import Board
+        from intransitive.record import export_record, RULES
+        cycle = ('B5-B6', 'H5-H4', 'B6-B5', 'H4-H5')
+        for move in cycle * 10:
+            self.move(move)
+        record = load_record(self.session.snapshot()['pgn'])
+        self.assertEqual(len(record.actions), 40)
+        for actual, expected in zip(record.states, self.session.history + [self.session.board.get_state()]):
+            self.assertEqual(actual.tobytes(), expected.tobytes())
+        legacy = Board()
+        for move in cycle * 2:
+            legacy.make_move(parse_record_move(move), legacy.get_next_player())
+        pgn = export_record(cycle * 2, legacy, self.config)
+        self.assertEqual(load_record(pgn).tags['Rules'], RULES)
+        self.assertEqual(load_record(pgn).tags['Result'], '1/2-1/2')
+        self.assertIsNone(analyze_record(pgn)['search'])
 
     def test_corrupt_records_and_illegal_moves_rejected(self):
         pgn = self.move('B5-B6')['pgn']
@@ -57,11 +75,57 @@ class RecordTests(unittest.TestCase):
                         pgn.replace('1. B5-B6', '1. B5-B4'),
                         pgn.replace('[PlyCount "1"]', '[PlyCount "2"]'),
                         pgn.replace('[Result "*"]', '[Result "1-0"]'),
-                        pgn.replace('Intransitive-PGN-1', 'Chess'),
+                        pgn.replace('Intransitive-PGN-2', 'Chess'),
                         pgn.replace('1. B5-B6', '2. B5-B6'),
                         '[SetUp "1"]\n' + pgn):
             with self.subTest(corrupt=corrupt[-80:]), self.assertRaises(ValueError):
                 load_record(corrupt)
+
+    def test_version_one_official_record_replays_to_expanded_history(self):
+        from intransitive.record import legacy_state_hash
+        for move in ('B5-B6', 'H5-H4', 'B6-B5', 'H4-H5') * 10:
+            self.move(move)
+        state = self.session.board.get_state()
+        pgn = self.session.snapshot()['pgn'].replace('Intransitive-PGN-2', 'Intransitive-PGN-1')
+        pgn = pgn.replace(state_hash(state), legacy_state_hash(state))
+        loaded = load_record(pgn)
+        self.assertEqual(loaded.states[-1].tobytes(), state.tobytes())
+        self.assertEqual(loaded.states[-1][:, :, 82:84].flat[4], 41)
+
+    def test_version_one_quiet_limit_is_preserved_during_record_validation(self):
+        import numpy as np
+        from intransitive.IntransitiveConstants import action_destination
+        from intransitive.IntransitiveLogicNumba import Board
+        from intransitive.IntransitiveDisplay import move_to_str
+        from intransitive.record import export_record, legacy_state_hash
+        board = Board()
+        rng = np.random.default_rng(80)
+        moves = []
+        for _ in range(30):
+            before = board.get_state()
+            player = board.get_next_player()
+            for action in rng.permutation(np.flatnonzero(board.valid_moves(player))):
+                x, y = action_destination(int(action))
+                if before[y, x, 0] != 0:
+                    continue
+                board.copy_state(before, True)
+                board.make_move(int(action), player)
+                if board.get_terminal_reason() == 'ongoing':
+                    moves.append(move_to_str(int(action)))
+                    break
+            else:
+                self.fail('Could not construct the quiet legacy record')
+        state = board.get_state()
+        pgn = export_record(moves, board, self.config)
+        self.assertEqual(load_record(pgn).tags['Result'], '*')
+        pgn = pgn.replace('Intransitive-PGN-2', 'Intransitive-PGN-1')
+        pgn = pgn.replace('80-plies-without-capture', '30-plies-without-capture')
+        pgn = pgn.replace(state_hash(state), legacy_state_hash(state))
+        pgn = pgn.replace('[Result "*"]', '[Result "1/2-1/2"]')
+        pgn = pgn.rstrip()[:-1] + '1/2-1/2\n'
+        loaded = load_record(pgn)
+        self.assertEqual(loaded.tags['Result'], '1/2-1/2')
+        self.assertEqual(loaded.states[-1].tobytes(), state.tobytes())
 
     def test_original_ai_search_and_active_configuration(self):
         self.update('restart', opponent='alphabeta', human_player=1,

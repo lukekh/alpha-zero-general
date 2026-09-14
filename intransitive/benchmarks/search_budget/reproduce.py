@@ -48,7 +48,7 @@ def main():
     warm = AlphaBetaPlayer(game, replace(config, max_depth=1, node_limit=10_000))
     warm._prepare()
     for ply in (35, 61):
-        side = int(record.states[ply][:, :, 32].flat[1])
+        side = int(record.states[ply][:, :, 82:84].flat[1])
         game.getValidMoves(record.states[ply], side)
     setup_elapsed = perf_counter() - setup_start
 

@@ -47,10 +47,12 @@ class HumanPlayer:
             return action
 
 
-@njit(cache=True)
+# The jitclass rule engine must be compiled afresh when its state format changes.
+@njit
 def _greedy_action(state):
     """Two-ply safety check using the exact history-bearing rule engine."""
-    board = Board(2)
+    # Numba's jitclass constructor needs explicit arguments inside njit code.
+    board = Board(2, True)
     board.copy_state(state, False)
     actions = np.flatnonzero(board.valid_moves(0))
     target = 8 if board.get_a1_defender() == 0 else 0

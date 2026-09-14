@@ -120,7 +120,7 @@ def transform_state(state, symmetry):
     k, d, e = symmetry_components(symmetry)
     validate_state(state)
     out = state.copy()
-    meta = out[:, :, METADATA_PLANE]
+    meta = out[:, :, METADATA_PLANE:]
     length = int(meta.flat[META_HISTORY_LENGTH])
     for plane in range(length + 1):
         for y in range(9):

@@ -73,7 +73,7 @@ def winning_actions(pieces, actions, side, goal):
 @lru_cache(maxsize=1)
 def warm_search_kernels():
     # Match the strided board plane layout used by full game states.
-    board = np.zeros((9, 9, 33), dtype=np.int8)[:, :, 0]
+    board = np.zeros((9, 9, 84), dtype=np.int8)[:, :, 0]
     no_terminal_win_in_horizon(board, 0, 0, 2)
     winning_actions(board, np.empty(0, dtype=np.int64), 0, 80)
     # Compile rule queries/transitions before the first move's deadline.

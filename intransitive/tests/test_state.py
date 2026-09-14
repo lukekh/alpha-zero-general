@@ -94,7 +94,7 @@ class StateContract(unittest.TestCase):
                 self.assertEqual(expected[y, x], 0)
                 expected[y, x] = piece
         state = self.board.get_state()
-        self.assertEqual(state.shape, (9, 9, 33))
+        self.assertEqual(state.shape, (9, 9, 84))
         self.assertEqual(observation_size(), STATE_SHAPE)
         self.assertEqual(state.dtype, np.int8)
         np.testing.assert_array_equal(state[:, :, 0], expected)
@@ -111,23 +111,23 @@ class StateContract(unittest.TestCase):
         self.assertEqual(self.board.get_history_length(), 1)
         self.assertEqual(self.board.get_history_player(0), 0)
         np.testing.assert_array_equal(self.board.get_history(0), expected)
-        np.testing.assert_array_equal(state[:, :, 2:32], 0)
-        expected_meta = np.zeros(81, dtype=np.int8)
-        expected_meta[[0, 4]] = 1
-        np.testing.assert_array_equal(state[:, :, 32].ravel(), expected_meta)
+        np.testing.assert_array_equal(state[:, :, 2:82], 0)
+        expected_meta = np.zeros(162, dtype=np.int8)
+        expected_meta[0], expected_meta[4] = 2, 1
+        np.testing.assert_array_equal(state[:, :, 82:84].ravel(), expected_meta)
         validate_state(state)
 
     def test_capacity_and_capture_reset(self):
         initial = self.board.get_state()
         pieces = self.board.get_board()
         # Storage-level fixtures: record_position intentionally does not check moves.
-        for ply in range(1, 31):
+        for ply in range(1, 81):
             self.board.record_position(pieces, ply % 2, False)
         full = self.board.get_state()
-        self.assertEqual(self.board.get_history_length(), 31)
-        self.assertEqual(self.board.get_no_capture_count(), 30)
-        self.assertEqual(self.board.get_total_ply(), 30)
-        for index in range(31):
+        self.assertEqual(self.board.get_history_length(), 81)
+        self.assertEqual(self.board.get_no_capture_count(), 80)
+        self.assertEqual(self.board.get_total_ply(), 80)
+        for index in range(81):
             np.testing.assert_array_equal(self.board.get_history(index), pieces)
             self.assertEqual(self.board.get_history_player(index), index % 2)
         validate_state(full)
@@ -138,21 +138,21 @@ class StateContract(unittest.TestCase):
         self.board.record_position(pieces, 1, True)
         self.assertEqual(self.board.get_history_length(), 1)
         self.assertEqual(self.board.get_no_capture_count(), 0)
-        self.assertEqual(self.board.get_total_ply(), 31)
+        self.assertEqual(self.board.get_total_ply(), 81)
         reset = self.board.get_state()
-        np.testing.assert_array_equal(reset[:, :, 2:32], 0)
-        np.testing.assert_array_equal(reset[:, :, 32].ravel()[11:], 0)
+        np.testing.assert_array_equal(reset[:, :, 2:82], 0)
+        np.testing.assert_array_equal(reset[:, :, 82:84].ravel()[11:], 0)
         np.testing.assert_array_equal(full[:, :, 0], initial[:, :, 0])
-        for ply in range(32, 62):
+        for ply in range(82, 162):
             self.board.record_position(pieces, ply % 2, False)
-        self.assertEqual(self.board.get_total_ply(), 61)
-        self.assertEqual(self.board.get_history_length(), 31)
+        self.assertEqual(self.board.get_total_ply(), 161)
+        self.assertEqual(self.board.get_history_length(), 81)
         validate_state(self.board.get_state())
 
     def test_total_ply_survives_127_and_serialization(self):
         # A loaded late-game fixture: total is independent of resettable clock.
         state = self.board.get_state()
-        meta = state[:, :, 32]
+        meta = state[:, :, 82:84]
         meta.flat[5] = 127
         meta.flat[1] = 1
         meta.flat[10] = 1
@@ -162,9 +162,9 @@ class StateContract(unittest.TestCase):
         self.assertEqual(self.board.get_total_ply(), 128)
         self.assertEqual(self.board.get_no_capture_count(), 1)
         result = self.board.get_state()
-        np.testing.assert_array_equal(result[:, :, 32].ravel()[5:10], [0, 1, 0, 0, 0])
+        np.testing.assert_array_equal(result[:, :, 82:84].ravel()[5:10], [0, 1, 0, 0, 0])
         wire = serialize_state(result)
-        self.assertEqual(len(wire), 2673)
+        self.assertEqual(len(wire), 6804)
         self.assertEqual(wire, result.tobytes(order="C"))
         restored = deserialize_state(wire)
         np.testing.assert_array_equal(restored, result)
@@ -177,13 +177,13 @@ class StateContract(unittest.TestCase):
         # Decode owns its data even for a mutable wire buffer.
         mutable = bytearray(wire)
         decoded = deserialize_state(mutable)
-        mutable[:] = bytes(2673)
+        mutable[:] = bytes(6804)
         np.testing.assert_array_equal(decoded, result)
 
     def test_maximum_ply_and_atomic_overflow(self):
         state = self.board.get_state()
         for i in range(5, 10):
-            state[:, :, 32].flat[i] = 127
+            state[:, :, 82:84].flat[i] = 127
         self.board.copy_state(state, True)
         self.assertEqual(self.board.get_total_ply(), MAX_TOTAL_PLY)
         self.assertEqual(serialize_state(deserialize_state(serialize_state(state))), serialize_state(state))
@@ -225,10 +225,10 @@ class StateContract(unittest.TestCase):
 
     def test_malformed_state_rejected_without_mutation(self):
         original = self.board.get_state()
-        for offset, value in ((0, 2), (1, 2), (2, -1), (3, 1), (4, 0),
-                              (4, 32), (5, -1), (10, 1), (11, 1), (41, 1)):
+        for offset, value in ((0, 1), (1, 2), (2, -1), (3, 1), (4, 0),
+                              (4, 82), (5, -1), (10, 1), (11, 1), (91, 1)):
             bad = original.copy()
-            bad[:, :, 32].flat[offset] = value
+            bad[:, :, 82:84].flat[offset] = value
             with self.subTest(offset=offset), self.assertRaises(ValueError):
                 self.board.copy_state(bad, True)
             np.testing.assert_array_equal(self.board.get_state(), original)
@@ -237,10 +237,10 @@ class StateContract(unittest.TestCase):
             bad[0, 0, plane] = 4
             with self.assertRaises(ValueError):
                 serialize_state(bad)
-        for bad in (original.astype(np.int16), np.zeros((8, 9, 33), dtype=np.int8)):
+        for bad in (original.astype(np.int16), np.zeros((8, 9, 84), dtype=np.int8)):
             with self.assertRaises(ValueError):
                 validate_state(bad)
-        for wire in (b"", bytes(2672), bytes(2674), bytes(2673)):
+        for wire in (b"", bytes(6803), bytes(6805), bytes(6804)):
             with self.assertRaises(ValueError):
                 deserialize_state(wire)
         with self.assertRaises(ValueError):

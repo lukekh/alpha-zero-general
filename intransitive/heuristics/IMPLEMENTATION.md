@@ -1,6 +1,6 @@
 # Standalone alpha–beta player
 
-`AlphaBetaPlayer` is an Arena-compatible opponent with the unchanged version-1
+`AlphaBetaPlayer` is an Arena-compatible opponent with the version-2
 rules, state and 648 action slots. It supports physical states through `choose`
 and canonical current-player-zero states through `play`. No network is required.
 The full design remains in [README.md](README.md).

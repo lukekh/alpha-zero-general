@@ -11,6 +11,8 @@ from itertools import permutations
 import numpy as np
 from numba import njit
 
+from ..IntransitiveConstants import STATE_SHAPE
+
 
 @njit(cache=True)
 def count_pieces(state):
@@ -98,6 +100,6 @@ class MaterialCache:
 
 @lru_cache(maxsize=1)
 def warm_material_kernels():
-    state = np.zeros((9, 9, 33), dtype=np.int8)
+    state = np.zeros(STATE_SHAPE, dtype=np.int8)
     counts = count_pieces(state)
     ordered_score(state, 0, counts, np.zeros((2, 64)), 100., 25.)

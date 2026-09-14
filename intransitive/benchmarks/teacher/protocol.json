@@ -51,7 +51,7 @@
     "updates_per_phase": 4,
     "anneal_teacher_fractions": [0.5, 0.25],
     "network": {
-      "nn_version": 1,
+      "nn_version": 2,
       "learn_rate": 0.0003,
       "epochs": 1,
       "batch_size": 16,

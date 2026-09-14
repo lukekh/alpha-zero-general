@@ -7,18 +7,18 @@ NUMBER_PLAYERS = 2
 BLUE, RED = 0, 1
 EMPTY, ROCK, SCISSORS, PAPER = 0, 1, 2, 3
 ACTION_SIZE = 648
-HISTORY_CAPACITY = 31
-NO_CAPTURE_LIMIT = 30
+NO_CAPTURE_LIMIT = 80
+HISTORY_CAPACITY = NO_CAPTURE_LIMIT + 1
 # Equal nonzero terminal utility: shared search/self-play checks result.any().
 DRAW_VALUE = 1e-4
-STATE_VERSION = 1
-STATE_SHAPE = (9, 9, 33)
-STATE_BYTES = 2673
+STATE_VERSION = 2
+STATE_SHAPE = (9, 9, 84)
+STATE_BYTES = 6804
 CURRENT_PLANE = 0
 HISTORY_START = 1
-METADATA_PLANE = 32
+METADATA_PLANE = 82
 
-# Flat row-major offsets within the metadata plane.
+# Flat C-order offsets within the two metadata planes (162 bytes).
 META_VERSION = 0
 META_NEXT_PLAYER = 1
 META_A1_DEFENDER = 2
@@ -28,7 +28,7 @@ META_TOTAL_PLY = 5
 TOTAL_PLY_DIGITS = 5
 MAX_TOTAL_PLY = 128**TOTAL_PLY_DIGITS - 1
 META_HISTORY_PLAYERS = 10
-META_RESERVED = 41
+META_RESERVED = 91
 
 N, NE, E, SE, S, SW, W, NW = range(8)
 # (dx, dy): north increases the printed row number.

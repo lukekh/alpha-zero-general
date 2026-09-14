@@ -76,7 +76,7 @@ class AuditedGame(IntransitiveGame):
             np.testing.assert_allclose(policy.sum(), 1., atol=1e-6)
             require(not policy[~mask].any(), 'Policy targets illegal moves')
             self.max_history = max(self.max_history,
-                                   int(state[:, :, METADATA_PLANE].flat[META_HISTORY_LENGTH]))
+                                   int(state[:, :, METADATA_PLANE:].flat[META_HISTORY_LENGTH]))
         self.positions += 1
         self.augmented += len(examples)
         self.symmetry_counts[len(examples)] += 1
@@ -121,18 +121,18 @@ def settings(cli):
     if cli.settings:
         values = json.loads(Path(cli.settings).read_text())
     else:
-        # At most 19 captures, then 30 noncaptures: <=600 plies/game.
-        # 2 games * 600 plies * 12 symmetries fits without truncation.
+        # At most 19 captures, then 80 noncaptures: <=1600 plies/game.
+        # 2 games * 1600 plies * 12 symmetries fits without truncation.
         values = dict(game='intransitive', numMCTSSims=4, prob_fullMCTS=1.,
                       ratio_fullMCTS=1, forced_playouts=False, universes=0,
                       cpuct=1.25, fpu=0., no_mem_optim=False, dirichletAlpha=0.,
                       parallel_inferences=1, temperature=[1., 1., 1.],
                       tempThreshold=10, no_compression=False, numEps=2,
-                      maxlenOfQueue=14400, numIters=1, numItersHistory=2,
+                      maxlenOfQueue=38400, numIters=1, numItersHistory=2,
                       profile=False, arenaCompare=2, updateThreshold=0.6,
                       stop_after_N_fail=2, useray=False, forget_examples=False,
                       learn_rate=0.0003, dropout=0., epochs=1, batch_size=64,
-                      nn_version=1, q_weight=0.5)
+                      nn_version=2, q_weight=0.5)
     values.update(checkpoint=str(Path(cli.checkpoint).resolve()), seed=cli.seed,
                   inference_backend=cli.backend, load_model=bool(cli.resume),
                   load_folder_file=str(Path(cli.resume).resolve()) if cli.resume else None)
@@ -157,7 +157,7 @@ def checkpoint_checks(folder, args, game, report):
         histories = pickle.load(stream)
     examples = [decode(x) for history in histories for x in history]
     state, _, _, mask, _ = max(examples, key=lambda x:
-                             int(x[0][:, :, METADATA_PLANE].flat[META_HISTORY_LENGTH]))
+                             int(x[0][:, :, METADATA_PLANE:].flat[META_HISTORY_LENGTH]))
     candidate.device['inference'] = 'cpu'
     cpu = candidate.predict(state, mask)
     candidate.device['inference'] = 'onnx'

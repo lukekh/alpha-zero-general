@@ -32,18 +32,18 @@ def compiled_round_trip(state, policy, values, symmetry):
 def fixture(length, defender):
     rng = np.random.default_rng(417)
     state = Board().get_state()
-    state[:, :, :32] = 0
+    state[:, :, :82] = 0
     state[:, :, 1:length + 1] = rng.integers(-3, 4, (9, 9, length), dtype=np.int8)
     # Random storage fixtures must not create simultaneous corner winners.
     # Clear both goals throughout history for either defender assignment.
-    state[0, 0, :32] = 0
-    state[8, 8, :32] = 0
+    state[0, 0, :82] = 0
+    state[8, 8, :82] = 0
     # Repeated boards with equal and different movers must retain exact equality.
     if length > 4:
         state[:, :, 3] = state[:, :, 1]
         state[:, :, 4] = state[:, :, 1]
     state[:, :, 0] = state[:, :, length]
-    meta = state[:, :, 32]
+    meta = state[:, :, 82:84]
     meta.flat[1] = (length - 1) % 2
     meta.flat[2] = defender
     meta.flat[3] = length - 1
@@ -105,7 +105,7 @@ class Symmetries(unittest.TestCase):
         self.assertEqual(transform_action(encode_action(1, 4, 2), E), encode_action(4, 7, 4))
 
     def test_full_state(self):
-        for length in (1, 5, 31):
+        for length in (1, 5, 31, 81):
             for defender in (0, 1):
                 state = fixture(length, defender)
                 original = state.copy()
@@ -125,7 +125,7 @@ class Symmetries(unittest.TestCase):
                             board = -board.T[::-1, ::-1]
                         expected[:, :, plane] = board
                     if s // 6:
-                        meta = expected[:, :, 32]
+                        meta = expected[:, :, 82:84]
                         meta.flat[1] = 1 - meta.flat[1]
                         for i in range(length):
                             meta.flat[10 + i] = 1 - meta.flat[10 + i]
@@ -176,7 +176,7 @@ class Symmetries(unittest.TestCase):
         np.testing.assert_array_equal(fresh.get_state(), state)
         self.assertEqual(fresh.get_next_player(), 0)
         self.assertEqual(np.count_nonzero(fresh.get_board() == 3), 4)
-        self.assertEqual(transform_state(state, E)[:, :, 32].flat[1], 1)
+        self.assertEqual(transform_state(state, E)[:, :, 82:84].flat[1], 1)
         self.assertEqual(np.count_nonzero(transform_state(state, C)[:, :, 0] == 1), 4)
 
     def test_invalid_arguments(self):
@@ -196,7 +196,7 @@ class Symmetries(unittest.TestCase):
                                 (transform_player_vector, np.zeros(3))):
             with self.assertRaises(ValueError):
                 function(array, 0)
-        state[:, :, 32].flat[4] = 0
+        state[:, :, 82:84].flat[4] = 0
         with self.assertRaises(ValueError):
             transform_state(state, 0)
 

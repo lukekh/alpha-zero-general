@@ -12,7 +12,7 @@ from threading import Lock
 import numpy as np
 
 from .IntransitiveConstants import action_destination, decode_action, format_coordinate
-from .IntransitiveLogicNumba import Board
+from .IntransitiveLogicNumba import Board, search_observation
 
 
 AB_OPTION_FIELDS = ('attack_enabled', 'defence_enabled', 'overload_enabled',
@@ -106,7 +106,7 @@ class ModelOpponent:
 class GameSession:
     def __init__(self, opponent=None, human_player=0, opponent_factory=None):
         self.opponent_factory = opponent_factory
-        self.board = Board()
+        self.board = Board(modelling_draws=False)
         self.history = []
         self.moves = []
         self.ai_decisions = {}
@@ -145,12 +145,20 @@ class GameSession:
                          'score_bound', 'stop_reason', 'diagnostics_status',
                          'effective_limits'):
                 analysis[name] = getattr(analysis_result, name)
+        noncapture = 0
+        for move in reversed(self.moves):
+            if ' × ' in move:
+                break
+            noncapture += 1
+        current = self.board.get_board()
+        repetition = 1 + sum(
+            int(s[:, :, 82:84].flat[1]) == player and np.array_equal(s[:, :, 0], current)
+            for s in (self.history[-noncapture:] if noncapture else []))
         return dict(
             board=self.board.get_board().tolist(), player=player, legal=legal,
             reason=self.board.get_terminal_reason(),
             winner=next((p for p in range(2) if result[p] == 1), None),
-            noncapture=self.board.get_no_capture_count(),
-            repetition=self.board.get_repetition_count(),
+            noncapture=noncapture, repetition=repetition,
             ply=self.board.get_total_ply(), moves=self.moves.copy(),
             revision=self.revision,
             mode='ai' if self.opponent else 'local', human_player=self.human_player,
@@ -192,7 +200,7 @@ class GameSession:
             from .record import state_hash
             before = self.board.get_state()
             ply = len(self.moves)
-            action = int(self.opponent.choose(before, self.board.get_next_player()))
+            action = int(self.opponent.choose(search_observation(before), self.board.get_next_player()))
             self.make_move(action)
             result = getattr(self.opponent, 'last_result', None)
             search = asdict(result) if result else None

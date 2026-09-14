@@ -44,12 +44,14 @@ Reviewed against upstream commit `f22c07ad64a78b9e1423c376dbc289380ef6f6fc`:
 | Captures | Same R > S > P > R cycle; optional; attacker keeps its type. |
 | Bases | Same occupancy/capture rules; reaching enemy base immediately wins. |
 | No legal move | Same loss, including elimination of the last piece. |
-| Draws | Upstream assumes 200 quiet plies and has no repetition cutoff. Our modelling mode uses 30 quiet plies or threefold board-plus-turn repetition. These are modelling assumptions, separate from the movement and win rules. |
+| Draws | Upstream assumes 200 quiet plies and has no repetition cutoff. Our modelling mode now uses 80 quiet plies or threefold board-plus-turn repetition. These are modelling assumptions, separate from the movement and win rules. |
 | Win precedence | Both check corner and no-legal-move wins before draw limits. |
 
 The upstream comment explicitly calls its 200-ply limit an assumption because
 server-side draw handling was not in the extracted client. This comparison
 does not verify whether the live server has additional draw rules.
+
+The following measurements predate the increase from 30 to 80 quiet plies.
 
 A direct differential run over 12 seeded trajectories (six random and six
 reference-greedy, capped at 250 plies) compared 1,764 positions and 82,553 legal

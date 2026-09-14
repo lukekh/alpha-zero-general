@@ -47,7 +47,7 @@ class SymmetryEfficiency(unittest.TestCase):
                    mask, np.zeros(2, np.float32))
         for explicit, expected in ((None, 2), (5, 5)):
             with self.subTest(batches_per_epoch=explicit):
-                args = dict(nn_version=1, learn_rate=.0003, epochs=1, batch_size=2,
+                args = dict(nn_version=2, learn_rate=.0003, epochs=1, batch_size=2,
                             no_compression=True, q_weight=.5)
                 if explicit:
                     args['batches_per_epoch'] = explicit
@@ -61,7 +61,7 @@ class SymmetryEfficiency(unittest.TestCase):
 
     def test_invalid_update_budgets_and_short_replay_fail(self):
         for batches in (0, -1, 1.5, True, 2):
-            net = NNetWrapper(experiment.IdentityGame(), dict(nn_version=1,
+            net = NNetWrapper(experiment.IdentityGame(), dict(nn_version=2,
                 learn_rate=.0003, epochs=1, batch_size=64, batches_per_epoch=batches))
             with self.assertRaises(ValueError):
                 net.train([])

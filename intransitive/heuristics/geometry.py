@@ -58,8 +58,8 @@ class Geometry:
     def __init__(self, state, budget, *, routes=True):
         self.state, self.budget = state, budget
         self.board = state[:, :, 0]
-        self.turn = int(state[:, :, 32].flat[META_NEXT_PLAYER])
-        a1 = int(state[:, :, 32].flat[META_A1_DEFENDER])
+        self.turn = int(state[:, :, 82:84].flat[META_NEXT_PLAYER])
+        a1 = int(state[:, :, 82:84].flat[META_A1_DEFENDER])
         self.goals = (80, 0) if a1 == 0 else (0, 80)
         self.pieces = []
         for square in np.flatnonzero(self.board.ravel()):

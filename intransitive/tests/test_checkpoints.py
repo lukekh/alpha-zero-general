@@ -64,7 +64,7 @@ class Checkpoints(unittest.TestCase):
         self.assertEqual(saved['nn_args'], args())
         self.assertEqual(saved['intransitive_config'], FEATURE_CONFIG)
         self.assertEqual(saved['intransitive_checkpoint'], dict(
-            format_version=1, game='intransitive', board_size=(9, 9, 33),
+            format_version=2, game='intransitive', board_size=(9, 9, 84),
             action_size=648, num_players=2, optimizer_state='recreated',
             scheduler_state='recreated'))
         for key, value in settings.items():
@@ -73,13 +73,13 @@ class Checkpoints(unittest.TestCase):
         # must use the validated state_dict and configuration, not that object.
         del saved['full_model']
         torch.save(saved, self.path)
-        for version in (1, -1):
+        for version in (2, -1):
             with self.subTest(version=version):
                 loaded, _ = self.load(version)
                 loaded.device['inference'] = 'cpu'
-                self.assertEqual(loaded.nnet.board_size, (9, 9, 33))
+                self.assertEqual(loaded.nnet.board_size, (9, 9, 84))
                 self.assertEqual(loaded.nnet.action_size, 648)
-                self.assertEqual(loaded.nnet.version, 1)
+                self.assertEqual(loaded.nnet.version, 2)
                 self.assertEqual(loaded.number_params(), self.net.number_params())
                 for key, value in self.net.nnet.state_dict().items():
                     torch.testing.assert_close(loaded.nnet.state_dict()[key], value, rtol=0, atol=0)
@@ -103,6 +103,7 @@ class Checkpoints(unittest.TestCase):
     def test_incompatible_metadata_and_weights_fail_without_replacing_model(self):
         saved = self.save()
         cases = [
+            ('intransitive_checkpoint', 'format_version', 1),
             ('intransitive_checkpoint', 'format_version', 99),
             ('intransitive_checkpoint', 'game', 'other'),
             ('intransitive_checkpoint', 'board_size', (9, 9, 1)),
@@ -205,7 +206,7 @@ class Checkpoints(unittest.TestCase):
             # Resaving a model loaded via nn_version=-1 records its real version.
             loaded.save_checkpoint(self.folder, 'resumed.pt')
             resaved = torch.load(Path(self.folder, 'resumed.pt'), weights_only=False)
-            self.assertEqual(resaved['nn_args']['nn_version'], 1)
+            self.assertEqual(resaved['nn_args']['nn_version'], 2)
             self.assertEqual(resaved['nn_args']['learn_rate'], 0.0002)
 
     def test_dynamic_batch_and_single_onnx_match_pytorch_and_masks(self):
@@ -293,7 +294,7 @@ class Checkpoints(unittest.TestCase):
 
                 def checked(callback, index):
                     def choose(state, turn):
-                        self.assertLessEqual(turn, 600)
+                        self.assertLessEqual(turn, 1600)
                         untouched = state.copy()
                         action = callback(state, turn)
                         np.testing.assert_array_equal(state, untouched)

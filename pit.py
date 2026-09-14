@@ -88,7 +88,7 @@ def play(args):
 		print(players[0], 'vs', players[1])
 	player1, player2 = create_player(players[0], args), create_player(players[1], args)
 	human = 'human' in players
-	arena = Arena.Arena(player1, player2, game, display=game.printBoard)
+	arena = Arena.Arena(player1, player2, game, display=game.printBoard, modelling_draws=False)
 	result = arena.playGames(args.num_games, initial_state=args.state, verbose=args.display or human)
 
 	if args.useray:

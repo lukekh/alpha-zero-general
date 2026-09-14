@@ -2,7 +2,7 @@
 
 Confirmed rules for implementing the game and training a model.
 
-See the [state contract](#state-contract-version-1) below for storage, action
+See the [state contract](#state-contract-version-2) below for storage, action
 encoding, and tests, and the [implementation plan](IMPLEMENTATION_PLAN.md) for
 the delivery sequence.
 
@@ -130,6 +130,22 @@ Click a piece, then a highlighted destination. You control both Blue and Red;
 this command starts a local game with both sides controlled by you. Undo restores
 the complete position and draw history. New game restores the official setup.
 
+Browser games and `pit.py` matches use official termination only: corner wins
+and wins when the opponent has no legal moves. Repetition and 80 quiet plies do
+not end a played game. Training, candidate evaluation, MCTS and heuristic search
+still use those modelling cutoffs. A live game can therefore cycle indefinitely.
+
+The version-2 model observation keeps at most 81 positions; live play rolls that
+window forward without changing checkpoint layout. If a live position has already
+crossed a modelling cutoff, its next search receives a fresh history window rooted
+at that position. Simulated continuations then enforce the cutoffs again. The
+physical game and its full move record are preserved. Browser counters report the
+full played history, and copied records identify official versus modelling rules;
+older records retain their original draw semantics.
+
+For direct match code use `Arena(p1, p2, game, modelling_draws=False)`.
+The default `Arena` and `IntransitiveGame` remain bounded for training callers.
+
 To play against a trained model, use the pinned training environment and pass a
 checkpoint (for an active run, use its `retained.pt`):
 
@@ -150,8 +166,8 @@ the saved iteration when available. Training can continue in its separate proces
 Use **Retry AI** if an AI request fails. Model loading requires the training packages
 above; local play without `--checkpoint` still needs only NumPy and Numba.
 
-The board uses the existing compiled engine, including its modelling-only
-threefold repetition and 30-noncapture draw rules, which are explained in the UI.
+The board uses the compiled engine in official-play mode. Its modelling-only
+draw limits apply inside AI searches, without ending the browser game.
 Each server has one shared game across browser tabs. Refresh keeps the current
 game; stopping the server discards it. The server listens only on localhost.
 Press Ctrl+C in its terminal to stop it.
@@ -302,10 +318,10 @@ turns). Both limits automatically end the game as a draw:
   The initial position counts as the first occurrence of that position. Pieces
   of the same type and colour are interchangeable; their individual identities
   do not affect position equality.
-- **30 moves without a capture:** end the game as a draw after 30 consecutive
+- **80 moves without a capture:** end the game as a draw after 80 consecutive
   moves by either player without a capture. The counter starts at zero and resets
-  to zero whenever a capture takes place. This is 30 total player turns (15 per
-  player), not 30 turns each.
+  to zero whenever a capture takes place. This is 80 total player turns (40 per
+  player), not 80 turns each.
 
 An official win (reaching the opponent's corner or leaving the opponent with no
 legal move) takes precedence over either modelling-only draw condition.
@@ -315,7 +331,20 @@ official win or one of these two limits is reached.
 
 ---
 
-## State contract (version 1)
+## State contract (version 2)
+
+The no-capture limit is now **80 individual turns** (40 per side). This expands
+history to 81 complete board-plus-turn positions, preserving exact threefold
+repetition throughout the interval. State, network and checkpoint formats are
+version 2. Existing version-1 checkpoints, raw states, and training replays need
+explicit migration or new training; the loader rejects incompatible formats.
+Start fresh training with `nn_version=2`. Archived benchmark results and saved
+models describe the earlier 30-turn rules and 31-slot network.
+
+New copied records use `Intransitive-PGN-2` and declare the 80-turn modelling
+limit when enabled. `load_record` also authenticates and replays PGN-1 records
+using their original hashes and 30-turn termination, returning expanded states
+for analysis under the current rules. It does not rewrite the source record.
 
 The compiled foundation implements coordinates, action slots, official setup,
 serialized storage, snapshot ownership, legal movement, captures, and official
@@ -344,26 +373,26 @@ numeric action helpers compile with Numba.
 
 ### Serialized layout
 
-The state is an `int8` array of shape `(9, 9, 33)`, exactly 2,673 bytes in C order.
+The state is an `int8` array of shape `(9, 9, 84)`, exactly 6,804 bytes in C order.
 There is no external header or implicit Python state. The byte offset of
-`state[y, x, plane]` is `33 * (9*y + x) + plane`.
+`state[y, x, plane]` is `84 * (9*y + x) + plane`.
 
 | Plane | Contents |
 | --- | --- |
 | 0 | Current signed piece board |
-| 1–31 | Up to 31 historical boards, oldest first, **including the current position** |
-| 32 | Metadata; offsets below are `9*y + x` within this plane |
+| 1–81 | Up to 81 historical boards, oldest first, **including the current position** |
+| 82–83 | Metadata; offsets below flatten `state[:, :, 82:84]` in C order: `2*(9*y+x)+(plane-82)` |
 
 | Metadata offsets | Meaning |
 | --- | --- |
-| 0 | State version, currently 1 |
+| 0 | State version, currently 2 |
 | 1 | Next player (0 or 1) |
 | 2 | A1 defender (0 or 1); the other player defends I9 |
-| 3 | Consecutive noncapture plies (0–30) |
-| 4 | Valid history length (1–31) |
+| 3 | Consecutive noncapture plies (0–80) |
+| 4 | Valid history length (1–81) |
 | 5–9 | Total ply count: five little-endian base-128 digits |
-| 10–40 | Next player for each corresponding history slot |
-| 41–80 | Reserved, always zero |
+| 10–90 | Next player for each corresponding history slot |
+| 91–161 | Reserved, always zero |
 
 The total ply value is `sum(int(meta[5+i]) * 128**i for i in range(5))`.
 Every digit is 0–127, avoiding signed-byte overflow and host endianness concerns.
@@ -377,7 +406,7 @@ earlier history and records its resulting position as slot 0. This is safe:
 each legal capture permanently removes exactly one piece, so no position before
 that capture can recur. Each noncapture
 appends one resulting position. This fits the capture/initial position plus all
-30 subsequent noncapture plies. The current board and next player equal the last
+80 subsequent noncapture plies. The current board and next player equal the last
 valid history entry, historical players alternate, and history length equals
 the noncapture clock plus one. Unused boards, unused historical player bytes,
 and reserved bytes must be zero; historical Blue (0) is distinguished from
@@ -409,18 +438,22 @@ piece codes, alternating player, capacity, and overflow before changing storage.
 It updates current/history boards, turns, capture clock, and total plies atomically.
 The caller supplies the capture flag after validating the move; this function
 does not infer or enforce captures, stop on repetition, or determine terminal wins.
-At full history, a further noncapture is rejected; terminal enforcement belongs
-to the game engine. A capture resets history even at that storage boundary.
+In the default modelling mode, a further noncapture at full history is rejected;
+terminal enforcement belongs to the game engine. In official-play mode
+(`Board(2, modelling_draws=False)`), a further noncapture drops the oldest entry
+and appends the new position. The stored clock saturates at 80; browser counters
+are computed from the full move record instead. A capture resets history in both modes.
 
 `raw_movement_mask(pieces, player)` computes piece mobility without consulting
 terminal state. `Board.valid_moves(player)` uses that helper to return all legal
 one-square moves and returns an all-false mask after a corner win or when the
-current player is stuck, or after either modelling draw.
+current player is stuck, or after either draw when modelling mode is enabled.
 `Board.make_move(action, player, random_seed=0)` rejects
 out-of-range, out-of-turn, and illegal actions before mutation, moves the attacker
 without changing its type, and records whether the defender was captured.
 `Board.check_end_game(next_player)` checks corner wins, next-player stalemate,
-threefold repetition, and the 30-noncapture limit, in that order. It returns
+threefold repetition, and the 80-noncapture limit, in that order. Official-play
+mode skips the last two checks. It returns
 `float32` absolute-player vectors: `[1, -1]` or `[-1, 1]` for wins, `[0, 0]`
 for ongoing play, and `[1e-4, 1e-4]` for either draw (`DRAW_VALUE` in constants).
 This small equal nonzero sentinel makes `result.any()` distinguish terminal draws
@@ -432,7 +465,8 @@ and compiled MCTS preserve these vectors throughout the shared training pipeline
 next player among valid history slots, including the latest slot. Same-type,
 same-colour pieces have no individual identity. Physical positions related only
 by symmetry do not match; neither counters nor total ply participate in position
-equality. No history or repetition cache exists outside the serialized state.
+equality. This is the bounded model-window count. The browser uses its full game
+history for the displayed repetition count beyond that window.
 
 `Board.get_terminal_reason()` returns `"ongoing"`, `"corner"`, `"stalemate"`,
 `"repetition"`, or `"no-capture limit"`. It shares the same terminal decision as
@@ -452,7 +486,7 @@ for the adapter's `getRound()`.
 ### Game adapter and canonical search
 
 `IntransitiveGame` implements the shared `Game` interface with player IDs 0/1,
-`num_players = 2`, observation shape `(9, 9, 33)`, and 648 actions. It exposes
+`num_players = 2`, observation shape `(9, 9, 84)`, and 648 actions. It exposes
 initialization, transitions, legal masks, absolute-player reward vectors,
 remaining-piece diagnostics, total plies, canonicalization, state keys, a training
 triple hook, and basic coordinate display. `getInitBoard()` always restores the
@@ -476,7 +510,7 @@ byte with applying the action physically and then canonicalizing the next mover.
 All mutations detach borrowed states, and returned snapshots survive sibling
 searches and later adapter queries.
 
-`stringRepresentation` uses all 2673 versioned serialized bytes in C order,
+`stringRepresentation` uses all 6804 versioned serialized bytes in C order,
 including history, turns, goals, and counters. This search key is deliberately
 separate from physical repetition's exact piece-array-plus-turn comparison.
 `getRound()` decodes the five base-128 total-ply digits; captures reset the draw
@@ -545,7 +579,7 @@ An optional `selfplay_seed` supplies an independent NumPy generator per episode
 Coach ends an episode on any nonzero terminal vector. Outcome labels are rolled
 into each example's mover frame, including equal nonzero draw labels; Q labels
 retain that frame. Replay stores complete `(state, policy, outcome, valid, q)`
-tuples. Both `--no-compression` and compressed replay retain all 33 int8 planes,
+tuples. Both `--no-compression` and compressed replay retain all 84 int8 planes,
 including every historical board and metadata byte. `checkpoint.examples`
 round-trips those tuples and can convert either compression mode at load time.
 
@@ -565,7 +599,7 @@ To save a position for `pit.py --state`, use
 DEFLATE/base64 format: all C-order int8 board bytes, one absolute-player byte,
 and a two-byte big-endian turn count (0–65535). `arena.restore_state(text)`
 returns an owned writable state plus player and turn; `playGame(initial_state=...)`
-uses that path. For Intransitive, pass the complete `(9,9,33)` state and its
+uses that path. For Intransitive, pass the complete `(9,9,84)` state and its
 `getRound(state)` value, not only the piece plane. A restored penultimate
 repetition or noncapture-limit fixture reaches the same draw on its next move.
 
@@ -584,26 +618,26 @@ The `main.py` test bounds learning to one real self-play episode. Full checkpoin
 resume/export tests are in `test_checkpoints`; the complete training lifecycle and
 resumed CPU/ONNX runs are recorded in the [smoke evidence](smoke/README.md).
 
-### History-aware policy and value network (version 1)
+### History-aware policy and value network (version 2)
 
 `IntransitiveNNet.py` and `NNet.py` implement #10 through `GenericNNetWrapper`.
-Construct `NNetWrapper(game, nn_args)` with `nn_version=1` for new training or
+Construct `NNetWrapper(game, nn_args)` with `nn_version=2` for new training or
 `nn_version=-1` before loading a checkpoint. Version -1 is an empty placeholder
 that the shared loader replaces with the saved full model. Other positive
 versions are rejected. The wrapper consumes raw canonical float32 batches shaped
-`(batch, 9, 9, 33)` and boolean legal masks shaped `(batch, 648)`.
+`(batch, 9, 9, 84)` and boolean legal masks shaped `(batch, 648)`.
 
 `extract_features` is the single mapping inside `forward`, used by training,
 single predictions, batched ONNX inference, and export. It expects validated
-state-v1 observations from the Game adapter. No Python preprocessing or spatial
-convolution of the packed metadata plane is used. Piece codes are categorical,
+state-v2 observations from the Game adapter. No Python preprocessing or spatial
+convolution of the packed metadata planes is used. Piece codes are categorical,
 never ordinal magnitudes. All history remains in the current canonical frame.
 
 | Current feature channels | Meaning |
 | --- | --- |
 | 0–5 | Own rock/scissors/paper, opponent rock/scissors/paper (codes 1,2,3,-1,-2,-3) |
 | 6–7 | Own and opponent defended-corner indicator planes, decoded from A1 defender |
-| 8 | Noncapture clock divided by 30, broadcast spatially |
+| 8 | Noncapture clock divided by 80, broadcast spatially |
 | 9 | Exact current board-plus-turn occurrences among valid slots, divided by 3 |
 | 10 | `log1p(total ply) / log1p(34359738367)`, broadcast spatially |
 
@@ -615,7 +649,7 @@ versions, architecture sizes, and action/value order are recorded in
 `FEATURE_CONFIG`, the saved full model, and the checkpoint's
 `intransitive_config` key.
 
-Each of the 31 historical slots has eight input channels: six categorical piece
+Each of the 81 historical slots has eight input channels: six categorical piece
 planes in the same order, a broadcast validity flag, and a broadcast historical
 next-player label (0 own, 1 opponent). All eight channels are masked before a
 shared 3×3 convolution maps them to four ReLU channels. The output is masked
@@ -623,7 +657,7 @@ again so convolution biases cannot leak padding. The four channels for slot 0,
 then slot 1, and so on are concatenated oldest first, including the current
 position. Padding is always zero, distinct from a valid empty board or player 0.
 
-The 11 current plus 124 history channels project through a 1×1 convolution to
+The 11 current plus 324 history channels project through a 1×1 convolution to
 64 channels, followed by four residual blocks with two 3×3 convolutions each.
 The policy head emits eight direction logits per square, explicitly transposes
 to `(batch,y,x,direction)`, and flattens to `8*(9*y+x)+direction`. Illegal slots
@@ -638,33 +672,22 @@ relative labels require no extra swap for E augmentation and no material,
 distance, or other heuristic reward is added. Batch normalization supports
 single-position training because each convolution retains the 9×9 grid.
 
-The baseline has **326,706 trainable parameters**, including **292** in the
-shared history encoder. Historical convolution costs **723,168 multiply-adds
-per state**. CPU measurements on macOS 15.6.1 arm64, Python 3.11.4, PyTorch 2.8.0,
-one thread, inference mode, 100 timed iterations after warmup:
-
-| Batch | Feature decoding | History encoding | Complete forward |
-| --- | --- | --- | --- |
-| 1 | 0.131 ms | 0.089 ms | 1.081 ms |
-| 32 | 1.785 ms | 2.618 ms | 34.811 ms |
-
-These are batch latencies, not training or MCTS throughput guarantees. The
-fixed-shape encoder computes all 31 slots even for the one-slot opening used
-in this benchmark. Decoded current/history tensors occupy 83,916 bytes per
-state; encoded history occupies another 40,176 bytes (excluding intermediates,
-autograd, and backend workspaces). Sizes remain the proposed baseline; no
-width/depth increase is justified by this measurement alone. Raw measurements
-are in [network-v1-cpu.json](benchmarks/network-v1-cpu.json). Reproduce with:
+The version-2 network has **339,506 trainable parameters**, including **292**
+in the shared history encoder. Historical convolution costs **1,889,568
+multiply-adds per state**. The archived
+[network-v1-cpu.json](benchmarks/network-v1-cpu.json) measures the earlier
+31-slot network and does not describe version-2 runtime or memory use.
+Measure the expanded network with:
 
 ```sh
 python -m intransitive.benchmark_network --repeats 100
 python -m unittest intransitive.tests.test_network -v
 ```
 
-Network tests cover categorical/goal/counter fixtures, 1/5/31-slot histories,
+Network tests cover categorical/goal/counter fixtures, 1/5/31/81-slot histories,
 exact repetition with historical turns, padding and order, all 648 action slots,
 finite losses/gradients and parameter changes, canonical value/Q labels, actual
-shared-wrapper training, version-1 and version-minus-1 checkpoint loading, and
+shared-wrapper training, version-2 and version-minus-1 checkpoint loading, and
 single/batched ONNX parity within `2e-6` absolute tolerance. The tested inference
 stack uses ONNX 1.22.0 and ONNX Runtime 1.30.0 with the shared wrapper's legacy
 PyTorch 2.8 exporter. Persistence/resume/export verification is covered by
@@ -677,13 +700,13 @@ Intransitive checkpoint format **1** retains the shared `state_dict` and
 
 | Key | Contents |
 | --- | --- |
-| `intransitive_checkpoint` | Format version, game identifier, `(9,9,33)` input shape, 648 actions, two players, and optimizer/scheduler recreation policy |
+| `intransitive_checkpoint` | Format version, game identifier, `(9,9,84)` input shape, 648 actions, two players, and optimizer/scheduler recreation policy |
 | `intransitive_config` | State/network versions, complete feature and action ordering, normalization definitions, and architecture settings |
 | `nn_args` | Saved training settings, with `nn_version` set to the actual loaded architecture |
 | `nn_version` | Actual network version (1), including when the wrapper was initialized with -1 |
 
 Coach's additional run/search settings remain at the top level, including
-temperature and cpuct. The loader reconstructs version 1 from its validated
+temperature and cpuct. The loader reconstructs version 2 from its validated
 configuration and strictly loads all weights and BatchNorm statistics. It checks
 the fixed piece/history/corner/ply-normalization buffers too. `full_model` is
 retained for compatibility but is not the source of Intransitive reconstruction.
@@ -694,7 +717,7 @@ or corrupt files raise descriptive errors, and a failed Intransitive load leaves
 the current network intact. Missing paths raise `FileNotFoundError` through the
 shared wrapper. Checkpoints use PyTorch pickle loading and must be trusted files.
 
-Both `nn_version=1` and the `pit.py`/inference placeholder `nn_version=-1` work.
+Both `nn_version=2` and the `pit.py`/inference placeholder `nn_version=-1` work.
 Reloading invalidates an existing ONNX session so inference uses the new weights.
 A bare wrapper checkpoint can be played using pit's default search settings;
 Coach checkpoints retain their stored settings (CLI overrides still apply):
@@ -705,7 +728,7 @@ python chkpt_to_onnx.py -i checkpoints/best.pt -o /tmp/intransitive.onnx
 python -m unittest intransitive.tests.test_checkpoints -v
 ```
 
-The exported inputs are float32 `board` of shape `(batch,9,9,33)` in canonical
+The exported inputs are float32 `board` of shape `(batch,9,9,84)` in canonical
 player perspective and boolean `valid_actions` of shape `(batch,648)`. Outputs
 are `pi` **log probabilities** `(batch,648)` and `v` values `(batch,2)` in canonical
 player order. Exponentiate `pi` to obtain probabilities. Illegal actions remain
@@ -872,7 +895,7 @@ repetition counts, complete ordered histories, clocks, total plies, and padding.
 Borrowed/copied parents and retained sibling/game snapshots must stay unchanged
 after transformations, queries, moves, and actual MCTS searches.
 
-Independent hand-built fixtures cover quiet/capturing moves 29/30, the total-ply
+Independent hand-built fixtures cover quiet/capturing moves 79/80, the total-ply
 carry 127→128, every piece entering empty/occupied goals with both goal assignments
 and player labels, canonical player 0 defending I9, last-piece elimination,
 blocked-army stalemate, legal second/third repetitions, and official-win/draw
@@ -881,12 +904,12 @@ generated games. Every nonidentity symmetry supplies an unequal orbit member
 that must not count as an exact physical repetition; the entire resulting
 history is then checked under every uniform transform.
 
-All games must terminate within **600 plies**: at most 19 captures can remove the
-initial 20 pieces, each capture can follow at most 29 quiet plies, and a final
-30 quiet plies forces a modelling draw. The bound is an assertion, not an extra
+All games must terminate within **1600 plies**: at most 19 captures can remove the
+initial 20 pieces, each capture can follow at most 79 quiet plies, and a final
+80 quiet plies forces a modelling draw. The bound is an assertion, not an extra
 game rule. Failures include seed, ply, serialized `state_hex`, and action/symmetry
 subtest diagnostics. Reconstruct a failing state with
-`np.frombuffer(bytes.fromhex(state_hex), dtype=np.int8).reshape(9, 9, 33).copy()`.
+`np.frombuffer(bytes.fromhex(state_hex), dtype=np.int8).reshape(9, 9, 84).copy()`.
 The gate prints actual game lengths/reasons and generated branch counts.
 
 ### Focused feature coverage
@@ -911,7 +934,7 @@ verify Arena never calls a player after the game ends.
 
 Draw fixtures cover legal nonconsecutive repetitions, exchange of same-type
 pieces, exact type/colour/square/turn comparisons, symmetry distinctions, all
-30 individual noncaptures, captures on moves 29/30, terminal precedence and
+80 individual noncaptures, captures on moves 79/80, terminal precedence and
 diagnostics, and rejection of moves after draws. Serialized midgame histories
 retain their future draw decisions, and all 12 uniform symmetries preserve both
 draw reasons. Compiled sibling transitions exercise copying and borrowing the

@@ -133,7 +133,7 @@ def main():
 	parser.add_argument('--epochs'          , '-p' , action='store', default=2    , type=int  , help='')
 	parser.add_argument('--batch-size'      , '-b' , action='store', default=32   , type=int  , help='')
 	parser.add_argument('--dropout'         , '-D' , action='store', default=0.   , type=float  , help='Dropout value - advised to disable')
-	parser.add_argument('--nn-version'      , '-V' , action='store', default=1    , type=int  , help='Which architecture to choose')
+	parser.add_argument('--nn-version'      , '-V' , action='store', default=None , type=int  , help='Architecture version (default: 2 for Intransitive, 1 otherwise)')
 
 	### Advanced params ###
 	parser.add_argument('--q-weight'        , '-q' , action='store', default=0.5  , type=float, help='Weight for mixing Q into value loss')
@@ -153,6 +153,8 @@ def main():
 	parser.add_argument('--no-mem-optim'           , action='store_true', help='Prevent cleaning MCTS tree of old moves during each game')
 	
 	args = parser.parse_args()
+	if args.nn_version is None:
+		args.nn_version = 2 if args.game == 'intransitive' else 1
 	args.arenaCompare = 30
 	args.maxlenOfQueue = int(2.5e6 / ((
 		                                  2 if args.no_compression else 0.5) * args.numItersHistory))  # at most 2GB per process, with each example weighing 2kB (or 0.5kB)

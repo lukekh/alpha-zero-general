@@ -14,9 +14,17 @@ from .IntransitiveSymmetries import (
 
 
 class IntransitiveGame(Game):
-    def __init__(self):
+    def __init__(self, modelling_draws=True):
         self.num_players = NUMBER_PLAYERS
-        self.board = Board(NUMBER_PLAYERS)
+        self.board = Board(NUMBER_PLAYERS, modelling_draws)
+
+    def for_play(self):
+        """Official game transitions; searches keep their own modelling game."""
+        return IntransitiveGame(modelling_draws=False)
+
+    def getSearchObservation(self, state):
+        from .IntransitiveLogicNumba import search_observation
+        return search_observation(state)
 
     def getInitBoard(self):
         self.board.init_game()
@@ -74,7 +82,7 @@ class IntransitiveGame(Game):
         examples, seen = [], set()
         for symmetry in range(NUM_SYMMETRIES):
             transformed = transform_state(canonical, symmetry)
-            player = int(transformed[:, :, METADATA_PLANE].flat[META_NEXT_PLAYER])
+            player = int(transformed[:, :, METADATA_PLANE:].flat[META_NEXT_PLAYER])
             transformed = self.getCanonicalForm(transformed, player)
             transformed_policy = transform_action_vector(policy, symmetry)
             transformed_valid = transform_action_vector(valid, symmetry)

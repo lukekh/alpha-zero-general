@@ -45,7 +45,7 @@ class CompiledProofTests(unittest.TestCase):
             cls.boards.extend((board, board.transform(6)))
         quiet = Position.fixture(position({'D4': 1, 'F6': -3}))
         different = position({'C3': 1, 'G7': -3})
-        for length in (3, 4, 5, 29, 30, 31):
+        for length in (3, 4, 5, 79, 80, 81):
             # Structurally valid modelling histories, including second/third
             # occurrences and the no-capture boundary.
             history = [different] * (length - 1) + [quiet.pieces]
@@ -107,7 +107,7 @@ class CompiledProofTests(unittest.TestCase):
     def test_draw_histories_and_official_win_precedence(self):
         for pieces in ({"H8": 3, "I9": -1, "D4": -2},
                        {"D4": 1, "E5": -2}, {"I9": 1, "D4": -2}):
-            for length in (29, 30, 31):
+            for length in (79, 80, 81):
                 current = position(pieces)
                 history = [position({"C3": 1, "G7": -3})] * (length - 1) + [current]
                 board = Position.fixture(current, history=history)

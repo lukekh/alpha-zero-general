@@ -59,20 +59,20 @@ def _visit(state, depth, ply, alpha, beta, node_limit, work_limit, counts, lines
     counts[1] += 1
     if ply == 0:
         validate_state(state)
-    side = int(state[:, :, 32].flat[1])
+    side = int(state[:, :, 82:84].flat[1])
     winner, reason = _terminal_status(state)
     if winner >= 0:
         return MATE - ply if winner == side else -MATE + ply
     if reason != 'ongoing' or depth == 0:
         return 0.
-    a1 = int(state[:, :, 32].flat[2])
+    a1 = int(state[:, :, 82:84].flat[2])
     if ply == 0:
         if not _charge(counts, work_limit):
             return 0.
         if no_terminal_win_in_horizon(state[:, :, 0], side, a1, depth):
             return 0.
     best = -np.inf
-    board = Board(2)
+    board = Board(2, True)
     for action in ordered_actions(state[:, :, 0], side, a1):
         if not _charge(counts, work_limit):
             return 0.
@@ -129,6 +129,6 @@ def native_proof(state, depth, node_limit, work_limit, specialised):
 @lru_cache(maxsize=1)
 def warm_proof_kernel():
     global READY
-    board = Board(2)
+    board = Board(2, True)
     native_proof(board.get_state(), 2, NATIVE_NODE_LIMIT, 128, True)
     READY = True

@@ -8,7 +8,8 @@ import sys
 
 from ..IntransitiveDisplay import format_board, move_to_str, player_colour
 from ..IntransitiveGame import IntransitiveGame
-from ..record import load_record, parse_record_move, state_hash
+from ..IntransitiveLogicNumba import search_observation
+from ..record import OFFICIAL_RULES, load_record, parse_record_move, state_hash
 from .budget import Budget, BudgetExpired
 from .config import SearchConfig
 from .evaluation import Evaluator, terminal_value
@@ -22,7 +23,7 @@ def evaluate_position(state, config=None, *, perspective=None):
     Budget exhaustion is explicit rather than a misleading zero score.
     """
     config = config or SearchConfig()
-    side = int(state[:, :, 32].flat[1]) if perspective is None else perspective
+    side = int(state[:, :, 82:84].flat[1]) if perspective is None else perspective
     if type(side) is not int or side not in (0, 1):
         raise ValueError('Perspective must be player 0 or 1')
     budget = Budget(config.node_limit, config.time_limit)
@@ -49,15 +50,19 @@ def analyze_record(text, *, ply=None, last_ai=False, config=None, moves=()):
     if type(ply) is not int or not 0 <= ply <= len(record.actions):
         raise ValueError(f'Ply must be between 0 and {len(record.actions)} (moves already played)')
     state = record.states[ply]
+    physical_hash = state_hash(state)
+    if record.tags['Rules'] == OFFICIAL_RULES:
+        state = search_observation(state)
     config = config or record.config
-    side = int(state[:, :, 32].flat[1])
+    side = int(state[:, :, 82:84].flat[1])
     game = IntransitiveGame()
     # Warm compiled validation before starting a timed search.
     terminal = terminal_value(game, state, side)
     if terminal is None:
         game.getValidMoves(state, side)
     report = dict(ply=ply, perspective=player_colour(state, side),
-                  board=format_board(state), state_sha256=state_hash(state),
+                  board=format_board(state), state_sha256=physical_hash,
+                  search_state_sha256=state_hash(state),
                   recorded_config=record.config.to_dict(), config=config.to_dict(),
                   evaluation=evaluate_position(state, config),
                   recorded_ai=record.last_ai if record.last_ai and record.last_ai['ply'] == ply else None,

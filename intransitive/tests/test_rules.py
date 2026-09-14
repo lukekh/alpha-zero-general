@@ -17,8 +17,8 @@ def load_position(board, pieces, next_player=0, a1_defender=0):
     state[:] = 0
     state[:, :, 0] = pieces
     state[:, :, 1] = pieces
-    meta = state[:, :, 32]
-    meta.flat[0] = 1
+    meta = state[:, :, 82:84]
+    meta.flat[0] = 2
     meta.flat[1] = next_player
     meta.flat[2] = a1_defender
     meta.flat[4] = 1

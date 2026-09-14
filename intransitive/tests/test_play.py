@@ -54,16 +54,34 @@ class PlaySessionTests(unittest.TestCase):
         self.game.update("undo", dict(revision=self.game.revision))
         self.assertEqual(self.game.board.get_state().tobytes(), before)
 
-    def test_repetition_terminal_and_undo(self):
+    def test_repetition_continues_and_undo(self):
         for _ in range(2):
             for source, target in [("B5", "B6"), ("H5", "H4"), ("B6", "B5"), ("H4", "H5")]:
                 state = self.move(source, target)
-        self.assertEqual(state["reason"], "repetition")
+        self.assertEqual(state["reason"], "ongoing")
         self.assertIsNone(state["winner"])
-        self.assertEqual(state["legal"], [])
+        self.assertEqual(state["repetition"], 3)
+        self.assertTrue(state["legal"])
+        self.move('B5', 'B6')
         state = self.game.update("undo", dict(revision=self.game.revision))
         self.assertEqual(state["reason"], "ongoing")
         self.assertTrue(state["legal"])
+
+    def test_long_play_counters_undo_and_ai_after_cutoff(self):
+        for _ in range(10):
+            for source, target in [('B5', 'B6'), ('H5', 'H4'), ('B6', 'B5'), ('H4', 'H5')]:
+                state = self.move(source, target)
+        self.assertEqual((state['ply'], state['noncapture'], state['repetition']), (40, 40, 11))
+        self.assertEqual(state['reason'], 'ongoing')
+        self.game.opponent = FirstLegalOpponent()
+        self.game.human_player = 1
+        # The test opponent uses a modelling Board: it must receive a usable
+        # search observation even though the physical history exceeds its limit.
+        state = self.game.update('ai', dict(revision=self.game.revision))
+        self.assertEqual(state['ply'], 41)
+        self.game.opponent = None
+        state = self.game.update('undo', dict(revision=self.game.revision))
+        self.assertEqual((state['noncapture'], state['repetition']), (40, 11))
 
     def test_invalid_and_stale_moves_are_atomic(self):
         self.move("B5", "B6")
@@ -152,15 +170,14 @@ class AIPlaySessionTests(unittest.TestCase):
         self.assertFalse(state['ai_turn'])
 
     def test_terminal_human_move_does_not_request_ai(self):
-        # Repetition ends the game without scheduling another AI move.
-        for _ in range(2):
-            for source, target in [('B5', 'B6'), ('H5', 'H4'), ('B6', 'B5'), ('H4', 'H5')]:
-                self.game.human_player = self.game.board.get_next_player()
-                source, target = list(parse_coordinate(source)), list(parse_coordinate(target))
-                action = next(m['action'] for m in self.game.snapshot()['legal']
-                              if m['source'] == source and m['target'] == target)
-                state = self.update('move', action=action)
-        self.assertEqual(state['reason'], 'repetition')
+        from intransitive.IntransitiveConstants import NE, encode_action
+        from intransitive.tests.test_draws import load_history, sparse_position
+        pieces = sparse_position()
+        pieces[7, 7] = 1
+        pieces[1, 1] = -1
+        load_history(self.game.board, [pieces])
+        state = self.update('move', action=encode_action(7, 7, NE))
+        self.assertEqual(state['reason'], 'corner')
         self.assertFalse(state['ai_turn'])
         with self.assertRaises(ValueError):
             self.update('ai')

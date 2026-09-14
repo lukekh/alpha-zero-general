@@ -33,7 +33,7 @@
     "dropout": 0.0,
     "epochs": 1,
     "batch_size": 64,
-    "nn_version": 1,
+    "nn_version": 2,
     "q_weight": 0.5,
     "checkpoint": "checkpoints/intransitive-baseline",
     "seed": 150,

@@ -6,7 +6,7 @@ from GenericNNetWrapper import GenericNNetWrapper
 from .IntransitiveNNet import FEATURE_CONFIG, NETWORK_VERSION, IntransitiveNNet
 
 
-CHECKPOINT_FORMAT_VERSION = 1
+CHECKPOINT_FORMAT_VERSION = 2
 
 
 class NNetWrapper(GenericNNetWrapper):
@@ -54,6 +54,9 @@ class NNetWrapper(GenericNNetWrapper):
             actual = checkpoint['intransitive_checkpoint']
             if not isinstance(actual, dict):
                 raise ValueError('Invalid Intransitive checkpoint format metadata')
+            if actual.get('format_version') == 1:
+                raise ValueError('Intransitive checkpoint format_version 1 uses 31 history slots; '
+                                 'the 80-turn rules require version 2. Migrate or retrain the model.')
             for key, expected in self.checkpoint_format().items():
                 if (self.args.get('nn_version') == -1 and key == 'optimizer_state'
                         and actual.get(key) in ('recreated', 'persistent')):

@@ -10,7 +10,7 @@ import unittest
 import numpy as np
 
 from intransitive.heuristics import AlphaBetaPlayer, SearchConfig
-from intransitive.record import load_record, parse_record_move, state_hash
+from intransitive.record import load_record, parse_record_move, legacy_state_hash as state_hash
 from intransitive.tests.reference_rules import Position, map_action, position
 from intransitive.tests.tactical_oracle import material, move_name, tactical_proof
 

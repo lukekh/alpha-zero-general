@@ -92,7 +92,7 @@
         <p class="rule">Move one square in any direction. Reach the opposite corner to win. A player with no legal moves loses.</p>
         <p class="rule"><b>R</b> Rock captures scissors<br><b>S</b> Scissors captures paper<br><b>P</b> Paper captures rock</p>
         <p class="rule">Friendly pieces and enemies you cannot capture block their squares. Captures are optional.</p>
-        <details><summary class="rule">Training draw rules are active</summary><p class="rule">This engine also draws on threefold repetition or 30 total turns without a capture. These are modelling limits, not official game rules. A win takes precedence.</p></details>
+        <p class="rule">Repetition and turns without captures do not end a played game. The AI uses draw limits internally when modelling possible continuations.</p>
         <p class="rule muted" id="counters"></p>
       </div>
       <div class="card"><details id="analysis" hidden><summary>Last AI analysis</summary><pre id="analysis-text" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></details></div>
@@ -203,7 +203,7 @@
     $('copy-position').disabled = false;
     $('copy-position').title = state.pgn ? 'Copy position as PGN' : 'Restart the game server to enable position export';
     $('retry').hidden = !state.ai_turn || busy;
-    $('counters').textContent = state.noncapture + '/30 turns without capture · Position seen ' + state.repetition + ' time(s)';
+    $('counters').textContent = state.noncapture + ' turns without capture · Position seen ' + state.repetition + ' time(s)';
     $('blue-count').textContent = 'Blue · ' + state.board.flat().filter(p => p > 0).length + ' pieces';
     $('red-count').textContent = 'Red · ' + state.board.flat().filter(p => p < 0).length + ' pieces';
     $('board').replaceChildren();

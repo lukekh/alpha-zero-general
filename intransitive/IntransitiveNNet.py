@@ -1,4 +1,4 @@
-"""Version 1 policy/value baseline; feature semantics live in this module."""
+"""Version 2 policy/value baseline; feature semantics live in this module."""
 
 import torch
 from torch import nn
@@ -11,7 +11,7 @@ from .IntransitiveConstants import (
     NO_CAPTURE_LIMIT, NUMBER_PLAYERS, STATE_SHAPE, STATE_VERSION, TOTAL_PLY_DIGITS,
 )
 
-NETWORK_VERSION = 1
+NETWORK_VERSION = 2
 PIECE_CODES = (1, 2, 3, -1, -2, -3)
 FEATURE_CONFIG = {
     'state_version': STATE_VERSION,
@@ -19,9 +19,9 @@ FEATURE_CONFIG = {
     'piece_order': ('own rock', 'own scissors', 'own paper',
                     'opponent rock', 'opponent scissors', 'opponent paper'),
     'current_order': ('six piece planes', 'own defended corner',
-                      'opponent defended corner', 'noncapture / 30',
+                      'opponent defended corner', 'noncapture / 80',
                       'current occurrences / 3', 'log1p(total ply) / log1p(max ply)'),
-    'history_order': 'oldest first, including current position; 31 slots',
+    'history_order': 'oldest first, including current position; 81 slots',
     'history_slot_order': ('six piece planes', 'valid', 'side to move (0 own, 1 opponent)'),
     'history_channels': 4,
     'trunk_channels': 64,
@@ -52,7 +52,7 @@ class IntransitiveNNet(nn.Module):
         if (tuple(game.getBoardSize()) != STATE_SHAPE
                 or game.getActionSize() != ACTION_SIZE
                 or game.num_players != NUMBER_PLAYERS):
-            raise ValueError('Intransitive network requires state v1, 648 actions and two players')
+            raise ValueError('Intransitive network requires state v2, 648 actions and two players')
         self.version = args['nn_version']
         self.board_size = STATE_SHAPE
         self.action_size = ACTION_SIZE
@@ -84,13 +84,16 @@ class IntransitiveNNet(nn.Module):
         )
 
     def extract_features(self, state):
-        """Decode raw (B,9,9,33) state into current and masked history planes.
+        """Decode raw (B,9,9,84) state into current and masked history planes.
 
-        Inputs must obey state v1 and already use the canonical player frame.
+        Inputs must obey state v2 and already use the canonical player frame.
         Storage validation belongs to the game boundary, outside the export graph.
         Reserved bytes and the version tag are never spatial gameplay features.
         """
-        meta = state[:, :, :, METADATA_PLANE].reshape(-1, BOARD_SIZE * BOARD_SIZE)
+        if not torch.jit.is_tracing() and (state.ndim != 4 or tuple(state.shape[1:]) != STATE_SHAPE):
+            raise ValueError('Intransitive network requires state v2 batches shaped (batch, 9, 9, 84); '
+                             'migrate version-1 replay data before training')
+        meta = state[:, :, :, METADATA_PLANE:].reshape(-1, 2 * BOARD_SIZE * BOARD_SIZE)
         pieces = state[:, :, :, CURRENT_PLANE]
         history = state[:, :, :, HISTORY_START:HISTORY_START + HISTORY_CAPACITY].permute(0, 3, 1, 2)
         valid = self.history_slots < meta[:, META_HISTORY_LENGTH:META_HISTORY_LENGTH + 1]

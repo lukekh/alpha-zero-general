@@ -19,9 +19,9 @@ from intransitive.tests.test_draws import (
 def relabel(state):
     """Independent fixed-square reference, including only populated history."""
     out = state.copy()
-    length = int(state[:, :, 32].flat[4])
+    length = int(state[:, :, 82:84].flat[4])
     out[:, :, :length + 1] *= -1
-    meta = out[:, :, 32]
+    meta = out[:, :, 82:84]
     for offset in [1, 2] + list(range(10, 10 + length)):
         meta.flat[offset] = 1 - meta.flat[offset]
     return out
@@ -30,7 +30,7 @@ def relabel(state):
 def with_ply(state, ply):
     out = state.copy()
     for i in range(5):
-        out[:, :, 32].flat[5 + i] = ply % 128
+        out[:, :, 82:84].flat[5 + i] = ply % 128
         ply //= 128
     return out
 
@@ -70,7 +70,7 @@ class CanonicalGameIntegration(unittest.TestCase):
     def test_adapter_contract_and_owned_augmentation_hook(self):
         state = self.game.getInitBoard()
         saved = state.copy()
-        self.assertEqual(self.game.getBoardSize(), (9, 9, 33))
+        self.assertEqual(self.game.getBoardSize(), (9, 9, 84))
         self.assertEqual(self.game.getActionSize(), 648)
         self.assertEqual(self.game.getNumberOfPlayers(), 2)
         self.assertEqual(self.game.num_players, 2)
@@ -106,7 +106,7 @@ class CanonicalGameIntegration(unittest.TestCase):
             play(board, actions[:length - 1])
             for defender in (0, 1):
                 original = with_ply(board.get_state(), 129)
-                original[:, :, 32].flat[2] = defender
+                original[:, :, 82:84].flat[2] = defender
                 for copy in (False, True):
                     board.copy_state(original, copy)
                     before = original.copy()
@@ -133,7 +133,7 @@ class CanonicalGameIntegration(unittest.TestCase):
                 board.make_move(cycle[0], 0)
             for defender in (0, 1):
                 original = board.get_state()
-                original[:, :, 32].flat[2] = defender
+                original[:, :, 82:84].flat[2] = defender
                 saved = original.copy()
                 canonical = self.game.getCanonicalForm(original, player)
                 np.testing.assert_array_equal(canonical, relabel(original) if player else original)
@@ -162,8 +162,8 @@ class CanonicalGameIntegration(unittest.TestCase):
             physical, next_player = self.game.getNextState(original, player, action)
             self.assertEqual(self.game.getRound(original), 127)
             self.assertEqual(self.game.getRound(physical), 128)
-            self.assertEqual(physical[:, :, 32].flat[3], 0)
-            self.assertEqual(physical[:, :, 32].flat[4], 1)
+            self.assertEqual(physical[:, :, 82:84].flat[3], 0)
+            self.assertEqual(physical[:, :, 82:84].flat[4], 1)
             expected = relabel(physical) if next_player else physical
             np.testing.assert_array_equal(self.compiled_child(canonical, action), expected)
             self.assertEqual(self.game.getRound(expected), 128)
@@ -177,17 +177,17 @@ class CanonicalGameIntegration(unittest.TestCase):
         history = base.copy()
         history[1, 1, 1] = 3
         goal = base.copy()
-        goal[:, :, 32].flat[2] = 1
+        goal[:, :, 82:84].flat[2] = 1
         turn = base.copy()
         for offset in (1, 10, 11, 12):
-            turn[:, :, 32].flat[offset] = 1 - turn[:, :, 32].flat[offset]
+            turn[:, :, 82:84].flat[offset] = 1 - turn[:, :, 82:84].flat[offset]
         shorter = with_ply(load_history(board, [pieces]), 2)
         states = [base, history, goal, turn, shorter, with_ply(base, 130)]
         keys = [self.game.stringRepresentation(s) for s in states]
         self.assertEqual(len(set(keys)), len(states))
         for state, key in zip(states, keys):
             self.assertEqual(key, state.tobytes(order="C"))
-            self.assertEqual(len(key), 2673)
+            self.assertEqual(len(key), 6804)
             board.copy_state(state, False)
             self.assertEqual(board.get_repetition_count(), 1)
         self.assertEqual(self.game.stringRepresentation(np.asfortranarray(base)), keys[0])

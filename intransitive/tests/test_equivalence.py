@@ -22,9 +22,9 @@ from intransitive.tests.test_game import UniformNetwork, search_args
 RANDOM_SEEDS = (4, 7, 11)
 MCTS_SEEDS = (17, 170)
 SAMPLE_PLIES = (0, 7, 19)
-# At most 19 captures, each preceded by at most 29 quiet plies, then 30
+# At most 19 captures, each preceded by at most 79 quiet plies, then 80
 # quiet plies. Official wins and repetition can only shorten this bound.
-MAX_GAME_PLIES = 600
+MAX_GAME_PLIES = 1600
 
 
 @contextmanager
@@ -62,7 +62,7 @@ def clock_fixture(pieces, clock, player=0, a1_defender=0, ply=None):
     earlier = []
     for i in range(clock):
         history_piece = [0] * 81
-        history_piece[9 + i] = 3
+        history_piece[(9 + i) % 81] = 3
         earlier.append(tuple(history_piece))
     return Position.fixture(pieces, player, a1_defender,
                             history=earlier + [pieces], ply=ply)
@@ -185,30 +185,30 @@ class IndependentEquivalence(unittest.TestCase):
 
     def test_rare_transition_thresholds_and_canonical_i9_defender(self):
         fixtures = []
-        for clock in (28, 29):
-            # Capture at plies 29/30, preserving total-ply carry at 127 -> 128.
+        for clock in (78, 79):
+            # Capture at plies 79/80, preserving total-ply carry at 127 -> 128.
             ref = clock_fixture(position({'B2': 1, 'C2': -2, 'H8': -1}),
                                 clock, ply=127)
             fixtures.append((f'capture-clock-{clock}', ref, 'B2', 'C2', 'ongoing', 0))
             ref = clock_fixture(position({'B2': 1, 'H8': -1}), clock)
             fixtures.append((f'quiet-clock-{clock}', ref, 'B2', 'C2',
-                             'ongoing' if clock == 28 else 'no-capture limit', clock + 1))
+                             'ongoing' if clock == 78 else 'no-capture limit', clock + 1))
         # Every type can win; occupying the own corner is allowed, with both
         # corner assignments and both labels (including canonical 0 defending I9).
         for piece in (1, 2, 3):
             for defender in (0, 1):
                 source, target, own = ('I8', 'I9', 'A1') if defender == 0 else ('A2', 'A1', 'I9')
                 ref = clock_fixture(position({source: piece, 'E5': -1, own: 3}),
-                                    29, a1_defender=defender)
-                fixtures.append((f'corner-{piece}-{defender}', ref, source, target, 'corner', 30))
+                                    79, a1_defender=defender)
+                fixtures.append((f'corner-{piece}-{defender}', ref, source, target, 'corner', 80))
                 # Occupied goals require a legal RPS capture.
                 ps = dict(zip((source, target, 'E5'), (piece, -(piece % 3 + 1), -1)))
-                ref = clock_fixture(position(ps), 29, a1_defender=defender)
+                ref = clock_fixture(position(ps), 79, a1_defender=defender)
                 fixtures.append((f'occupied-goal-{piece}-{defender}', ref, source, target, 'corner', 0))
         blocked = position({'D4': -1, 'E4': -1, 'F4': -1, 'C5': -1,
                             'E5': 1, 'F5': -1, 'D6': -1, 'E6': -1, 'F6': -1})
-        fixtures.append(('stalemate-clock', clock_fixture(blocked, 29, player=1),
-                         'C5', 'D5', 'stalemate', 30))
+        fixtures.append(('stalemate-clock', clock_fixture(blocked, 79, player=1),
+                         'C5', 'D5', 'stalemate', 80))
         fixtures.append(('last-piece', Position.fixture(position({'B2': 1, 'C2': -2})),
                          'B2', 'C2', 'stalemate', 0))
         for label, reference, source, target, reason, clock in fixtures:
@@ -253,11 +253,11 @@ class IndependentEquivalence(unittest.TestCase):
             ('stalemate', position({'B2': 1}), 1),
         ):
             # All three thresholds hold; official wins override both draws.
-            ref = Position.fixture(pieces, player, history=(pieces,) * 31)
+            ref = Position.fixture(pieces, player, history=(pieces,) * 81)
             with self.subTest(precedence=reason):
                 self.assertEqual(ref.terminal()[0], reason)
                 self.assertGreaterEqual(ref.repetitions(), 3)
-                self.assertEqual(ref.clock, 30)
+                self.assertEqual(ref.clock, 80)
                 self.assert_equivariant(ref)
 
     def test_complete_seeded_mcts_games_match_reference(self):
