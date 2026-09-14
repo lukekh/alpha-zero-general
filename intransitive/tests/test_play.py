@@ -160,5 +160,39 @@ class AIPlaySessionTests(unittest.TestCase):
             self.update('ai')
 
 
+class SelectableOpponentTests(unittest.TestCase):
+    def test_switch_all_opponents_and_independent_options(self):
+        from itertools import product
+        from intransitive.play import OpponentFactory
+        from intransitive.heuristics import SearchConfig
+        factory = OpponentFactory(config=SearchConfig(max_depth=1, time_limit=5, node_limit=500000))
+        session = GameSession(opponent_factory=factory)
+        for flags in product((False, True), repeat=3):
+            options = dict(zip(('attack_enabled', 'defence_enabled', 'overload_enabled'), flags))
+            snapshot = session.update('restart', dict(revision=session.revision, opponent='alphabeta',
+                                                      human_player=1, ab_options=options))
+            self.assertEqual(snapshot['ab_options'], options)
+            self.assertTrue(snapshot['ai_turn'])
+            result = session.update('ai', dict(revision=session.revision))
+            self.assertEqual(result['ply'], 1)
+            self.assertIsNotNone(result['analysis'])
+        for opponent in ('random', 'greedy', 'local'):
+            snapshot = session.update('restart', dict(revision=session.revision, opponent=opponent))
+            self.assertEqual(snapshot['opponent'], opponent)
+            self.assertEqual(snapshot['mode'], 'local' if opponent == 'local' else 'ai')
+
+    def test_invalid_selection_or_options_preserve_game(self):
+        from intransitive.play import OpponentFactory
+        session = GameSession(opponent_factory=OpponentFactory())
+        before = session.snapshot()
+        for options in ({'opponent': 'model'}, {'opponent': 'unknown'},
+                        {'opponent': 'alphabeta', 'ab_options': {'attack_enabled': 1}},
+                        {'opponent': 'alphabeta', 'ab_options': {'time_limit': 999}},
+                        {'opponent': 'alphabeta', 'ab_options': ['attack']}):
+            with self.assertRaises(ValueError):
+                session.update('restart', dict(revision=session.revision, **options))
+            self.assertEqual(session.snapshot(), before)
+
+
 if __name__ == "__main__":
     unittest.main()

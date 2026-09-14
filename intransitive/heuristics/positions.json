@@ -1,0 +1,16 @@
+{
+  "tuning": [
+    {"name": "material", "pieces": {"D4": 1, "E4": 1, "H8": -2}},
+    {"name": "predator", "pieces": {"D4": 1, "E4": 1, "G7": -3, "H8": -2}}
+  ],
+  "heldout": [
+    {"name": "quiet_win", "pieces": {"H8": 3, "B2": -1}},
+    {"name": "intercepted", "pieces": {"E5": 3, "G6": -2, "G8": -1}},
+    {"name": "blocked_corner", "pieces": {"G7": 3, "I9": -3}},
+    {"name": "capturable_corner", "pieces": {"G7": 3, "I9": -1}},
+    {"name": "faster_other_type", "pieces": {"G7": 3, "B2": -1}},
+    {"name": "overload", "pieces": {"A5": 2, "C5": -3, "D1": -3, "E5": -1}},
+    {"name": "paper_support", "pieces": {"A5": 2, "C5": -3, "D1": -3, "E5": -1, "A1": 3}},
+    {"name": "exposed_rock", "pieces": {"A5": 2, "C5": -3, "D1": -3, "E5": -1, "A1": 1}}
+  ]
+}

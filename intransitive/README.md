@@ -864,3 +864,13 @@ that distinguishes histories, policies, and masks. Real `Coach.executeEpisode`
 runs with scripted legal search policies verify both winner perspectives, nonzero
 relative Q targets, and compressed draw examples from an official Blue-first
 episode. Network-backed shared pipeline checks are in `test_pipeline`.
+
+
+## Standalone alpha–beta opponent
+
+Play without a trained network using `python pit.py intransitive human alphabeta`
+or `python -m intransitive.play --opponent alphabeta`. The browser also retains
+local, random, greedy and saved-model choices. Independent attack, defence and
+overload switches start disabled in the core preset. See the
+[configuration, evaluation explanations and commands](heuristics/IMPLEMENTATION.md)
+and [controlled comparisons](heuristics/MEASUREMENTS.md).

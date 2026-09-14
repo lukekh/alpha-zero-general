@@ -3,7 +3,8 @@
 Design specification for a minimax player with alpha–beta pruning. The first
 implementation should provide a useful opponent without a trained network and
 make it straightforward to measure whether individual heuristics help or hurt.
-This directory currently contains the specification, not an implemented player.
+The standalone player is implemented. See [implementation, formulas and runnable commands](IMPLEMENTATION.md)
+and [measured ablation results](MEASUREMENTS.md). The original design follows below.
 
 Tracked in [implementation issue #34](https://github.com/lukekh/alpha-zero-general/issues/34),
 a focused follow-up to [training-efficiency issue #33](https://github.com/lukekh/alpha-zero-general/issues/33).

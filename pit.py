@@ -35,6 +35,17 @@ def create_player(name, args):
 		return players.RandomPlayer(game).play
 	if name == 'greedy':
 		return players.GreedyPlayer(game).play
+	if name == 'alphabeta':
+		if args.game != 'intransitive':
+			raise ValueError('alphabeta is available for Intransitive')
+		from intransitive.heuristics import AlphaBetaPlayer, SearchConfig
+		from dataclasses import replace
+		config = SearchConfig.from_file(args.ab_config) if args.ab_config else SearchConfig()
+		overrides = {key: value for key, value in dict(
+			max_depth=args.ab_depth, node_limit=args.ab_nodes, time_limit=args.ab_time,
+			attack_enabled=args.ab_attack, defence_enabled=args.ab_defence,
+			overload_enabled=args.ab_overload).items() if value is not None}
+		return AlphaBetaPlayer(game, replace(config, **overrides)).play
 	if name == 'human':
 		return players.HumanPlayer(game).play
 
@@ -230,7 +241,7 @@ def main():
 	parser.add_argument('--fpu'                , '-f' , action='store', default=None, type=float, help='Value for FPU (first play urgency)')
 
 	parser.add_argument('game'                        , action='store', default='splendor', help='The name of the game to play')
-	parser.add_argument('players'                     , metavar='player', nargs='*', help='list of players to test (either file, or "human" or "random")')
+	parser.add_argument('players'                     , metavar='player', nargs='*', help='list of players to test (checkpoint, human, random, greedy, or Intransitive alphabeta)')
 	parser.add_argument('--reference'          , '-r' , metavar='ref'   , nargs='*', help='list of reference players')
 	parser.add_argument('--vs-ref-only'        , '-z' , action='store_true', help='Use this option to prevent games between players, only players vs references')
 	parser.add_argument('--ratings'            , '-R' , action='store_true', help='Compute ratings based in games results and write ratings on disk')
@@ -240,6 +251,12 @@ def main():
 	parser.add_argument('--compare-age'        , '-A' , action='store', default=None        , help='Maximum age (in hour) of best.pt to be compared', type=int)
 	parser.add_argument('--max-compare-threads', '-T' , action='store', default=1           , help='No of threads to run comparison on', type=int)
 
+	parser.add_argument('--ab-config', help='Alpha-beta JSON configuration')
+	parser.add_argument('--ab-depth', type=int)
+	parser.add_argument('--ab-nodes', type=int)
+	parser.add_argument('--ab-time', type=float, help='Seconds per alpha-beta move')
+	for module in ('attack', 'defence', 'overload'):
+		parser.add_argument('--ab-' + module, action=argparse.BooleanOptionalAction, default=None)
 	args = parser.parse_args()
 	
 	if args.profile:
