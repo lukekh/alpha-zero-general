@@ -94,3 +94,13 @@ bounded hints, leaf reuse and input preservation.
 
 The five known defensive failures at depth three remain separate heuristic
 weaknesses. These tests remain active; timeout changes do not suppress them.
+
+## Reversible search positions
+
+The default alpha-beta path imports validated public storage into a private
+compact board and restores each searched move in `finally` blocks. Draw-safe
+keys, exact material ordering, bounded proof work and root result publication
+retain the semantics above. Public game/storage interfaces remain unchanged;
+`AlphaBetaPlayer(use_compact=False)` selects the copy-based comparison path.
+See the [compact-search report](../benchmarks/compact/README.md) for ownership,
+validation, boundary costs and repeated fixed-depth/equal-time measurements.

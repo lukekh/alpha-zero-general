@@ -10,6 +10,7 @@ from intransitive.heuristics import AlphaBetaPlayer, SearchConfig, exhaustive_mi
 from intransitive.heuristics.budget import Budget, BudgetExpired
 from intransitive.heuristics.evaluation import MATE
 from intransitive.heuristics.search import from_table, position_key
+from intransitive.heuristics.position import SearchPosition
 from intransitive.tests.reference_rules import Position, position
 
 
@@ -37,7 +38,8 @@ class ScriptedChildren(AlphaBetaPlayer):
     def _search(self, state, depth, alpha, beta, ply, budget):
         if ply != 1:
             return super()._search(state, depth, alpha, beta, ply, budget)
-        index = self.indices[state.tobytes()]
+        snapshot = state.export() if isinstance(state, SearchPosition) else state
+        index = self.indices[snapshot.tobytes()]
         self.visited.append((depth, index))
         stop = depth == 1 and index == self.stop_index
         if stop and self.midway:

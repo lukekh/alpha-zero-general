@@ -15,6 +15,7 @@ from .evaluation import Evaluator, MATE, MATE_THRESHOLD, terminal_value
 from .kernels import no_terminal_win_in_horizon, winning_actions, warm_search_kernels
 from .material import after_capture, count_pieces, warm_material_kernels
 from ..IntransitiveConstants import action_destination
+from .position import SearchPosition, warm_position_kernels
 
 
 @lru_cache(maxsize=1)
@@ -33,6 +34,8 @@ def position_key(state):
     clock. Never merge by board alone or discard a mere second occurrence.
     Bytes are compared exactly by dict, so hash collisions cannot merge nodes.
     """
+    if isinstance(state, SearchPosition):
+        return state.key()
     meta = state[:, :, 82:84].ravel()
     length = int(meta[4])
     # Copy the strided planes once, rather than once per historical board.
@@ -122,30 +125,43 @@ def prove_reference(game, state, config, budget, *, compiled_order=False):
             raise ProofLimit
         used += 1
         budget.visit(proof=True)
-        side = int(position[:, :, 82:84].flat[1])
+        side = position.side if isinstance(position, SearchPosition) else int(position[:, :, 82:84].flat[1])
         terminal = terminal_value(game, position, side, ply)
         if terminal is not None:
             return terminal, []
         if depth == 0:
             return 0., []
+        compact = isinstance(position, SearchPosition)
+        pieces = position.pieces if compact else position[:, :, 0]
+        a1 = position.a1 if compact else int(position[:, :, 82:84].flat[2])
         if ply == 0:
             budget.charge()
-            if no_terminal_win_in_horizon(position[:, :, 0], side,
-                                           int(position[:, :, 82:84].flat[2]), depth):
+            if no_terminal_win_in_horizon(pieces, side, a1, depth):
                 return 0., []
         best, pv = -inf, []
-        mask = game.getValidMoves(position, side)
-        goal = 80 if side == int(position[:, :, 82:84].flat[2]) else 0
+        if compact:
+            from ..IntransitiveLogicNumba import raw_movement_mask
+            mask = raw_movement_mask(pieces, side)
+        else:
+            mask = game.getValidMoves(position, side)
+        goal = 80 if side == a1 else 0
         if compiled_order:
             from .proof import order_legal_actions
-            actions = order_legal_actions(mask, side, int(position[:, :, 82:84].flat[2]))
+            actions = order_legal_actions(mask, side, a1)
         else:
             actions = list(map(int, np.flatnonzero(mask)))
             actions.sort(key=lambda a: action_destination(a) != (goal % 9, goal // 9))
         for action in actions:
             budget.charge()
-            child, _ = game.getNextState(position, side, action)
-            value, line = visit(child, depth - 1, ply + 1, -beta, -alpha)
+            if compact:
+                position.push(action)
+                try:
+                    value, line = visit(position, depth - 1, ply + 1, -beta, -alpha)
+                finally:
+                    position.pop()
+            else:
+                child, _ = game.getNextState(position, side, action)
+                value, line = visit(child, depth - 1, ply + 1, -beta, -alpha)
             value = -value
             if value > best:
                 best, pv = value, [action] + line
@@ -178,7 +194,9 @@ def prove(game, state, config, budget, *, specialised=True):
     """
     from . import proof as kernels
     from ..IntransitiveGame import IntransitiveGame
-    if (not kernels.READY or not state.flags.c_contiguous or not state.flags.writeable
+    compact = isinstance(state, SearchPosition)
+    ready = kernels.COMPACT_READY if compact else kernels.READY
+    if (not ready or (not compact and (not state.flags.c_contiguous or not state.flags.writeable))
             or type(game) is not IntransitiveGame
             or config.proof_nodes > kernels.NATIVE_NODE_LIMIT
             or config.proof_depth == 0 or config.proof_nodes == 0):
@@ -186,10 +204,13 @@ def prove(game, state, config, budget, *, specialised=True):
     start = perf_counter()
     try:
         budget.check()
-        score, line, counts = kernels.native_proof(
-            state, config.proof_depth, config.proof_nodes,
-            min(2 * kernels.NATIVE_NODE_LIMIT + 1, max(0, budget.limit - budget.work)),
-            specialised)
+        allowance = min(2 * kernels.NATIVE_NODE_LIMIT + 1, max(0, budget.limit - budget.work))
+        if compact:
+            score, line, counts = kernels.compact_proof(
+                state, config.proof_depth, config.proof_nodes, allowance)
+        else:
+            score, line, counts = kernels.native_proof(
+                state, config.proof_depth, config.proof_nodes, allowance, specialised)
         work, nodes, stop = map(int, counts)
         budget.work += work
         budget.nodes += nodes
@@ -212,13 +233,14 @@ class AlphaBetaPlayer:
     label = 'Alpha–beta'
     kind = 'alphabeta'
 
-    def __init__(self, game=None, config=None, use_table=True):
+    def __init__(self, game=None, config=None, use_table=True, *, use_compact=True):
         if game is None:
             from ..IntransitiveGame import IntransitiveGame
             game = IntransitiveGame()
         self.game = game
         self.config = config or SearchConfig()
         self.use_table = use_table
+        self.use_compact = use_compact
         self.table = {}
         self._hints = {}
         self._identity = None
@@ -234,9 +256,12 @@ class AlphaBetaPlayer:
     def _prepare(self, *, warm_proof=True):
         warm_search_kernels()
         warm_material_kernels()
+        warm_position_kernels()
         if warm_proof:
             from .proof import warm_proof_kernel
             warm_proof_kernel()
+            from .proof import warm_compact_proof_kernel
+            warm_compact_proof_kernel()
         if self.config.attack_enabled or self.config.defence_enabled or self.config.overload_enabled:
             warm_route_kernels()
         identity = self.config.identity()
@@ -255,15 +280,19 @@ class AlphaBetaPlayer:
         return self.evaluator.score(state, side, budget, proof=proof, counts=self._material_counts), []
 
     def _ordered(self, state, side, preferred, budget, root=False):
-        actions = list(map(int, np.flatnonzero(self.game.getValidMoves(state, side))))
-        goal = 80 if side == int(state[:, :, 82:84].flat[2]) else 0
+        compact = isinstance(state, SearchPosition)
+        actions = list(map(int, state.legal() if compact else
+                               np.flatnonzero(self.game.getValidMoves(state, side))))
+        pieces = state.pieces if compact else state[:, :, 0]
+        a1 = state.a1 if compact else int(state[:, :, 82:84].flat[2])
+        goal = 80 if side == a1 else 0
         own_goal = 80 - goal
         threats = []
-        for y, x in np.argwhere(state[:, :, 0] * (1 if side == 0 else -1) < 0):
+        for y, x in np.argwhere(pieces * (1 if side == 0 else -1) < 0):
             if max(abs(x - own_goal % 9), abs(y - own_goal // 9)) <= 1:
                 threats.append(int(y) * 9 + int(x))
         budget.charge(len(actions))
-        wins = winning_actions(state[:, :, 0], np.asarray(actions, dtype=np.int64), side, goal)
+        wins = winning_actions(pieces, np.asarray(actions, dtype=np.int64), side, goal)
         budget.check()
 
         def rank(item):
@@ -274,26 +303,32 @@ class AlphaBetaPlayer:
             prior = self._root_previous.get(action) if root else None
             return (win, action == preferred,
                     prior['score'] if prior else -inf,
-                    dest in threats or dest == own_goal, state[dy, dx, 0] != 0,
+                    dest in threats or dest == own_goal, pieces[dy, dx] != 0,
                     -max(abs(dx - goal % 9), abs(dy - goal // 9)), -action)
         # Construct history states only for children actually visited.
         for action, _ in sorted(zip(actions, wins), key=rank, reverse=True):
             budget.charge()
-            child, _ = self.game.getNextState(state, side, action)
-            yield action, child
+            if compact:
+                yield action, None  # mutation belongs to the recursive try/finally
+            else:
+                child, _ = self.game.getNextState(state, side, action)
+                yield action, child
 
     def _search(self, state, depth, alpha, beta, ply, budget):
         budget.visit()
-        if ply == 0 and self._material_root is not state:
+        compact = isinstance(state, SearchPosition)
+        if compact:
+            self._material_counts = state.counts
+        elif ply == 0 and self._material_root is not state:
             self._material_counts = count_pieces(state)
-        side = int(state[:, :, 82:84].flat[1])
+        side = state.side if compact else int(state[:, :, 82:84].flat[1])
         terminal = terminal_value(self.game, state, side, ply)
         if terminal is not None:
             return terminal, []
         # Post-capture leaves commonly transpose. Quiet leaves usually carry
         # different repetition histories; avoid building a costly cache key
         # where reuse is rare. Internal nodes still use the full draw-safe key.
-        if depth == 0 and (not self.use_table or int(state[:, :, 82:84].flat[4]) != 1):
+        if depth == 0 and (not self.use_table or (len(state.history) if compact else int(state[:, :, 82:84].flat[4])) != 1):
             return self._leaf(state, side, ply, budget)
         # Fold positions only when all future-play/draw information agrees.
         # Different-depth heuristic scores remain ordering hints, not values.
@@ -325,12 +360,18 @@ class AlphaBetaPlayer:
         best, pv = -inf, []
         for action, child in self._ordered(state, side, preferred, budget, root=progress is not None):
             counts = self._material_counts
-            if int(child[:, :, 82:84].flat[3]) == 0:
+            if compact:
+                state.push(action)
+                child = state
+                self._material_counts = state.counts
+            elif int(child[:, :, 82:84].flat[3]) == 0:
                 x, y = action_destination(action)
                 self._material_counts = after_capture(counts, int(state[y, x, 0]))
             try:
                 value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
             finally:
+                if compact:
+                    state.pop()
                 self._material_counts = counts
             value = -value
             if progress is not None:
@@ -365,13 +406,18 @@ class AlphaBetaPlayer:
     def analyze(self, state, budget=None):
         self._prepare(warm_proof=budget is None)
         budget = budget or Budget(self.config.node_limit, self.config.time_limit)
-        side = int(state[:, :, 82:84].flat[1])
-        # Validation/one legal fallback is required even for a zero budget.
-        if terminal_value(self.game, state, side) is not None:
+        from ..IntransitiveGame import IntransitiveGame
+        compact = self.use_compact and type(self.game) is IntransitiveGame
+        # Validate/copy once on entry, including for a zero-budget fallback.
+        search_state = (SearchPosition(state, modelling_draws=self.game.board.modelling_draws)
+                        if compact else state)
+        side = search_state.side if compact else int(state[:, :, 82:84].flat[1])
+        if terminal_value(self.game, search_state, side) is not None:
             raise ValueError('Cannot select a move from a terminal position')
-        actions = np.flatnonzero(self.game.getValidMoves(state, side))
-        self._material_counts = count_pieces(state)
-        self._material_root = state
+        actions = (search_state.legal() if compact else
+                   np.flatnonzero(self.game.getValidMoves(state, side)))
+        self._material_counts = search_state.counts if compact else count_pieces(state)
+        self._material_root = search_state
         action, score, depth, pv = int(actions[0]), None, 0, [int(actions[0])]
         selected_depth, source, score_bound = 0, 'legal_fallback', None
         self._root_previous = {}
@@ -383,7 +429,7 @@ class AlphaBetaPlayer:
         try:
             for target in range(1, self.config.max_depth + 1):
                 self._root_progress = RootProgress(target, len(actions), action if depth else None)
-                value, line = self._search(state, target, -inf, inf, 0, budget)
+                value, line = self._search(search_state, target, -inf, inf, 0, budget)
                 score, pv, action, depth = value, line, line[0], target
                 selected_depth, source, score_bound = target, 'completed_iteration', 'exact'
                 if self._root_progress.moves:
