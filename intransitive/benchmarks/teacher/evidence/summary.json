@@ -1,0 +1,109 @@
+{
+  "schema": "intransitive-teacher-evidence-summary-1",
+  "passed": true,
+  "issues": [33, 35],
+  "protocol": {
+    "training_seeds": [410, 411, 412],
+    "trained_arm_seed_runs": 12,
+    "wall_seconds": 72.57292887498625,
+    "peak_rss_bytes": 419528704,
+    "wall_seconds_limit": 1800,
+    "peak_rss_bytes_limit": 1073741824
+  },
+  "dataset": {
+    "original_positions": 192,
+    "augmented_examples": 2304,
+    "split_examples": {
+      "train": 756,
+      "validation": 840,
+      "test": 708
+    },
+    "symmetries_per_original": 12,
+    "sha256": "e6eec3503f5e4ee6a698168bc15b136d88a52513394d1076cba1976275ec079d",
+    "byte_reproducible": true,
+    "trajectory_splits_disjoint": true,
+    "symmetry_orbits_disjoint": true,
+    "teacher_policy": "one-hot legal action from completed fixed-depth search",
+    "value_target": "exact terminal outcome in canonical current-player order",
+    "q_target": "absent and excluded with q_mask=false"
+  },
+  "training": {
+    "untrained": {
+      "updates_per_seed": 0,
+      "test_policy_top1_mean": 0.02401129943502825,
+      "tactical_top1_mean": 0.12666666666666668
+    },
+    "scratch_selfplay": {
+      "updates_per_seed": 8,
+      "test_policy_top1_mean": 0.02919020715630885,
+      "tactical_top1_mean": 0.18000000000000002
+    },
+    "pretrained_only": {
+      "updates_per_seed": 4,
+      "test_policy_top1_mean": 0.019774011299435026,
+      "tactical_top1_mean": 0.15666666666666668
+    },
+    "pretrained_selfplay": {
+      "updates_per_seed": 12,
+      "test_policy_top1_mean": 0.026836158192090398,
+      "tactical_top1_mean": 0.1466666666666667
+    },
+    "annealed_mix": {
+      "updates_per_seed": 12,
+      "teacher_fractions": [0.5, 0.25],
+      "test_policy_top1_mean": 0.02919020715630885,
+      "tactical_top1_mean": 0.17
+    }
+  },
+  "strength": {
+    "model_only": "Every trained arm and the untrained control scored 0/0/6 against both greedy and alpha-beta.",
+    "equal_four_simulation_mcts": "Every trained arm and the untrained control scored 0/0/6 against both greedy and alpha-beta.",
+    "selected_deployment_vs_greedy": {
+      "model_only": "0/0/2",
+      "neural_mcts": "0/0/2",
+      "hybrid": "0/1/1",
+      "heuristic_only": "2/0/0"
+    }
+  },
+  "selected_checkpoint": {
+    "arm": "annealed_mix",
+    "seed": 412,
+    "sha256": "bb9f39d02d3afe9c8a5891dccbb71b50a40391728c0f46ccc4748004431a606d",
+    "optimizer_updates": 12,
+    "standalone_reload_passed": true,
+    "teacher_required_at_inference": false,
+    "cpu_onnx_max_abs_policy": 1.1175870895385742e-08,
+    "cpu_onnx_max_abs_value": 2.9802322387695312e-08
+  },
+  "decisions": {
+    "masked_targets": "adopt",
+    "optimizer_persistence": "adopt for labelled continuous-learner experiments; preserve legacy recreation by default",
+    "pretrained_only": "reject as baseline replacement",
+    "pretrained_selfplay": "defer",
+    "annealed_mix": "defer",
+    "root_noise": "defer",
+    "tactical_hybrid": "defer for play-time use",
+    "search_efficiency": "defer to issues #37-#41"
+  },
+  "validation": {
+    "focused_teacher_tests": {
+      "passed": 6,
+      "failed": 0
+    },
+    "intransitive_tests": {
+      "total": 301,
+      "passed": 296,
+      "known_failures": 5,
+      "unexpected_failures": 0,
+      "errors": 0
+    },
+    "repository_tests": {
+      "passed": 7,
+      "failed": 0
+    }
+  },
+  "artifacts": {
+    "archive_sha256": "ab78089ef2fff604303a1b00bb43fb4a1f3e776a65852abff05afcc487d80da7",
+    "compressed_report_sha256": "176ba2916b7992a0a9e54c5be3f822dff2826309f0cca7825bb7514926fed708"
+  }
+}

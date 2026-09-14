@@ -1,0 +1,549 @@
+{
+  "settings_held_equal": [
+    "arenaCompare",
+    "cpuct",
+    "forced_playouts",
+    "fpu",
+    "maxlenOfQueue",
+    "no_mem_optim",
+    "numIters",
+    "numItersHistory",
+    "numMCTSSims",
+    "parallel_inferences",
+    "prob_fullMCTS",
+    "profile",
+    "ratio_fullMCTS",
+    "stop_after_N_fail",
+    "tempThreshold",
+    "temperature",
+    "universes",
+    "updateThreshold",
+    "useray"
+  ],
+  "changed_field": "dirichletAlpha",
+  "rows": [
+    {
+      "seed": 410,
+      "arm": "baseline_no_noise",
+      "phase_seed": 2203447070,
+      "games": 1,
+      "original_positions": 30,
+      "augmented_examples": 360,
+      "root_noise": 0.0,
+      "policy_entropy": {
+        "count": 30,
+        "mean": 0.5489134420185393,
+        "min": -0.0,
+        "median": 0.592111103444404,
+        "p95": 1.1788068154704674,
+        "max": 1.6094379124341005
+      },
+      "legal_actions": {
+        "count": 30,
+        "mean": 41.7,
+        "min": 36.0,
+        "median": 42.0,
+        "p95": 46.0,
+        "max": 46.0
+      },
+      "unique_position_hashes": 30,
+      "unique_trajectories": 1,
+      "decisive_games": 0,
+      "captures": 0,
+      "reasons": {
+        "no-capture limit": 1
+      },
+      "games_detail": [
+        {
+          "index": 0,
+          "actions": [
+            102,
+            542,
+            94,
+            534,
+            110,
+            550,
+            166,
+            526,
+            158,
+            519,
+            174,
+            542,
+            230,
+            534,
+            238,
+            526,
+            302,
+            487,
+            86,
+            423,
+            166,
+            518,
+            103,
+            550,
+            311,
+            487,
+            163,
+            542,
+            103,
+            551
+          ],
+          "plies": 30,
+          "captures": 0,
+          "outcome": [
+            9.999999747378752e-05,
+            9.999999747378752e-05
+          ],
+          "reason": "no-capture limit",
+          "trajectory_sha256": "75815e54f60b7879bf7447819e2e79b0a62e95ffd35f58247a1a42630632be27"
+        }
+      ],
+      "wall_seconds": 1.0687731250654906,
+      "cpu_seconds": 1.033804
+    },
+    {
+      "seed": 410,
+      "arm": "root_noise",
+      "phase_seed": 2203447070,
+      "games": 1,
+      "original_positions": 30,
+      "augmented_examples": 360,
+      "root_noise": -1.0,
+      "policy_entropy": {
+        "count": 30,
+        "mean": 0.8469427384289209,
+        "min": -0.0,
+        "median": 1.0042424730540764,
+        "p95": 1.1777248585923488,
+        "max": 1.6094379124341005
+      },
+      "legal_actions": {
+        "count": 30,
+        "mean": 44.2,
+        "min": 36.0,
+        "median": 44.0,
+        "p95": 53.099999999999994,
+        "max": 55.0
+      },
+      "unique_position_hashes": 30,
+      "unique_trajectories": 1,
+      "decisive_games": 0,
+      "captures": 0,
+      "reasons": {
+        "no-capture limit": 1
+      },
+      "games_detail": [
+        {
+          "index": 0,
+          "actions": [
+            109,
+            468,
+            31,
+            345,
+            304,
+            537,
+            303,
+            416,
+            94,
+            483,
+            166,
+            473,
+            230,
+            545,
+            174,
+            494,
+            380,
+            486,
+            87,
+            416,
+            216,
+            428,
+            233,
+            358,
+            308,
+            395,
+            102,
+            337,
+            163,
+            553
+          ],
+          "plies": 30,
+          "captures": 0,
+          "outcome": [
+            9.999999747378752e-05,
+            9.999999747378752e-05
+          ],
+          "reason": "no-capture limit",
+          "trajectory_sha256": "15be09671b0469cd381b1124eb1030baf19e2ac004ad3a5e649979047bfa4997"
+        }
+      ],
+      "wall_seconds": 0.20923095801845193,
+      "cpu_seconds": 0.20733099999999993
+    },
+    {
+      "seed": 411,
+      "arm": "baseline_no_noise",
+      "phase_seed": 2025531775,
+      "games": 1,
+      "original_positions": 54,
+      "augmented_examples": 648,
+      "root_noise": 0.0,
+      "policy_entropy": {
+        "count": 54,
+        "mean": 1.0587923195862283,
+        "min": 0.6365141682948128,
+        "median": 1.0549201679861442,
+        "p95": 1.4643946040798628,
+        "max": 1.6094379124341005
+      },
+      "legal_actions": {
+        "count": 54,
+        "mean": 43.425925925925924,
+        "min": 21.0,
+        "median": 41.5,
+        "p95": 59.349999999999994,
+        "max": 62.0
+      },
+      "unique_position_hashes": 54,
+      "unique_trajectories": 1,
+      "decisive_games": 0,
+      "captures": 1,
+      "reasons": {
+        "no-capture limit": 1
+      },
+      "games_detail": [
+        {
+          "index": 0,
+          "actions": [
+            302,
+            406,
+            310,
+            342,
+            301,
+            334,
+            239,
+            398,
+            303,
+            390,
+            166,
+            542,
+            246,
+            534,
+            158,
+            470,
+            103,
+            414,
+            110,
+            478,
+            102,
+            382,
+            166,
+            374,
+            174,
+            350,
+            233,
+            526,
+            94,
+            462,
+            317,
+            342,
+            181,
+            518,
+            157,
+            454,
+            166,
+            446,
+            102,
+            406,
+            76,
+            326,
+            86,
+            470,
+            232,
+            462,
+            310,
+            318,
+            1,
+            398,
+            84,
+            454,
+            94,
+            334
+          ],
+          "plies": 54,
+          "captures": 1,
+          "outcome": [
+            9.999999747378752e-05,
+            9.999999747378752e-05
+          ],
+          "reason": "no-capture limit",
+          "trajectory_sha256": "a99d7649793697fff5b63fadaf4d03d83c840942d032aad404c27e9181bbcbf8"
+        }
+      ],
+      "wall_seconds": 0.34117425000295043,
+      "cpu_seconds": 0.3399979999999996
+    },
+    {
+      "seed": 411,
+      "arm": "root_noise",
+      "phase_seed": 2025531775,
+      "games": 1,
+      "original_positions": 30,
+      "augmented_examples": 360,
+      "root_noise": -1.0,
+      "policy_entropy": {
+        "count": 30,
+        "mean": 1.1001143132483666,
+        "min": 0.6931471805599453,
+        "median": 1.0549201679861442,
+        "p95": 1.6094379124341005,
+        "max": 1.6094379124341005
+      },
+      "legal_actions": {
+        "count": 30,
+        "mean": 52.266666666666666,
+        "min": 36.0,
+        "median": 51.0,
+        "p95": 63.0,
+        "max": 65.0
+      },
+      "unique_position_hashes": 30,
+      "unique_trajectories": 1,
+      "decisive_games": 0,
+      "captures": 0,
+      "reasons": {
+        "no-capture limit": 1
+      },
+      "games_detail": [
+        {
+          "index": 0,
+          "actions": [
+            165,
+            471,
+            303,
+            407,
+            231,
+            341,
+            291,
+            533,
+            310,
+            348,
+            105,
+            482,
+            247,
+            544,
+            188,
+            542,
+            173,
+            259,
+            231,
+            467,
+            117,
+            454,
+            34,
+            440,
+            236,
+            472,
+            162,
+            545,
+            179,
+            421
+          ],
+          "plies": 30,
+          "captures": 0,
+          "outcome": [
+            9.999999747378752e-05,
+            9.999999747378752e-05
+          ],
+          "reason": "no-capture limit",
+          "trajectory_sha256": "1eb5e95fe51f9f366f80a70b9cabefa827eb20d8c76a8f57b5fe3407fb546de3"
+        }
+      ],
+      "wall_seconds": 0.19489179097581655,
+      "cpu_seconds": 0.19423500000000082
+    },
+    {
+      "seed": 412,
+      "arm": "baseline_no_noise",
+      "phase_seed": 1219866250,
+      "games": 1,
+      "original_positions": 30,
+      "augmented_examples": 360,
+      "root_noise": 0.0,
+      "policy_entropy": {
+        "count": 30,
+        "mean": 1.3767049587048306,
+        "min": 1.0986122886681096,
+        "median": 1.3862943611198906,
+        "p95": 1.3862943611198906,
+        "max": 1.3862943611198906
+      },
+      "legal_actions": {
+        "count": 30,
+        "mean": 43.0,
+        "min": 30.0,
+        "median": 43.5,
+        "p95": 49.0,
+        "max": 49.0
+      },
+      "unique_position_hashes": 30,
+      "unique_trajectories": 1,
+      "decisive_games": 0,
+      "captures": 0,
+      "reasons": {
+        "no-capture limit": 1
+      },
+      "games_detail": [
+        {
+          "index": 0,
+          "actions": [
+            102,
+            342,
+            94,
+            406,
+            230,
+            543,
+            110,
+            550,
+            166,
+            542,
+            238,
+            414,
+            102,
+            350,
+            174,
+            422,
+            231,
+            534,
+            158,
+            606,
+            167,
+            527,
+            86,
+            399,
+            95,
+            479,
+            246,
+            415,
+            183,
+            543
+          ],
+          "plies": 30,
+          "captures": 0,
+          "outcome": [
+            9.999999747378752e-05,
+            9.999999747378752e-05
+          ],
+          "reason": "no-capture limit",
+          "trajectory_sha256": "7a70306c4ded77f9d91ae2184fedf2c3dd7e0e973ec567f3582182fa7e5e3e5d"
+        }
+      ],
+      "wall_seconds": 0.19026904192287475,
+      "cpu_seconds": 0.1897169999999999
+    },
+    {
+      "seed": 412,
+      "arm": "root_noise",
+      "phase_seed": 1219866250,
+      "games": 1,
+      "original_positions": 30,
+      "augmented_examples": 360,
+      "root_noise": -1.0,
+      "policy_entropy": {
+        "count": 30,
+        "mean": 1.2907683649065862,
+        "min": 0.9502705392332347,
+        "median": 1.3862943611198906,
+        "p95": 1.5090233143427054,
+        "max": 1.6094379124341005
+      },
+      "legal_actions": {
+        "count": 30,
+        "mean": 51.43333333333333,
+        "min": 36.0,
+        "median": 52.5,
+        "p95": 59.55,
+        "max": 61.0
+      },
+      "unique_position_hashes": 30,
+      "unique_trajectories": 1,
+      "decisive_games": 0,
+      "captures": 0,
+      "reasons": {
+        "no-capture limit": 1
+      },
+      "games_detail": [
+        {
+          "index": 0,
+          "actions": [
+            99,
+            413,
+            106,
+            347,
+            304,
+            545,
+            180,
+            627,
+            240,
+            475,
+            312,
+            411,
+            112,
+            339,
+            301,
+            400,
+            387,
+            542,
+            228,
+            533,
+            172,
+            480,
+            162,
+            275,
+            187,
+            476,
+            103,
+            346,
+            239,
+            559
+          ],
+          "plies": 30,
+          "captures": 0,
+          "outcome": [
+            9.999999747378752e-05,
+            9.999999747378752e-05
+          ],
+          "reason": "no-capture limit",
+          "trajectory_sha256": "4cbacffa5b88e8e3a4c74a5611d81c6aa399e7e5dc18531b9fa3b0329fe6193e"
+        }
+      ],
+      "wall_seconds": 0.19171816704329103,
+      "cpu_seconds": 0.1912009999999995
+    }
+  ],
+  "summary": {
+    "baseline_no_noise": {
+      "seeds": 3,
+      "games": 3,
+      "decisive_games": 0,
+      "captures": 1,
+      "unique_trajectories": 3,
+      "unique_positions": 114,
+      "mean_policy_entropy": 0.9948035734365327,
+      "wall_seconds": 1.6002164169913158,
+      "cpu_seconds": 1.5635189999999994
+    },
+    "root_noise": {
+      "seeds": 3,
+      "games": 3,
+      "decisive_games": 0,
+      "captures": 0,
+      "unique_trajectories": 3,
+      "unique_positions": 90,
+      "mean_policy_entropy": 1.0792751388612911,
+      "wall_seconds": 0.5958409160375595,
+      "cpu_seconds": 0.5927670000000003
+    }
+  },
+  "limits": "Bounded paired trajectory pilot; diversity and outcomes are descriptive, not a strength estimate."
+}

@@ -133,6 +133,11 @@ checkpoint (for an active run, use its `retained.pt`):
 ORT_DISABLE_TELEMETRY=1 python -m intransitive.play --checkpoint checkpoints/my-run/retained.pt
 ```
 
+The bounded [teacher-learning experiment](benchmarks/teacher/README.md) includes
+a reloadable learned checkpoint, leakage-safe teacher dataset, resumable AdamW
+continuation and model/heuristic/hybrid comparisons. It is retained as a negative
+pilot result; the core alpha-beta opponent remains the stronger recommendation.
+
 Choose your colour and click **New game**; Blue moves first. The AI replies
 automatically using 32 MCTS simulations per move (`--simulations` changes this).
 **Undo turn** takes back your move and the AI's reply. New game reloads the latest
