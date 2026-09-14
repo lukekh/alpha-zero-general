@@ -1,0 +1,39 @@
+{
+  "captured_epoch": 1789392555.571981,
+  "source": "/Users/work/dev/alpha-zero-general/checkpoints/greedy-training-20260914-215558",
+  "iteration": 84,
+  "sha256": {
+    "latest.pt": "8156df701bfd0bdb32c9f95ed00bdfa3dd4f07e7e67eb9b35e4d04a7f3c4b4e4",
+    "best.pt": "dbb0bb56fc9d97bc80c66e8cb1e9f4d844204bd6c9b79f94016ccf510853a1cb",
+    "replay.pkl": "f1998ef6427e533341bb14c91e5c3f62b24489967966de06e57e2910f78204f8",
+    "settings.json": "7a29ee6225a167c12a8b5e9993ccb56e22f88cd3ee5c71fa619bca050a02b715",
+    "progress.json": "5ba26dba81fdabda712a2af3c62457c0b55498682ca5e71e24ca94d69a639cce",
+    "training-games.jsonl": "c1882558098b4d86023a9f96041c21ad0cc6b89d6af4bfae2289f6a72076b1fa",
+    "evaluations.jsonl": "85bab4fc3cc3e227ee331f3c0873b15cd3bedf050b31ff153336553e81452302"
+  },
+  "status_before": {
+    "state": "running",
+    "pid": 34640,
+    "iteration": 85,
+    "completed_iterations": 84,
+    "phase": "opponent_rollouts",
+    "updated_at": "2026-09-14T13:29:12.293359+00:00",
+    "started_epoch": 1789388998.51246,
+    "deadline_epoch": 1789475398.51246
+  },
+  "status_after": {
+    "state": "running",
+    "pid": 34640,
+    "iteration": 85,
+    "completed_iterations": 84,
+    "phase": "opponent_rollouts",
+    "updated_at": "2026-09-14T13:29:12.293359+00:00",
+    "started_epoch": 1789388998.51246,
+    "deadline_epoch": 1789475398.51246
+  },
+  "replay_lengths": [
+    3000,
+    2580
+  ],
+  "description": "Read-only stable rollover snapshot, no live run files altered. Full-model objects omitted; validated state_dict and optimizer retained."
+}

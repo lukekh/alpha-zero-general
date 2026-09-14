@@ -1,0 +1,25 @@
+{
+  "exit_codes": {
+    "intransitive": 1,
+    "repository": 0
+  },
+  "completed_epoch": 1789393988.732034,
+  "base_commit": "8aabd7ac9666b942373de7b172ac944e97e27ebe",
+  "baseline_blunder_exit_code": 1,
+  "baseline_blunder_tests": 12,
+  "preexisting_failures": [
+    "test_game_red_14_preserve_material",
+    "test_game_red_18_prevent_paper_fork",
+    "test_game_red_31_keep_goal_defender",
+    "test_simplified_unique_last_defender_exchanged_colours",
+    "test_simplified_unique_last_defender_original_colours"
+  ],
+  "baseline_failure_actions_scores_depth_work_and_pv_match": true,
+  "new_tests_passed": 9,
+  "final_continuation_tests_passed": 6,
+  "intransitive_tests": 372,
+  "repository_tests": 7,
+  "wheel_build": "passed",
+  "wheel_fixture_and_module_bytes_verified": true,
+  "wheel_sha256": "4563f96e6dc133a469b39adb4f5e8a444ba9662a87a4ca4f0d2be50ef00b4b3f"
+}

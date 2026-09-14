@@ -1,0 +1,12 @@
+test_backup_precedes_learning_failure_stops_learning_and_ray_skips_backup (test_source_backup.RunBackupIntegrationTests.test_backup_precedes_learning_failure_stops_learning_and_ray_skips_backup) ... ok
+test_checkpoint_inside_game_is_not_recursively_backed_up (test_source_backup.SourceBackupTests.test_checkpoint_inside_game_is_not_recursively_backed_up) ... ok
+test_copy_failure_is_visible_and_does_not_publish_partial_backup (test_source_backup.SourceBackupTests.test_copy_failure_is_visible_and_does_not_publish_partial_backup) ... ok
+test_default_source_root_is_independent_of_working_directory (test_source_backup.SourceBackupTests.test_default_source_root_is_independent_of_working_directory) ... ok
+test_missing_sources_fail_clearly (test_source_backup.SourceBackupTests.test_missing_sources_fail_clearly) ... ok
+test_repeated_runs_retain_legacy_settings_and_source_versions (test_source_backup.SourceBackupTests.test_repeated_runs_retain_legacy_settings_and_source_versions) ... ok
+test_selected_game_layout_and_literal_settings (test_source_backup.SourceBackupTests.test_selected_game_layout_and_literal_settings) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.071s
+
+OK
