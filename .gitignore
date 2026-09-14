@@ -4,6 +4,10 @@
 *.nbi
 *.nbc
 .DS_Store
+.venv/
+*.egg-info/
+/build/
+/dist/
 
 /temp/
 /.project
@@ -15,4 +19,3 @@ results/
 
 # For PyCharm users
 .idea/
-

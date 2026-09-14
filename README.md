@@ -5,6 +5,19 @@ CPU-only 25-100x speed improvement, and supporting 2+ players games. You can pla
 browser https://github.com/cestpasphoto/cestpasphoto.github.io. Technical details about the improvements are listed in
 this [page](README_features.md).
 
+## Run Intransitive with uv
+
+```sh
+uv sync --locked
+uv run intransitive --opponent alphabeta --port 8765
+```
+
+Open the local URL printed by the server. `uv run intransitive --help` lists all
+options, including `--checkpoint`, `--human-colour`, `--simulations` and
+`--ab-config`. The project uses a local `.venv/`; see the
+[Intransitive setup guide](intransitive/README.md#setup-training-evaluation-and-human-play)
+for playing a saved model and running training.
+
 ## Supported games
 
 * [Abalone](#abalone)

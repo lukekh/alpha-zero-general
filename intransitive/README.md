@@ -21,7 +21,37 @@ original positions and compute, with per-colour results and sample limitations.
 
 ## Setup, training, evaluation and human play
 
-Run commands from the repository root. Use Python 3.11.4 and the pinned packages:
+Run commands from the repository root. The uv project pins Python 3.11.4 and the
+measured dependencies, creates `.venv/`, and records the resolution in `uv.lock`:
+
+```sh
+uv sync --locked
+uv run intransitive --help
+uv run intransitive --opponent alphabeta --human-colour blue --port 8765
+```
+
+`intransitive` launches the browser game. All named command-line options are
+forwarded to the existing game CLI; both `--port 8766` and `--port=8766` work.
+No environment activation is required. Open the local URL printed by the server.
+The command supports `--opponent`, `--checkpoint`, `--human-colour`, `--simulations`,
+`--ab-config` and `--port`; use `--help` for accepted values. For example:
+
+```sh
+uv run intransitive --opponent model --checkpoint checkpoints/my-run/retained.pt --human-colour red --simulations 64 --port 8766
+uv run intransitive --opponent alphabeta --ab-config intransitive/heuristics/configs/core.json
+```
+
+The second example loads the bundled core preset; see the
+[heuristic configuration guide](heuristics/IMPLEMENTATION.md) for other presets
+and the configuration format. Use `uv run python` for the existing training commands:
+
+```sh
+ORT_DISABLE_TELEMETRY=1 uv run python -m intransitive.smoke --checkpoint checkpoints/uv-smoke --seed 13 --backend onnx
+ORT_DISABLE_TELEMETRY=1 uv run python -m unittest discover -s intransitive/tests -v
+uv run python -m unittest discover -s tests -v
+```
+
+Alternatively, use a conventional virtual environment with the measured packages:
 
 ```sh
 python3.11 -m venv /tmp/intransitive-venv
