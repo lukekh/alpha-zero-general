@@ -756,6 +756,22 @@ optimizer state, finite gradients/parameters and changed weights, then checks
 the regenerated ONNX predictions against PyTorch. Replay restoration is separate
 and remains the responsibility of Coach's `loadTrainExamples()` path.
 
+### Greedy-opponent process benchmark and safe continuation
+
+The opt-in [process benchmark](benchmarks/process/README.md) compares 1, 2 and 4
+independent spawned game workers with the version-2 network and reference greedy
+opponent. It includes a portable checkpoint/replay fixture, matched trajectory and
+target checks, end-to-end timings, and process-tree memory measurements.
+
+`python -m intransitive.greedy_training --state checkpoints/greedy/state.pt`
+resumes its atomic continuation bundle with **one game worker by default**.
+The bundle preserves current/best weights, persistent AdamW moments and update
+count, ordered replay, iteration and selection state, and the original absolute
+deadline. This is separate from Coach's legacy resume path described above.
+See the benchmark guide for initialization, legacy snapshot capture, interruption
+behaviour and optional worker counts. These are modelling rollouts; official-play
+termination is unchanged.
+
 ### Human play and baseline opponents
 
 `IntransitivePlayers` provides `RandomPlayer(game, seed=None)`,

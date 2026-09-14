@@ -58,4 +58,5 @@ intransitive = [
     "play.html", "heuristics/*.json", "heuristics/configs/*.json", "smoke/requirements.txt",
     "benchmarks/training/baseline.json", "benchmarks/symmetry/*.json",
     "benchmarks/teacher/*.json",
+    "benchmarks/process/fixture.pt", "benchmarks/process/fixture.json",
 ]

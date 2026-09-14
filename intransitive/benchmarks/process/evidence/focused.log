@@ -1,0 +1,17 @@
+test_corruption_and_expired_deadline_are_rejected (intransitive.tests.test_greedy_process.Continuation.test_corruption_and_expired_deadline_are_rejected) ... ok
+test_interruption_boundaries_never_publish_mixed_generations (intransitive.tests.test_greedy_process.Continuation.test_interruption_boundaries_never_publish_mixed_generations) ... ok
+test_legacy_capture_accepts_only_consistent_rollout_boundaries (intransitive.tests.test_greedy_process.Continuation.test_legacy_capture_accepts_only_consistent_rollout_boundaries) ... ok
+test_mid_update_cancellation_cannot_mutate_committed_adamw_or_best (intransitive.tests.test_greedy_process.Continuation.test_mid_update_cancellation_cannot_mutate_committed_adamw_or_best) ... ok
+test_restarts_preserve_adamw_replay_numbering_best_and_deadline (intransitive.tests.test_greedy_process.Continuation.test_restarts_preserve_adamw_replay_numbering_best_and_deadline) ... ok
+test_bad_initializer_and_quota (intransitive.tests.test_greedy_process.ProcessGames.test_bad_initializer_and_quota) ... ok
+test_exception_deadline_keyboard_interrupt_and_hard_exit_reap_workers (intransitive.tests.test_greedy_process.ProcessGames.test_exception_deadline_keyboard_interrupt_and_hard_exit_reap_workers) ... ok
+test_spawn_matches_inline_actions_targets_and_colour_quota (intransitive.tests.test_greedy_process.ProcessGames.test_spawn_matches_inline_actions_targets_and_colour_quota) ... /Users/work/orca/workspaces/alpha-zero-general/issue-48-benchmark-process-parallel/GenericNNetWrapper.py:376: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/dev/alpha-zero-general/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 70.549s
+
+OK

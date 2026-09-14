@@ -3,6 +3,7 @@ import sys
 import time
 import pickle
 import zlib
+import tempfile
 
 os.environ["OMP_NUM_THREADS"] = "1" # PyTorch more efficient this way
 
@@ -370,31 +371,33 @@ class GenericNNetWrapper(NeuralNet):
 		self.nnet.to('cpu')
 		self.nnet.eval()
 
-		temporary_file = 'nn_export_' + str( int(time.time()*1000)%1000000 ) + '.onnx'
-		torch.onnx.export(
-			self.nnet,
-			(dummy_board, dummy_valid_actions),
-			temporary_file,
-			dynamo=False,
-			input_names = ['board', 'valid_actions'],
-			output_names = ['pi', 'v'],
-			dynamic_axes={
-				'board'        : {0: 'batch_size'},
-				'valid_actions': {0: 'batch_size'},
-				'pi'           : {0: 'batch_size'},
-				'v'            : {0: 'batch_size'},
-			}
-		)
-		if ort.__version__ >= '1.17.0':
-			# Convert ONNX file to most recent opset version
-			model_with_old_opset = onnx.load(temporary_file)
-			model_with_new_opset = onnx.version_converter.convert_version(model_with_old_opset, 21)
-			onnx.save(model_with_new_opset, temporary_file)
+		with tempfile.TemporaryDirectory(prefix='azg-onnx-') as export_dir:
+			temporary_file = os.path.join(export_dir, 'model.onnx')
+			torch.onnx.export(
+				self.nnet,
+				(dummy_board, dummy_valid_actions),
+				temporary_file,
+				dynamo=False,
+				input_names = ['board', 'valid_actions'],
+				output_names = ['pi', 'v'],
+				dynamic_axes={
+					'board'        : {0: 'batch_size'},
+					'valid_actions': {0: 'batch_size'},
+					'pi'           : {0: 'batch_size'},
+					'v'            : {0: 'batch_size'},
+				}
+			)
+			if ort.__version__ >= '1.17.0':
+				# Convert ONNX file to most recent opset version
+				model_with_old_opset = onnx.load(temporary_file)
+				model_with_new_opset = onnx.version_converter.convert_version(model_with_old_opset, 21)
+				onnx.save(model_with_new_opset, temporary_file)
 
-		opts = ort.SessionOptions()
-		opts.intra_op_num_threads, opts.inter_op_num_threads, opts.inter_op_num_threads = 1, 1, ort.ExecutionMode.ORT_SEQUENTIAL
-		self.ort_session = ort.InferenceSession(temporary_file, sess_options=opts, providers=['CPUExecutionProvider'])
-		os.remove(temporary_file)
+			opts = ort.SessionOptions()
+			opts.intra_op_num_threads = opts.inter_op_num_threads = 1
+			opts.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
+			self.ort_session = ort.InferenceSession(temporary_file, sess_options=opts, providers=['CPUExecutionProvider'])
+			os.remove(temporary_file)
 
 	def pick_examples(self, examples, sample_ids):
 		if self.args['no_compression']:
