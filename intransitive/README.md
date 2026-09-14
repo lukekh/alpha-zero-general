@@ -217,6 +217,11 @@ python3.11 -m venv /tmp/intransitive-ui-venv
 
 ## Board and players
 
+The [comparison with the extracted rps2.py implementation](heuristics/REFERENCE_GREEDY.md)
+confirms matching setup, movement, captures and wins. Its assumed 200-quiet-ply
+draw differs from our modelling cutoffs; neither assumption establishes a
+server-side draw rule.
+
 - Play on a 9×9 grid with columns A–I and rows 1–9, labelled A1 through I9.
 - The two players are Blue and Red. Blue always moves first.
 - Players alternate turns, moving one piece per turn.
@@ -768,6 +773,19 @@ Terminal draws have no opponent reply. This is a bounded two-ply baseline, not
 a strength guarantee. Its ranking never changes rewards, rules, draw limits, or
 the official opening. Greedy evaluates branches in separate Board storage and
 does not alter the callback state or the Game adapter's state through lookahead.
+
+`ReferenceGreedyPlayer(game, seed=None)` is the separate `reference-greedy`
+opponent, porting the five binary move features and weights from the linked
+`rps2.py`: goal +1000, base threat -500, capture +10, danger -8, progress +2.
+It maximizes their sum and chooses uniformly among ties. Progress means reducing
+the moved piece's Chebyshev distance, rather than rewarding its absolute
+proximity. See [feature details, rule comparison and regression results](heuristics/REFERENCE_GREEDY.md).
+Select **Reference greedy** in the browser, or run:
+
+```sh
+uv run intransitive --opponent reference-greedy
+uv run python pit.py intransitive human reference-greedy -n 2
+```
 
 Run human versus greedy now through the shared Arena (install `numpy`, `numba`,
 and `tqdm` in the Python environment first):

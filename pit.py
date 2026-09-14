@@ -35,6 +35,10 @@ def create_player(name, args):
 		return players.RandomPlayer(game).play
 	if name == 'greedy':
 		return players.GreedyPlayer(game).play
+	if name == 'reference-greedy':
+		if args.game != 'intransitive':
+			raise ValueError('reference-greedy is available for Intransitive')
+		return players.ReferenceGreedyPlayer(game).play
 	if name == 'alphabeta':
 		if args.game != 'intransitive':
 			raise ValueError('alphabeta is available for Intransitive')
@@ -241,7 +245,7 @@ def main():
 	parser.add_argument('--fpu'                , '-f' , action='store', default=None, type=float, help='Value for FPU (first play urgency)')
 
 	parser.add_argument('game'                        , action='store', default='splendor', help='The name of the game to play')
-	parser.add_argument('players'                     , metavar='player', nargs='*', help='list of players to test (checkpoint, human, random, greedy, or Intransitive alphabeta)')
+	parser.add_argument('players'                     , metavar='player', nargs='*', help='list of players to test (checkpoint, human, random, greedy, or Intransitive reference-greedy/alphabeta)')
 	parser.add_argument('--reference'          , '-r' , metavar='ref'   , nargs='*', help='list of reference players')
 	parser.add_argument('--vs-ref-only'        , '-z' , action='store_true', help='Use this option to prevent games between players, only players vs references')
 	parser.add_argument('--ratings'            , '-R' , action='store_true', help='Compute ratings based in games results and write ratings on disk')

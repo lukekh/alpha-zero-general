@@ -17,7 +17,7 @@ from intransitive.IntransitiveDisplay import (
 )
 from intransitive.IntransitiveGame import IntransitiveGame
 from intransitive.IntransitiveLogicNumba import Board
-from intransitive.IntransitivePlayers import GreedyPlayer, HumanPlayer, RandomPlayer
+from intransitive.IntransitivePlayers import GreedyPlayer, HumanPlayer, RandomPlayer, ReferenceGreedyPlayer
 from intransitive.tests.test_draws import load_history, noncapture_actions, play, sparse_position
 from intransitive.tests.test_rules import load_position
 
@@ -167,7 +167,7 @@ class DisplayAndPlayers(unittest.TestCase):
                 patch.object(pit, 'NNet', None, create=True), \
                 patch.object(pit, 'import_game', return_value=(
                     IntransitiveGame, None, IntransitivePlayers, 2)):
-            for name in ('random', 'greedy', 'human'):
+            for name in ('random', 'greedy', 'reference-greedy', 'human'):
                 callback = pit.create_player(name, SimpleNamespace(game='intransitive'))
                 state = pit.game.getInitBoard()
                 with patch('builtins.input', return_value='B5 B6'):
@@ -190,7 +190,7 @@ class DisplayAndPlayers(unittest.TestCase):
             player = int(state[:, :, 32].flat[1])
             canonical = self.game.getCanonicalForm(state, player)
             with patch('builtins.input', side_effect=AssertionError('Must not prompt')):
-                for cls in (RandomPlayer, HumanPlayer, GreedyPlayer):
+                for cls in (RandomPlayer, HumanPlayer, GreedyPlayer, ReferenceGreedyPlayer):
                     with self.assertRaisesRegex(ValueError, 'terminal'):
                         cls(self.game).play(canonical, 1)
             payload = state.tobytes() + bytes([player]) + (30).to_bytes(2, 'big')

@@ -22,11 +22,12 @@ AB_OPTION_FIELDS = ('attack_enabled', 'defence_enabled', 'overload_enabled',
 class BaselineOpponent:
     def __init__(self, kind):
         from .IntransitiveGame import IntransitiveGame
-        from .IntransitivePlayers import GreedyPlayer, RandomPlayer
+        from .IntransitivePlayers import GreedyPlayer, RandomPlayer, ReferenceGreedyPlayer
         self.kind = kind
-        self.label = kind.title()
+        self.label = kind.replace('-', ' ').title()
         self.game = IntransitiveGame()
-        self.player = (GreedyPlayer if kind == 'greedy' else RandomPlayer)(self.game)
+        self.player = {'greedy': GreedyPlayer, 'random': RandomPlayer,
+                       'reference-greedy': ReferenceGreedyPlayer}[kind](self.game)
 
     def reload(self):
         pass
@@ -43,7 +44,7 @@ class OpponentFactory:
 
     @property
     def choices(self):
-        return ['local', 'alphabeta', 'greedy', 'random'] + (['model'] if self.checkpoint else [])
+        return ['local', 'alphabeta', 'greedy', 'reference-greedy', 'random'] + (['model'] if self.checkpoint else [])
 
     def create(self, kind, options=None):
         from .heuristics import AlphaBetaPlayer
@@ -308,7 +309,7 @@ def main():
     parser.add_argument("--checkpoint", type=Path, help="Model to play against; reloaded for each new game")
     parser.add_argument("--human-colour", choices=('blue', 'red'), default='blue')
     parser.add_argument("--simulations", type=int, default=32)
-    parser.add_argument('--opponent', choices=('local', 'alphabeta', 'greedy', 'random', 'model'))
+    parser.add_argument('--opponent', choices=('local', 'alphabeta', 'greedy', 'reference-greedy', 'random', 'model'))
     parser.add_argument('--ab-config', type=Path)
     args = parser.parse_args()
     if args.simulations < 2:

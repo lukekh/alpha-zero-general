@@ -96,3 +96,20 @@ class GreedyPlayer:
     def play(self, board, nb_moves=0):
         _legal_actions(self.game, board)
         return _greedy_action(board)
+
+
+class ReferenceGreedyPlayer:
+    """Maximize the rps2.py feature score, choosing uniformly among tied moves."""
+
+    def __init__(self, game, seed=None):
+        self.game = game
+        self.rng = np.random.default_rng(seed)
+
+    def play(self, board, nb_moves=0):
+        from .reference_greedy import features, reference_value
+
+        actions = _legal_actions(self.game, board)
+        values = np.asarray([reference_value(features(board, int(action)))
+                             for action in actions])
+        best = actions[values >= values.max() - 1e-9]
+        return int(self.rng.choice(best))
