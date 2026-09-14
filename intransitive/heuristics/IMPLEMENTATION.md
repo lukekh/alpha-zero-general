@@ -19,7 +19,13 @@ python -m intransitive.play --checkpoint /path/to/frozen.pt --opponent alphabeta
 ```
 
 In the browser, select Alpha–beta, set Attack/Defence/Overload independently,
-and press **New game**. **Core only** clears all three. Choose either colour;
+and choose maximum depth (0–64 plies), time per move in seconds, and work limit
+per move. These fields start with the server's configuration, including any
+`--ab-config` file. Search stops at the first limit reached; work includes
+heuristic calculations as well as search visits. A zero limit uses a legal
+fallback. Press **New game** to apply changes; the current game's settings remain
+fixed until then. **Core only** clears the three evaluation toggles and leaves
+search limits unchanged. Choose either colour;
 Blue always starts. Local, random, greedy and (when a checkpoint is supplied)
 model opponents remain available. Expand **Last AI analysis** for the previous
 AI root's features, weighted contributions, configuration, proof status and PV.
@@ -43,22 +49,35 @@ immutable config clears the transposition table on the next search.
 The independent exhaustive max/min reference and full-width negamax alpha–beta
 use identical leaf evaluation, terminal checks and proof settings. No moves are
 removed by heuristic pruning. Ordering prefers exact wins (including stalemate),
-plausible goal defences, a previous-depth/TT move, captures and goal progress.
-All legal quiet moves remain available. Iterative deepening commits only complete
-iterations; an interrupted iteration returns the last complete move/score/PV.
-If none completed, the first legal action is returned with `score: null` and
-`completed_depth: 0`. Terminal roots reject move selection.
+the incumbent/cached move, previous root results, goal defences, captures and goal
+progress. All legal quiet moves remain available. Interrupted iterations retain
+fully searched root children and can return a better move from that partial
+iteration. Incomplete children are discarded, and a proved losing incumbent can
+yield to an unrefuted alternative. With no completed child, a legal fallback has
+`score: null`. `completed_depth` and `selected_depth` distinguish full iteration
+coverage from the chosen branch's depth. Terminal roots reject move selection.
+See [ANYTIME_SEARCH.md](ANYTIME_SEARCH.md) for result fields and draw-safe folding.
 
 `node_limit` caps **work units**, not just tree nodes. Each tree/proof visit,
-transition, ordering item and interceptor check costs one unit; each occupied-board
+transition, ordering item, immediate-win probe, bounded no-win check and interceptor check costs one unit; each occupied-board
 BFS costs 81 units (its maximum number of expanded squares). `nodes`,
 `proof_nodes` and `work` are reported separately. Route, feature and proof work
 share the same deadline. Disabled optional modules perform no analysis and have
-zero calls and terms. Shared routes are required by the core race module.
+zero calls and terms. Core-only search counts pieces without constructing route
+maps. Interception, safety and shortest-route results are cached within each
+immutable position when enabled modules need them. A cache hit does not repeat
+or charge the underlying traversal.
 
-Time checks are cooperative between bounded operations. JIT compilation and OS
-scheduling can exceed a very small first-call deadline; warm the rule, route and
-search kernels before steady-state latency measurements. The benchmark does so.
+Search calls the scalar `Evaluator.score`; it never builds diagnostic race
+explanations at leaves. Root features and weighted terms are computed only when
+budget remains after move search; otherwise diagnostics are explicitly deferred.
+`Evaluator.explain` and the PGN analyser still provide detailed routes on demand.
+This separation preserves the binary clear-run score and all optional-module
+formulas. See [PERFORMANCE.md](PERFORMANCE.md) for measured before/after results.
+
+Time checks are cooperative between bounded operations. Rule/search kernels and
+enabled route kernels are warmed before the timed search. Initial preparation
+still has a startup cost, and OS scheduling can delay a cooperative deadline.
 No extra unbudgeted evaluation is performed after a timeout. Memory inspection
 and result assembly have small additional overhead included in reported elapsed
 time. Table size is capped by `table_entries` (zero disables storage).
@@ -70,6 +89,20 @@ score reuse; deeper heuristic values are not equivalent to shallower minimax.
 Mate scores are converted between root-relative and node-relative distance on
 store/probe. Aborted nodes do not publish entries; completed child entries remain
 valid. All evaluation/config changes invalidate the table.
+
+Move ordering checks immediate corner and stalemate wins on a temporary board
+plane, preserving the previous order exactly. Full history states are then built
+only for children actually searched; alpha-beta cutoffs avoid building the rest.
+All applied moves still use the validated rules engine.
+
+Before expanding a bounded proof tree, a sufficient no-win check can rule out
+terminal victories within that proof horizon. Neither side can reach its target
+within its available moves, and each has more than `2 * proof_depth` disjoint
+piece/empty-neighbour pairs. Since a move changes at most two squares, at least
+one pair per side must survive untouched, guaranteeing a legal move and excluding
+stalemate. If either condition fails, the original full proof search runs. This
+shortcut awards no win credit, does not declare the position safe beyond the
+horizon, and does not prune the main minimax tree.
 
 The organizational reference is [Stockfish search.cpp](https://github.com/official-stockfish/Stockfish/blob/master/src/search.cpp):
 iterative deepening, completed-result retention, TT bounds and mate conversion.
@@ -83,14 +116,20 @@ encoding rock=1, scissors=2, paper=3. There is no absolute type ranking.
 | Module | Raw own-side feature | Weight |
 | --- | --- | ---: |
 | Piece count | Number of surviving pieces | 100 |
-| Clear run | Best bounded timed-route estimate, below | 40 |
+| Clear run | Zero unless a forced win/loss is proved; then decisive score, below | Not weighted |
 | Piece advantage | Sum over surviving types of `n * (1[predators=0] + 0.5/(1+predators) + 0.25*prey/(1+prey))` | 25 |
 | Attack | Safe next-step goal progress, capped at 2, plus at most one safe immediate capture | 12 |
 | Defence | Timely interception duties, deduplicated per runner; safe same-type goal-hold credit; total capped at 4 | 10 |
 | Overload | Distinct overloaded defenders, capped at 2 | −5 |
 
-Each weighted contribution is `weight * (own - opponent)`. The total is clamped
-to ±10,000. A proven win is `100000 - plies`; a proven loss is `-100000 + plies`.
+Ordinary weighted contributions are `weight * (own - opponent)`, clamped
+to ±10,000. Clear-run scoring is binary: an unproven run contributes zero;
+a proven win/loss overrides the sum. A proven win is `100000 - plies`; a proven
+loss is `-100000 + plies`. These finite decisive scores serve the role of positive
+and negative infinity while preserving mate-distance ordering, transposition
+arithmetic and valid JSON. A proved result reports a winning-side clear-run
+feature of 1 and a losing-side feature of 0; its decisive term is not clamped.
+Other modules are skipped once that proof settles the evaluation.
 A real engine draw has utility zero. These values never alter game rewards or
 neural training labels. The overload penalty is at most 10 points per side,
 compared with 100 per piece. Feature totals and weighted terms are logged separately.
@@ -100,7 +139,12 @@ smooth bonus. A threshold-only ablation sets `predator_scarcity_bonus` to zero.
 No relevant surviving pieces means no bonus. An uncapturable piece may still be
 blocked or lose the competing race; its matchup bonus is never a win certificate.
 
-### Route estimate versus proof
+Version 2 removes the former fractional race bonus. `race_weight` is accepted
+only for compatibility and has no scoring effect. Old v1 configuration files load
+with their other settings preserved and their evaluator version updated to v2.
+The committed v1 benchmark results describe the previous evaluator, not v2.
+
+### Route diagnostics versus binary proof
 
 Each piece gets occupied-board king-move distance maps from its source and target.
 Friendly and uncapturable enemies block squares; capturable occupants can be
@@ -118,12 +162,11 @@ captured before its first move. Same-type blockers receive coverage only at the
 unavoidable goal. Predators of a defender can invalidate its apparent safety.
 This is conservative exposure screening with static occupancy, not joint planning.
 
-The race estimate is `clock_factor * race_factor / ((1+arrival)*(1+interceptors))`.
-The clock factor is 1 if arrival is within the remaining no-capture clock,
-otherwise 0.25; the competing-race factor is 1/0.5/0.25 for earlier/equal/later
-arrival than the opponent's best route **of any type**. Missing routes score zero.
-Repetition and possible captures/detours remain unresolved by this estimate.
-Every candidate explicitly reports `status: unknown`.
+Routes, arrival times and interceptors are diagnostic information only. Candidate
+`estimate` fields are always zero; no partial credit is awarded for proximity,
+a favourable race margin or having fewer interceptors. Positional progress belongs
+to the optional attack module. Static routes do not settle repetition, possible
+captures, detours or competing wins, so candidate routes report `status: unknown`.
 
 A separate bounded adversarial proof search uses only actual full-state legal
 transitions and terminal rules. Horizon leaves are unknown, never exact draws.
@@ -131,7 +174,9 @@ A mate score requires a proven terminal outcome against every relevant defence,
 including opponent corner wins and modelling draws. Proof node exhaustion returns
 unknown; exhaustion of the shared budget interrupts the whole iteration. Proof
 work has independent depth/node caps and is charged to the main budget. Search
-leaves use a completed proof before ordinary features. Exact terminal handling
+leaves use a completed proof before ordinary features, and the standalone evaluator
+uses the same proof logic. Horizon or proof-budget exhaustion yields zero clear-run
+credit, not a claim that no winning run exists. Exact terminal handling
 always precedes both and respects official-win precedence over draws.
 
 ### Defence and overload limitations

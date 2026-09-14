@@ -1,0 +1,1343 @@
+{
+  "schema": "intransitive-tactics-1",
+  "positions": [
+    {
+      "id": "001_immediate_goal_diagonal_finish_blue",
+      "category": "immediate_goal",
+      "layout": "diagonal_finish",
+      "player": 0,
+      "pieces": {
+        "D4": -3,
+        "H8": 1
+      },
+      "expected": "H8-I9",
+      "reason": "Take the empty goal now."
+    },
+    {
+      "id": "002_immediate_goal_diagonal_finish_red",
+      "category": "immediate_goal",
+      "layout": "diagonal_finish",
+      "player": 1,
+      "pieces": {
+        "B2": -1,
+        "F6": 3
+      },
+      "expected": "B2-A1",
+      "reason": "Take the empty goal now."
+    },
+    {
+      "id": "003_immediate_goal_file_finish_blue",
+      "category": "immediate_goal",
+      "layout": "file_finish",
+      "player": 0,
+      "pieces": {
+        "G6": -1,
+        "I8": 2
+      },
+      "expected": "I8-I9",
+      "reason": "Finish along the edge before the predator approaches."
+    },
+    {
+      "id": "004_immediate_goal_file_finish_red",
+      "category": "immediate_goal",
+      "layout": "file_finish",
+      "player": 1,
+      "pieces": {
+        "B1": -2,
+        "D3": 1
+      },
+      "expected": "B1-A1",
+      "reason": "Finish along the edge before the predator approaches."
+    },
+    {
+      "id": "005_immediate_goal_rank_finish_blue",
+      "category": "immediate_goal",
+      "layout": "rank_finish",
+      "player": 0,
+      "pieces": {
+        "C7": -2,
+        "H9": 3
+      },
+      "expected": "H9-I9",
+      "reason": "Finish along the board edge."
+    },
+    {
+      "id": "006_immediate_goal_rank_finish_red",
+      "category": "immediate_goal",
+      "layout": "rank_finish",
+      "player": 1,
+      "pieces": {
+        "A2": -3,
+        "C7": 2
+      },
+      "expected": "A2-A1",
+      "reason": "Finish along the board edge."
+    },
+    {
+      "id": "007_immediate_goal_capture_corner_diagonal_blue",
+      "category": "immediate_goal",
+      "layout": "capture_corner_diagonal",
+      "player": 0,
+      "pieces": {
+        "D4": -1,
+        "H8": 2,
+        "I9": -3
+      },
+      "expected": "H8-I9",
+      "reason": "Capture the paper occupying the goal to win immediately."
+    },
+    {
+      "id": "008_immediate_goal_capture_corner_diagonal_red",
+      "category": "immediate_goal",
+      "layout": "capture_corner_diagonal",
+      "player": 1,
+      "pieces": {
+        "A1": 3,
+        "B2": -2,
+        "F6": 1
+      },
+      "expected": "B2-A1",
+      "reason": "Capture the paper occupying the goal to win immediately."
+    },
+    {
+      "id": "009_immediate_goal_capture_corner_file_blue",
+      "category": "immediate_goal",
+      "layout": "capture_corner_file",
+      "player": 0,
+      "pieces": {
+        "G5": -2,
+        "I8": 3,
+        "I9": -1
+      },
+      "expected": "I8-I9",
+      "reason": "Capture the rock occupying the goal to win immediately."
+    },
+    {
+      "id": "010_immediate_goal_capture_corner_file_red",
+      "category": "immediate_goal",
+      "layout": "capture_corner_file",
+      "player": 1,
+      "pieces": {
+        "A1": 1,
+        "B1": -3,
+        "E3": 2
+      },
+      "expected": "B1-A1",
+      "reason": "Capture the rock occupying the goal to win immediately."
+    },
+    {
+      "id": "011_immediate_goal_capture_corner_rank_blue",
+      "category": "immediate_goal",
+      "layout": "capture_corner_rank",
+      "player": 0,
+      "pieces": {
+        "D7": -3,
+        "H9": 1,
+        "I9": -2
+      },
+      "expected": "H9-I9",
+      "reason": "Capture the scissors occupying the goal to win immediately."
+    },
+    {
+      "id": "012_immediate_goal_capture_corner_rank_red",
+      "category": "immediate_goal",
+      "layout": "capture_corner_rank",
+      "player": 1,
+      "pieces": {
+        "A1": 2,
+        "A2": -1,
+        "C6": 3
+      },
+      "expected": "A2-A1",
+      "reason": "Capture the scissors occupying the goal to win immediately."
+    },
+    {
+      "id": "013_immediate_goal_win_before_diagonal_racer_blue",
+      "category": "immediate_goal",
+      "layout": "win_before_diagonal_racer",
+      "player": 0,
+      "pieces": {
+        "B2": -2,
+        "D4": 1,
+        "E5": -2,
+        "H8": 3
+      },
+      "expected": "H8-I9",
+      "reason": "Win now instead of taking capture bait or defending the counter-racer."
+    },
+    {
+      "id": "014_immediate_goal_win_before_diagonal_racer_red",
+      "category": "immediate_goal",
+      "layout": "win_before_diagonal_racer",
+      "player": 1,
+      "pieces": {
+        "B2": -3,
+        "E5": 2,
+        "F6": -1,
+        "H8": 2
+      },
+      "expected": "B2-A1",
+      "reason": "Win now instead of taking capture bait or defending the counter-racer."
+    },
+    {
+      "id": "015_immediate_goal_win_before_file_racer_blue",
+      "category": "immediate_goal",
+      "layout": "win_before_file_racer",
+      "player": 0,
+      "pieces": {
+        "A2": -3,
+        "D4": 2,
+        "E5": -3,
+        "I8": 1
+      },
+      "expected": "I8-I9",
+      "reason": "The goal wins before the opposing runner can finish; ignore the free paper."
+    },
+    {
+      "id": "016_immediate_goal_win_before_file_racer_red",
+      "category": "immediate_goal",
+      "layout": "win_before_file_racer",
+      "player": 1,
+      "pieces": {
+        "B1": -1,
+        "E5": 3,
+        "F6": -2,
+        "H9": 3
+      },
+      "expected": "B1-A1",
+      "reason": "The goal wins before the opposing runner can finish; ignore the free paper."
+    },
+    {
+      "id": "017_immediate_goal_win_before_rank_racer_blue",
+      "category": "immediate_goal",
+      "layout": "win_before_rank_racer",
+      "player": 0,
+      "pieces": {
+        "B1": -1,
+        "E4": 3,
+        "F5": -1,
+        "H9": 2
+      },
+      "expected": "H9-I9",
+      "reason": "Finish now; capturing the nearby rock would let the opponent win."
+    },
+    {
+      "id": "018_immediate_goal_win_before_rank_racer_red",
+      "category": "immediate_goal",
+      "layout": "win_before_rank_racer",
+      "player": 1,
+      "pieces": {
+        "A2": -2,
+        "E4": 1,
+        "F5": -3,
+        "I8": 1
+      },
+      "expected": "A2-A1",
+      "reason": "Finish now; capturing the nearby rock would let the opponent win."
+    },
+    {
+      "id": "019_immediate_goal_capture_goal_before_counter_race_blue",
+      "category": "immediate_goal",
+      "layout": "capture_goal_before_counter_race",
+      "player": 0,
+      "pieces": {
+        "B2": -3,
+        "E5": 3,
+        "F5": -1,
+        "H8": 1,
+        "I9": -2
+      },
+      "expected": "H8-I9",
+      "reason": "Capture on the goal, rather than the tempting rock away from the finish."
+    },
+    {
+      "id": "020_immediate_goal_capture_goal_before_counter_race_red",
+      "category": "immediate_goal",
+      "layout": "capture_goal_before_counter_race",
+      "player": 1,
+      "pieces": {
+        "A1": 2,
+        "B2": -1,
+        "E4": 1,
+        "E5": -3,
+        "H8": 3
+      },
+      "expected": "B2-A1",
+      "reason": "Capture on the goal, rather than the tempting rock away from the finish."
+    },
+    {
+      "id": "021_clear_run_unopposed_diagonal_blue",
+      "category": "clear_run",
+      "layout": "unopposed_diagonal",
+      "player": 0,
+      "pieces": {
+        "A7": -3,
+        "G7": 1
+      },
+      "expected": "G7-H8",
+      "reason": "Start the unique two-move goal run; the distant predator cannot intercept."
+    },
+    {
+      "id": "022_clear_run_unopposed_diagonal_red",
+      "category": "clear_run",
+      "layout": "unopposed_diagonal",
+      "player": 1,
+      "pieces": {
+        "C3": -1,
+        "C9": 3
+      },
+      "expected": "C3-B2",
+      "reason": "Start the unique two-move goal run; the distant predator cannot intercept."
+    },
+    {
+      "id": "023_clear_run_outrun_near_predator_blue",
+      "category": "clear_run",
+      "layout": "outrun_near_predator",
+      "player": 0,
+      "pieces": {
+        "G7": 2,
+        "F8": -1
+      },
+      "expected": "G7-H8",
+      "reason": "Step beyond the predator: every reply still permits the goal next turn."
+    },
+    {
+      "id": "024_clear_run_outrun_near_predator_red",
+      "category": "clear_run",
+      "layout": "outrun_near_predator",
+      "player": 1,
+      "pieces": {
+        "C3": -2,
+        "B4": 1
+      },
+      "expected": "C3-B2",
+      "reason": "Step beyond the predator: every reply still permits the goal next turn."
+    },
+    {
+      "id": "025_clear_run_avoid_lower_interception_blue",
+      "category": "clear_run",
+      "layout": "avoid_lower_interception",
+      "player": 0,
+      "pieces": {
+        "I7": -2,
+        "G8": 3
+      },
+      "expected": "G8-H9",
+      "reason": "Use the safe edge route; the other short route allows an immediate capture."
+    },
+    {
+      "id": "026_clear_run_avoid_lower_interception_red",
+      "category": "clear_run",
+      "layout": "avoid_lower_interception",
+      "player": 1,
+      "pieces": {
+        "C1": 2,
+        "B3": -3
+      },
+      "expected": "B3-A2",
+      "reason": "Use the safe edge route; the other short route allows an immediate capture."
+    },
+    {
+      "id": "027_clear_run_edge_run_around_predator_blue",
+      "category": "clear_run",
+      "layout": "edge_run_around_predator",
+      "player": 0,
+      "pieces": {
+        "I7": -3,
+        "G9": 1
+      },
+      "expected": "G9-H9",
+      "reason": "Stay on the board edge so the predator cannot intercept the first step."
+    },
+    {
+      "id": "028_clear_run_edge_run_around_predator_red",
+      "category": "clear_run",
+      "layout": "edge_run_around_predator",
+      "player": 1,
+      "pieces": {
+        "C1": 3,
+        "A3": -1
+      },
+      "expected": "A3-A2",
+      "reason": "Stay on the board edge so the predator cannot intercept the first step."
+    },
+    {
+      "id": "029_clear_run_avoid_left_interception_blue",
+      "category": "clear_run",
+      "layout": "avoid_left_interception",
+      "player": 0,
+      "pieces": {
+        "H7": 2,
+        "G9": -1
+      },
+      "expected": "H7-I8",
+      "reason": "Use the safe edge route; the other short route moves into the predator capture range."
+    },
+    {
+      "id": "030_clear_run_avoid_left_interception_red",
+      "category": "clear_run",
+      "layout": "avoid_left_interception",
+      "player": 1,
+      "pieces": {
+        "C2": -2,
+        "A3": 1
+      },
+      "expected": "C2-B1",
+      "reason": "Use the safe edge route; the other short route moves into the predator capture range."
+    },
+    {
+      "id": "031_clear_run_file_run_around_predator_blue",
+      "category": "clear_run",
+      "layout": "file_run_around_predator",
+      "player": 0,
+      "pieces": {
+        "I7": 3,
+        "G9": -2
+      },
+      "expected": "I7-I8",
+      "reason": "Stay on the edge to complete the two-move run without interception."
+    },
+    {
+      "id": "032_clear_run_file_run_around_predator_red",
+      "category": "clear_run",
+      "layout": "file_run_around_predator",
+      "player": 1,
+      "pieces": {
+        "C1": -3,
+        "A3": 2
+      },
+      "expected": "C1-B1",
+      "reason": "Stay on the edge to complete the two-move run without interception."
+    },
+    {
+      "id": "033_clear_run_capture_to_open_run_blue",
+      "category": "clear_run",
+      "layout": "capture_to_open_run",
+      "player": 0,
+      "pieces": {
+        "C6": -1,
+        "G7": 2,
+        "H8": -3
+      },
+      "expected": "G7-H8",
+      "reason": "Capture the blocking paper and force the corner on the following turn."
+    },
+    {
+      "id": "034_clear_run_capture_to_open_run_red",
+      "category": "clear_run",
+      "layout": "capture_to_open_run",
+      "player": 1,
+      "pieces": {
+        "B2": 3,
+        "C3": -2,
+        "D7": 1
+      },
+      "expected": "C3-B2",
+      "reason": "Capture the blocking paper and force the corner on the following turn."
+    },
+    {
+      "id": "035_clear_run_capture_before_defender_arrives_blue",
+      "category": "clear_run",
+      "layout": "capture_before_defender_arrives",
+      "player": 0,
+      "pieces": {
+        "I6": -2,
+        "G7": 3,
+        "H8": -1
+      },
+      "expected": "G7-H8",
+      "reason": "Capture the rock; its nearby defender is one move too late to stop the finish."
+    },
+    {
+      "id": "036_clear_run_capture_before_defender_arrives_red",
+      "category": "clear_run",
+      "layout": "capture_before_defender_arrives",
+      "player": 1,
+      "pieces": {
+        "D1": 2,
+        "B2": 1,
+        "C3": -3
+      },
+      "expected": "C3-B2",
+      "reason": "Capture the rock; its nearby defender is one move too late to stop the finish."
+    },
+    {
+      "id": "037_clear_run_run_instead_of_side_capture_blue",
+      "category": "clear_run",
+      "layout": "run_instead_of_side_capture",
+      "player": 0,
+      "pieces": {
+        "D5": -3,
+        "H6": -2,
+        "G7": 1
+      },
+      "expected": "G7-H8",
+      "reason": "Take the forced goal run rather than the off-route scissors capture."
+    },
+    {
+      "id": "038_clear_run_run_instead_of_side_capture_red",
+      "category": "clear_run",
+      "layout": "run_instead_of_side_capture",
+      "player": 1,
+      "pieces": {
+        "D2": 2,
+        "C3": -1,
+        "E6": 3
+      },
+      "expected": "C3-B2",
+      "reason": "Take the forced goal run rather than the off-route scissors capture."
+    },
+    {
+      "id": "039_clear_run_run_instead_of_other_piece_capture_blue",
+      "category": "clear_run",
+      "layout": "run_instead_of_other_piece_capture",
+      "player": 0,
+      "pieces": {
+        "D4": 3,
+        "E5": -1,
+        "B6": -2,
+        "G7": 3
+      },
+      "expected": "G7-H8",
+      "reason": "Start the forced goal run instead of winning material with the other paper."
+    },
+    {
+      "id": "040_clear_run_run_instead_of_other_piece_capture_red",
+      "category": "clear_run",
+      "layout": "run_instead_of_other_piece_capture",
+      "player": 1,
+      "pieces": {
+        "C3": -3,
+        "E5": 1,
+        "F6": -3,
+        "D8": 2
+      },
+      "expected": "C3-B2",
+      "reason": "Start the forced goal run instead of winning material with the other paper."
+    },
+    {
+      "id": "041_goal_defence_capture_diagonal_runner_blue",
+      "category": "goal_defence",
+      "layout": "capture_diagonal_runner",
+      "player": 0,
+      "pieces": {
+        "B2": -2,
+        "C3": 1,
+        "I5": -3
+      },
+      "expected": "C3-B2",
+      "reason": "Capture the runner: every other move allows an immediate goal loss."
+    },
+    {
+      "id": "042_goal_defence_capture_diagonal_runner_red",
+      "category": "goal_defence",
+      "layout": "capture_diagonal_runner",
+      "player": 1,
+      "pieces": {
+        "E1": 3,
+        "G7": -1,
+        "H8": 2
+      },
+      "expected": "G7-H8",
+      "reason": "Capture the runner: every other move allows an immediate goal loss."
+    },
+    {
+      "id": "043_goal_defence_capture_rank_runner_blue",
+      "category": "goal_defence",
+      "layout": "capture_rank_runner",
+      "player": 0,
+      "pieces": {
+        "B1": -3,
+        "C2": 2,
+        "H6": -1
+      },
+      "expected": "C2-B1",
+      "reason": "Capture the paper threatening the corner; advancing cannot defend it."
+    },
+    {
+      "id": "044_goal_defence_capture_rank_runner_red",
+      "category": "goal_defence",
+      "layout": "capture_rank_runner",
+      "player": 1,
+      "pieces": {
+        "D2": 1,
+        "H7": -2,
+        "I8": 3
+      },
+      "expected": "H7-I8",
+      "reason": "Capture the paper threatening the corner; advancing cannot defend it."
+    },
+    {
+      "id": "045_goal_defence_capture_file_runner_blue",
+      "category": "goal_defence",
+      "layout": "capture_file_runner",
+      "player": 0,
+      "pieces": {
+        "A2": -1,
+        "B3": 3,
+        "H6": -2
+      },
+      "expected": "B3-A2",
+      "reason": "Capture the rock before it enters the corner."
+    },
+    {
+      "id": "046_goal_defence_capture_file_runner_red",
+      "category": "goal_defence",
+      "layout": "capture_file_runner",
+      "player": 1,
+      "pieces": {
+        "D2": 2,
+        "G8": -3,
+        "H9": 1
+      },
+      "expected": "G8-H9",
+      "reason": "Capture the rock before it enters the corner."
+    },
+    {
+      "id": "047_goal_defence_edge_capture_rank_runner_blue",
+      "category": "goal_defence",
+      "layout": "edge_capture_rank_runner",
+      "player": 0,
+      "pieces": {
+        "B1": -2,
+        "C1": 1,
+        "H6": -3
+      },
+      "expected": "C1-B1",
+      "reason": "Capture along the edge; the corner cannot be reached to block in time."
+    },
+    {
+      "id": "048_goal_defence_edge_capture_rank_runner_red",
+      "category": "goal_defence",
+      "layout": "edge_capture_rank_runner",
+      "player": 1,
+      "pieces": {
+        "D2": 3,
+        "I7": -1,
+        "I8": 2
+      },
+      "expected": "I7-I8",
+      "reason": "Capture along the edge; the corner cannot be reached to block in time."
+    },
+    {
+      "id": "049_goal_defence_edge_capture_file_runner_blue",
+      "category": "goal_defence",
+      "layout": "edge_capture_file_runner",
+      "player": 0,
+      "pieces": {
+        "A2": -3,
+        "A3": 2,
+        "H6": -1
+      },
+      "expected": "A3-A2",
+      "reason": "Remove the paper on the file; every quiet move loses next turn."
+    },
+    {
+      "id": "050_goal_defence_edge_capture_file_runner_red",
+      "category": "goal_defence",
+      "layout": "edge_capture_file_runner",
+      "player": 1,
+      "pieces": {
+        "D2": 1,
+        "G9": -2,
+        "H9": 3
+      },
+      "expected": "G9-H9",
+      "reason": "Remove the paper on the file; every quiet move loses next turn."
+    },
+    {
+      "id": "051_goal_defence_paper_corner_block_blue",
+      "category": "goal_defence",
+      "layout": "paper_corner_block",
+      "player": 0,
+      "pieces": {
+        "A2": -3,
+        "B2": 3,
+        "G7": -2
+      },
+      "expected": "B2-A1",
+      "reason": "Occupy the corner: the same-type paper cannot capture the blocker."
+    },
+    {
+      "id": "052_goal_defence_paper_corner_block_red",
+      "category": "goal_defence",
+      "layout": "paper_corner_block",
+      "player": 1,
+      "pieces": {
+        "C3": 2,
+        "H8": -3,
+        "H9": 3
+      },
+      "expected": "H8-I9",
+      "reason": "Occupy the corner: the same-type paper cannot capture the blocker."
+    },
+    {
+      "id": "053_goal_defence_rock_corner_block_blue",
+      "category": "goal_defence",
+      "layout": "rock_corner_block",
+      "player": 0,
+      "pieces": {
+        "B1": 1,
+        "B2": -1,
+        "G6": -3
+      },
+      "expected": "B1-A1",
+      "reason": "Block the goal with the rock; the opposing rock cannot capture it."
+    },
+    {
+      "id": "054_goal_defence_rock_corner_block_red",
+      "category": "goal_defence",
+      "layout": "rock_corner_block",
+      "player": 1,
+      "pieces": {
+        "D3": 3,
+        "H8": 1,
+        "I8": -1
+      },
+      "expected": "I8-I9",
+      "reason": "Block the goal with the rock; the opposing rock cannot capture it."
+    },
+    {
+      "id": "055_goal_defence_scissors_corner_block_blue",
+      "category": "goal_defence",
+      "layout": "scissors_corner_block",
+      "player": 0,
+      "pieces": {
+        "B1": -2,
+        "A2": 2,
+        "G6": -1
+      },
+      "expected": "A2-A1",
+      "reason": "Block the goal with scissors rather than running away from the threat."
+    },
+    {
+      "id": "056_goal_defence_scissors_corner_block_red",
+      "category": "goal_defence",
+      "layout": "scissors_corner_block",
+      "player": 1,
+      "pieces": {
+        "D3": 1,
+        "I8": 2,
+        "H9": -2
+      },
+      "expected": "H9-I9",
+      "reason": "Block the goal with scissors rather than running away from the threat."
+    },
+    {
+      "id": "057_goal_defence_block_two_runners_blue",
+      "category": "goal_defence",
+      "layout": "block_two_runners",
+      "player": 0,
+      "pieces": {
+        "B1": -2,
+        "A2": -1,
+        "B2": 1,
+        "H6": -3
+      },
+      "expected": "B2-A1",
+      "reason": "Block both runners at once; capturing only the scissors leaves a goal loss."
+    },
+    {
+      "id": "058_goal_defence_block_two_runners_red",
+      "category": "goal_defence",
+      "layout": "block_two_runners",
+      "player": 1,
+      "pieces": {
+        "D2": 3,
+        "H8": -1,
+        "I8": 2,
+        "H9": 1
+      },
+      "expected": "H8-I9",
+      "reason": "Block both runners at once; capturing only the scissors leaves a goal loss."
+    },
+    {
+      "id": "059_goal_defence_block_two_runners_ignore_bait_blue",
+      "category": "goal_defence",
+      "layout": "block_two_runners_ignore_bait",
+      "player": 0,
+      "pieces": {
+        "B1": -3,
+        "A2": -2,
+        "B2": 2,
+        "D4": 3,
+        "E5": -1
+      },
+      "expected": "B2-A1",
+      "reason": "Block both runners; neither the local paper nor the distant rock capture saves the goal."
+    },
+    {
+      "id": "060_goal_defence_block_two_runners_ignore_bait_red",
+      "category": "goal_defence",
+      "layout": "block_two_runners_ignore_bait",
+      "player": 1,
+      "pieces": {
+        "E5": 1,
+        "F6": -3,
+        "H8": -2,
+        "I8": 3,
+        "H9": 2
+      },
+      "expected": "H8-I9",
+      "reason": "Block both runners; neither the local paper nor the distant rock capture saves the goal."
+    },
+    {
+      "id": "061_save_piece_three_predators_northwest_exit_blue",
+      "category": "save_piece",
+      "layout": "three_predators_northwest_exit",
+      "player": 0,
+      "pieces": {
+        "C3": -3,
+        "E3": -3,
+        "D4": 1,
+        "E5": -3
+      },
+      "expected": "D4-C5",
+      "reason": "Retreat through the sole safe square; every other move loses the last rock immediately."
+    },
+    {
+      "id": "062_save_piece_three_predators_northwest_exit_red",
+      "category": "save_piece",
+      "layout": "three_predators_northwest_exit",
+      "player": 1,
+      "pieces": {
+        "E5": 3,
+        "G5": 3,
+        "F6": -1,
+        "G7": 3
+      },
+      "expected": "F6-E7",
+      "reason": "Retreat through the sole safe square; every other move loses the last rock immediately."
+    },
+    {
+      "id": "063_save_piece_three_predators_northeast_exit_blue",
+      "category": "save_piece",
+      "layout": "three_predators_northeast_exit",
+      "player": 0,
+      "pieces": {
+        "D4": -1,
+        "F4": -1,
+        "E5": 2,
+        "D6": -1
+      },
+      "expected": "E5-F6",
+      "reason": "Escape the three rocks through the only square they cannot capture next turn."
+    },
+    {
+      "id": "064_save_piece_three_predators_northeast_exit_red",
+      "category": "save_piece",
+      "layout": "three_predators_northeast_exit",
+      "player": 1,
+      "pieces": {
+        "F4": 1,
+        "E5": -2,
+        "D6": 1,
+        "F6": 1
+      },
+      "expected": "E5-D4",
+      "reason": "Escape the three rocks through the only square they cannot capture next turn."
+    },
+    {
+      "id": "065_save_piece_three_predators_west_exit_blue",
+      "category": "save_piece",
+      "layout": "three_predators_west_exit",
+      "player": 0,
+      "pieces": {
+        "E3": -2,
+        "G3": -2,
+        "F4": 3,
+        "G5": -2
+      },
+      "expected": "F4-E5",
+      "reason": "Preserve the final paper by moving outside all three scissors capture ranges."
+    },
+    {
+      "id": "066_save_piece_three_predators_west_exit_red",
+      "category": "save_piece",
+      "layout": "three_predators_west_exit",
+      "player": 1,
+      "pieces": {
+        "E3": 2,
+        "G3": 2,
+        "F4": -3,
+        "G5": 2
+      },
+      "expected": "F4-E5",
+      "reason": "Preserve the final paper by moving outside all three scissors capture ranges."
+    },
+    {
+      "id": "067_save_piece_three_predators_southeast_exit_blue",
+      "category": "save_piece",
+      "layout": "three_predators_southeast_exit",
+      "player": 0,
+      "pieces": {
+        "D5": -3,
+        "E6": 1,
+        "D7": -3,
+        "F7": -3
+      },
+      "expected": "E6-F5",
+      "reason": "Use the sole safe exit; alternatives lose the final rock next turn."
+    },
+    {
+      "id": "068_save_piece_three_predators_southeast_exit_red",
+      "category": "save_piece",
+      "layout": "three_predators_southeast_exit",
+      "player": 1,
+      "pieces": {
+        "C4": 3,
+        "D5": -1,
+        "C6": 3,
+        "E6": 3
+      },
+      "expected": "D5-E4",
+      "reason": "Use the sole safe exit; alternatives lose the final rock next turn."
+    },
+    {
+      "id": "069_save_piece_left_edge_escape_blue",
+      "category": "save_piece",
+      "layout": "left_edge_escape",
+      "player": 0,
+      "pieces": {
+        "B3": -1,
+        "A4": 2,
+        "C5": -1
+      },
+      "expected": "A4-A5",
+      "reason": "Stay on the edge: this is the only move surviving the two rocks."
+    },
+    {
+      "id": "070_save_piece_left_edge_escape_red",
+      "category": "save_piece",
+      "layout": "left_edge_escape",
+      "player": 1,
+      "pieces": {
+        "E7": 1,
+        "G8": 1,
+        "F9": -2
+      },
+      "expected": "F9-E9",
+      "reason": "Stay on the edge: this is the only move surviving the two rocks."
+    },
+    {
+      "id": "071_save_piece_right_edge_escape_blue",
+      "category": "save_piece",
+      "layout": "right_edge_escape",
+      "player": 0,
+      "pieces": {
+        "H4": -2,
+        "I5": 3,
+        "G6": -2
+      },
+      "expected": "I5-I6",
+      "reason": "Move along the edge to preserve the final paper against two scissors."
+    },
+    {
+      "id": "072_save_piece_right_edge_escape_red",
+      "category": "save_piece",
+      "layout": "right_edge_escape",
+      "player": 1,
+      "pieces": {
+        "E1": -3,
+        "F2": 2,
+        "D3": 2
+      },
+      "expected": "E1-D1",
+      "reason": "Move along the edge to preserve the final paper against two scissors."
+    },
+    {
+      "id": "073_save_piece_bottom_edge_escape_blue",
+      "category": "save_piece",
+      "layout": "bottom_edge_escape",
+      "player": 0,
+      "pieces": {
+        "D1": 1,
+        "C2": -3,
+        "E3": -3
+      },
+      "expected": "D1-E1",
+      "reason": "Slide along the edge; every inward move permits capture of the final rock."
+    },
+    {
+      "id": "074_save_piece_bottom_edge_escape_red",
+      "category": "save_piece",
+      "layout": "bottom_edge_escape",
+      "player": 1,
+      "pieces": {
+        "G5": 3,
+        "I6": -1,
+        "H7": 3
+      },
+      "expected": "I6-I5",
+      "reason": "Slide along the edge; every inward move permits capture of the final rock."
+    },
+    {
+      "id": "075_save_piece_top_edge_escape_blue",
+      "category": "save_piece",
+      "layout": "top_edge_escape",
+      "player": 0,
+      "pieces": {
+        "F7": -1,
+        "D8": -1,
+        "E9": 2
+      },
+      "expected": "E9-F9",
+      "reason": "Slide along the board edge, outside the immediate capture range of both rocks."
+    },
+    {
+      "id": "076_save_piece_top_edge_escape_red",
+      "category": "save_piece",
+      "layout": "top_edge_escape",
+      "player": 1,
+      "pieces": {
+        "C4": 1,
+        "A5": -2,
+        "B6": 1
+      },
+      "expected": "A5-A4",
+      "reason": "Slide along the board edge, outside the immediate capture range of both rocks."
+    },
+    {
+      "id": "077_save_piece_escape_ignore_poisoned_rock_blue",
+      "category": "save_piece",
+      "layout": "escape_ignore_poisoned_rock",
+      "player": 0,
+      "pieces": {
+        "C4": -2,
+        "E4": -2,
+        "D5": 3,
+        "E5": -1,
+        "E6": -2
+      },
+      "expected": "D5-C6",
+      "reason": "Escape instead of capturing the poisoned rock; its defenders would take the final paper."
+    },
+    {
+      "id": "078_save_piece_escape_ignore_poisoned_rock_red",
+      "category": "save_piece",
+      "layout": "escape_ignore_poisoned_rock",
+      "player": 1,
+      "pieces": {
+        "D5": 2,
+        "E5": 1,
+        "F5": 2,
+        "E6": -3,
+        "F7": 2
+      },
+      "expected": "E6-D7",
+      "reason": "Escape instead of capturing the poisoned rock; its defenders would take the final paper."
+    },
+    {
+      "id": "079_save_piece_escape_ignore_poisoned_scissors_blue",
+      "category": "save_piece",
+      "layout": "escape_ignore_poisoned_scissors",
+      "player": 0,
+      "pieces": {
+        "E4": -3,
+        "F5": 1,
+        "E6": -3,
+        "F6": -2,
+        "G6": -3
+      },
+      "expected": "F5-G4",
+      "reason": "Retreat instead of taking the scissors bait covered by the papers."
+    },
+    {
+      "id": "080_save_piece_escape_ignore_poisoned_scissors_red",
+      "category": "save_piece",
+      "layout": "escape_ignore_poisoned_scissors",
+      "player": 1,
+      "pieces": {
+        "D3": 3,
+        "D4": 2,
+        "E4": -1,
+        "D5": 3,
+        "F5": 3
+      },
+      "expected": "E4-F3",
+      "reason": "Retreat instead of taking the scissors bait covered by the papers."
+    },
+    {
+      "id": "081_safe_capture_free_central_scissors_blue",
+      "category": "safe_capture",
+      "layout": "free_central_scissors",
+      "player": 0,
+      "pieces": {
+        "D4": 1,
+        "B5": 3,
+        "E5": -2,
+        "H6": -3
+      },
+      "expected": "D4-E5",
+      "reason": "Take the free scissors: no reply can recapture or win a compensating piece."
+    },
+    {
+      "id": "082_safe_capture_free_central_scissors_red",
+      "category": "safe_capture",
+      "layout": "free_central_scissors",
+      "player": 1,
+      "pieces": {
+        "D2": 3,
+        "E5": 2,
+        "F6": -1,
+        "E8": -3
+      },
+      "expected": "F6-E5",
+      "reason": "Take the free scissors: no reply can recapture or win a compensating piece."
+    },
+    {
+      "id": "083_safe_capture_free_edge_paper_blue",
+      "category": "safe_capture",
+      "layout": "free_edge_paper",
+      "player": 0,
+      "pieces": {
+        "B5": 2,
+        "A6": -3,
+        "F6": -1
+      },
+      "expected": "B5-A6",
+      "reason": "Capture the undefended paper on the edge for a guaranteed extra piece."
+    },
+    {
+      "id": "084_safe_capture_free_edge_paper_red",
+      "category": "safe_capture",
+      "layout": "free_edge_paper",
+      "player": 1,
+      "pieces": {
+        "D4": 1,
+        "E8": -2,
+        "D9": 3
+      },
+      "expected": "E8-D9",
+      "reason": "Capture the undefended paper on the edge for a guaranteed extra piece."
+    },
+    {
+      "id": "085_safe_capture_scissors_safe_or_poisoned_blue",
+      "category": "safe_capture",
+      "layout": "scissors_safe_or_poisoned",
+      "player": 0,
+      "pieces": {
+        "D4": 1,
+        "C5": -2,
+        "E5": -2,
+        "B6": -3,
+        "I6": -1
+      },
+      "expected": "D4-E5",
+      "reason": "Capture the free scissors, not the scissors defended by a paper."
+    },
+    {
+      "id": "086_safe_capture_scissors_safe_or_poisoned_red",
+      "category": "safe_capture",
+      "layout": "scissors_safe_or_poisoned",
+      "player": 1,
+      "pieces": {
+        "D1": 1,
+        "E5": 2,
+        "F6": -1,
+        "E7": 2,
+        "D8": 3
+      },
+      "expected": "F6-E5",
+      "reason": "Capture the free scissors, not the scissors defended by a paper."
+    },
+    {
+      "id": "087_safe_capture_rocks_safe_or_poisoned_blue",
+      "category": "safe_capture",
+      "layout": "rocks_safe_or_poisoned",
+      "player": 0,
+      "pieces": {
+        "E4": 3,
+        "D5": -1,
+        "F5": -1,
+        "G6": -2
+      },
+      "expected": "E4-D5",
+      "reason": "Take the undefended rock; the other rock capture allows immediate recapture."
+    },
+    {
+      "id": "088_safe_capture_rocks_safe_or_poisoned_red",
+      "category": "safe_capture",
+      "layout": "rocks_safe_or_poisoned",
+      "player": 1,
+      "pieces": {
+        "D3": 2,
+        "E4": 1,
+        "F5": -3,
+        "E6": 1
+      },
+      "expected": "F5-E6",
+      "reason": "Take the undefended rock; the other rock capture allows immediate recapture."
+    },
+    {
+      "id": "089_safe_capture_papers_safe_or_poisoned_blue",
+      "category": "safe_capture",
+      "layout": "papers_safe_or_poisoned",
+      "player": 0,
+      "pieces": {
+        "E5": 2,
+        "D6": -3,
+        "F6": -3,
+        "G7": -1
+      },
+      "expected": "E5-D6",
+      "reason": "Capture the free paper, avoiding the paper protected by a rock."
+    },
+    {
+      "id": "090_safe_capture_papers_safe_or_poisoned_red",
+      "category": "safe_capture",
+      "layout": "papers_safe_or_poisoned",
+      "player": 1,
+      "pieces": {
+        "C3": 1,
+        "D4": 3,
+        "E5": -2,
+        "D6": 3
+      },
+      "expected": "E5-D6",
+      "reason": "Capture the free paper, avoiding the paper protected by a rock."
+    },
+    {
+      "id": "091_safe_capture_remove_last_paper_blue",
+      "category": "safe_capture",
+      "layout": "remove_last_paper",
+      "player": 0,
+      "pieces": {
+        "D4": 2,
+        "I4": -2,
+        "B5": 1,
+        "E5": -3
+      },
+      "expected": "D4-E5",
+      "reason": "Win the last enemy paper safely, also removing the predator of the friendly rock."
+    },
+    {
+      "id": "092_safe_capture_remove_last_paper_red",
+      "category": "safe_capture",
+      "layout": "remove_last_paper",
+      "player": 1,
+      "pieces": {
+        "F1": 2,
+        "E5": 3,
+        "F6": -2,
+        "E8": -1
+      },
+      "expected": "F6-E5",
+      "reason": "Win the last enemy paper safely, also removing the predator of the friendly rock."
+    },
+    {
+      "id": "093_safe_capture_capture_attacker_to_save_scissors_blue",
+      "category": "safe_capture",
+      "layout": "capture_attacker_to_save_scissors",
+      "player": 0,
+      "pieces": {
+        "D4": 3,
+        "D5": 2,
+        "E5": -1,
+        "H5": -2
+      },
+      "expected": "D4-E5",
+      "reason": "Capture the attacking rock and preserve the threatened friendly scissors."
+    },
+    {
+      "id": "094_safe_capture_capture_attacker_to_save_scissors_red",
+      "category": "safe_capture",
+      "layout": "capture_attacker_to_save_scissors",
+      "player": 1,
+      "pieces": {
+        "E2": 2,
+        "E5": 1,
+        "E6": -2,
+        "F6": -3
+      },
+      "expected": "F6-E5",
+      "reason": "Capture the attacking rock and preserve the threatened friendly scissors."
+    },
+    {
+      "id": "095_safe_capture_capture_forking_scissors_blue",
+      "category": "safe_capture",
+      "layout": "capture_forking_scissors",
+      "player": 0,
+      "pieces": {
+        "D4": 1,
+        "F4": 3,
+        "E5": -2,
+        "F6": 3,
+        "H7": -3
+      },
+      "expected": "D4-E5",
+      "reason": "Capture the scissors forking both friendly papers, with no compensating reply."
+    },
+    {
+      "id": "096_safe_capture_capture_forking_scissors_red",
+      "category": "safe_capture",
+      "layout": "capture_forking_scissors",
+      "player": 1,
+      "pieces": {
+        "C2": 3,
+        "D4": -3,
+        "F4": -3,
+        "E5": 2,
+        "F6": -1
+      },
+      "expected": "F6-E5",
+      "reason": "Capture the scissors forking both friendly papers, with no compensating reply."
+    },
+    {
+      "id": "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+      "category": "safe_capture",
+      "layout": "horizontal_rocks_safe_or_poisoned",
+      "player": 0,
+      "pieces": {
+        "E4": -1,
+        "F4": 3,
+        "G4": -1,
+        "H5": -2
+      },
+      "expected": "F4-E4",
+      "reason": "Take the safe rock rather than the rock covered by scissors."
+    },
+    {
+      "id": "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+      "category": "safe_capture",
+      "layout": "horizontal_rocks_safe_or_poisoned",
+      "player": 1,
+      "pieces": {
+        "E2": 2,
+        "F3": 1,
+        "F4": -3,
+        "F5": 1
+      },
+      "expected": "F4-F5",
+      "reason": "Take the safe rock rather than the rock covered by scissors."
+    },
+    {
+      "id": "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+      "category": "safe_capture",
+      "layout": "horizontal_papers_safe_or_poisoned",
+      "player": 0,
+      "pieces": {
+        "E5": -1,
+        "B6": -3,
+        "C6": 2,
+        "D6": -3
+      },
+      "expected": "C6-B6",
+      "reason": "Take the free paper rather than the paper covered by a rock."
+    },
+    {
+      "id": "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+      "category": "safe_capture",
+      "layout": "horizontal_papers_safe_or_poisoned",
+      "player": 1,
+      "pieces": {
+        "E5": 1,
+        "D6": 3,
+        "D7": -2,
+        "D8": 3
+      },
+      "expected": "D7-D8",
+      "reason": "Take the free paper rather than the paper covered by a rock."
+    }
+  ]
+}

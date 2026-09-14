@@ -20,7 +20,7 @@ Each module has a configurable nonnegative weight and reports its contribution.
 | # | Module | Purpose | Baseline |
 | --- | --- | --- | --- |
 | 1 | `piece_count` | Reward a numerical material advantage. | Enabled |
-| 2 | `clear_run` | Recognize safe races to the opposing corner and prove early wins when possible. | Enabled |
+| 2 | `clear_run` | Binary: a proved winning run is decisive; otherwise contributes zero. | Enabled |
 | 3 | `piece_advantage` | Reward favourable rock/paper/scissors matchups, especially pieces with no remaining predator. | Enabled |
 | 4 | `attacking_position` | Reward useful progress toward the goal and accessible capture opportunities. | Optional, disabled |
 | 5 | `defensive_position` | Reward defenders that can intercept threats while remaining safe themselves. | Optional, disabled |
@@ -38,9 +38,9 @@ of rock, paper and scissors: each type captures one type and loses to another.
 
 ### 2. Early win calculation from a clear run
 
-Identify pieces with a viable route to the opponent's defended corner. Reward a
-runner when it can arrive before the opponent can intercept, block the route or
-win a race to our corner. The intended example is a paper runner closer to the
+Identify pieces with a viable route to the opponent's defended corner. This is a
+binary win calculation, not a graded positional bonus: a proved winning run is
+decisive, and an unproven run contributes zero. The intended example is a paper runner closer to the
 opponent's corner than opposing paper or scissors, provided no opposing piece of
 any type can win its own race first.
 
@@ -66,19 +66,25 @@ Distance alone is a useful screening feature, not a sufficient proof. Evaluate:
    stalemate. A race must finish before a modelling draw, except that an official
    win takes precedence when the events coincide under the existing rules.
 
-Return two distinct results:
+Keep diagnostics separate from scoring:
 
-- A bounded **race advantage estimate**, including the candidate runner, route,
-  arrival estimate and identified interceptors. Unresolved cases remain heuristic.
+- **Route diagnostics**, including the candidate runner, route, arrival estimate
+  and identified interceptors. These contribute zero to the score.
 - A **proven forced result**, only when a conservative sufficient-condition check
   or bounded adversarial search establishes success against every legal defence.
   A single plausible route is not enough. Proof search must use the complete
   state and account for opponent wins, not only capture/block responses. If its
-  budget expires, return unknown and use the heuristic estimate.
+  budget expires, return unknown and contribute zero for clear-run scoring.
 
 Only a proven forced result may produce a mate-like score or an exact search
 cutoff. Turning off optional positional modules must not disable exact terminal
 checks or make unproven distance estimates count as wins.
+
+The implementation uses the finite win value (`100000`, adjusted for proven
+distance to termination) as the equivalent of infinity. It outranks every ordinary
+heuristic and keeps alpha–beta arithmetic and JSON output well-defined. A zero
+clear-run score means no win was established within the proof budget, not that
+every possible longer winning route has been disproved.
 
 ### 3. Piece advantage
 
@@ -120,8 +126,8 @@ is geometrically close to a target behind an uncapturable blocker. Avoid repeate
 rewarding the same opportunity for every nearby piece without accounting for
 mutually exclusive moves.
 
-Keep this term smooth and bounded. Module 2 evaluates a specific race and possible
-proof; this module evaluates broader attacking opportunities. Log contributions
+Keep this term smooth and bounded. Module 2 is a binary win calculation;
+this optional module evaluates broader attacking opportunities. Log contributions
 separately to detect double counting.
 
 ### 5. Optional defensive positional advantage
@@ -186,13 +192,14 @@ perspective and combine own and opponent values consistently:
 ```text
 evaluation(state, p) =
     w_count     * (count(p)     - count(opponent))
-  + w_race      * (race(p)      - race(opponent))
   + w_advantage * (advantage(p) - advantage(opponent))
   + attack_enabled  * w_attack  * (attack(p)  - attack(opponent))
   + defence_enabled * w_defence * (defence(p) - defence(opponent))
   - overload_enabled * w_overload * (overload(p) - overload(opponent))
 ```
 
+Clear-run proof overrides this sum with a decisive win/loss score; otherwise it
+contributes zero. `race_weight` is a deprecated, ignored compatibility setting.
 Use terminal/proven-result handling before this weighted sum. Clamp ordinary
 heuristic totals below the forced-result range; prefer shorter proven wins and
 longer forced losses. Do not invent exact win distances from a heuristic estimate.
@@ -214,16 +221,19 @@ results and invalidate evaluation-dependent caches when it changes.
 Implement a depth-limited exhaustive minimax reference, followed by an equivalent
 negamax/alpha–beta search over the same evaluator and legal game transitions.
 Use iterative deepening with a maximum depth and explicit node/time limits.
-Return the move from the last completed iteration, or a legal fallback when no
-iteration finishes. Count heuristic analysis and race-proof work in the budget.
+Retain completed root branches from interrupted iterations, comparing them at
+the same depth after rechecking the incumbent. Fall back to the last completed
+iteration or a legal move when no newer branch completes. Count heuristic
+analysis and race-proof work in the budget; run diagnostics after move selection.
 
 Order moves using exact immediate wins, promising defensive replies, captures,
 the previous principal variation and cached best moves. Ordering must retain all
 legal moves. In particular, captures are optional and a quiet move to a corner can
 win. Do not add speculative selective pruning to the first correctness baseline.
 
-A transposition table must distinguish full states, including side to move, goals,
-repetition history and no-capture count. Store depth, score, bound type
+A transposition table must distinguish future-play states, including side to move,
+goals, repetition occurrence counts and the no-capture clock. Equivalent history
+orders and different total move numbers can share entries. Store depth, score, bound type
 (exact/lower/upper) and best move. Include evaluator/config identity or clear the
 table when configuration changes. Normalize root-relative mate distances when
 reusing entries, and do not treat a bound or incomplete proof as an exact result.
@@ -240,6 +250,19 @@ game-specific pruning assumptions. The proposed Intransitive feature definitions
 above are hypotheses to validate in this game.
 
 ## Validation and comparisons
+
+[Search under a deadline](ANYTIME_SEARCH.md) explains retained partial-iteration
+work, move prioritisation, and transposition reuse that preserves repetition rules.
+
+The implemented [100-position tactical regression suite](TACTICS.md) checks
+exact bot moves for immediate wins, clear runs, mandatory goal defences, forced
+escapes, and safe captures. Each expected move is independently certified using
+the Python reference rules. Another [12 game-blunder regressions](GAME_REGRESSIONS.md)
+cover deeper forks, exchanges, and abandoning the last goal defender. Run both with:
+
+```sh
+uv run --locked python -m unittest intransitive.tests.test_tactics intransitive.tests.test_game_blunders -v
+```
 
 Add targeted positions and assertions for:
 

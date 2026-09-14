@@ -16,6 +16,7 @@ class Budget:
         self.work = 0
         self.nodes = 0
         self.proof_nodes = 0
+        self.tt_hits = 0
         self.module_seconds = defaultdict(float)
         self.module_calls = defaultdict(int)
 

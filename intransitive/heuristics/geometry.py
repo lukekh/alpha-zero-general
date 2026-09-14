@@ -45,8 +45,8 @@ class Piece:
     square: int
     code: int
     side: int
-    distances: np.ndarray
-    goal_distances: np.ndarray
+    distances: np.ndarray | None
+    goal_distances: np.ndarray | None
     goal: int
 
     @property
@@ -55,7 +55,7 @@ class Piece:
 
 
 class Geometry:
-    def __init__(self, state, budget):
+    def __init__(self, state, budget, *, routes=True):
         self.state, self.budget = state, budget
         self.board = state[:, :, 0]
         self.turn = int(state[:, :, 32].flat[META_NEXT_PLAYER])
@@ -63,31 +63,42 @@ class Geometry:
         self.goals = (80, 0) if a1 == 0 else (0, 80)
         self.pieces = []
         for square in np.flatnonzero(self.board.ravel()):
-            budget.charge(162)  # two BFS maps, at most 81 expanded squares each
+            budget.charge(162 if routes else 1)
             square = int(square)
             code = int(self.board.flat[square])
             side = int(code < 0)
             goal = self.goals[side]
-            distances = distance_map(self.board, square, code)
-            reverse = distance_map(self.board, goal, code, removed=square)
+            distances = distance_map(self.board, square, code) if routes else None
+            reverse = distance_map(self.board, goal, code, removed=square) if routes else None
             self.pieces.append(Piece(square, code, side, distances, reverse, goal))
         self.by_square = {p.square: p for p in self.pieces}
+        self.by_side = tuple([p for p in self.pieces if p.side == side] for side in (0, 1))
+        # A Geometry describes one immutable position. These answers depend only
+        # on that position, not on any search bounds or repetition history.
+        self._route_squares = {}
+        self._safety = {}
+        self._interceptions = {}
 
     def own(self, side):
-        return [p for p in self.pieces if p.side == side]
+        return self.by_side[side]
 
     def safe(self, piece, square, ply):
         # Conservative exposure estimate, including predators elsewhere on board.
-        return not any(captures(enemy.code, piece.code)
-                       and arrival(int(enemy.distances[square]), enemy.side, self.turn) <= ply
-                       for enemy in self.own(1 - piece.side))
+        key = (piece.square, square, ply)
+        if key not in self._safety:
+            self._safety[key] = not any(captures(enemy.code, piece.code)
+                and arrival(int(enemy.distances[square]), enemy.side, self.turn) <= ply
+                for enemy in self.own(1 - piece.side))
+        return self._safety[key]
 
     def route_squares(self, runner):
         if runner.distance == 99:
             return []
-        return [int(s) for s in np.flatnonzero(
-            runner.distances + runner.goal_distances == runner.distance)
-                if int(s) != runner.square]
+        if runner.square not in self._route_squares:
+            self._route_squares[runner.square] = [int(s) for s in np.flatnonzero(
+                runner.distances + runner.goal_distances == runner.distance)
+                    if int(s) != runner.square]
+        return self._route_squares[runner.square]
 
     def intercepts(self, defender, runner):
         """Timely capture on a shortest route, or a safe same-type goal hold.
@@ -100,6 +111,10 @@ class Geometry:
         capture = captures(defender.code, runner.code)
         if not capture and abs(defender.code) != abs(runner.code):
             return []
+        key = (defender.square, runner.square)
+        if key in self._interceptions:
+            self.budget.check()
+            return self._interceptions[key]
         squares = [runner.square] + self.route_squares(runner) if capture else [runner.goal]
         found = []
         for square in squares:
@@ -114,6 +129,7 @@ class Geometry:
             if defender_ply <= deadline and self.safe(defender, square, max(defender_ply, deadline)):
                 found.append(dict(square=square, ply=defender_ply,
                                   runner_ply=runner_ply, kind='capture' if capture else 'block'))
+        self._interceptions[key] = found
         return found
 
     def route(self, runner):

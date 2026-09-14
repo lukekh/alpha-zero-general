@@ -41,6 +41,7 @@ dependencies = [
 
 [project.scripts]
 intransitive = "intransitive.play:main"
+intransitive-analyze = "intransitive.heuristics.analyze:main"
 
 [tool.setuptools]
 py-modules = [

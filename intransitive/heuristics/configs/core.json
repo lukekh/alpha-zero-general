@@ -1,7 +1,7 @@
 {
-  "evaluator_version": "intransitive-heuristics-v1",
+  "evaluator_version": "intransitive-heuristics-v2",
   "count_weight": 100.0,
-  "race_weight": 40.0,
+  "race_weight": 0.0,
   "advantage_weight": 25.0,
   "attack_weight": 12.0,
   "defence_weight": 10.0,

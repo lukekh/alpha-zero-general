@@ -1,17 +1,22 @@
 """Local browser play using the compiled rules engine: python -m intransitive.play."""
 
 import argparse
-from dataclasses import replace
+from dataclasses import asdict, replace
 import json
 import logging
 import os
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from threading import Lock
 
 import numpy as np
 
 from .IntransitiveConstants import action_destination, decode_action, format_coordinate
 from .IntransitiveLogicNumba import Board
+
+
+AB_OPTION_FIELDS = ('attack_enabled', 'defence_enabled', 'overload_enabled',
+                    'max_depth', 'time_limit', 'node_limit')
 
 
 class BaselineOpponent:
@@ -49,8 +54,8 @@ class OpponentFactory:
         if kind == 'model':
             return ModelOpponent(self.checkpoint, self.simulations)
         if kind == 'alphabeta':
-            options = options or {}
-            if not isinstance(options, dict) or set(options) - {'attack_enabled', 'defence_enabled', 'overload_enabled'}:
+            options = {} if options is None else options
+            if not isinstance(options, dict) or set(options) - set(AB_OPTION_FIELDS):
                 raise ValueError('Invalid alpha-beta options')
             return AlphaBetaPlayer(config=replace(self.config, **options))
         return BaselineOpponent(kind)
@@ -103,6 +108,7 @@ class GameSession:
         self.board = Board()
         self.history = []
         self.moves = []
+        self.ai_decisions = {}
         self.revision = 0
         self.opponent = opponent
         self.human_player = human_player
@@ -124,6 +130,11 @@ class GameSession:
             dx, dy = action_destination(int(action))
             legal.append(dict(action=int(action), source=[x, y], target=[dx, dy]))
         result = self.board.check_end_game(player)
+        config = (self.opponent.config if getattr(self.opponent, 'kind', None) == 'alphabeta'
+                  else self.opponent_factory.config if self.opponent_factory else None)
+        from .heuristics.config import SearchConfig
+        from .record import export_record
+        last_ai = self.ai_decisions[max(self.ai_decisions)] if self.ai_decisions else None
         return dict(
             board=self.board.get_board().tolist(), player=player, legal=legal,
             reason=self.board.get_terminal_reason(),
@@ -137,9 +148,10 @@ class GameSession:
             model=self.opponent.label if self.opponent else None,
             opponent=getattr(self.opponent, 'kind', 'model') if self.opponent else 'local',
             opponents=self.opponent_factory.choices if self.opponent_factory else [],
-            ab_options={name: getattr(self.opponent.config, name) for name in
-                        ('attack_enabled', 'defence_enabled', 'overload_enabled')}
-                       if getattr(self.opponent, 'kind', None) == 'alphabeta' else {},
+            ab_options={name: getattr(config, name) for name in AB_OPTION_FIELDS} if config else {},
+            pgn=export_record(self.moves, self.board, config or SearchConfig(),
+                              opponent=getattr(self.opponent, 'kind', 'model') if self.opponent else 'local',
+                              human_player=self.human_player, last_ai=last_ai),
             analysis=self.opponent.last_result.explanation
                      if getattr(self.opponent, 'last_result', None) else None,
         )
@@ -167,8 +179,20 @@ class GameSession:
         elif command == "ai":
             if not self.ai_turn():
                 raise ValueError("It is not the AI's turn.")
-            action = self.opponent.choose(self.board.get_state(), self.board.get_next_player())
+            from .record import state_hash
+            before = self.board.get_state()
+            ply = len(self.moves)
+            action = int(self.opponent.choose(before, self.board.get_next_player()))
             self.make_move(action)
+            result = getattr(self.opponent, 'last_result', None)
+            search = asdict(result) if result else None
+            if search:
+                # Keep the original scores/features and search statistics in the
+                # copied message; verbose route traces can be recomputed later.
+                for name in ('races', 'config', 'pv', 'search_score'):
+                    search['explanation'].pop(name, None)
+            self.ai_decisions[ply] = dict(ply=ply, action=action, state_sha256=state_hash(before),
+                                          search=search)
         elif command == "undo":
             if not self.can_undo():
                 raise ValueError("There are no moves to undo.")
@@ -177,6 +201,8 @@ class GameSession:
                 self.moves.pop()
                 if not self.opponent or self.board.get_next_player() == self.human_player:
                     break
+            self.ai_decisions = {ply: record for ply, record in self.ai_decisions.items()
+                                 if ply < len(self.moves)}
         elif command == "restart":
             human = data.get('human_player', self.human_player)
             if type(human) is not int or human not in (0, 1):
@@ -193,13 +219,28 @@ class GameSession:
             self.board.init_game()
             self.history.clear()
             self.moves.clear()
+            self.ai_decisions.clear()
         else:
             raise ValueError("Unknown command.")
         self.revision += 1
         return self.snapshot()
 
 
+class PlayServer(ThreadingHTTPServer):
+    """Idle browser preconnections must not block other requests.
+
+    The shared game and opponent remain serialized, including revision checks.
+    """
+
+    def __init__(self, address, game):
+        self.game = game
+        self.game_lock = Lock()
+        super().__init__(address, PlayHandler)
+
+
 class PlayHandler(BaseHTTPRequestHandler):
+    timeout = 10
+
     def respond(self, status, body, content_type="application/json"):
         payload = json.dumps(body).encode() if content_type == "application/json" else body
         self.send_response(status)
@@ -214,7 +255,9 @@ class PlayHandler(BaseHTTPRequestHandler):
             self.respond(200, Path(__file__).with_name("play.html").read_bytes(),
                          "text/html; charset=utf-8")
         elif self.path == "/api/state":
-            self.respond(200, self.server.game.snapshot())
+            with self.server.game_lock:
+                state = self.server.game.snapshot()
+            self.respond(200, state)
         else:
             self.respond(404, {"error": "Not found"})
 
@@ -238,7 +281,8 @@ class PlayHandler(BaseHTTPRequestHandler):
             data = json.loads(self.rfile.read(size))
             if not isinstance(data, dict):
                 raise ValueError("Expected a JSON object.")
-            state = self.server.game.update(self.path.removeprefix("/api/"), data)
+            with self.server.game_lock:
+                state = self.server.game.update(self.path.removeprefix("/api/"), data)
         except (ValueError, UnicodeDecodeError) as exc:
             self.respond(400, {"error": str(exc)})
             return
@@ -272,8 +316,7 @@ def main():
     opponent = factory.create(args.opponent or ('model' if args.checkpoint else 'local'))
     game = GameSession(opponent, human_player=0 if args.human_colour == 'blue' else 1,
                        opponent_factory=factory)
-    with HTTPServer(("127.0.0.1", args.port), PlayHandler) as server:
-        server.game = game
+    with PlayServer(("127.0.0.1", args.port), game) as server:
         print(f"Play Intransitive at http://127.0.0.1:{server.server_port}", flush=True)
         try:
             server.serve_forever()

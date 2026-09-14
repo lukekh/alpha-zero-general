@@ -1,5 +1,9 @@
 # Measured recommendation
 
+These measurements used evaluator v1 with a fractional clear-run bonus. Evaluator
+v2 uses binary clear-run scoring (zero or a proven decisive result); these results
+have not been rerun for v2 and do not establish its strength or throughput.
+
 Keep the core preset: piece count, clear-run analysis and piece-type advantage.
 Leave attack, defence and overload disabled by default. Attack is the only
 optional module that showed a promising diagnostic result, but the sample is too

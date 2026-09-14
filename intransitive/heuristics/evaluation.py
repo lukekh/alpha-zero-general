@@ -4,7 +4,6 @@ from itertools import combinations
 from time import perf_counter
 import numpy as np
 from .geometry import Geometry, arrival, captures
-from ..IntransitiveConstants import META_NO_CAPTURE
 
 MATE = 100000.
 HEURISTIC_LIMIT = 10000.
@@ -38,10 +37,10 @@ def piece_advantage(geometry, side, config):
 
 
 def race_candidates(geometry, side):
+    """Explain possible routes without awarding unproven positional credit."""
     candidates = []
     opponent_arrival = min((arrival(p.distance, p.side, geometry.turn)
                             for p in geometry.own(1 - side) if p.distance < 99), default=198)
-    remaining = 30 - int(geometry.state[:, :, 32].flat[META_NO_CAPTURE])
     for runner in geometry.own(side):
         geometry.budget.charge()
         if runner.distance == 99:
@@ -52,14 +51,9 @@ def race_candidates(geometry, side):
                         for d in geometry.own(1 - side)
                         if (responses := geometry.intercepts(d, runner))]
         finish = arrival(runner.distance, side, geometry.turn)
-        # Captures can reset the clock; this static estimate deliberately discounts
-        # races beyond it. The complete history is handled only by exact search.
-        clock_factor = 1. if finish <= remaining else .25
-        race_factor = 1. if finish < opponent_arrival else .5 if finish == opponent_arrival else .25
-        estimate = clock_factor * race_factor / ((1 + finish) * (1 + len(interceptors)))
         candidates.append(dict(runner=runner.square, route=geometry.route(runner),
                                arrival=finish, opponent_arrival=opponent_arrival,
-                               interceptors=interceptors, estimate=estimate, status='unknown'))
+                               interceptors=interceptors, estimate=0., status='unknown'))
     return candidates
 
 
@@ -164,26 +158,57 @@ class Evaluator:
     def __init__(self, game, config):
         self.game, self.config = game, config
 
-    def explain(self, state, side, budget):
+    def score(self, state, side, budget, proof=None):
+        """Search value without allocating explanations or route diagnostics."""
+        return self._evaluate(state, side, budget, proof, explain=False, diagnostics=False)
+
+    def explain(self, state, side, budget, proof=None, *, diagnostics=True):
+        return self._evaluate(state, side, budget, proof, explain=True, diagnostics=diagnostics)
+
+    def _evaluate(self, state, side, budget, proof, *, explain, diagnostics):
         terminal = terminal_value(self.game, state, side)
         if terminal is not None:
+            if not explain:
+                return terminal
             return dict(score=terminal, terminal=True, proof={'status': 'terminal'},
                         features={}, terms={})
+        if proof is None:
+            # Import at call time: search uses this evaluator for ordinary leaves.
+            # Search callers pass their existing proof so each leaf is proved once.
+            from .search import prove
+            proof = prove(self.game, state, self.config, budget)
+        if proof['status'] == 'proven':
+            turn = int(state[:, :, 32].flat[1])
+            score = proof['score'] if side == turn else -proof['score']
+            winner = side if score > 0 else 1 - side
+            budget.check()
+            if not explain:
+                return score
+            return dict(score=score, terminal=False,
+                        proof=dict(proof, winner=winner),
+                        features={'own': {'clear_run': float(winner == side)},
+                                  'opponent': {'clear_run': float(winner != side)}},
+                        terms={'clear_run': score}, races={},
+                        skipped_modules=[name for name in MODULES if name != 'clear_run'])
         own, opponent = {}, {}
         details = {}
+        config = self.config
+        routes = diagnostics or config.attack_enabled or config.defence_enabled or config.overload_enabled
         start = perf_counter()
         try:
-            geometry = Geometry(state, budget)
+            geometry = Geometry(state, budget, routes=routes)
         finally:
-            budget.module_seconds['routes'] += perf_counter() - start
-            budget.module_calls['routes'] += 1
-        config = self.config
+            module = 'routes' if routes else 'piece_index'
+            budget.module_seconds[module] += perf_counter() - start
+            budget.module_calls[module] += 1
         functions = (piece_count, None, piece_advantage, attacking_position,
                      defensive_position, None)
-        enabled = (True, True, True, config.attack_enabled, config.defence_enabled, config.overload_enabled)
-        weights = (config.count_weight, config.race_weight, config.advantage_weight,
+        enabled = (True, diagnostics, True, config.attack_enabled, config.defence_enabled, config.overload_enabled)
+        # Clear-run scoring is decisive proof or zero, never a weighted estimate.
+        weights = (config.count_weight, 0., config.advantage_weight,
                    config.attack_weight, config.defence_weight, -config.overload_weight)
         terms = {}
+        total = 0.
         for name, function, active, weight in zip(MODULES, functions, enabled, weights):
             values = [0., 0.]
             if active:
@@ -194,7 +219,7 @@ class Evaluator:
                         if name == 'clear_run':
                             candidates = race_candidates(geometry, player)
                             details['own' if i == 0 else 'opponent'] = candidates
-                            values[i] = max((c['estimate'] for c in candidates), default=0.)
+                            values[i] = 0.
                         elif name == 'overload':
                             values[i] = overload(geometry, player, config, self.game)
                         else:
@@ -202,9 +227,15 @@ class Evaluator:
                 finally:
                     budget.module_seconds[name] += perf_counter() - start
                     budget.module_calls[name] += 1
-            own[name], opponent[name] = values
-            terms[name] = weight * (values[0] - values[1])
+            term = weight * (values[0] - values[1])
+            total += term
+            if explain:
+                own[name], opponent[name] = values
+                terms[name] = term
         budget.check()
-        return dict(score=float(np.clip(sum(terms.values()), -HEURISTIC_LIMIT, HEURISTIC_LIMIT)),
+        score = max(-HEURISTIC_LIMIT, min(HEURISTIC_LIMIT, total))
+        if not explain:
+            return score
+        return dict(score=score,
                     terminal=False, features={'own': own, 'opponent': opponent}, terms=terms,
-                    races=details, proof={'status': 'unknown'})
+                    races=details, proof=proof)

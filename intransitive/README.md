@@ -147,6 +147,53 @@ Each server has one shared game across browser tabs. Refresh keeps the current
 game; stopping the server discards it. The server listens only on localhost.
 Press Ctrl+C in its terminal to stop it.
 
+The overlapping-squares icon at the top right of **Moves** copies the current game
+as an Intransitive PGN-style record. Paste it into a message for analysis, or save
+it as `position.pgn`. It includes the full move history, draw rules, a state hash,
+active heuristic settings (including weights and disabled modules), and the last
+AI decision with its original search statistics. Pending changes in the settings
+form are not exported. If clipboard access fails, a selected text box appears for
+manual copying. Refresh after updating the server to load the button.
+
+```sh
+# Inspect the position before the last AI move, and compare a candidate defence.
+uv run intransitive-analyze position.pgn --last-ai --move C5-D5
+# Inspect after six individual moves, using more search time.
+uv run intransitive-analyze position.pgn --ply 6 --depth 4 --time 10
+# Read a pasted record from standard input (finish with Ctrl+D).
+uv run intransitive-analyze - --last-ai
+```
+
+Only specify a candidate move that is legal in the selected position. Omit
+`--last-ai`/`--ply` to analyse the current position. `--config path.json` overrides
+the exported configuration for experiments; `--move` can be repeated. Output is
+JSON with the board, raw features, weighted heuristic terms, proof status, search
+depth/work/score, principal variation, and candidate evaluations. Positive scores
+favour the named perspective player, including when evaluating the opponent's
+turn after a candidate. Candidate scores are static evaluations, separate from
+minimax continuation scores. Budget exhaustion is reported explicitly.
+
+The notation uses tags and moves such as `1. B5-B6 H5-H4`, with `x` for captures;
+it is a custom Intransitive format, not chess SAN. Replaying the complete history
+reconstructs repetition and noncapture counters. The analyser checks the resulting
+state hash and can select any earlier ply. A fresh search uses an empty cache;
+timing, cache history and future engine changes can change its result. The copied
+original AI result is retained separately for comparison.
+
+The same production heuristic is callable from Python without a browser:
+
+```python
+from pathlib import Path
+from intransitive.record import load_record
+from intransitive.heuristics.analyze import analyze_record, evaluate_position
+
+text = Path("position.pgn").read_text()
+report = analyze_record(text, last_ai=True, moves=["C5-D5"])
+record = load_record(text)
+evaluation = evaluate_position(record.states[-1], record.config)
+print(evaluation["terms"])
+```
+
 To prepare an isolated environment:
 
 ```sh

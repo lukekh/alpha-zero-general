@@ -8,6 +8,7 @@ from unittest.mock import patch
 import numpy as np
 
 from intransitive.heuristics import AlphaBetaPlayer, SearchConfig, exhaustive_minimax
+from intransitive.heuristics.search import position_key
 from intransitive.heuristics.budget import Budget, BudgetExpired
 from intransitive.heuristics.evaluation import (
     Evaluator, MATE, HEURISTIC_LIMIT, MODULES, piece_advantage, race_candidates,
@@ -90,7 +91,54 @@ class HeuristicTests(unittest.TestCase):
         race = race_candidates(intercepted, 0)[0]
         self.assertTrue(race['interceptors'])
         self.assertEqual(race['status'], 'unknown')
-        self.assertLess(race['estimate'], 1 / (1 + race['arrival']))
+        self.assertEqual(race['estimate'], 0.)
+
+    def test_clear_run_has_no_partial_positional_score(self):
+        # Even an attractive route gets no credit when no win has been proved.
+        for entries in ({'G7': 3, 'I1': -1}, {'E5': 3, 'G6': -2},
+                        {'G7': 3, 'I9': -3}):
+            state = position(entries)
+            for weight in (0., 40., 10**9):
+                explanation = self.explain(state, replace(self.config, race_weight=weight))
+                self.assertEqual(explanation['terms']['clear_run'], 0.)
+                for side in ('own', 'opponent'):
+                    self.assertEqual(explanation['features'][side]['clear_run'], 0.)
+                    self.assertTrue(all(c['estimate'] == 0 for c in explanation['races'][side]))
+
+    def test_proven_run_overrides_material_and_is_json_safe(self):
+        # Blue can finish in two moves; even huge material weights cannot oppose it.
+        state = position({'G7': 3, 'I1': -1, 'H1': -2, 'G1': -3})
+        before = state.tobytes()
+        config = replace(self.config, proof_depth=3, proof_nodes=10000,
+                         count_weight=10**9, race_weight=0.)
+        own = self.explain(state, config)
+        enemy = self.explain(state, config, side=1)
+        self.assertEqual(own['proof']['status'], 'proven')
+        self.assertEqual(own['score'], MATE - 3)
+        self.assertEqual(own['terms']['clear_run'], MATE - 3)
+        self.assertEqual(own['features']['own']['clear_run'], 1.)
+        self.assertEqual(enemy['features']['opponent']['clear_run'], 1.)
+        self.assertEqual(enemy['score'], -own['score'])
+        json.dumps(own, allow_nan=False)
+        self.assertEqual(state.tobytes(), before)
+        shallow = self.explain(state, replace(config, proof_depth=2))
+        self.assertEqual(shallow['proof']['status'], 'unknown')
+        self.assertEqual(shallow['terms']['clear_run'], 0.)
+
+    def test_faster_enemy_run_is_a_decisive_loss(self):
+        state = position({'G7': 3, 'B2': -1})
+        result = self.explain(state, replace(self.config, proof_nodes=500, proof_depth=2))
+        self.assertEqual(result['score'], -MATE + 2)
+        self.assertEqual(result['features']['own']['clear_run'], 0.)
+        self.assertEqual(result['features']['opponent']['clear_run'], 1.)
+
+    def test_old_race_weight_cannot_change_binary_scoring(self):
+        config = SearchConfig(evaluator_version='intransitive-heuristics-v1', race_weight=40.)
+        self.assertEqual(config.evaluator_version, 'intransitive-heuristics-v2')
+        state = position({'H8': 3, 'B2': -1})
+        for weight in (0., 40., 10**9):
+            result = self.explain(state, replace(config, race_weight=weight))
+            self.assertEqual(result['score'], MATE - 1)
 
     def test_same_type_and_friendly_detours(self):
         g = self.geometry({'G7': 3, 'H8': -3, 'H7': 1, 'G8': 2})
@@ -134,6 +182,9 @@ class HeuristicTests(unittest.TestCase):
         self.assertEqual(proof['status'], 'unknown')
         self.assertEqual(proof['reason'], 'proof budget')
         self.assertNotIn('score', proof)
+        result = self.explain(s, replace(self.config, proof_nodes=1))
+        self.assertEqual(result['proof']['status'], 'unknown')
+        self.assertEqual(result['terms']['clear_run'], 0.)
         b = Budget(1, 60)
         with self.assertRaises(BudgetExpired):
             prove(self.game, s, replace(self.config, proof_nodes=100), b)
@@ -262,11 +313,11 @@ class HeuristicTests(unittest.TestCase):
         p = AlphaBetaPlayer(config=self.config)
         p._prepare()
         p._search(s, 2, -1., 1., 0, unlimited())
-        self.assertIn(p.table[(s.tobytes(), 2)].bound, ('lower', 'upper'))
+        self.assertIn(p.table[(position_key(s), 2)].bound, ('lower', 'upper'))
         score, _ = self.search(p, s, 2)
         reference, _ = exhaustive_minimax(self.game, s, 2, self.config)
         self.assertAlmostEqual(score, reference)
-        self.assertEqual(p.table[(s.tobytes(), 2)].bound, 'exact')
+        self.assertEqual(p.table[(position_key(s), 2)].bound, 'exact')
 
     def test_history_separation_and_config_invalidation(self):
         s = position({'D4': 1, 'F6': -2})
@@ -278,8 +329,8 @@ class HeuristicTests(unittest.TestCase):
             value, _ = self.search(p, state, 1)
             reference, _ = exhaustive_minimax(self.game, state, 1, self.config)
             self.assertAlmostEqual(value, reference)
-        self.assertIn((s.tobytes(), 1), p.table)
-        self.assertIn((history.tobytes(), 1), p.table)
+        self.assertIn((position_key(s), 1), p.table)
+        self.assertIn((position_key(history), 1), p.table)
         p.config = replace(self.config, race_weight=123)
         p._prepare()
         self.assertFalse(p.table)

@@ -1,9 +1,15 @@
 """Browser-session checks against actual engine transitions and history."""
 
 import unittest
+import json
+import socket
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier, Thread
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
 
 from intransitive.IntransitiveConstants import parse_coordinate
-from intransitive.play import GameSession
+from intransitive.play import GameSession, PlayServer
 from intransitive.IntransitiveLogicNumba import Board
 
 
@@ -171,7 +177,8 @@ class SelectableOpponentTests(unittest.TestCase):
             options = dict(zip(('attack_enabled', 'defence_enabled', 'overload_enabled'), flags))
             snapshot = session.update('restart', dict(revision=session.revision, opponent='alphabeta',
                                                       human_player=1, ab_options=options))
-            self.assertEqual(snapshot['ab_options'], options)
+            self.assertEqual({key: snapshot['ab_options'][key] for key in options}, options)
+            self.assertEqual(snapshot['ab_options']['max_depth'], factory.config.max_depth)
             self.assertTrue(snapshot['ai_turn'])
             result = session.update('ai', dict(revision=session.revision))
             self.assertEqual(result['ply'], 1)
@@ -187,11 +194,99 @@ class SelectableOpponentTests(unittest.TestCase):
         before = session.snapshot()
         for options in ({'opponent': 'model'}, {'opponent': 'unknown'},
                         {'opponent': 'alphabeta', 'ab_options': {'attack_enabled': 1}},
-                        {'opponent': 'alphabeta', 'ab_options': {'time_limit': 999}},
+                        {'opponent': 'alphabeta', 'ab_options': {'unknown': 999}},
                         {'opponent': 'alphabeta', 'ab_options': ['attack']}):
             with self.assertRaises(ValueError):
                 session.update('restart', dict(revision=session.revision, **options))
             self.assertEqual(session.snapshot(), before)
+
+    def test_search_limits_round_trip_and_reach_the_player(self):
+        from intransitive.play import OpponentFactory
+        from intransitive.heuristics import SearchConfig
+        factory = OpponentFactory(config=SearchConfig(max_depth=6, time_limit=2.5, node_limit=700000))
+        session = GameSession(opponent_factory=factory)
+        # A page opened in local mode must still show the configured defaults.
+        self.assertEqual(session.snapshot()['ab_options']['max_depth'], 6)
+        self.assertEqual(session.snapshot()['ab_options']['time_limit'], 2.5)
+        options = dict(max_depth=1, time_limit=5., node_limit=500000, attack_enabled=True)
+        state = session.update('restart', dict(revision=0, opponent='alphabeta',
+                                               human_player=1, ab_options=options))
+        for key, value in options.items():
+            self.assertEqual(state['ab_options'][key], value)
+            self.assertEqual(getattr(session.opponent.config, key), value)
+        reply = session.update('ai', dict(revision=state['revision']))
+        self.assertEqual(reply['ply'], 1)
+        for key, value in options.items():
+            self.assertEqual(reply['analysis']['config'][key], value)
+        self.assertLessEqual(session.opponent.last_result.completed_depth, 1)
+        # Per-game settings do not mutate the factory's CLI defaults.
+        self.assertEqual(factory.config.max_depth, 6)
+
+    def test_invalid_search_limits_leave_existing_game_unchanged(self):
+        from intransitive.play import OpponentFactory
+        session = GameSession(opponent_factory=OpponentFactory())
+        session.update('move', dict(revision=0, action=session.snapshot()['legal'][0]['action']))
+        before = session.snapshot()
+        for key, values in {
+            'max_depth': [-1, 65, 2.5, True, '4', None],
+            'time_limit': [-1, float('inf'), float('nan'), True, '5', None],
+            'node_limit': [-1, 2.5, True, '1000', None],
+        }.items():
+            for value in values:
+                with self.subTest(key=key, value=value):
+                    with self.assertRaises(ValueError):
+                        session.update('restart', dict(revision=session.revision,
+                            opponent='alphabeta', ab_options={key: value}))
+                    self.assertEqual(session.snapshot(), before)
+        for options in ([], False, ''):
+            with self.assertRaises(ValueError):
+                session.update('restart', dict(revision=session.revision,
+                    opponent='alphabeta', ab_options=options))
+            self.assertEqual(session.snapshot(), before)
+
+
+class PlayServerTests(unittest.TestCase):
+    def setUp(self):
+        self.game = GameSession()
+        self.initial = self.game.snapshot()  # Warm compilation outside request deadlines.
+        self.server = PlayServer(('127.0.0.1', 0), self.game)
+        self.thread = Thread(target=self.server.serve_forever, daemon=True)
+        self.thread.start()
+        self.url = f'http://127.0.0.1:{self.server.server_port}'
+
+    def tearDown(self):
+        self.server.shutdown()
+        self.server.server_close()
+        self.thread.join(timeout=3)
+
+    def test_idle_browser_connection_does_not_block_state_or_page(self):
+        with socket.create_connection(self.server.server_address, timeout=2):
+            with urlopen(self.url + '/api/state', timeout=2) as response:
+                state = json.load(response)
+            self.assertEqual(state['pgn'], self.initial['pgn'])
+            with urlopen(self.url, timeout=2) as response:
+                self.assertIn(b'id="copy-position"', response.read())
+
+    def test_concurrent_moves_with_same_revision_apply_only_once(self):
+        barrier = Barrier(2)
+        body = json.dumps(dict(revision=0, action=self.initial['legal'][0]['action'])).encode()
+
+        def move():
+            request = Request(self.url + '/api/move', data=body,
+                              headers={'Content-Type': 'application/json'})
+            barrier.wait(timeout=3)
+            try:
+                with urlopen(request, timeout=3) as response:
+                    return response.status
+            except HTTPError as exc:
+                exc.close()
+                return exc.code
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results = list(pool.map(lambda _: move(), range(2)))
+        self.assertEqual(sorted(results), [200, 400])
+        self.assertEqual(self.game.revision, 1)
+        self.assertEqual(len(self.game.moves), 1)
 
 
 if __name__ == "__main__":

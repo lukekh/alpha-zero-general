@@ -35,6 +35,9 @@
   .controls { display: flex; gap: 8px; }
   select { font: inherit; padding: 6px; margin-left: 8px; }
   #model { font-size: 13px; }
+  .search-limits { display: grid; gap: 8px; margin-top: 14px; }
+  .search-limits label { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .search-limits input { width: 110px; min-width: 0; font: inherit; padding: 5px; }
   .controls button { border: 1px solid #c8cec3; background: white; border-radius: 7px; font: inherit; padding: 8px 14px; cursor: pointer; }
   .controls button:disabled { opacity: .45; cursor: default; }
   .counts { display: flex; justify-content: space-between; font-weight: 600; margin: 16px 0; }
@@ -45,6 +48,13 @@
   .history li { padding: 3px 0 3px 4px; }
   .history li:nth-child(odd) { color: #2864a5; }
   .history li:nth-child(even) { color: #a23d2e; }
+  .moves-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .moves-heading h3 { margin: 0; }
+  .copy-button { display: grid; place-items: center; width: 36px; height: 36px; padding: 7px; border: 0; border-radius: 6px; color: #626966; background: transparent; cursor: pointer; }
+  .copy-button:hover { background: #e8ede2; color: #242b2b; }
+  .copy-button:disabled { opacity: .45; cursor: default; }
+  #copy-status { margin: 4px 0 0; }
+  #copy-text { width: 100%; min-height: 130px; margin-top: 8px; font: 12px/1.4 monospace; }
   @media (max-width: 760px) { main { margin: 20px auto; padding: 0 12px; } .layout { grid-template-columns: 1fr; gap: 16px; } header { align-items: start; } h1 { font-size: 30px; } .piece { font-size: clamp(16px, 4vw, 26px); } .coordinate { font-size: 9px; } }
 </style>
 <main>
@@ -57,13 +67,19 @@
         <h2 id="status" aria-live="polite">Getting the board ready…</h2>
         <p id="hint">Select a piece, then a highlighted destination.</p>
         <p><label for="opponent">Opponent <select id="opponent"><option value="local">Local · two players</option><option value="alphabeta">Alpha–beta</option><option value="greedy">Greedy</option><option value="random">Random</option><option value="model">Saved neural model</option></select></label></p>
-        <fieldset id="ab-options" hidden><legend>Alpha–beta evaluation</legend>
+        <fieldset id="ab-options" hidden><legend>Alpha–beta settings</legend>
           <label><input id="attack" type="checkbox"> Attack</label>
           <label><input id="defence" type="checkbox"> Defence</label>
           <label><input id="overload" type="checkbox"> Overload</label>
           <button id="core" type="button">Core only</button>
+          <div class="search-limits">
+            <label for="max-depth">Maximum depth (plies)<input id="max-depth" type="number" min="0" max="64" step="1" value="3" required aria-describedby="search-help"></label>
+            <label for="time-limit">Time per move (seconds)<input id="time-limit" type="number" min="0" step="any" value="1" required aria-describedby="search-help"></label>
+            <label for="node-limit">Work limit per move<input id="node-limit" type="number" min="0" max="9007199254740991" step="1" value="200000" required aria-describedby="search-help"></label>
+          </div>
+          <p class="rule muted" id="search-help">One ply is one player's move. Search stops at the first limit reached; work includes search and heuristic calculations. Zero uses a fallback move.</p>
         </fieldset>
-        <p class="muted">Opponent, colour and evaluation changes apply with New game.</p>
+        <p class="muted">Opponent, colour and search settings apply with New game.</p>
         <p id="ai-options"><label for="colour">Your colour <select id="colour"><option value="0">Blue · move first</option><option value="1">Red · AI moves first</option></select></label></p>
         <p class="muted" id="model" hidden></p>
         <div class="counts"><span id="blue-count"></span><span id="red-count"></span></div>
@@ -79,7 +95,12 @@
         <p class="rule muted" id="counters"></p>
       </div>
       <div class="card"><details id="analysis" hidden><summary>Last AI analysis</summary><pre id="analysis-text" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></details></div>
-      <div class="card"><h3>Moves</h3><p id="empty-history" class="rule muted">Your first move starts the story.</p><ol id="history" class="history"></ol></div>
+      <div class="card" id="moves-panel">
+        <div class="moves-heading"><h3>Moves</h3><button id="copy-position" class="copy-button" type="button" aria-label="Copy position as PGN" title="Copy position as PGN" disabled><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button></div>
+        <p id="copy-status" class="rule muted" role="status"></p>
+        <textarea id="copy-text" aria-label="Position PGN — copy this text" readonly hidden></textarea>
+        <p id="empty-history" class="rule muted">Your first move starts the story.</p><ol id="history" class="history"></ol>
+      </div>
     </aside>
   </div>
 </main>
@@ -90,6 +111,7 @@
   const symbols = ['', 'R', 'S', 'P'];
   const coord = (x, y) => 'ABCDEFGHI'[x] + (y + 1);
   const same = (a, b) => a && b && a[0] === b[0] && a[1] === b[1];
+  const searchFields = {'max_depth': 'max-depth', 'time_limit': 'time-limit', 'node_limit': 'node-limit'};
 
   async function request(command, extra = {}) {
     if (busy) return;
@@ -106,11 +128,16 @@
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Unable to update the board.');
       state = data;
+      $('copy-status').textContent = '';
+      $('copy-text').hidden = true;
       selected = null;
       if (!command || command === 'restart') {
         $('colour').value = String(state.human_player);
         $('opponent').value = state.opponent;
         for (const module of ['attack', 'defence', 'overload']) $(module).checked = !!state.ab_options[module + '_enabled'];
+        for (const [name, id] of Object.entries(searchFields)) {
+          if (state.ab_options[name] !== undefined) $(id).value = state.ab_options[name];
+        }
         for (const option of $('opponent').options) option.disabled = !state.opponents.includes(option.value);
         updateOptions();
       }
@@ -151,6 +178,7 @@
     $('mode').textContent = ai ? 'You: ' + human + ' · AI: ' + (state.human_player === 0 ? 'Red' : 'Blue') : 'Local · Play both sides';
     $('opponent').disabled = busy;
     for (const id of ['attack', 'defence', 'overload', 'core']) $(id).disabled = busy;
+    for (const id of Object.values(searchFields)) $(id).disabled = busy;
     $('colour').disabled = busy;
     $('model').hidden = !ai;
     $('model').textContent = ai ? state.model : '';
@@ -170,6 +198,9 @@
     $('undo').disabled = busy || !state.can_undo;
     $('undo').textContent = ai ? 'Undo turn' : 'Undo';
     $('restart').disabled = busy;
+    // Copy the visible snapshot even while a move request is in flight.
+    $('copy-position').disabled = false;
+    $('copy-position').title = state.pgn ? 'Copy position as PGN' : 'Restart the game server to enable position export';
     $('retry').hidden = !state.ai_turn || busy;
     $('counters').textContent = state.noncapture + '/30 turns without capture · Position seen ' + state.repetition + ' time(s)';
     $('blue-count').textContent = 'Blue · ' + state.board.flat().filter(p => p > 0).length + ' pieces';
@@ -202,16 +233,57 @@
     $('history').scrollTop = $('history').scrollHeight;
   }
   $('undo').onclick = () => request('undo');
+  $('copy-position').onclick = async () => {
+    const pgn = state.pgn;
+    if (!pgn) {
+      $('copy-status').textContent = 'This server is running an older version. Restart it, then refresh this page to enable position export.';
+      return;
+    }
+    const revision = state.revision;
+    let timeout;
+    $('copy-text').value = pgn;
+    $('copy-text').hidden = false;
+    $('copy-text').focus();
+    $('copy-text').select();
+    $('copy-status').textContent = 'Copying… You can also copy the selected text below.';
+    try {
+      await Promise.race([
+        navigator.clipboard.writeText(pgn),
+        new Promise((_, reject) => { timeout = setTimeout(() => reject(new Error('Clipboard unavailable')), 1500); })
+      ]);
+      if (state.revision === revision) {
+        $('copy-status').textContent = 'Position copied.';
+        $('copy-text').hidden = true;
+      }
+    } catch (_) {
+      if (state.revision !== revision) return;
+      $('copy-status').textContent = 'Select and copy the position below.';
+      $('copy-text').value = pgn;
+      $('copy-text').hidden = false;
+      $('copy-text').focus();
+      $('copy-text').select();
+    } finally {
+      clearTimeout(timeout);
+    }
+  };
   function updateOptions() {
     $('ab-options').hidden = $('opponent').value !== 'alphabeta';
     $('ai-options').hidden = $('opponent').value === 'local';
   }
   $('opponent').onchange = updateOptions;
   $('core').onclick = () => { for (const module of ['attack', 'defence', 'overload']) $(module).checked = false; };
-  $('restart').onclick = () => request('restart', {
-    human_player: Number($('colour').value), opponent: $('opponent').value,
-    ab_options: Object.fromEntries(['attack', 'defence', 'overload'].map(module => [module + '_enabled', $(module).checked]))
-  });
+  $('restart').onclick = () => {
+    const options = Object.fromEntries(['attack', 'defence', 'overload'].map(module => [module + '_enabled', $(module).checked]));
+    if ($('opponent').value === 'alphabeta') {
+      for (const [name, id] of Object.entries(searchFields)) {
+        if (!$(id).reportValidity()) return;
+        options[name] = $(id).valueAsNumber;
+      }
+    }
+    request('restart', {
+      human_player: Number($('colour').value), opponent: $('opponent').value, ab_options: options
+    });
+  };
   $('retry').onclick = () => request('ai');
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && state) { selected = null; render(); }
