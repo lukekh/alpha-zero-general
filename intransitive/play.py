@@ -1,6 +1,7 @@
 """Local browser play using the compiled rules engine: python -m intransitive.play."""
 
 import argparse
+from dataclasses import replace
 import json
 import logging
 import os
@@ -13,8 +14,52 @@ from .IntransitiveConstants import action_destination, decode_action, format_coo
 from .IntransitiveLogicNumba import Board
 
 
+class BaselineOpponent:
+    def __init__(self, kind):
+        from .IntransitiveGame import IntransitiveGame
+        from .IntransitivePlayers import GreedyPlayer, RandomPlayer
+        self.kind = kind
+        self.label = kind.title()
+        self.game = IntransitiveGame()
+        self.player = (GreedyPlayer if kind == 'greedy' else RandomPlayer)(self.game)
+
+    def reload(self):
+        pass
+
+    def choose(self, state, player):
+        return self.player.play(self.game.getCanonicalForm(state, player))
+
+
+class OpponentFactory:
+    def __init__(self, checkpoint=None, simulations=32, config=None):
+        from .heuristics import SearchConfig
+        self.checkpoint, self.simulations = checkpoint, simulations
+        self.config = config or SearchConfig()
+
+    @property
+    def choices(self):
+        return ['local', 'alphabeta', 'greedy', 'random'] + (['model'] if self.checkpoint else [])
+
+    def create(self, kind, options=None):
+        from .heuristics import AlphaBetaPlayer
+        if kind not in self.choices:
+            raise ValueError('Choose an available opponent')
+        if kind == 'local':
+            return None
+        if kind == 'model':
+            return ModelOpponent(self.checkpoint, self.simulations)
+        if kind == 'alphabeta':
+            options = options or {}
+            if not isinstance(options, dict) or set(options) - {'attack_enabled', 'defence_enabled', 'overload_enabled'}:
+                raise ValueError('Invalid alpha-beta options')
+            return AlphaBetaPlayer(config=replace(self.config, **options))
+        return BaselineOpponent(kind)
+
+
 class ModelOpponent:
     """A fixed model per game; reload the checkpoint when starting a new game."""
+
+    kind = 'model'
 
     def __init__(self, checkpoint, simulations=32):
         if simulations < 2:
@@ -53,7 +98,8 @@ class ModelOpponent:
 
 
 class GameSession:
-    def __init__(self, opponent=None, human_player=0):
+    def __init__(self, opponent=None, human_player=0, opponent_factory=None):
+        self.opponent_factory = opponent_factory
         self.board = Board()
         self.history = []
         self.moves = []
@@ -89,6 +135,13 @@ class GameSession:
             mode='ai' if self.opponent else 'local', human_player=self.human_player,
             ai_turn=self.ai_turn(), can_undo=self.can_undo(),
             model=self.opponent.label if self.opponent else None,
+            opponent=getattr(self.opponent, 'kind', 'model') if self.opponent else 'local',
+            opponents=self.opponent_factory.choices if self.opponent_factory else [],
+            ab_options={name: getattr(self.opponent.config, name) for name in
+                        ('attack_enabled', 'defence_enabled', 'overload_enabled')}
+                       if getattr(self.opponent, 'kind', None) == 'alphabeta' else {},
+            analysis=self.opponent.last_result.explanation
+                     if getattr(self.opponent, 'last_result', None) else None,
         )
 
     def make_move(self, action):
@@ -128,8 +181,14 @@ class GameSession:
             human = data.get('human_player', self.human_player)
             if type(human) is not int or human not in (0, 1):
                 raise ValueError("Choose Blue or Red.")
-            if self.opponent:
-                self.opponent.reload()
+            opponent = self.opponent
+            if 'opponent' in data:
+                if self.opponent_factory is None:
+                    raise ValueError('Opponent selection is unavailable')
+                opponent = self.opponent_factory.create(data['opponent'], data.get('ab_options'))
+            elif opponent:
+                opponent.reload()
+            self.opponent = opponent
             self.human_player = human
             self.board.init_game()
             self.history.clear()
@@ -196,6 +255,8 @@ def main():
     parser.add_argument("--checkpoint", type=Path, help="Model to play against; reloaded for each new game")
     parser.add_argument("--human-colour", choices=('blue', 'red'), default='blue')
     parser.add_argument("--simulations", type=int, default=32)
+    parser.add_argument('--opponent', choices=('local', 'alphabeta', 'greedy', 'random', 'model'))
+    parser.add_argument('--ab-config', type=Path)
     args = parser.parse_args()
     if args.simulations < 2:
         parser.error('--simulations must be at least 2')
@@ -205,8 +266,12 @@ def main():
     first = warmup.snapshot()["legal"][0]["action"]
     warmup.update("move", {"action": first, "revision": 0})
     warmup.update("undo", {"revision": 1})
-    opponent = ModelOpponent(args.checkpoint, args.simulations) if args.checkpoint else None
-    game = GameSession(opponent, human_player=0 if args.human_colour == 'blue' else 1)
+    from .heuristics import SearchConfig
+    config = SearchConfig.from_file(args.ab_config) if args.ab_config else SearchConfig()
+    factory = OpponentFactory(args.checkpoint, args.simulations, config)
+    opponent = factory.create(args.opponent or ('model' if args.checkpoint else 'local'))
+    game = GameSession(opponent, human_player=0 if args.human_colour == 'blue' else 1,
+                       opponent_factory=factory)
     with HTTPServer(("127.0.0.1", args.port), PlayHandler) as server:
         server.game = game
         print(f"Play Intransitive at http://127.0.0.1:{server.server_port}", flush=True)

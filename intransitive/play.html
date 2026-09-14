@@ -56,7 +56,15 @@
         <p class="eyebrow" id="turn">Loading game</p>
         <h2 id="status" aria-live="polite">Getting the board ready…</h2>
         <p id="hint">Select a piece, then a highlighted destination.</p>
-        <p id="ai-options" hidden><label for="colour">Your colour <select id="colour"><option value="0">Blue · move first</option><option value="1">Red · AI moves first</option></select></label></p>
+        <p><label for="opponent">Opponent <select id="opponent"><option value="local">Local · two players</option><option value="alphabeta">Alpha–beta</option><option value="greedy">Greedy</option><option value="random">Random</option><option value="model">Saved neural model</option></select></label></p>
+        <fieldset id="ab-options" hidden><legend>Alpha–beta evaluation</legend>
+          <label><input id="attack" type="checkbox"> Attack</label>
+          <label><input id="defence" type="checkbox"> Defence</label>
+          <label><input id="overload" type="checkbox"> Overload</label>
+          <button id="core" type="button">Core only</button>
+        </fieldset>
+        <p class="muted">Opponent, colour and evaluation changes apply with New game.</p>
+        <p id="ai-options"><label for="colour">Your colour <select id="colour"><option value="0">Blue · move first</option><option value="1">Red · AI moves first</option></select></label></p>
         <p class="muted" id="model" hidden></p>
         <div class="counts"><span id="blue-count"></span><span id="red-count"></span></div>
         <div class="controls"><button id="undo" disabled>Undo</button><button id="restart" disabled>New game</button><button id="retry" hidden>Retry AI</button></div>
@@ -70,6 +78,7 @@
         <details><summary class="rule">Training draw rules are active</summary><p class="rule">This engine also draws on threefold repetition or 30 total turns without a capture. These are modelling limits, not official game rules. A win takes precedence.</p></details>
         <p class="rule muted" id="counters"></p>
       </div>
+      <div class="card"><details id="analysis" hidden><summary>Last AI analysis</summary><pre id="analysis-text" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></details></div>
       <div class="card"><h3>Moves</h3><p id="empty-history" class="rule muted">Your first move starts the story.</p><ol id="history" class="history"></ol></div>
     </aside>
   </div>
@@ -98,7 +107,13 @@
       if (!response.ok) throw new Error(data.error || 'Unable to update the board.');
       state = data;
       selected = null;
-      if (!command || command === 'restart') $('colour').value = String(state.human_player);
+      if (!command || command === 'restart') {
+        $('colour').value = String(state.human_player);
+        $('opponent').value = state.opponent;
+        for (const module of ['attack', 'defence', 'overload']) $(module).checked = !!state.ab_options[module + '_enabled'];
+        for (const option of $('opponent').options) option.disabled = !state.opponents.includes(option.value);
+        updateOptions();
+      }
       succeeded = true;
     } catch (error) {
       // Recover the authoritative board after a stale request or lost response.
@@ -134,10 +149,13 @@
     const ai = state.mode === 'ai';
     const human = state.human_player === 0 ? 'Blue' : 'Red';
     $('mode').textContent = ai ? 'You: ' + human + ' · AI: ' + (state.human_player === 0 ? 'Red' : 'Blue') : 'Local · Play both sides';
-    $('ai-options').hidden = !ai;
+    $('opponent').disabled = busy;
+    for (const id of ['attack', 'defence', 'overload', 'core']) $(id).disabled = busy;
     $('colour').disabled = busy;
     $('model').hidden = !ai;
-    $('model').textContent = ai ? state.model + '. New game loads the latest saved model and your selected colour.' : '';
+    $('model').textContent = ai ? state.model : '';
+    $('analysis').hidden = !state.analysis;
+    $('analysis-text').textContent = state.analysis ? JSON.stringify(state.analysis, null, 2) : '';
     $('turn').textContent = ongoing ? 'Turn ' + (state.ply + 1) : 'Game complete';
     $('status').textContent = ongoing ? ai ? state.ai_turn ? (busy ? 'AI is thinking…' : 'AI to move') : 'Your turn · ' + human : player + ' to move' :
       state.winner !== null ? ai ? state.winner === state.human_player ? 'You win!' : 'AI wins' : (state.winner === 0 ? 'Blue' : 'Red') + ' wins!' : 'Draw';
@@ -148,7 +166,7 @@
       ({corner: 'The opposite corner was reached.', stalemate: player + ' has no legal moves.',
         repetition: 'This position occurred three times.', 'no-capture limit': '30 turns passed without a capture.'})[state.reason];
     if (state.ai_turn) $('hint').textContent = busy ? 'The AI is choosing its move.' : 'Use Retry AI to continue.';
-    if (pendingCommand === 'restart') $('hint').textContent = 'Loading the latest model for your new game…';
+    if (pendingCommand === 'restart') $('hint').textContent = 'Preparing your new game…';
     $('undo').disabled = busy || !state.can_undo;
     $('undo').textContent = ai ? 'Undo turn' : 'Undo';
     $('restart').disabled = busy;
@@ -184,7 +202,16 @@
     $('history').scrollTop = $('history').scrollHeight;
   }
   $('undo').onclick = () => request('undo');
-  $('restart').onclick = () => request('restart', {human_player: Number($('colour').value)});
+  function updateOptions() {
+    $('ab-options').hidden = $('opponent').value !== 'alphabeta';
+    $('ai-options').hidden = $('opponent').value === 'local';
+  }
+  $('opponent').onchange = updateOptions;
+  $('core').onclick = () => { for (const module of ['attack', 'defence', 'overload']) $(module).checked = false; };
+  $('restart').onclick = () => request('restart', {
+    human_player: Number($('colour').value), opponent: $('opponent').value,
+    ab_options: Object.fromEntries(['attack', 'defence', 'overload'].map(module => [module + '_enabled', $(module).checked]))
+  });
   $('retry').onclick = () => request('ai');
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && state) { selected = null; render(); }

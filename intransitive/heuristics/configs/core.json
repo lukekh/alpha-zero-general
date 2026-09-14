@@ -1,0 +1,21 @@
+{
+  "evaluator_version": "intransitive-heuristics-v1",
+  "count_weight": 100.0,
+  "race_weight": 40.0,
+  "advantage_weight": 25.0,
+  "attack_weight": 12.0,
+  "defence_weight": 10.0,
+  "overload_weight": 5.0,
+  "predator_zero_bonus": 1.0,
+  "predator_scarcity_bonus": 0.5,
+  "prey_bonus": 0.25,
+  "attack_enabled": false,
+  "defence_enabled": false,
+  "overload_enabled": false,
+  "max_depth": 3,
+  "node_limit": 200000,
+  "time_limit": 1.0,
+  "proof_depth": 2,
+  "proof_nodes": 64,
+  "table_entries": 10000
+}

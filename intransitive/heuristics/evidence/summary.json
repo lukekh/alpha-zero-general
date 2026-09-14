@@ -1,0 +1,4750 @@
+{
+  "schema": 1,
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "python": "3.11.4 (main, Nov 30 2023, 10:49:11) [Clang 15.0.0 (clang-1500.0.40.1)]",
+  "numpy": "2.4.6",
+  "torch": "2.8.0",
+  "checkpoint_sha256": "c428e867ee3a1cebe24355d1e4f5e526cd8449b8af8d96a76a1f4bb77ab9a22c",
+  "neural_simulations": 8,
+  "seeds": [
+    0,
+    1
+  ],
+  "seed_policy": "SeedSequence([3400, seed, opponent_index]); same stream for both colours and every variant/mode; fresh trees per game",
+  "rules": "Official Blue opening; exact engine threefold/30-ply draw limits; no adjudicated/truncated draws",
+  "uncertainty": "95% Hoeffding score intervals using colour-paired seed units; tiny conditional sample only. Deterministic opponents repeat trajectories; these are not independent strength evidence or opening/training-seed generalization.",
+  "budgets": {
+    "nodes": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": false,
+      "defence_enabled": false,
+      "overload_enabled": false,
+      "max_depth": 2,
+      "node_limit": 200000,
+      "time_limit": 60.0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "wall": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": false,
+      "defence_enabled": false,
+      "overload_enabled": false,
+      "max_depth": 64,
+      "node_limit": 1000000000,
+      "time_limit": 0.1,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    }
+  },
+  "configurations": {
+    "nodes/core": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": false,
+      "defence_enabled": false,
+      "overload_enabled": false,
+      "max_depth": 2,
+      "node_limit": 200000,
+      "time_limit": 60.0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "nodes/O": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": false,
+      "defence_enabled": false,
+      "overload_enabled": true,
+      "max_depth": 2,
+      "node_limit": 200000,
+      "time_limit": 60.0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "nodes/D": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": false,
+      "defence_enabled": true,
+      "overload_enabled": false,
+      "max_depth": 2,
+      "node_limit": 200000,
+      "time_limit": 60.0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "nodes/DO": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": false,
+      "defence_enabled": true,
+      "overload_enabled": true,
+      "max_depth": 2,
+      "node_limit": 200000,
+      "time_limit": 60.0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "nodes/A": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": true,
+      "defence_enabled": false,
+      "overload_enabled": false,
+      "max_depth": 2,
+      "node_limit": 200000,
+      "time_limit": 60.0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "nodes/AO": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": true,
+      "defence_enabled": false,
+      "overload_enabled": true,
+      "max_depth": 2,
+      "node_limit": 200000,
+      "time_limit": 60.0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "nodes/AD": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": true,
+      "defence_enabled": true,
+      "overload_enabled": false,
+      "max_depth": 2,
+      "node_limit": 200000,
+      "time_limit": 60.0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "nodes/ADO": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": true,
+      "defence_enabled": true,
+      "overload_enabled": true,
+      "max_depth": 2,
+      "node_limit": 200000,
+      "time_limit": 60.0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "wall/core": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": false,
+      "defence_enabled": false,
+      "overload_enabled": false,
+      "max_depth": 64,
+      "node_limit": 1000000000,
+      "time_limit": 0.1,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "wall/O": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": false,
+      "defence_enabled": false,
+      "overload_enabled": true,
+      "max_depth": 64,
+      "node_limit": 1000000000,
+      "time_limit": 0.1,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "wall/D": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": false,
+      "defence_enabled": true,
+      "overload_enabled": false,
+      "max_depth": 64,
+      "node_limit": 1000000000,
+      "time_limit": 0.1,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "wall/DO": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": false,
+      "defence_enabled": true,
+      "overload_enabled": true,
+      "max_depth": 64,
+      "node_limit": 1000000000,
+      "time_limit": 0.1,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "wall/A": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": true,
+      "defence_enabled": false,
+      "overload_enabled": false,
+      "max_depth": 64,
+      "node_limit": 1000000000,
+      "time_limit": 0.1,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "wall/AO": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": true,
+      "defence_enabled": false,
+      "overload_enabled": true,
+      "max_depth": 64,
+      "node_limit": 1000000000,
+      "time_limit": 0.1,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "wall/AD": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": true,
+      "defence_enabled": true,
+      "overload_enabled": false,
+      "max_depth": 64,
+      "node_limit": 1000000000,
+      "time_limit": 0.1,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    },
+    "wall/ADO": {
+      "evaluator_version": "intransitive-heuristics-v1",
+      "count_weight": 100.0,
+      "race_weight": 40.0,
+      "advantage_weight": 25.0,
+      "attack_weight": 12.0,
+      "defence_weight": 10.0,
+      "overload_weight": 5.0,
+      "predator_zero_bonus": 1.0,
+      "predator_scarcity_bonus": 0.5,
+      "prey_bonus": 0.25,
+      "attack_enabled": true,
+      "defence_enabled": true,
+      "overload_enabled": true,
+      "max_depth": 64,
+      "node_limit": 1000000000,
+      "time_limit": 0.1,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "table_entries": 10000
+    }
+  },
+  "tuning": [
+    {
+      "position": "material",
+      "scarcity": 0.0,
+      "explanation": {
+        "score": 160.05392156862746,
+        "terminal": false,
+        "features": {
+          "own": {
+            "piece_count": 2.0,
+            "clear_run": 0.1,
+            "piece_advantage": 2.25,
+            "attacking_position": 0.0,
+            "defensive_position": 0.0,
+            "overload": 0.0
+          },
+          "opponent": {
+            "piece_count": 1.0,
+            "clear_run": 0.004901960784313725,
+            "piece_advantage": 0.0,
+            "attacking_position": 0.0,
+            "defensive_position": 0.0,
+            "overload": 0.0
+          }
+        },
+        "terms": {
+          "piece_count": 100.0,
+          "clear_run": 3.8039215686274512,
+          "piece_advantage": 56.25,
+          "attacking_position": 0.0,
+          "defensive_position": 0.0,
+          "overload": -0.0
+        },
+        "races": {
+          "own": [
+            {
+              "runner": 30,
+              "route": [
+                30,
+                40,
+                50,
+                60,
+                70,
+                80
+              ],
+              "arrival": 9,
+              "opponent_arrival": 16,
+              "interceptors": [],
+              "estimate": 0.1,
+              "status": "unknown"
+            },
+            {
+              "runner": 31,
+              "route": [
+                31,
+                40,
+                50,
+                60,
+                70,
+                80
+              ],
+              "arrival": 9,
+              "opponent_arrival": 16,
+              "interceptors": [],
+              "estimate": 0.1,
+              "status": "unknown"
+            }
+          ],
+          "opponent": [
+            {
+              "runner": 70,
+              "route": [
+                70,
+                60,
+                50,
+                40,
+                39,
+                29,
+                19,
+                9,
+                0
+              ],
+              "arrival": 16,
+              "opponent_arrival": 9,
+              "interceptors": [
+                {
+                  "defender": 30,
+                  "responses": [
+                    {
+                      "square": 0,
+                      "ply": 5,
+                      "runner_ply": 16,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 9,
+                      "ply": 5,
+                      "runner_ply": 14,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 10,
+                      "ply": 3,
+                      "runner_ply": 14,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 19,
+                      "ply": 3,
+                      "runner_ply": 12,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 20,
+                      "ply": 1,
+                      "runner_ply": 12,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 29,
+                      "ply": 1,
+                      "runner_ply": 10,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 39,
+                      "ply": 1,
+                      "runner_ply": 8,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 40,
+                      "ply": 1,
+                      "runner_ply": 6,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 49,
+                      "ply": 3,
+                      "runner_ply": 6,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 50,
+                      "ply": 3,
+                      "runner_ply": 4,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 59,
+                      "ply": 5,
+                      "runner_ply": 4,
+                      "kind": "capture"
+                    }
+                  ]
+                },
+                {
+                  "defender": 31,
+                  "responses": [
+                    {
+                      "square": 0,
+                      "ply": 7,
+                      "runner_ply": 16,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 9,
+                      "ply": 7,
+                      "runner_ply": 14,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 10,
+                      "ply": 5,
+                      "runner_ply": 14,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 19,
+                      "ply": 5,
+                      "runner_ply": 12,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 20,
+                      "ply": 3,
+                      "runner_ply": 12,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 29,
+                      "ply": 3,
+                      "runner_ply": 10,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 39,
+                      "ply": 1,
+                      "runner_ply": 8,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 40,
+                      "ply": 1,
+                      "runner_ply": 6,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 49,
+                      "ply": 3,
+                      "runner_ply": 6,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 50,
+                      "ply": 3,
+                      "runner_ply": 4,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 59,
+                      "ply": 5,
+                      "runner_ply": 4,
+                      "kind": "capture"
+                    }
+                  ]
+                }
+              ],
+              "estimate": 0.004901960784313725,
+              "status": "unknown"
+            }
+          ]
+        },
+        "proof": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "position": "predator",
+      "scarcity": 0.0,
+      "explanation": {
+        "score": -21.685897435897438,
+        "terminal": false,
+        "features": {
+          "own": {
+            "piece_count": 2.0,
+            "clear_run": 0.05,
+            "piece_advantage": 0.25,
+            "attacking_position": 0.0,
+            "defensive_position": 0.0,
+            "overload": 0.0
+          },
+          "opponent": {
+            "piece_count": 2.0,
+            "clear_run": 0.019230769230769232,
+            "piece_advantage": 1.1666666666666667,
+            "attacking_position": 0.0,
+            "defensive_position": 0.0,
+            "overload": 0.0
+          }
+        },
+        "terms": {
+          "piece_count": 0.0,
+          "clear_run": 1.2307692307692308,
+          "piece_advantage": -22.916666666666668,
+          "attacking_position": 0.0,
+          "defensive_position": 0.0,
+          "overload": -0.0
+        },
+        "races": {
+          "own": [
+            {
+              "runner": 30,
+              "route": [
+                30,
+                39,
+                49,
+                59,
+                69,
+                70,
+                80
+              ],
+              "arrival": 11,
+              "opponent_arrival": 12,
+              "interceptors": [
+                {
+                  "defender": 60,
+                  "responses": [
+                    {
+                      "square": 41,
+                      "ply": 4,
+                      "runner_ply": 3,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 49,
+                      "ply": 4,
+                      "runner_ply": 3,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 50,
+                      "ply": 2,
+                      "runner_ply": 3,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 51,
+                      "ply": 2,
+                      "runner_ply": 5,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 59,
+                      "ply": 2,
+                      "runner_ply": 5,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 61,
+                      "ply": 2,
+                      "runner_ply": 7,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 69,
+                      "ply": 2,
+                      "runner_ply": 7,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 71,
+                      "ply": 4,
+                      "runner_ply": 9,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 79,
+                      "ply": 4,
+                      "runner_ply": 9,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 80,
+                      "ply": 6,
+                      "runner_ply": 11,
+                      "kind": "capture"
+                    }
+                  ]
+                }
+              ],
+              "estimate": 0.041666666666666664,
+              "status": "unknown"
+            },
+            {
+              "runner": 31,
+              "route": [
+                31,
+                41,
+                51,
+                61,
+                70,
+                80
+              ],
+              "arrival": 9,
+              "opponent_arrival": 12,
+              "interceptors": [
+                {
+                  "defender": 60,
+                  "responses": [
+                    {
+                      "square": 51,
+                      "ply": 2,
+                      "runner_ply": 3,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 61,
+                      "ply": 2,
+                      "runner_ply": 5,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 71,
+                      "ply": 4,
+                      "runner_ply": 7,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 80,
+                      "ply": 6,
+                      "runner_ply": 9,
+                      "kind": "capture"
+                    }
+                  ]
+                }
+              ],
+              "estimate": 0.05,
+              "status": "unknown"
+            }
+          ],
+          "opponent": [
+            {
+              "runner": 60,
+              "route": [
+                60,
+                50,
+                40,
+                30,
+                20,
+                10,
+                0
+              ],
+              "arrival": 12,
+              "opponent_arrival": 9,
+              "interceptors": [],
+              "estimate": 0.019230769230769232,
+              "status": "unknown"
+            },
+            {
+              "runner": 70,
+              "route": [
+                70,
+                69,
+                59,
+                49,
+                39,
+                29,
+                19,
+                9,
+                0
+              ],
+              "arrival": 16,
+              "opponent_arrival": 9,
+              "interceptors": [],
+              "estimate": 0.014705882352941176,
+              "status": "unknown"
+            }
+          ]
+        },
+        "proof": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "position": "material",
+      "scarcity": 0.5,
+      "explanation": {
+        "score": 180.88725490196077,
+        "terminal": false,
+        "features": {
+          "own": {
+            "piece_count": 2.0,
+            "clear_run": 0.1,
+            "piece_advantage": 3.25,
+            "attacking_position": 0.0,
+            "defensive_position": 0.0,
+            "overload": 0.0
+          },
+          "opponent": {
+            "piece_count": 1.0,
+            "clear_run": 0.004901960784313725,
+            "piece_advantage": 0.16666666666666666,
+            "attacking_position": 0.0,
+            "defensive_position": 0.0,
+            "overload": 0.0
+          }
+        },
+        "terms": {
+          "piece_count": 100.0,
+          "clear_run": 3.8039215686274512,
+          "piece_advantage": 77.08333333333334,
+          "attacking_position": 0.0,
+          "defensive_position": 0.0,
+          "overload": -0.0
+        },
+        "races": {
+          "own": [
+            {
+              "runner": 30,
+              "route": [
+                30,
+                40,
+                50,
+                60,
+                70,
+                80
+              ],
+              "arrival": 9,
+              "opponent_arrival": 16,
+              "interceptors": [],
+              "estimate": 0.1,
+              "status": "unknown"
+            },
+            {
+              "runner": 31,
+              "route": [
+                31,
+                40,
+                50,
+                60,
+                70,
+                80
+              ],
+              "arrival": 9,
+              "opponent_arrival": 16,
+              "interceptors": [],
+              "estimate": 0.1,
+              "status": "unknown"
+            }
+          ],
+          "opponent": [
+            {
+              "runner": 70,
+              "route": [
+                70,
+                60,
+                50,
+                40,
+                39,
+                29,
+                19,
+                9,
+                0
+              ],
+              "arrival": 16,
+              "opponent_arrival": 9,
+              "interceptors": [
+                {
+                  "defender": 30,
+                  "responses": [
+                    {
+                      "square": 0,
+                      "ply": 5,
+                      "runner_ply": 16,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 9,
+                      "ply": 5,
+                      "runner_ply": 14,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 10,
+                      "ply": 3,
+                      "runner_ply": 14,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 19,
+                      "ply": 3,
+                      "runner_ply": 12,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 20,
+                      "ply": 1,
+                      "runner_ply": 12,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 29,
+                      "ply": 1,
+                      "runner_ply": 10,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 39,
+                      "ply": 1,
+                      "runner_ply": 8,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 40,
+                      "ply": 1,
+                      "runner_ply": 6,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 49,
+                      "ply": 3,
+                      "runner_ply": 6,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 50,
+                      "ply": 3,
+                      "runner_ply": 4,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 59,
+                      "ply": 5,
+                      "runner_ply": 4,
+                      "kind": "capture"
+                    }
+                  ]
+                },
+                {
+                  "defender": 31,
+                  "responses": [
+                    {
+                      "square": 0,
+                      "ply": 7,
+                      "runner_ply": 16,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 9,
+                      "ply": 7,
+                      "runner_ply": 14,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 10,
+                      "ply": 5,
+                      "runner_ply": 14,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 19,
+                      "ply": 5,
+                      "runner_ply": 12,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 20,
+                      "ply": 3,
+                      "runner_ply": 12,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 29,
+                      "ply": 3,
+                      "runner_ply": 10,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 39,
+                      "ply": 1,
+                      "runner_ply": 8,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 40,
+                      "ply": 1,
+                      "runner_ply": 6,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 49,
+                      "ply": 3,
+                      "runner_ply": 6,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 50,
+                      "ply": 3,
+                      "runner_ply": 4,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 59,
+                      "ply": 5,
+                      "runner_ply": 4,
+                      "kind": "capture"
+                    }
+                  ]
+                }
+              ],
+              "estimate": 0.004901960784313725,
+              "status": "unknown"
+            }
+          ]
+        },
+        "proof": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "position": "predator",
+      "scarcity": 0.5,
+      "explanation": {
+        "score": -25.852564102564106,
+        "terminal": false,
+        "features": {
+          "own": {
+            "piece_count": 2.0,
+            "clear_run": 0.05,
+            "piece_advantage": 0.75,
+            "attacking_position": 0.0,
+            "defensive_position": 0.0,
+            "overload": 0.0
+          },
+          "opponent": {
+            "piece_count": 2.0,
+            "clear_run": 0.019230769230769232,
+            "piece_advantage": 1.8333333333333335,
+            "attacking_position": 0.0,
+            "defensive_position": 0.0,
+            "overload": 0.0
+          }
+        },
+        "terms": {
+          "piece_count": 0.0,
+          "clear_run": 1.2307692307692308,
+          "piece_advantage": -27.083333333333336,
+          "attacking_position": 0.0,
+          "defensive_position": 0.0,
+          "overload": -0.0
+        },
+        "races": {
+          "own": [
+            {
+              "runner": 30,
+              "route": [
+                30,
+                39,
+                49,
+                59,
+                69,
+                70,
+                80
+              ],
+              "arrival": 11,
+              "opponent_arrival": 12,
+              "interceptors": [
+                {
+                  "defender": 60,
+                  "responses": [
+                    {
+                      "square": 41,
+                      "ply": 4,
+                      "runner_ply": 3,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 49,
+                      "ply": 4,
+                      "runner_ply": 3,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 50,
+                      "ply": 2,
+                      "runner_ply": 3,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 51,
+                      "ply": 2,
+                      "runner_ply": 5,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 59,
+                      "ply": 2,
+                      "runner_ply": 5,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 61,
+                      "ply": 2,
+                      "runner_ply": 7,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 69,
+                      "ply": 2,
+                      "runner_ply": 7,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 71,
+                      "ply": 4,
+                      "runner_ply": 9,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 79,
+                      "ply": 4,
+                      "runner_ply": 9,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 80,
+                      "ply": 6,
+                      "runner_ply": 11,
+                      "kind": "capture"
+                    }
+                  ]
+                }
+              ],
+              "estimate": 0.041666666666666664,
+              "status": "unknown"
+            },
+            {
+              "runner": 31,
+              "route": [
+                31,
+                41,
+                51,
+                61,
+                70,
+                80
+              ],
+              "arrival": 9,
+              "opponent_arrival": 12,
+              "interceptors": [
+                {
+                  "defender": 60,
+                  "responses": [
+                    {
+                      "square": 51,
+                      "ply": 2,
+                      "runner_ply": 3,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 61,
+                      "ply": 2,
+                      "runner_ply": 5,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 71,
+                      "ply": 4,
+                      "runner_ply": 7,
+                      "kind": "capture"
+                    },
+                    {
+                      "square": 80,
+                      "ply": 6,
+                      "runner_ply": 9,
+                      "kind": "capture"
+                    }
+                  ]
+                }
+              ],
+              "estimate": 0.05,
+              "status": "unknown"
+            }
+          ],
+          "opponent": [
+            {
+              "runner": 60,
+              "route": [
+                60,
+                50,
+                40,
+                30,
+                20,
+                10,
+                0
+              ],
+              "arrival": 12,
+              "opponent_arrival": 9,
+              "interceptors": [],
+              "estimate": 0.019230769230769232,
+              "status": "unknown"
+            },
+            {
+              "runner": 70,
+              "route": [
+                70,
+                69,
+                59,
+                49,
+                39,
+                29,
+                19,
+                9,
+                0
+              ],
+              "arrival": 16,
+              "opponent_arrival": 9,
+              "interceptors": [],
+              "estimate": 0.014705882352941176,
+              "status": "unknown"
+            }
+          ]
+        },
+        "proof": {
+          "status": "unknown"
+        }
+      }
+    }
+  ],
+  "summaries": [
+    {
+      "mode": "nodes",
+      "variant": "core",
+      "opponent": "random",
+      "wins": 4,
+      "draws": 0,
+      "losses": 0,
+      "score": 1.0,
+      "score_interval": [
+        0.03967720868007929,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          2,
+          0,
+          0
+        ]
+      },
+      "moves": 36,
+      "p50_seconds": 0.1927806669846177,
+      "p95_seconds": 0.20547274997807108,
+      "mean_depth": 0.9166666666666666,
+      "max_table_bytes": 55094,
+      "fallback_moves": 3,
+      "nodes": 110499,
+      "work": 7035729,
+      "proof_nodes": 108505,
+      "module_seconds": {
+        "routes": 0.16240698739420623,
+        "proof": 1.3235802906565368,
+        "piece_count": 0.003632245701737702,
+        "clear_run": 5.1942122200271115,
+        "piece_advantage": 0.023850691271945834,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.004511305205394617,
+        "proof": 0.0367661191849038,
+        "piece_count": 0.00010089571393715839,
+        "clear_run": 0.14428367277853088,
+        "piece_advantage": 0.0006625192019984954,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "core",
+      "opponent": "greedy",
+      "wins": 2,
+      "draws": 0,
+      "losses": 2,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          2,
+          0,
+          0
+        ]
+      },
+      "moves": 88,
+      "p50_seconds": 0.174407270969823,
+      "p95_seconds": 0.19243435387616045,
+      "mean_depth": 1.2954545454545454,
+      "max_table_bytes": 757810,
+      "fallback_moves": 0,
+      "nodes": 404156,
+      "work": 14755802,
+      "proof_nodes": 396810,
+      "module_seconds": {
+        "routes": 0.3556497631361708,
+        "proof": 4.813489004969597,
+        "piece_count": 0.010708594345487654,
+        "clear_run": 7.65705958835315,
+        "piece_advantage": 0.06976492598187178,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.00404147458109285,
+        "proof": 0.05469873869283633,
+        "piece_count": 0.00012168857210781425,
+        "clear_run": 0.08701204077674034,
+        "piece_advantage": 0.0007927832497939976,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "core",
+      "opponent": "neural",
+      "wins": 4,
+      "draws": 0,
+      "losses": 0,
+      "score": 1.0,
+      "score_interval": [
+        0.03967720868007929,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          2,
+          0,
+          0
+        ]
+      },
+      "moves": 34,
+      "p50_seconds": 0.18497879151254892,
+      "p95_seconds": 0.19864621476153843,
+      "mean_depth": 1.0,
+      "max_table_bytes": 75692,
+      "fallback_moves": 0,
+      "nodes": 108186,
+      "work": 6592006,
+      "proof_nodes": 106206,
+      "module_seconds": {
+        "routes": 0.15443210466764867,
+        "proof": 1.2697553873294964,
+        "piece_count": 0.0034316445235162973,
+        "clear_run": 4.588151595206,
+        "piece_advantage": 0.021756378235295415,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.004542120725519079,
+        "proof": 0.03734574668616166,
+        "piece_count": 0.0001009307212798911,
+        "clear_run": 0.13494563515311764,
+        "piece_advantage": 0.0006398934775086887,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "core",
+      "opponent": "core",
+      "wins": 2,
+      "draws": 0,
+      "losses": 2,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 110,
+      "p50_seconds": 0.17757654149318114,
+      "p95_seconds": 0.1916494974575471,
+      "mean_depth": 1.290909090909091,
+      "max_table_bytes": 1253822,
+      "fallback_moves": 0,
+      "nodes": 520812,
+      "work": 19037244,
+      "proof_nodes": 511090,
+      "module_seconds": {
+        "routes": 0.45663496293127537,
+        "proof": 6.148434027680196,
+        "piece_count": 0.01415972167160362,
+        "clear_run": 9.55984877271112,
+        "piece_advantage": 0.0933610456995666,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.004151226935738867,
+        "proof": 0.05589485479709269,
+        "piece_count": 0.00012872474246912382,
+        "clear_run": 0.08690771611555564,
+        "piece_advantage": 0.0008487367790869691,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "O",
+      "opponent": "random",
+      "wins": 2,
+      "draws": 2,
+      "losses": 0,
+      "score": 0.75,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 81,
+      "p50_seconds": 0.22169124998617917,
+      "p95_seconds": 0.23581470793578774,
+      "mean_depth": 0.38271604938271603,
+      "max_table_bytes": 37890,
+      "fallback_moves": 52,
+      "nodes": 222633,
+      "work": 15738361,
+      "proof_nodes": 218779,
+      "module_seconds": {
+        "routes": 0.34585645888000727,
+        "proof": 2.654626985313371,
+        "piece_count": 0.007872792542912066,
+        "clear_run": 10.3156244821148,
+        "piece_advantage": 0.05453793972264975,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 3.6601015074411407
+      },
+      "module_seconds_per_move": {
+        "routes": 0.004269832825679102,
+        "proof": 0.03277317265818976,
+        "piece_count": 0.00009719496966558106,
+        "clear_run": 0.12735338866808393,
+        "piece_advantage": 0.0006733078978104908,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0.045186438363470874
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "O",
+      "opponent": "greedy",
+      "wins": 2,
+      "draws": 0,
+      "losses": 2,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          2,
+          0,
+          0
+        ]
+      },
+      "moves": 80,
+      "p50_seconds": 0.1924446245539002,
+      "p95_seconds": 0.2218740521231666,
+      "mean_depth": 1.125,
+      "max_table_bytes": 511078,
+      "fallback_moves": 8,
+      "nodes": 320122,
+      "work": 13174982,
+      "proof_nodes": 314446,
+      "module_seconds": {
+        "routes": 0.2996596235316247,
+        "proof": 3.7022403195733204,
+        "piece_count": 0.008870334131643176,
+        "clear_run": 6.383027827017941,
+        "piece_advantage": 0.05768542620353401,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 1.9786908169044182
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0037457452941453083,
+        "proof": 0.04627800399466651,
+        "piece_count": 0.0001108791766455397,
+        "clear_run": 0.07978784783772426,
+        "piece_advantage": 0.000721067827544175,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0.024733635211305227
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "O",
+      "opponent": "neural",
+      "wins": 4,
+      "draws": 0,
+      "losses": 0,
+      "score": 1.0,
+      "score_interval": [
+        0.03967720868007929,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          2,
+          0,
+          0
+        ]
+      },
+      "moves": 82,
+      "p50_seconds": 0.19399991648970172,
+      "p95_seconds": 0.22424771101213992,
+      "mean_depth": 0.5853658536585366,
+      "max_table_bytes": 200042,
+      "fallback_moves": 35,
+      "nodes": 240805,
+      "work": 15708217,
+      "proof_nodes": 236736,
+      "module_seconds": {
+        "routes": 0.3039758640807122,
+        "proof": 2.7203972678398713,
+        "piece_count": 0.007250672671943903,
+        "clear_run": 7.911959132296033,
+        "piece_advantage": 0.0464756244327873,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 2.949658888624981
+      },
+      "module_seconds_per_move": {
+        "routes": 0.003707022732691612,
+        "proof": 0.0331755764370716,
+        "piece_count": 0.00008842283746273053,
+        "clear_run": 0.09648730649141504,
+        "piece_advantage": 0.0005667759077169183,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0.03597144986128026
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "O",
+      "opponent": "core",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 86,
+      "p50_seconds": 0.2010920625180006,
+      "p95_seconds": 0.21972092729993165,
+      "mean_depth": 1.0232558139534884,
+      "max_table_bytes": 455138,
+      "fallback_moves": 14,
+      "nodes": 324414,
+      "work": 15228574,
+      "proof_nodes": 318690,
+      "module_seconds": {
+        "routes": 0.3456326250452548,
+        "proof": 3.8140129884704947,
+        "piece_count": 0.009832013049162924,
+        "clear_run": 8.099985255510546,
+        "piece_advantage": 0.06620338850189,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 2.684048501541838
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0040189840121541255,
+        "proof": 0.04434898823802901,
+        "piece_count": 0.00011432573312980144,
+        "clear_run": 0.09418587506407612,
+        "piece_advantage": 0.0007698068430452326,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0.031209866296998116
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "D",
+      "opponent": "random",
+      "wins": 1,
+      "draws": 3,
+      "losses": 0,
+      "score": 0.625,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          1,
+          1,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 98,
+      "p50_seconds": 0.2394875210011378,
+      "p95_seconds": 0.2595326473587193,
+      "mean_depth": 0.1326530612244898,
+      "max_table_bytes": 35040,
+      "fallback_moves": 87,
+      "nodes": 240737,
+      "work": 19175218,
+      "proof_nodes": 236648,
+      "module_seconds": {
+        "routes": 0.3943263195687905,
+        "proof": 2.8886334715643898,
+        "piece_count": 0.00882673671003431,
+        "clear_run": 11.480991909047589,
+        "piece_advantage": 0.05974349856842309,
+        "attacking_position": 0.0,
+        "defensive_position": 8.100649715750478,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.004023737954783576,
+        "proof": 0.029475851750657037,
+        "piece_count": 0.00009006874193912562,
+        "clear_run": 0.1171529786637509,
+        "piece_advantage": 0.0006096275364124806,
+        "attacking_position": 0,
+        "defensive_position": 0.0826596909770457,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "D",
+      "opponent": "greedy",
+      "wins": 2,
+      "draws": 0,
+      "losses": 2,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 124,
+      "p50_seconds": 0.20673218747833744,
+      "p95_seconds": 0.24124341866699978,
+      "mean_depth": 1.2096774193548387,
+      "max_table_bytes": 1105086,
+      "fallback_moves": 6,
+      "nodes": 529132,
+      "work": 20200036,
+      "proof_nodes": 519426,
+      "module_seconds": {
+        "routes": 0.45854500273708254,
+        "proof": 6.237778539536521,
+        "piece_count": 0.014803085592575371,
+        "clear_run": 8.555664505576715,
+        "piece_advantage": 0.09815068019088358,
+        "attacking_position": 0.0,
+        "defensive_position": 5.130431703990325,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.003697943570460343,
+        "proof": 0.05030466564142356,
+        "piece_count": 0.00011937972252076912,
+        "clear_run": 0.06899729439981221,
+        "piece_advantage": 0.0007915377434748675,
+        "attacking_position": 0,
+        "defensive_position": 0.04137444922572843,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "D",
+      "opponent": "neural",
+      "wins": 2,
+      "draws": 2,
+      "losses": 0,
+      "score": 0.75,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 116,
+      "p50_seconds": 0.23229897947749123,
+      "p95_seconds": 0.25997246874612756,
+      "mean_depth": 0.43103448275862066,
+      "max_table_bytes": 57960,
+      "fallback_moves": 69,
+      "nodes": 331757,
+      "work": 22531119,
+      "proof_nodes": 326126,
+      "module_seconds": {
+        "routes": 0.5235015111975372,
+        "proof": 4.032203305978328,
+        "piece_count": 0.01264581992290914,
+        "clear_run": 12.399192222510464,
+        "piece_advantage": 0.08968774566892534,
+        "attacking_position": 0.0,
+        "defensive_position": 8.422845802968368,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.004512944062047735,
+        "proof": 0.03476037332739938,
+        "piece_count": 0.00010901568899059603,
+        "clear_run": 0.10688958812509021,
+        "piece_advantage": 0.0007731702212838392,
+        "attacking_position": 0,
+        "defensive_position": 0.07261073968076179,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "D",
+      "opponent": "core",
+      "wins": 2,
+      "draws": 0,
+      "losses": 2,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 112,
+      "p50_seconds": 0.20775354147190228,
+      "p95_seconds": 0.24851702931919134,
+      "mean_depth": 1.1428571428571428,
+      "max_table_bytes": 1402878,
+      "fallback_moves": 6,
+      "nodes": 501894,
+      "work": 19581078,
+      "proof_nodes": 492644,
+      "module_seconds": {
+        "routes": 0.4622463583946228,
+        "proof": 6.020696202409454,
+        "piece_count": 0.014916428248398006,
+        "clear_run": 8.47501049656421,
+        "piece_advantage": 0.09918461844790727,
+        "attacking_position": 0.0,
+        "defensive_position": 5.062969176331535,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.004127199628523418,
+        "proof": 0.05375621609294155,
+        "piece_count": 0.0001331823950749822,
+        "clear_run": 0.07566973657646615,
+        "piece_advantage": 0.0008855769504277435,
+        "attacking_position": 0,
+        "defensive_position": 0.04520508193153156,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "DO",
+      "opponent": "random",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 86,
+      "p50_seconds": 0.2642840210464783,
+      "p95_seconds": 0.28363269843976013,
+      "mean_depth": 0.06976744186046512,
+      "max_table_bytes": 5956,
+      "fallback_moves": 83,
+      "nodes": 189715,
+      "work": 16614473,
+      "proof_nodes": 186466,
+      "module_seconds": {
+        "routes": 0.33258454338647425,
+        "proof": 2.2958214165410027,
+        "piece_count": 0.00723208743147552,
+        "clear_run": 9.309913132456131,
+        "piece_advantage": 0.05249777704011649,
+        "attacking_position": 0.0,
+        "defensive_position": 6.4867300720652565,
+        "overload": 3.2359224727842957
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0038672621324008635,
+        "proof": 0.026695597866755846,
+        "piece_count": 0.00008409403990087815,
+        "clear_run": 0.10825480386576897,
+        "piece_advantage": 0.0006104392679083313,
+        "attacking_position": 0,
+        "defensive_position": 0.07542709386122391,
+        "overload": 0.03762700549749181
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "DO",
+      "opponent": "greedy",
+      "wins": 2,
+      "draws": 0,
+      "losses": 2,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          2,
+          0,
+          0
+        ]
+      },
+      "moves": 122,
+      "p50_seconds": 0.2163316459627822,
+      "p95_seconds": 0.272707056166837,
+      "mean_depth": 1.0327868852459017,
+      "max_table_bytes": 665714,
+      "fallback_moves": 16,
+      "nodes": 485914,
+      "work": 21743210,
+      "proof_nodes": 477100,
+      "module_seconds": {
+        "routes": 0.5034264912828803,
+        "proof": 6.032218129024841,
+        "piece_count": 0.015964195830747485,
+        "clear_run": 8.717232914408669,
+        "piece_advantage": 0.11010057979729027,
+        "attacking_position": 0.0,
+        "defensive_position": 5.354361025267281,
+        "overload": 2.5468415598152205
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0041264466498596745,
+        "proof": 0.049444410893646235,
+        "piece_count": 0.0001308540641864548,
+        "clear_run": 0.07145272880662844,
+        "piece_advantage": 0.0009024637688302481,
+        "attacking_position": 0,
+        "defensive_position": 0.04388820512514165,
+        "overload": 0.020875750490288694
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "DO",
+      "opponent": "neural",
+      "wins": 1,
+      "draws": 3,
+      "losses": 0,
+      "score": 0.625,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          1,
+          1,
+          0
+        ]
+      },
+      "moves": 135,
+      "p50_seconds": 0.25717916700523347,
+      "p95_seconds": 0.2759382250835188,
+      "mean_depth": 0.2222222222222222,
+      "max_table_bytes": 64236,
+      "fallback_moves": 106,
+      "nodes": 339568,
+      "work": 26565529,
+      "proof_nodes": 334051,
+      "module_seconds": {
+        "routes": 0.5435580196790397,
+        "proof": 4.0624683033674955,
+        "piece_count": 0.012218440417200327,
+        "clear_run": 13.944215768598951,
+        "piece_advantage": 0.08605854562483728,
+        "attacking_position": 0.0,
+        "defensive_position": 9.516809277003631,
+        "overload": 4.7996945842169225
+      },
+      "module_seconds_per_move": {
+        "routes": 0.00402635570132622,
+        "proof": 0.030092357802722187,
+        "piece_count": 0.00009050696605333576,
+        "clear_run": 0.10329048717480704,
+        "piece_advantage": 0.000637470708332128,
+        "attacking_position": 0,
+        "defensive_position": 0.07049488353336023,
+        "overload": 0.03555329321642165
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "DO",
+      "opponent": "core",
+      "wins": 2,
+      "draws": 0,
+      "losses": 2,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          2,
+          0,
+          0
+        ]
+      },
+      "moves": 122,
+      "p50_seconds": 0.23387502052355558,
+      "p95_seconds": 0.2686822127958294,
+      "mean_depth": 1.0327868852459017,
+      "max_table_bytes": 1268176,
+      "fallback_moves": 18,
+      "nodes": 517960,
+      "work": 21763318,
+      "proof_nodes": 508424,
+      "module_seconds": {
+        "routes": 0.46807220252230763,
+        "proof": 6.311848757555708,
+        "piece_count": 0.015751569531857967,
+        "clear_run": 8.88041104155127,
+        "piece_advantage": 0.10769518732558936,
+        "attacking_position": 0.0,
+        "defensive_position": 5.292295450926758,
+        "overload": 2.708469448960386
+      },
+      "module_seconds_per_move": {
+        "routes": 0.003836657397723833,
+        "proof": 0.05173646522586646,
+        "piece_count": 0.00012911122567096694,
+        "clear_run": 0.07279025443894484,
+        "piece_advantage": 0.0008827474370949948,
+        "attacking_position": 0,
+        "defensive_position": 0.043379470909235725,
+        "overload": 0.022200569253773658
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "A",
+      "opponent": "random",
+      "wins": 3,
+      "draws": 1,
+      "losses": 0,
+      "score": 0.875,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          1,
+          1,
+          0
+        ]
+      },
+      "moves": 129,
+      "p50_seconds": 0.18091479199938476,
+      "p95_seconds": 0.2021911669988185,
+      "mean_depth": 0.5193798449612403,
+      "max_table_bytes": 104368,
+      "fallback_moves": 64,
+      "nodes": 404032,
+      "work": 24898433,
+      "proof_nodes": 397351,
+      "module_seconds": {
+        "routes": 0.5609913241351023,
+        "proof": 4.626011961954646,
+        "piece_count": 0.012834471301175654,
+        "clear_run": 15.572372819297016,
+        "piece_advantage": 0.08551138802431524,
+        "attacking_position": 1.4115959805203602,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.004348769954535677,
+        "proof": 0.035860557844609654,
+        "piece_count": 0.00009949202559050895,
+        "clear_run": 0.12071606836664353,
+        "piece_advantage": 0.0006628789769326762,
+        "attacking_position": 0.01094260450015783,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "A",
+      "opponent": "greedy",
+      "wins": 2,
+      "draws": 0,
+      "losses": 2,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          2,
+          0,
+          0
+        ]
+      },
+      "moves": 88,
+      "p50_seconds": 0.1729556875070557,
+      "p95_seconds": 0.19018775442964397,
+      "mean_depth": 1.2045454545454546,
+      "max_table_bytes": 958006,
+      "fallback_moves": 0,
+      "nodes": 400152,
+      "work": 15680698,
+      "proof_nodes": 392372,
+      "module_seconds": {
+        "routes": 0.3547282472718507,
+        "proof": 4.726526962360367,
+        "piece_count": 0.010562102310359478,
+        "clear_run": 7.374956989311613,
+        "piece_advantage": 0.06843955186195672,
+        "attacking_position": 0.837213977589272,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.004031002809907394,
+        "proof": 0.05371053366318599,
+        "piece_count": 0.00012002388989044861,
+        "clear_run": 0.0838063294239956,
+        "piece_advantage": 0.0007777221802495081,
+        "attacking_position": 0.00951379519987809,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "A",
+      "opponent": "neural",
+      "wins": 3,
+      "draws": 1,
+      "losses": 0,
+      "score": 0.875,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          1,
+          1,
+          0
+        ]
+      },
+      "moves": 92,
+      "p50_seconds": 0.17687558353645727,
+      "p95_seconds": 0.19863855404546485,
+      "mean_depth": 0.8043478260869565,
+      "max_table_bytes": 107226,
+      "fallback_moves": 19,
+      "nodes": 320468,
+      "work": 17482268,
+      "proof_nodes": 315145,
+      "module_seconds": {
+        "routes": 0.3910956470062956,
+        "proof": 3.6418353929184377,
+        "piece_count": 0.009436646825633943,
+        "clear_run": 10.260725765721872,
+        "piece_advantage": 0.06232407223433256,
+        "attacking_position": 0.9828824521973729,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0042510396413727785,
+        "proof": 0.039585167314330844,
+        "piece_count": 0.00010257224810471678,
+        "clear_run": 0.11152962788828122,
+        "piece_advantage": 0.0006774355677644844,
+        "attacking_position": 0.010683504915188836,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "A",
+      "opponent": "core",
+      "wins": 4,
+      "draws": 0,
+      "losses": 0,
+      "score": 1.0,
+      "score_interval": [
+        0.03967720868007929,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          2,
+          0,
+          0
+        ]
+      },
+      "moves": 106,
+      "p50_seconds": 0.18411568750161678,
+      "p95_seconds": 0.19710303097963333,
+      "mean_depth": 1.0377358490566038,
+      "max_table_bytes": 843358,
+      "fallback_moves": 4,
+      "nodes": 474384,
+      "work": 19755712,
+      "proof_nodes": 466096,
+      "module_seconds": {
+        "routes": 0.45144117111340165,
+        "proof": 5.636321295169182,
+        "piece_count": 0.013508864212781191,
+        "clear_run": 10.564286418491974,
+        "piece_advantage": 0.08974531444255263,
+        "attacking_position": 1.1033975700847805,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.00425887897276794,
+        "proof": 0.053172842407256435,
+        "piece_count": 0.0001274421152149169,
+        "clear_run": 0.09966307941973561,
+        "piece_advantage": 0.0008466539098354022,
+        "attacking_position": 0.010409411038535665,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "AO",
+      "opponent": "random",
+      "wins": 2,
+      "draws": 2,
+      "losses": 0,
+      "score": 0.75,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 138,
+      "p50_seconds": 0.19173877104185522,
+      "p95_seconds": 0.2253443419584073,
+      "mean_depth": 0.2536231884057971,
+      "max_table_bytes": 154178,
+      "fallback_moves": 105,
+      "nodes": 333086,
+      "work": 26836880,
+      "proof_nodes": 327478,
+      "module_seconds": {
+        "routes": 0.4361348390812054,
+        "proof": 3.719731253106147,
+        "piece_count": 0.010211424669250846,
+        "clear_run": 11.355485290987417,
+        "piece_advantage": 0.06590779940597713,
+        "attacking_position": 1.0698785127606243,
+        "defensive_position": 0.0,
+        "overload": 4.367447869153693
+      },
+      "module_seconds_per_move": {
+        "routes": 0.003160397384646416,
+        "proof": 0.02695457429787063,
+        "piece_count": 0.00007399583093660033,
+        "clear_run": 0.08228612529701027,
+        "piece_advantage": 0.00047759274931867486,
+        "attacking_position": 0.007752742846091481,
+        "defensive_position": 0,
+        "overload": 0.031648172964881836
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "AO",
+      "opponent": "greedy",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 50,
+      "p50_seconds": 0.20041195850353688,
+      "p95_seconds": 0.2158577600319404,
+      "mean_depth": 1.0,
+      "max_table_bytes": 663048,
+      "fallback_moves": 12,
+      "nodes": 192294,
+      "work": 8533614,
+      "proof_nodes": 188686,
+      "module_seconds": {
+        "routes": 0.1814805017784238,
+        "proof": 2.2873788761207834,
+        "piece_count": 0.005206777015700936,
+        "clear_run": 4.26438607450109,
+        "piece_advantage": 0.033887945930473506,
+        "attacking_position": 0.435504526947625,
+        "defensive_position": 0.0,
+        "overload": 1.3788306772476062
+      },
+      "module_seconds_per_move": {
+        "routes": 0.003629610035568476,
+        "proof": 0.04574757752241567,
+        "piece_count": 0.00010413554031401872,
+        "clear_run": 0.0852877214900218,
+        "piece_advantage": 0.0006777589186094702,
+        "attacking_position": 0.0087100905389525,
+        "defensive_position": 0,
+        "overload": 0.027576613544952125
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "AO",
+      "opponent": "neural",
+      "wins": 1,
+      "draws": 3,
+      "losses": 0,
+      "score": 0.625,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          1,
+          1,
+          0
+        ]
+      },
+      "moves": 75,
+      "p50_seconds": 0.21468454191926867,
+      "p95_seconds": 0.23110614991746842,
+      "mean_depth": 0.29333333333333333,
+      "max_table_bytes": 46504,
+      "fallback_moves": 54,
+      "nodes": 204122,
+      "work": 14583321,
+      "proof_nodes": 200703,
+      "module_seconds": {
+        "routes": 0.31033790891524404,
+        "proof": 2.3070460848975927,
+        "piece_count": 0.006808317382819951,
+        "clear_run": 8.562298079719767,
+        "piece_advantage": 0.04532562545500696,
+        "attacking_position": 0.7448032252723351,
+        "defensive_position": 0.0,
+        "overload": 2.7241189520573243
+      },
+      "module_seconds_per_move": {
+        "routes": 0.004137838785536588,
+        "proof": 0.030760614465301237,
+        "piece_count": 0.00009077756510426601,
+        "clear_run": 0.11416397439626357,
+        "piece_advantage": 0.0006043416727334261,
+        "attacking_position": 0.009930709670297801,
+        "defensive_position": 0,
+        "overload": 0.03632158602743099
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "AO",
+      "opponent": "core",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 36,
+      "p50_seconds": 0.21705741697223857,
+      "p95_seconds": 0.2301936567237135,
+      "mean_depth": 0.2777777777777778,
+      "max_table_bytes": 8830,
+      "fallback_moves": 26,
+      "nodes": 84190,
+      "work": 6417508,
+      "proof_nodes": 82672,
+      "module_seconds": {
+        "routes": 0.13488615991082042,
+        "proof": 0.9831451934296638,
+        "piece_count": 0.00300965690985322,
+        "clear_run": 4.003361452952959,
+        "piece_advantage": 0.020721427397802472,
+        "attacking_position": 0.33197333570569754,
+        "defensive_position": 0.0,
+        "overload": 1.4025345207192004
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0037468377753005675,
+        "proof": 0.027309588706379548,
+        "piece_count": 0.00008360158082925611,
+        "clear_run": 0.11120448480424885,
+        "piece_advantage": 0.0005755952054945132,
+        "attacking_position": 0.009221481547380487,
+        "defensive_position": 0,
+        "overload": 0.03895929224220001
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "AD",
+      "opponent": "random",
+      "wins": 1,
+      "draws": 3,
+      "losses": 0,
+      "score": 0.625,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          1,
+          1,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 104,
+      "p50_seconds": 0.23757656203815714,
+      "p95_seconds": 0.25611934991902674,
+      "mean_depth": 0.21153846153846154,
+      "max_table_bytes": 434612,
+      "fallback_moves": 85,
+      "nodes": 278459,
+      "work": 20064736,
+      "proof_nodes": 273685,
+      "module_seconds": {
+        "routes": 0.3962702904827893,
+        "proof": 3.3703959526028484,
+        "piece_count": 0.009477216750383377,
+        "clear_run": 10.72453201690223,
+        "piece_advantage": 0.0642799687338993,
+        "attacking_position": 0.9631091649644077,
+        "defensive_position": 7.342461000313051,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0038102912546422044,
+        "proof": 0.032407653390412,
+        "piece_count": 0.0000911270841383017,
+        "clear_run": 0.10312050016252144,
+        "piece_advantage": 0.0006180766224413394,
+        "attacking_position": 0.009260665047734689,
+        "defensive_position": 0.07060058654147164,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "AD",
+      "opponent": "greedy",
+      "wins": 2,
+      "draws": 0,
+      "losses": 2,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 42,
+      "p50_seconds": 0.21849329152610153,
+      "p95_seconds": 0.2387211611145176,
+      "mean_depth": 0.6666666666666666,
+      "max_table_bytes": 32174,
+      "fallback_moves": 14,
+      "nodes": 118298,
+      "work": 7451778,
+      "proof_nodes": 116310,
+      "module_seconds": {
+        "routes": 0.1457907713484019,
+        "proof": 1.3959825398633257,
+        "piece_count": 0.003527540364302695,
+        "clear_run": 3.8048271437874064,
+        "piece_advantage": 0.022610255517065525,
+        "attacking_position": 0.354060226585716,
+        "defensive_position": 2.5453814120264724,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0034712088416286166,
+        "proof": 0.033237679520555376,
+        "piece_count": 0.0000839890562929213,
+        "clear_run": 0.09059112247112873,
+        "piece_advantage": 0.0005383394170729887,
+        "attacking_position": 0.008430005394898,
+        "defensive_position": 0.06060431933396363,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "AD",
+      "opponent": "neural",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 110,
+      "p50_seconds": 0.2292044375790283,
+      "p95_seconds": 0.24613513091462663,
+      "mean_depth": 0.16363636363636364,
+      "max_table_bytes": 43622,
+      "fallback_moves": 94,
+      "nodes": 271171,
+      "work": 21605529,
+      "proof_nodes": 266695,
+      "module_seconds": {
+        "routes": 0.41489773732610047,
+        "proof": 3.1332258976763114,
+        "piece_count": 0.008907913113944232,
+        "clear_run": 11.623907598899677,
+        "piece_advantage": 0.05718199338298291,
+        "attacking_position": 1.0099231926724315,
+        "defensive_position": 7.988310888409615,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0037717976120554587,
+        "proof": 0.028483871797057376,
+        "piece_count": 0.00008098102830858393,
+        "clear_run": 0.10567188726272433,
+        "piece_advantage": 0.0005198363034816628,
+        "attacking_position": 0.00918111993338574,
+        "defensive_position": 0.07262100807645104,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "AD",
+      "opponent": "core",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 54,
+      "p50_seconds": 0.22863966698059812,
+      "p95_seconds": 0.24410443751257843,
+      "mean_depth": 0.7777777777777778,
+      "max_table_bytes": 283042,
+      "fallback_moves": 14,
+      "nodes": 182884,
+      "work": 10010408,
+      "proof_nodes": 179658,
+      "module_seconds": {
+        "routes": 0.20433346380013973,
+        "proof": 2.237619700608775,
+        "piece_count": 0.005644595599733293,
+        "clear_run": 4.994618420954794,
+        "piece_advantage": 0.03812491800636053,
+        "attacking_position": 0.48720941913779825,
+        "defensive_position": 3.2276188179384917,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.003783953033335921,
+        "proof": 0.041437401863125466,
+        "piece_count": 0.00010452954814320913,
+        "clear_run": 0.09249293372138506,
+        "piece_advantage": 0.0007060170001177876,
+        "attacking_position": 0.009022396650699968,
+        "defensive_position": 0.059770718850712806,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "ADO",
+      "opponent": "random",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 86,
+      "p50_seconds": 0.26119864598149434,
+      "p95_seconds": 0.2802464684646111,
+      "mean_depth": 0.06976744186046512,
+      "max_table_bytes": 5956,
+      "fallback_moves": 83,
+      "nodes": 182160,
+      "work": 16614796,
+      "proof_nodes": 179029,
+      "module_seconds": {
+        "routes": 0.30789544351864606,
+        "proof": 2.2112044414971024,
+        "piece_count": 0.006801142822951078,
+        "clear_run": 8.976149765774608,
+        "piece_advantage": 0.048980061430484056,
+        "attacking_position": 0.7576725278049707,
+        "defensive_position": 6.279610802303068,
+        "overload": 3.1257569182198495
+      },
+      "module_seconds_per_move": {
+        "routes": 0.00358017957579821,
+        "proof": 0.025711679552291887,
+        "piece_count": 0.0000790830560808265,
+        "clear_run": 0.10437383448575126,
+        "piece_advantage": 0.0005695355980288844,
+        "attacking_position": 0.008810145672150823,
+        "defensive_position": 0.073018730259338,
+        "overload": 0.036346010676974995
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "ADO",
+      "opponent": "greedy",
+      "wins": 4,
+      "draws": 0,
+      "losses": 0,
+      "score": 1.0,
+      "score_interval": [
+        0.03967720868007929,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          2,
+          0,
+          0
+        ],
+        "1": [
+          2,
+          0,
+          0
+        ]
+      },
+      "moves": 104,
+      "p50_seconds": 0.2191689375322312,
+      "p95_seconds": 0.25740477054496297,
+      "mean_depth": 1.0,
+      "max_table_bytes": 834856,
+      "fallback_moves": 20,
+      "nodes": 402466,
+      "work": 17710982,
+      "proof_nodes": 395288,
+      "module_seconds": {
+        "routes": 0.34535788372159004,
+        "proof": 4.773358617676422,
+        "piece_count": 0.010756591218523681,
+        "clear_run": 7.070047646295279,
+        "piece_advantage": 0.07056473102420568,
+        "attacking_position": 0.7539570855442435,
+        "defensive_position": 4.341372610768303,
+        "overload": 2.1244108116952702
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0033207488819383658,
+        "proof": 0.04589767901611944,
+        "piece_count": 0.00010342876171657386,
+        "clear_run": 0.06798122736822385,
+        "piece_advantage": 0.0006785070290789008,
+        "attacking_position": 0.007249587361002341,
+        "defensive_position": 0.041743967411233686,
+        "overload": 0.020427027035531446
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "ADO",
+      "opponent": "neural",
+      "wins": 1,
+      "draws": 3,
+      "losses": 0,
+      "score": 0.625,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          1,
+          1,
+          0
+        ]
+      },
+      "moves": 137,
+      "p50_seconds": 0.2567123749759048,
+      "p95_seconds": 0.2711261001648381,
+      "mean_depth": 0.19708029197080293,
+      "max_table_bytes": 125502,
+      "fallback_moves": 111,
+      "nodes": 345668,
+      "work": 27139128,
+      "proof_nodes": 339923,
+      "module_seconds": {
+        "routes": 0.5199428647756577,
+        "proof": 4.074456096044742,
+        "piece_count": 0.012037904001772404,
+        "clear_run": 13.312943206750788,
+        "piece_advantage": 0.0806666964199394,
+        "attacking_position": 1.1955697054509073,
+        "defensive_position": 9.030195782077499,
+        "overload": 4.421916760620661
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0037952033925230484,
+        "proof": 0.029740555445582056,
+        "piece_count": 0.00008786791242169637,
+        "clear_run": 0.0971747679324875,
+        "piece_advantage": 0.0005888080030652511,
+        "attacking_position": 0.008726786171174505,
+        "defensive_position": 0.06591383782538321,
+        "overload": 0.03227676467606322
+      }
+    },
+    {
+      "mode": "nodes",
+      "variant": "ADO",
+      "opponent": "core",
+      "wins": 2,
+      "draws": 0,
+      "losses": 2,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          2,
+          0,
+          0
+        ]
+      },
+      "moves": 108,
+      "p50_seconds": 0.22474293754203245,
+      "p95_seconds": 0.26372071195510216,
+      "mean_depth": 1.1666666666666667,
+      "max_table_bytes": 1563462,
+      "fallback_moves": 22,
+      "nodes": 396222,
+      "work": 16238674,
+      "proof_nodes": 388312,
+      "module_seconds": {
+        "routes": 0.31662932818289846,
+        "proof": 4.732853174209595,
+        "piece_count": 0.011235892307013273,
+        "clear_run": 6.8882484080968425,
+        "piece_advantage": 0.07352470688056201,
+        "attacking_position": 0.7564238043269143,
+        "defensive_position": 4.011212099576369,
+        "overload": 2.087591341813095
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0029317530387305414,
+        "proof": 0.04382271457601477,
+        "piece_count": 0.00010403603987975253,
+        "clear_run": 0.06378007785274854,
+        "piece_advantage": 0.0006807843229681668,
+        "attacking_position": 0.007003924114138095,
+        "defensive_position": 0.03714085277385527,
+        "overload": 0.01932954946123236
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "core",
+      "opponent": "random",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 86,
+      "p50_seconds": 0.10005647951038554,
+      "p95_seconds": 0.10009690656443126,
+      "mean_depth": 2.2325581395348837,
+      "max_table_bytes": 185688,
+      "fallback_moves": 83,
+      "nodes": 141636,
+      "work": 9015351,
+      "proof_nodes": 131612,
+      "module_seconds": {
+        "routes": 0.20272799779195338,
+        "proof": 1.5446471490431577,
+        "piece_count": 0.004328835639171302,
+        "clear_run": 6.420397175941616,
+        "piece_advantage": 0.026661409763619304,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0023573022999064347,
+        "proof": 0.01796101336096695,
+        "piece_count": 0.000050335298129898866,
+        "clear_run": 0.07465578111560019,
+        "piece_advantage": 0.00031001639260022445,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "core",
+      "opponent": "greedy",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 42,
+      "p50_seconds": 0.10006412502843887,
+      "p95_seconds": 0.10009632027358747,
+      "mean_depth": 0.3333333333333333,
+      "max_table_bytes": 17556,
+      "fallback_moves": 28,
+      "nodes": 73003,
+      "work": 4078378,
+      "proof_nodes": 71684,
+      "module_seconds": {
+        "routes": 0.09675746795255691,
+        "proof": 0.8843428632244468,
+        "piece_count": 0.00239890709053725,
+        "clear_run": 2.744052884518169,
+        "piece_advantage": 0.01561591459903866,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0023037492369656406,
+        "proof": 0.021055782457724923,
+        "piece_count": 0.00005711683548898214,
+        "clear_run": 0.06533459248852783,
+        "piece_advantage": 0.00037180749045330144,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "core",
+      "opponent": "neural",
+      "wins": 1,
+      "draws": 3,
+      "losses": 0,
+      "score": 0.625,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          1,
+          1,
+          0
+        ]
+      },
+      "moves": 132,
+      "p50_seconds": 0.10006610449636355,
+      "p95_seconds": 0.10010532877640799,
+      "mean_depth": 0.6287878787878788,
+      "max_table_bytes": 191420,
+      "fallback_moves": 112,
+      "nodes": 245034,
+      "work": 14456997,
+      "proof_nodes": 238238,
+      "module_seconds": {
+        "routes": 0.3545542391948402,
+        "proof": 2.8830332465004176,
+        "piece_count": 0.0083548593102023,
+        "clear_run": 9.558187024551444,
+        "piece_advantage": 0.05349941097665578,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0026860169635972743,
+        "proof": 0.021841160958336495,
+        "piece_count": 0.00006329438871365379,
+        "clear_run": 0.07241050776175337,
+        "piece_advantage": 0.00040529856800496805,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "core",
+      "opponent": "core",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 114,
+      "p50_seconds": 0.10005933290813118,
+      "p95_seconds": 0.10011032683541998,
+      "mean_depth": 0.017543859649122806,
+      "max_table_bytes": 3090,
+      "fallback_moves": 112,
+      "nodes": 180983,
+      "work": 11984035,
+      "proof_nodes": 177978,
+      "module_seconds": {
+        "routes": 0.265053489129059,
+        "proof": 2.1636113438289613,
+        "piece_count": 0.006091562332585454,
+        "clear_run": 8.757799321669154,
+        "piece_advantage": 0.03922733140643686,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0023250306063952544,
+        "proof": 0.018979046875692643,
+        "piece_count": 0.000053434757303381175,
+        "clear_run": 0.07682280106727328,
+        "piece_advantage": 0.00034409939830207773,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "O",
+      "opponent": "random",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 86,
+      "p50_seconds": 0.10006024996982887,
+      "p95_seconds": 0.10009467724012211,
+      "mean_depth": 2.2325581395348837,
+      "max_table_bytes": 185688,
+      "fallback_moves": 83,
+      "nodes": 112544,
+      "work": 7837670,
+      "proof_nodes": 102972,
+      "module_seconds": {
+        "routes": 0.167301076464355,
+        "proof": 1.2206299036042765,
+        "piece_count": 0.003492186078801751,
+        "clear_run": 5.06363505567424,
+        "piece_advantage": 0.02200271759647876,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 1.736512528383173
+      },
+      "module_seconds_per_move": {
+        "routes": 0.001945361354236686,
+        "proof": 0.01419337097214275,
+        "piece_count": 0.00004060681486978781,
+        "clear_run": 0.05887947739156093,
+        "piece_advantage": 0.00025584555344742747,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0.020192006143990384
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "O",
+      "opponent": "greedy",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 42,
+      "p50_seconds": 0.10005816648481414,
+      "p95_seconds": 0.10010373126715422,
+      "mean_depth": 0.14285714285714285,
+      "max_table_bytes": 5964,
+      "fallback_moves": 36,
+      "nodes": 58631,
+      "work": 3699410,
+      "proof_nodes": 57554,
+      "module_seconds": {
+        "routes": 0.0794327900512144,
+        "proof": 0.6968068578280509,
+        "piece_count": 0.0018497135024517775,
+        "clear_run": 2.231852100463584,
+        "piece_advantage": 0.011604538187384605,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 0.7443858404876664
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0018912569059812952,
+        "proof": 0.01659063947209645,
+        "piece_count": 0.00004404079767742327,
+        "clear_run": 0.05313933572532343,
+        "piece_advantage": 0.00027629852827106206,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0.017723472392563486
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "O",
+      "opponent": "neural",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 120,
+      "p50_seconds": 0.10006181243807077,
+      "p95_seconds": 0.10010798987932504,
+      "mean_depth": 0.5583333333333333,
+      "max_table_bytes": 191420,
+      "fallback_moves": 116,
+      "nodes": 168220,
+      "work": 11705438,
+      "proof_nodes": 162661,
+      "module_seconds": {
+        "routes": 0.265100265503861,
+        "proof": 1.9464643854880705,
+        "piece_count": 0.005842377315275371,
+        "clear_run": 7.169868679251522,
+        "piece_advantage": 0.0368094437289983,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 2.3133575790561736
+      },
+      "module_seconds_per_move": {
+        "routes": 0.002209168879198842,
+        "proof": 0.01622053654573392,
+        "piece_count": 0.00004868647762729476,
+        "clear_run": 0.05974890566042935,
+        "piece_advantage": 0.0003067453644083192,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0.019277979825468115
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "O",
+      "opponent": "core",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 114,
+      "p50_seconds": 0.10006758302915841,
+      "p95_seconds": 0.10012223116355017,
+      "mean_depth": 0.017543859649122806,
+      "max_table_bytes": 3090,
+      "fallback_moves": 112,
+      "nodes": 139086,
+      "work": 10297825,
+      "proof_nodes": 136740,
+      "module_seconds": {
+        "routes": 0.2172521500615403,
+        "proof": 1.7008028666023165,
+        "piece_count": 0.005119957379065454,
+        "clear_run": 6.894412221736275,
+        "piece_advantage": 0.03392590687144548,
+        "attacking_position": 0.0,
+        "defensive_position": 0.0,
+        "overload": 2.3848845202010125
+      },
+      "module_seconds_per_move": {
+        "routes": 0.001905720614574915,
+        "proof": 0.01491932339124839,
+        "piece_count": 0.00004491190683390749,
+        "clear_run": 0.060477300190669075,
+        "piece_advantage": 0.00029759567431092524,
+        "attacking_position": 0,
+        "defensive_position": 0,
+        "overload": 0.020920039650886076
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "D",
+      "opponent": "random",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 86,
+      "p50_seconds": 0.1000647500040941,
+      "p95_seconds": 0.10009615623857826,
+      "mean_depth": 2.2325581395348837,
+      "max_table_bytes": 185688,
+      "fallback_moves": 83,
+      "nodes": 92545,
+      "work": 7083021,
+      "proof_nodes": 83283,
+      "module_seconds": {
+        "routes": 0.14111996290739626,
+        "proof": 0.9955662125721574,
+        "piece_count": 0.003022087039425969,
+        "clear_run": 4.20386126881931,
+        "piece_advantage": 0.01946333679370582,
+        "attacking_position": 0.0,
+        "defensive_position": 2.858244614675641,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0016409298012487936,
+        "proof": 0.011576351308978574,
+        "piece_count": 0.00003514054697006941,
+        "clear_run": 0.04888210777696872,
+        "piece_advantage": 0.00022631786969425373,
+        "attacking_position": 0,
+        "defensive_position": 0.03323540249622838,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "D",
+      "opponent": "greedy",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 42,
+      "p50_seconds": 0.10005614598048851,
+      "p95_seconds": 0.10009409337653778,
+      "mean_depth": 0.11904761904761904,
+      "max_table_bytes": 5964,
+      "fallback_moves": 37,
+      "nodes": 48876,
+      "work": 3366693,
+      "proof_nodes": 47955,
+      "module_seconds": {
+        "routes": 0.06900459330063313,
+        "proof": 0.584281790885143,
+        "piece_count": 0.0016421646578237414,
+        "clear_run": 1.8700320463394746,
+        "piece_advantage": 0.010190033470280468,
+        "attacking_position": 0.0,
+        "defensive_position": 1.2411334950011224,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0016429665071579318,
+        "proof": 0.013911471211551023,
+        "piece_count": 0.00003909915851961289,
+        "clear_run": 0.04452457253189225,
+        "piece_advantage": 0.00024261984453048733,
+        "attacking_position": 0,
+        "defensive_position": 0.02955079750002672,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "D",
+      "opponent": "neural",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 120,
+      "p50_seconds": 0.10005981201538816,
+      "p95_seconds": 0.10008841102244333,
+      "mean_depth": 0.5583333333333333,
+      "max_table_bytes": 191420,
+      "fallback_moves": 116,
+      "nodes": 139149,
+      "work": 10709611,
+      "proof_nodes": 134041,
+      "module_seconds": {
+        "routes": 0.22199491888750345,
+        "proof": 1.5832412788877264,
+        "piece_count": 0.004748257459141314,
+        "clear_run": 5.916146965231746,
+        "piece_advantage": 0.0293896779185161,
+        "attacking_position": 0.0,
+        "defensive_position": 4.011449603596702,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.001849957657395862,
+        "proof": 0.013193677324064386,
+        "piece_count": 0.000039568812159510953,
+        "clear_run": 0.04930122471026455,
+        "piece_advantage": 0.00024491398265430084,
+        "attacking_position": 0,
+        "defensive_position": 0.033428746696639186,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "D",
+      "opponent": "core",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 114,
+      "p50_seconds": 0.10006450006039813,
+      "p95_seconds": 0.10009977101581172,
+      "mean_depth": 0.017543859649122806,
+      "max_table_bytes": 3090,
+      "fallback_moves": 112,
+      "nodes": 117963,
+      "work": 9648071,
+      "proof_nodes": 115942,
+      "module_seconds": {
+        "routes": 0.18314419395755976,
+        "proof": 1.413569046300836,
+        "piece_count": 0.004178882227279246,
+        "clear_run": 5.788971144706011,
+        "piece_advantage": 0.02724085352383554,
+        "attacking_position": 0.0,
+        "defensive_position": 3.8460917002521455,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.001606528017171577,
+        "proof": 0.012399728476323122,
+        "piece_count": 0.0000366568616428004,
+        "clear_run": 0.05078044863777202,
+        "piece_advantage": 0.00023895485547224156,
+        "attacking_position": 0,
+        "defensive_position": 0.033737646493439875,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "DO",
+      "opponent": "random",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 86,
+      "p50_seconds": 0.10006983298808336,
+      "p95_seconds": 0.10009797872044146,
+      "mean_depth": 2.2325581395348837,
+      "max_table_bytes": 185688,
+      "fallback_moves": 83,
+      "nodes": 77409,
+      "work": 6336814,
+      "proof_nodes": 68382,
+      "module_seconds": {
+        "routes": 0.12366566236596555,
+        "proof": 0.8406763564562425,
+        "piece_count": 0.0027164064813405275,
+        "clear_run": 3.547574617085047,
+        "piece_advantage": 0.01876318105496466,
+        "attacking_position": 0.0,
+        "defensive_position": 2.515075396047905,
+        "overload": 1.1752459991257638
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0014379728182089017,
+        "proof": 0.009775306470421425,
+        "piece_count": 0.000031586121876052645,
+        "clear_run": 0.041250867640523804,
+        "piece_advantage": 0.00021817652389493792,
+        "attacking_position": 0,
+        "defensive_position": 0.029245062744743082,
+        "overload": 0.01366565115262516
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "DO",
+      "opponent": "greedy",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 42,
+      "p50_seconds": 0.1000618955004029,
+      "p95_seconds": 0.10009386459714734,
+      "mean_depth": 0.09523809523809523,
+      "max_table_bytes": 3098,
+      "fallback_moves": 38,
+      "nodes": 40565,
+      "work": 3046730,
+      "proof_nodes": 39773,
+      "module_seconds": {
+        "routes": 0.06054778560064733,
+        "proof": 0.49853097880259156,
+        "piece_count": 0.0014990516938269138,
+        "clear_run": 1.608855223050341,
+        "piece_advantage": 0.010094799217768013,
+        "attacking_position": 0.0,
+        "defensive_position": 1.0656453294213861,
+        "overload": 0.5268010124564171
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0014416139428725554,
+        "proof": 0.011869785209585513,
+        "piece_count": 0.0000356917069958789,
+        "clear_run": 0.038306076739293836,
+        "piece_advantage": 0.00024035236232780984,
+        "attacking_position": 0,
+        "defensive_position": 0.025372507843366338,
+        "overload": 0.012542881248962311
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "DO",
+      "opponent": "neural",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 120,
+      "p50_seconds": 0.1000685835024342,
+      "p95_seconds": 0.10009449823992327,
+      "mean_depth": 0.5583333333333333,
+      "max_table_bytes": 191420,
+      "fallback_moves": 116,
+      "nodes": 116127,
+      "work": 9589155,
+      "proof_nodes": 111379,
+      "module_seconds": {
+        "routes": 0.20071367791388184,
+        "proof": 1.375450039980933,
+        "piece_count": 0.004516865126788616,
+        "clear_run": 5.085137727786787,
+        "piece_advantage": 0.030150204431265593,
+        "attacking_position": 0.0,
+        "defensive_position": 3.4381390140624717,
+        "overload": 1.609335809131153
+      },
+      "module_seconds_per_move": {
+        "routes": 0.001672613982615682,
+        "proof": 0.011462083666507776,
+        "piece_count": 0.00003764054272323847,
+        "clear_run": 0.042376147731556554,
+        "piece_advantage": 0.00025125170359387996,
+        "attacking_position": 0,
+        "defensive_position": 0.028651158450520596,
+        "overload": 0.013411131742759607
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "DO",
+      "opponent": "core",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 114,
+      "p50_seconds": 0.10006156202871352,
+      "p95_seconds": 0.10009532554540783,
+      "mean_depth": 0.017543859649122806,
+      "max_table_bytes": 3090,
+      "fallback_moves": 112,
+      "nodes": 100803,
+      "work": 9045692,
+      "proof_nodes": 99052,
+      "module_seconds": {
+        "routes": 0.15825710247736424,
+        "proof": 1.1936372600030154,
+        "piece_count": 0.0034404933685436845,
+        "clear_run": 4.9545856572221965,
+        "piece_advantage": 0.02234052214771509,
+        "attacking_position": 0.0,
+        "defensive_position": 3.2832671869546175,
+        "overload": 1.6675990573130548
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0013882201971698617,
+        "proof": 0.010470502280728206,
+        "piece_count": 0.000030179766390734075,
+        "clear_run": 0.04346127769493155,
+        "piece_advantage": 0.0001959694925238166,
+        "attacking_position": 0,
+        "defensive_position": 0.02880058935925103,
+        "overload": 0.014628061906254868
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "A",
+      "opponent": "random",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 86,
+      "p50_seconds": 0.10005770798306912,
+      "p95_seconds": 0.10010631298064254,
+      "mean_depth": 2.2325581395348837,
+      "max_table_bytes": 185688,
+      "fallback_moves": 83,
+      "nodes": 132639,
+      "work": 8925827,
+      "proof_nodes": 122758,
+      "module_seconds": {
+        "routes": 0.1936474438989535,
+        "proof": 1.4483924938831478,
+        "piece_count": 0.004057773156091571,
+        "clear_run": 6.032168307108805,
+        "piece_advantage": 0.025476001435890794,
+        "attacking_position": 0.499577782000415,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0022517144639413195,
+        "proof": 0.016841773184687766,
+        "piece_count": 0.00004718340879176245,
+        "clear_run": 0.07014149194312563,
+        "piece_advantage": 0.0002962325748359395,
+        "attacking_position": 0.005809043976749012,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "A",
+      "opponent": "greedy",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 40,
+      "p50_seconds": 0.10005324997473508,
+      "p95_seconds": 0.10011007079738192,
+      "mean_depth": 0.15,
+      "max_table_bytes": 5964,
+      "fallback_moves": 34,
+      "nodes": 63711,
+      "work": 3945283,
+      "proof_nodes": 62550,
+      "module_seconds": {
+        "routes": 0.08585901255719364,
+        "proof": 0.7484082265291363,
+        "piece_count": 0.0019500377820804715,
+        "clear_run": 2.4969357362715527,
+        "piece_advantage": 0.012420555809512734,
+        "attacking_position": 0.21928213955834508,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.002146475313929841,
+        "proof": 0.018710205663228407,
+        "piece_count": 0.000048750944552011787,
+        "clear_run": 0.06242339340678882,
+        "piece_advantage": 0.00031051389523781834,
+        "attacking_position": 0.005482053488958627,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "A",
+      "opponent": "neural",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 120,
+      "p50_seconds": 0.10006268747383729,
+      "p95_seconds": 0.10010298396809958,
+      "mean_depth": 0.5583333333333333,
+      "max_table_bytes": 191420,
+      "fallback_moves": 116,
+      "nodes": 193430,
+      "work": 13021560,
+      "proof_nodes": 187484,
+      "module_seconds": {
+        "routes": 0.30344757868442684,
+        "proof": 2.2626288807950914,
+        "piece_count": 0.006762134842574596,
+        "clear_run": 8.380640684743412,
+        "piece_advantage": 0.04350243147928268,
+        "attacking_position": 0.72222222504206,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0025287298223702235,
+        "proof": 0.018855240673292428,
+        "piece_count": 0.00005635112368812164,
+        "clear_run": 0.06983867237286176,
+        "piece_advantage": 0.00036252026232735566,
+        "attacking_position": 0.006018518542017167,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "A",
+      "opponent": "core",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 114,
+      "p50_seconds": 0.1000633544754237,
+      "p95_seconds": 0.10011083921999671,
+      "mean_depth": 0.017543859649122806,
+      "max_table_bytes": 3090,
+      "fallback_moves": 112,
+      "nodes": 167185,
+      "work": 11753619,
+      "proof_nodes": 164403,
+      "module_seconds": {
+        "routes": 0.2551057490054518,
+        "proof": 2.0417433043476194,
+        "piece_count": 0.0058497420977801085,
+        "clear_run": 8.214870395022444,
+        "piece_advantage": 0.03928572405129671,
+        "attacking_position": 0.669181669712998,
+        "defensive_position": 0.0,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0022377697281179983,
+        "proof": 0.017910028985505432,
+        "piece_count": 0.00005131352717350972,
+        "clear_run": 0.0720602666230039,
+        "piece_advantage": 0.00034461161448505885,
+        "attacking_position": 0.005870014646605246,
+        "defensive_position": 0,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "AO",
+      "opponent": "random",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 86,
+      "p50_seconds": 0.10005806252593175,
+      "p95_seconds": 0.10010093796881847,
+      "mean_depth": 2.2325581395348837,
+      "max_table_bytes": 185688,
+      "fallback_moves": 83,
+      "nodes": 107561,
+      "work": 7868514,
+      "proof_nodes": 98066,
+      "module_seconds": {
+        "routes": 0.15900927549228072,
+        "proof": 1.154678417602554,
+        "piece_count": 0.0033027075696736574,
+        "clear_run": 4.823844620259479,
+        "piece_advantage": 0.02086799347307533,
+        "attacking_position": 0.4030508002033457,
+        "defensive_position": 0.0,
+        "overload": 1.653324285754934
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0018489450638637293,
+        "proof": 0.013426493227936674,
+        "piece_count": 0.00003840357639155415,
+        "clear_run": 0.056091216514645104,
+        "piece_advantage": 0.00024265108689622476,
+        "attacking_position": 0.00468663721166681,
+        "defensive_position": 0,
+        "overload": 0.019224700997150394
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "AO",
+      "opponent": "greedy",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 42,
+      "p50_seconds": 0.10005889553576708,
+      "p95_seconds": 0.10008184592588805,
+      "mean_depth": 0.14285714285714285,
+      "max_table_bytes": 5964,
+      "fallback_moves": 36,
+      "nodes": 55847,
+      "work": 3705879,
+      "proof_nodes": 54814,
+      "module_seconds": {
+        "routes": 0.07570601080078632,
+        "proof": 0.6625513271428645,
+        "piece_count": 0.0017685431521385908,
+        "clear_run": 2.1236550961621106,
+        "piece_advantage": 0.011104005854576826,
+        "attacking_position": 0.18533982732333243,
+        "defensive_position": 0.0,
+        "overload": 0.7079852337483317
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0018025240666853886,
+        "proof": 0.01577503159863963,
+        "piece_count": 0.00004210817028901407,
+        "clear_run": 0.050563216575288346,
+        "piece_advantage": 0.00026438109177563874,
+        "attacking_position": 0.004412853031507915,
+        "defensive_position": 0,
+        "overload": 0.016856791279722182
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "AO",
+      "opponent": "neural",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 120,
+      "p50_seconds": 0.10006145847728476,
+      "p95_seconds": 0.10009884787723422,
+      "mean_depth": 0.5583333333333333,
+      "max_table_bytes": 191420,
+      "fallback_moves": 116,
+      "nodes": 162155,
+      "work": 11860120,
+      "proof_nodes": 156697,
+      "module_seconds": {
+        "routes": 0.252765862387605,
+        "proof": 1.8456581070786342,
+        "piece_count": 0.005381142138503492,
+        "clear_run": 6.833532217773609,
+        "piece_advantage": 0.03317820909433067,
+        "attacking_position": 0.5899887105915695,
+        "defensive_position": 0.0,
+        "overload": 2.1954951187362894
+      },
+      "module_seconds_per_move": {
+        "routes": 0.002106382186563375,
+        "proof": 0.015380484225655284,
+        "piece_count": 0.000044842851154195765,
+        "clear_run": 0.056946101814780076,
+        "piece_advantage": 0.0002764850757860889,
+        "attacking_position": 0.00491657258826308,
+        "defensive_position": 0,
+        "overload": 0.018295792656135745
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "AO",
+      "opponent": "core",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 114,
+      "p50_seconds": 0.10006662498926744,
+      "p95_seconds": 0.10010421029292046,
+      "mean_depth": 0.017543859649122806,
+      "max_table_bytes": 3090,
+      "fallback_moves": 112,
+      "nodes": 133167,
+      "work": 10410380,
+      "proof_nodes": 130910,
+      "module_seconds": {
+        "routes": 0.20734837325289845,
+        "proof": 1.6119829544331878,
+        "piece_count": 0.0047689564526081085,
+        "clear_run": 6.571933378116228,
+        "piece_advantage": 0.03195793100167066,
+        "attacking_position": 0.5385685469955206,
+        "defensive_position": 0.0,
+        "overload": 2.2782965120859444
+      },
+      "module_seconds_per_move": {
+        "routes": 0.00181884537941139,
+        "proof": 0.014140201354677086,
+        "piece_count": 0.00004183295133866762,
+        "clear_run": 0.05764853840452831,
+        "piece_advantage": 0.0002803327280848303,
+        "attacking_position": 0.004724285499960707,
+        "defensive_position": 0,
+        "overload": 0.019985057123560915
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "AD",
+      "opponent": "random",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 86,
+      "p50_seconds": 0.10007058299379423,
+      "p95_seconds": 0.10010405248613097,
+      "mean_depth": 2.2325581395348837,
+      "max_table_bytes": 185688,
+      "fallback_moves": 83,
+      "nodes": 87428,
+      "work": 6961149,
+      "proof_nodes": 78247,
+      "module_seconds": {
+        "routes": 0.1375238971086219,
+        "proof": 0.961479825200513,
+        "piece_count": 0.003061287570744753,
+        "clear_run": 4.018805985688232,
+        "piece_advantage": 0.020691921934485435,
+        "attacking_position": 0.3350800435291603,
+        "defensive_position": 2.732889238046482,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0015991150826583941,
+        "proof": 0.011179997967447826,
+        "piece_count": 0.000035596367101683175,
+        "clear_run": 0.04673030215916549,
+        "piece_advantage": 0.00024060374342424926,
+        "attacking_position": 0.0038962795759204688,
+        "defensive_position": 0.03177778183774979,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "AD",
+      "opponent": "greedy",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 42,
+      "p50_seconds": 0.10005727095995098,
+      "p95_seconds": 0.1000960850622505,
+      "mean_depth": 0.09523809523809523,
+      "max_table_bytes": 3098,
+      "fallback_moves": 38,
+      "nodes": 46767,
+      "work": 3371064,
+      "proof_nodes": 45880,
+      "module_seconds": {
+        "routes": 0.06631437118630856,
+        "proof": 0.5592055423185229,
+        "piece_count": 0.0015529424417763948,
+        "clear_run": 1.7950877777766436,
+        "piece_advantage": 0.010094745550304651,
+        "attacking_position": 0.15673261357005686,
+        "defensive_position": 1.1848861990729347,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0015789135996740135,
+        "proof": 0.013314417674250546,
+        "piece_count": 0.00003697482004229512,
+        "clear_run": 0.04274018518515818,
+        "piece_advantage": 0.00024035108453106311,
+        "attacking_position": 0.0037317288945251633,
+        "defensive_position": 0.028211576168403207,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "AD",
+      "opponent": "neural",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 120,
+      "p50_seconds": 0.10006122954655439,
+      "p95_seconds": 0.10009719312074594,
+      "mean_depth": 0.5583333333333333,
+      "max_table_bytes": 191420,
+      "fallback_moves": 116,
+      "nodes": 132391,
+      "work": 10662356,
+      "proof_nodes": 127392,
+      "module_seconds": {
+        "routes": 0.21274247101973742,
+        "proof": 1.5087399105541408,
+        "piece_count": 0.004583018133416772,
+        "clear_run": 5.643153812736273,
+        "piece_advantage": 0.02834240533411503,
+        "attacking_position": 0.48817354755010456,
+        "defensive_position": 3.8879226909484714,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0017728539251644785,
+        "proof": 0.012572832587951173,
+        "piece_count": 0.0000381918177784731,
+        "clear_run": 0.04702628177280228,
+        "piece_advantage": 0.00023618671111762523,
+        "attacking_position": 0.004068112896250872,
+        "defensive_position": 0.03239935575790393,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "AD",
+      "opponent": "core",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 114,
+      "p50_seconds": 0.10006304195849225,
+      "p95_seconds": 0.10008295601001009,
+      "mean_depth": 0.017543859649122806,
+      "max_table_bytes": 3090,
+      "fallback_moves": 112,
+      "nodes": 112742,
+      "work": 9675665,
+      "proof_nodes": 110806,
+      "module_seconds": {
+        "routes": 0.17907595844008029,
+        "proof": 1.3567983797984198,
+        "piece_count": 0.004104829393327236,
+        "clear_run": 5.56781442288775,
+        "piece_advantage": 0.026773852296173573,
+        "attacking_position": 0.4544926079688594,
+        "defensive_position": 3.6744968752609566,
+        "overload": 0.0
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0015708417407024587,
+        "proof": 0.011901740173670348,
+        "piece_count": 0.000036007275380063475,
+        "clear_run": 0.04884047739375219,
+        "piece_advantage": 0.00023485835347520677,
+        "attacking_position": 0.003986777262884732,
+        "defensive_position": 0.03223242873035927,
+        "overload": 0
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "ADO",
+      "opponent": "random",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 86,
+      "p50_seconds": 0.10006797895766795,
+      "p95_seconds": 0.10012077097781003,
+      "mean_depth": 2.2325581395348837,
+      "max_table_bytes": 185688,
+      "fallback_moves": 83,
+      "nodes": 75573,
+      "work": 6446366,
+      "proof_nodes": 66572,
+      "module_seconds": {
+        "routes": 0.12221783585846424,
+        "proof": 0.8201401316327974,
+        "piece_count": 0.002711999579332769,
+        "clear_run": 3.472256956505589,
+        "piece_advantage": 0.01881577307358384,
+        "attacking_position": 0.2879296778701246,
+        "defensive_position": 2.346205410780385,
+        "overload": 1.1479506118921563
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0014211376262612122,
+        "proof": 0.0095365131585209,
+        "piece_count": 0.0000315348788294508,
+        "clear_run": 0.040375080889599874,
+        "piece_advantage": 0.00021878805899516095,
+        "attacking_position": 0.003348019510117728,
+        "defensive_position": 0.0272814582648882,
+        "overload": 0.013348262928978562
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "ADO",
+      "opponent": "greedy",
+      "wins": 0,
+      "draws": 0,
+      "losses": 4,
+      "score": 0.0,
+      "score_interval": [
+        0.0,
+        0.9603227913199207
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          0,
+          2
+        ],
+        "1": [
+          0,
+          0,
+          2
+        ]
+      },
+      "moves": 42,
+      "p50_seconds": 0.10006633354350924,
+      "p95_seconds": 0.10010748739587143,
+      "mean_depth": 0.09523809523809523,
+      "max_table_bytes": 3098,
+      "fallback_moves": 38,
+      "nodes": 39119,
+      "work": 3068767,
+      "proof_nodes": 38349,
+      "module_seconds": {
+        "routes": 0.05919507914222777,
+        "proof": 0.4799742784816772,
+        "piece_count": 0.0014468715526163578,
+        "clear_run": 1.5616130897542462,
+        "piece_advantage": 0.009933500085026026,
+        "attacking_position": 0.137124294298701,
+        "defensive_position": 1.01998259476386,
+        "overload": 0.5033692501019686
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0014094066462435183,
+        "proof": 0.011427959011468505,
+        "piece_count": 0.000034449322681341853,
+        "clear_run": 0.03718126404176777,
+        "piece_advantage": 0.00023651190678633394,
+        "attacking_position": 0.003264864149969071,
+        "defensive_position": 0.024285299875330003,
+        "overload": 0.011984982145284968
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "ADO",
+      "opponent": "neural",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 120,
+      "p50_seconds": 0.10006497899303213,
+      "p95_seconds": 0.10009458367130719,
+      "mean_depth": 0.5583333333333333,
+      "max_table_bytes": 191420,
+      "fallback_moves": 116,
+      "nodes": 114825,
+      "work": 9870458,
+      "proof_nodes": 110102,
+      "module_seconds": {
+        "routes": 0.19167721061967313,
+        "proof": 1.3192142365733162,
+        "piece_count": 0.004177714115940034,
+        "clear_run": 4.931279633659869,
+        "piece_advantage": 0.02678967930842191,
+        "attacking_position": 0.426418422954157,
+        "defensive_position": 3.32163031923119,
+        "overload": 1.5461068173171952
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0015973100884972761,
+        "proof": 0.010993451971444301,
+        "piece_count": 0.000034814284299500285,
+        "clear_run": 0.041093996947165576,
+        "piece_advantage": 0.00022324732757018258,
+        "attacking_position": 0.0035534868579513083,
+        "defensive_position": 0.027680252660259915,
+        "overload": 0.012884223477643293
+      }
+    },
+    {
+      "mode": "wall",
+      "variant": "ADO",
+      "opponent": "core",
+      "wins": 0,
+      "draws": 4,
+      "losses": 0,
+      "score": 0.5,
+      "score_interval": [
+        0.0,
+        1.0
+      ],
+      "by_colour": {
+        "0": [
+          0,
+          2,
+          0
+        ],
+        "1": [
+          0,
+          2,
+          0
+        ]
+      },
+      "moves": 114,
+      "p50_seconds": 0.10006260446971282,
+      "p95_seconds": 0.10009504809277132,
+      "mean_depth": 0.017543859649122806,
+      "max_table_bytes": 3090,
+      "fallback_moves": 112,
+      "nodes": 97181,
+      "work": 9106484,
+      "proof_nodes": 95486,
+      "module_seconds": {
+        "routes": 0.1532750012120232,
+        "proof": 1.1543742031790316,
+        "piece_count": 0.0033662369241937995,
+        "clear_run": 4.792297936975956,
+        "piece_advantage": 0.021794338710606098,
+        "attacking_position": 0.3924752869643271,
+        "defensive_position": 3.163074040785432,
+        "overload": 1.6069058829452842
+      },
+      "module_seconds_per_move": {
+        "routes": 0.0013445175544914317,
+        "proof": 0.010126089501570453,
+        "piece_count": 0.000029528394071875435,
+        "clear_run": 0.04203770120154347,
+        "piece_advantage": 0.00019117840974215876,
+        "attacking_position": 0.0034427656751256763,
+        "defensive_position": 0.027746263515661684,
+        "overload": 0.014095665639870915
+      }
+    }
+  ],
+  "elapsed_seconds": 1102.892382708029,
+  "process_peak_rss_bytes": 462503936
+}

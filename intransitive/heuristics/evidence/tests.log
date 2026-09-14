@@ -1,0 +1,195 @@
+test_both_winners_keep_relative_outcome_and_q_order (test_augmentation.CoachAugmentation.test_both_winners_keep_relative_outcome_and_q_order) ... ok
+test_official_blue_first_selfplay_and_compressed_draw_targets (test_augmentation.CoachAugmentation.test_official_blue_first_selfplay_and_compressed_draw_targets) ... ok
+test_absolute_targets_swap_only_for_e (test_augmentation.TrainingAugmentation.test_absolute_targets_swap_only_for_e) ... ok
+test_all_twelve_full_histories_masks_and_inverse_policies (test_augmentation.TrainingAugmentation.test_all_twelve_full_histories_masks_and_inverse_policies) ... ok
+test_deduplication_uses_history_policy_and_mask (test_augmentation.TrainingAugmentation.test_deduplication_uses_history_policy_and_mask) ... ok
+test_e_reflection_retains_square_actions_and_changes_goal (test_augmentation.TrainingAugmentation.test_e_reflection_retains_square_actions_and_changes_goal) ... ok
+test_exact_repetitions_survive_recanonicalization (test_augmentation.TrainingAugmentation.test_exact_repetitions_survive_recanonicalization) ... ok
+test_owned_outputs_and_invalid_shapes_or_mover (test_augmentation.TrainingAugmentation.test_owned_outputs_and_invalid_shapes_or_mover) ... ok
+test_colour_swap_and_nonzero_draw_reward (test_baseline.BaselineAccounting.test_colour_swap_and_nonzero_draw_reward) ... ok
+test_draws_remain_in_denominator_and_intervals_are_nonzero (test_baseline.BaselineAccounting.test_draws_remain_in_denominator_and_intervals_are_nonzero) ... ok
+test_selection_keeps_rejection_visible (test_baseline.BaselineAccounting.test_selection_keeps_rejection_visible) ... ok
+test_distribution_includes_empty_and_tail (test_benchmark_training.BenchmarkAccounting.test_distribution_includes_empty_and_tail) ... ok
+test_replay_accounting_includes_all_fields_and_compression (test_benchmark_training.BenchmarkAccounting.test_replay_accounting_includes_all_fields_and_compression) ... ok
+test_dynamic_batch_and_single_onnx_match_pytorch_and_masks (test_checkpoints.Checkpoints.test_dynamic_batch_and_single_onnx_match_pytorch_and_masks) ... /Users/work/orca/workspaces/alpha-zero-general/issue-34-intransitive-build-alpha-beta/GenericNNetWrapper.py:312: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/private/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+ok
+test_incompatible_metadata_and_weights_fail_without_replacing_model (test_checkpoints.Checkpoints.test_incompatible_metadata_and_weights_fail_without_replacing_model) ... ok
+test_legacy_feature_config_checkpoint_is_supported (test_checkpoints.Checkpoints.test_legacy_feature_config_checkpoint_is_supported) ... ok
+test_missing_metadata_weights_and_unreadable_files_fail_clearly (test_checkpoints.Checkpoints.test_missing_metadata_weights_and_unreadable_files_fail_clearly) ... ok
+test_pit_checkpoint_opponents_play_complete_games_as_both_colours (test_checkpoints.Checkpoints.test_pit_checkpoint_opponents_play_complete_games_as_both_colours) ... /Users/work/orca/workspaces/alpha-zero-general/issue-34-intransitive-build-alpha-beta/GenericNNetWrapper.py:312: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/private/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+/Users/work/orca/workspaces/alpha-zero-general/issue-34-intransitive-build-alpha-beta/GenericNNetWrapper.py:312: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/private/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+ok
+test_reload_invalidates_existing_onnx_session (test_checkpoints.Checkpoints.test_reload_invalidates_existing_onnx_session) ... ok
+test_resumed_training_recreates_optimizer_and_uses_caller_settings (test_checkpoints.Checkpoints.test_resumed_training_recreates_optimizer_and_uses_caller_settings) ... /Users/work/orca/workspaces/alpha-zero-general/issue-34-intransitive-build-alpha-beta/GenericNNetWrapper.py:312: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/private/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+ok
+test_round_trip_reconstructs_architecture_features_and_settings (test_checkpoints.Checkpoints.test_round_trip_reconstructs_architecture_features_and_settings) ... ok
+test_standalone_converter_rejects_incompatible_features (test_checkpoints.Checkpoints.test_standalone_converter_rejects_incompatible_features) ... ok
+test_standalone_export_cli_dynamic_batch_parity (test_checkpoints.Checkpoints.test_standalone_export_cli_dynamic_batch_parity) ... ok
+test_unrelated_game_shared_checkpoint_and_export_regression (test_checkpoints.Checkpoints.test_unrelated_game_shared_checkpoint_and_export_regression) ... /Users/work/orca/workspaces/alpha-zero-general/issue-34-intransitive-build-alpha-beta/GenericNNetWrapper.py:312: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/private/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+/Users/work/orca/workspaces/alpha-zero-general/issue-34-intransitive-build-alpha-beta/chkpt_to_onnx.py:33: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+ok
+test_29_and_30_individual_noncaptures (test_draws.ModellingDraws.test_29_and_30_individual_noncaptures) ... ok
+test_captures_on_29th_and_30th_move_reset_history (test_draws.ModellingDraws.test_captures_on_29th_and_30th_move_reset_history) ... ok
+test_compiled_repetition_branch_does_not_contaminate_sibling (test_draws.ModellingDraws.test_compiled_repetition_branch_does_not_contaminate_sibling) ... ok
+test_compiled_siblings_keep_independent_draws_and_counters (test_draws.ModellingDraws.test_compiled_siblings_keep_independent_draws_and_counters) ... ok
+test_corner_on_30th_move_wins (test_draws.ModellingDraws.test_corner_on_30th_move_wins) ... ok
+test_exact_piece_type_colour_square_and_turn (test_draws.ModellingDraws.test_exact_piece_type_colour_square_and_turn) ... ok
+test_initial_second_and_third_nonconsecutive_occurrence (test_draws.ModellingDraws.test_initial_second_and_third_nonconsecutive_occurrence) ... ok
+test_official_wins_precede_both_draw_conditions (test_draws.ModellingDraws.test_official_wins_precede_both_draw_conditions) ... ok
+test_repetition_precedes_simultaneous_capture_limit (test_draws.ModellingDraws.test_repetition_precedes_simultaneous_capture_limit) ... ok
+test_same_type_piece_identities_are_interchangeable (test_draws.ModellingDraws.test_same_type_piece_identities_are_interchangeable) ... ok
+test_serialization_and_all_symmetries_preserve_draws (test_draws.ModellingDraws.test_serialization_and_all_symmetries_preserve_draws) ... ok
+test_stalemate_on_30th_move_wins (test_draws.ModellingDraws.test_stalemate_on_30th_move_wins) ... ok
+test_symmetry_equivalent_physical_positions_do_not_repeat (test_draws.ModellingDraws.test_symmetry_equivalent_physical_positions_do_not_repeat) ... ok
+test_complete_seeded_mcts_games_match_reference (test_equivalence.IndependentEquivalence.test_complete_seeded_mcts_games_match_reference) ... ok
+test_rare_transition_thresholds_and_canonical_i9_defender (test_equivalence.IndependentEquivalence.test_rare_transition_thresholds_and_canonical_i9_defender) ... ok
+test_repetition_orbits_and_simultaneous_precedence (test_equivalence.IndependentEquivalence.test_repetition_orbits_and_simultaneous_precedence) ... ok
+test_seeded_reachable_transitions_all_actions_all_symmetries (test_equivalence.IndependentEquivalence.test_seeded_reachable_transitions_all_actions_all_symmetries) ... ok
+test_adapter_contract_and_owned_augmentation_hook (test_game.CanonicalGameIntegration.test_adapter_contract_and_owned_augmentation_hook) ... ok
+test_all_legal_action_round_trips_both_players_and_goals (test_game.CanonicalGameIntegration.test_all_legal_action_round_trips_both_players_and_goals) ... ok
+test_capture_crosses_127_without_resetting_round (test_game.CanonicalGameIntegration.test_capture_crosses_127_without_resetting_round) ... ok
+test_compiled_draw_branches_keep_history_and_reward_perspective (test_game.CanonicalGameIntegration.test_compiled_draw_branches_keep_history_and_reward_perspective) ... ok
+test_display_and_invalid_public_inputs (test_game.CanonicalGameIntegration.test_display_and_invalid_public_inputs) ... ok
+test_mcts_selects_playable_physical_actions_and_cleans_by_total_ply (test_game.CanonicalGameIntegration.test_mcts_selects_playable_physical_actions_and_cleans_by_total_ply) ... ok
+test_player_zero_defending_i9_can_win_at_a1 (test_game.CanonicalGameIntegration.test_player_zero_defending_i9_can_win_at_a1) ... ok
+test_search_keys_cover_history_counters_and_goals (test_game.CanonicalGameIntegration.test_search_keys_cover_history_counters_and_goals) ... ok
+test_swap_complete_history_involution_and_borrowed_ownership (test_game.CanonicalGameIntegration.test_swap_complete_history_involution_and_borrowed_ownership) ... ok
+test_all_module_combinations_skip_disabled_computation (test_heuristics.HeuristicTests.test_all_module_combinations_skip_disabled_computation) ... ok
+test_attack_safe_progress_and_unreachable_capture (test_heuristics.HeuristicTests.test_attack_safe_progress_and_unreachable_capture) ... ok
+test_bound_entries_are_not_exact_and_research_agrees (test_heuristics.HeuristicTests.test_bound_entries_are_not_exact_and_research_agrees) ... ok
+test_capture_increases_material_and_preserves_state (test_heuristics.HeuristicTests.test_capture_increases_material_and_preserves_state) ... ok
+test_config_validation_clamp_and_roundtrip (test_heuristics.HeuristicTests.test_config_validation_clamp_and_roundtrip) ... ok
+test_cycle_zero_predator_bonus_and_gradual_scarcity (test_heuristics.HeuristicTests.test_cycle_zero_predator_bonus_and_gradual_scarcity) ... ok
+test_defence_timing_safety_and_capture_vs_block (test_heuristics.HeuristicTests.test_defence_timing_safety_and_capture_vs_block) ... ok
+test_draws_and_official_win_precedence (test_heuristics.HeuristicTests.test_draws_and_official_win_precedence) ... ok
+test_goal_blockade_capturable_corner_and_interceptor (test_heuristics.HeuristicTests.test_goal_blockade_capturable_corner_and_interceptor) ... ok
+test_history_separation_and_config_invalidation (test_heuristics.HeuristicTests.test_history_separation_and_config_invalidation) ... ok
+test_immediate_stalemate_is_ordered_and_selected_as_a_win (test_heuristics.HeuristicTests.test_immediate_stalemate_is_ordered_and_selected_as_a_win) ... ok
+test_mate_normalization_and_parent_to_child_reuse (test_heuristics.HeuristicTests.test_mate_normalization_and_parent_to_child_reuse) ... ok
+test_overload_and_real_redundancy (test_heuristics.HeuristicTests.test_overload_and_real_redundancy) ... ok
+test_proof_exhaustion_is_unknown (test_heuristics.HeuristicTests.test_proof_exhaustion_is_unknown) ... ok
+test_random_positions_and_leaf_proofs_match_reference (test_heuristics.HeuristicTests.test_random_positions_and_leaf_proofs_match_reference) ... ok
+test_same_type_and_friendly_detours (test_heuristics.HeuristicTests.test_same_type_and_friendly_detours) ... ok
+test_search_matches_exhaustive_with_and_without_cache (test_heuristics.HeuristicTests.test_search_matches_exhaustive_with_and_without_cache) ... ok
+test_symmetries_canonical_colour_and_state_preservation (test_heuristics.HeuristicTests.test_symmetries_canonical_colour_and_state_preservation) ... ok
+test_tempo_competing_type_and_proven_clear_run (test_heuristics.HeuristicTests.test_tempo_competing_type_and_proven_clear_run) ... ok
+test_zero_budget_and_last_completed_iteration (test_heuristics.HeuristicTests.test_zero_budget_and_last_completed_iteration) ... ok
+test_canonical_features_and_value_q_label_order (test_network.HistoryNetwork.test_canonical_features_and_value_q_label_order) ... ok
+test_categorical_goals_and_scalar_oracle_all_history_lengths (test_network.HistoryNetwork.test_categorical_goals_and_scalar_oracle_all_history_lengths) ... ok
+test_finite_gradients_parameter_update_and_legal_mask (test_network.HistoryNetwork.test_finite_gradients_parameter_update_and_legal_mask) ... ok
+test_padding_and_reserved_bytes_do_not_leak_through_encoder_bias (test_network.HistoryNetwork.test_padding_and_reserved_bytes_do_not_leak_through_encoder_bias) ... ok
+test_repetition_includes_turn_and_ignores_padding (test_network.HistoryNetwork.test_repetition_includes_turn_and_ignores_padding) ... ok
+test_same_board_distinguishes_history_order_turns_goals_and_clock (test_network.HistoryNetwork.test_same_board_distinguishes_history_order_turns_goals_and_clock) ... ok
+test_shared_training_checkpoint_placeholder_and_onnx_dynamic_batch (test_network.HistoryNetwork.test_shared_training_checkpoint_placeholder_and_onnx_dynamic_batch) ... /Users/work/orca/workspaces/alpha-zero-general/issue-34-intransitive-build-alpha-beta/GenericNNetWrapper.py:312: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/private/tmp/intransitive-issue10-venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+ok
+test_square_major_action_mapping_exhaustive (test_network.HistoryNetwork.test_square_major_action_mapping_exhaustive) ... ok
+test_unsupported_version_fails_at_construction (test_network.HistoryNetwork.test_unsupported_version_fails_at_construction) ... ok
+test_arena_assigns_wins_losses_draws_when_agents_swap (test_pipeline.SharedPipeline.test_arena_assigns_wins_losses_draws_when_agents_swap) ... ok
+test_arena_restore_preserves_subsequent_draws_and_terminal_mcts (test_pipeline.SharedPipeline.test_arena_restore_preserves_subsequent_draws_and_terminal_mcts) ... ok
+test_arena_restore_rejects_wrong_size_or_player (test_pipeline.SharedPipeline.test_arena_restore_rejects_wrong_size_or_player) ... ok
+test_candidate_acceptance_excludes_draws_and_rejects_all_draws (test_pipeline.SharedPipeline.test_candidate_acceptance_excludes_draws_and_rejects_all_draws) ... ok
+test_coach_draw_labels_replay_roundtrips_and_real_training (test_pipeline.SharedPipeline.test_coach_draw_labels_replay_roundtrips_and_real_training) ... ok
+test_episode_sampling_seed_is_independent_of_global_rng_and_worker (test_pipeline.SharedPipeline.test_episode_sampling_seed_is_independent_of_global_rng_and_worker) ... ok
+test_main_cli_selects_real_game_network_coach_and_starts_blue (test_pipeline.SharedPipeline.test_main_cli_selects_real_game_network_coach_and_starts_blue) ... 2026-09-14 11:36:29 Octavius main[32051] INFO Saved run sources and settings to /private/var/folders/9s/b0plnkhx1bz465j5xqhr3mw80000gr/T/tmpyywu70kw/source_backups/20260914T020629.296334Z-5021af267fa7431b87dc0947a085f85b
+ok
+test_parallel_real_onnx_workers_have_independent_complete_states (test_pipeline.SharedPipeline.test_parallel_real_onnx_workers_have_independent_complete_states) ... ok
+test_pit_cli_random_opponents (test_pipeline.SharedPipeline.test_pit_cli_random_opponents) ... ok
+test_registry_official_start_and_unrelated_game_smoke (test_pipeline.SharedPipeline.test_registry_official_start_and_unrelated_game_smoke) ... ok
+test_rejected_trained_candidate_survives_rollback_and_reload (test_pipeline.SharedPipeline.test_rejected_trained_candidate_survives_rollback_and_reload) ... 2026-09-14 11:37:02 Octavius Coach[32051] INFO Iter #1 - new vs previous: 0-0  (2 draws) --> REJECTED (1)
+ok
+test_sequential_episodes_receive_fresh_search_trees (test_pipeline.SharedPipeline.test_sequential_episodes_receive_fresh_search_trees) ... NN version: 88, network i/o shape: (5, 5, 3) -> 1782, total nb of nnet params: 456924
+MCTS seed=17: plies=54, reason=no-capture limit
+MCTS seed=170: plies=30, reason=no-capture limit
+Random seed=4: plies=47, reason=no-capture limit
+Random seed=7: plies=30, reason=no-capture limit
+Random seed=11: plies=46, reason=no-capture limit
+Generated gate: states=11, transformed branches=6072, captures=2
+Self Play:   0%|                                                                                  | 0/2 [00:00<?, ?it/s]Self Play: 100%|███████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00, 21959.71it/s]
+ok
+test_human_can_undo_before_ai_reply (test_play.AIPlaySessionTests.test_human_can_undo_before_ai_reply) ... ok
+test_inference_and_reload_failure_preserve_game (test_play.AIPlaySessionTests.test_inference_and_reload_failure_preserve_game) ... ok
+test_red_opening_and_undo_keep_ai_opening (test_play.AIPlaySessionTests.test_red_opening_and_undo_keep_ai_opening) ... ok
+test_reply_and_undo_restore_complete_human_turn (test_play.AIPlaySessionTests.test_reply_and_undo_restore_complete_human_turn) ... ok
+test_terminal_human_move_does_not_request_ai (test_play.AIPlaySessionTests.test_terminal_human_move_does_not_request_ai) ... ok
+test_turn_ownership_and_stale_ai_requests_are_atomic (test_play.AIPlaySessionTests.test_turn_ownership_and_stale_ai_requests_are_atomic) ... ok
+test_capture_and_undo_restore_exact_history (test_play.PlaySessionTests.test_capture_and_undo_restore_exact_history) ... ok
+test_invalid_and_stale_moves_are_atomic (test_play.PlaySessionTests.test_invalid_and_stale_moves_are_atomic) ... ok
+test_repetition_terminal_and_undo (test_play.PlaySessionTests.test_repetition_terminal_and_undo) ... ok
+test_restart_clears_history_and_counters (test_play.PlaySessionTests.test_restart_clears_history_and_counters) ... ok
+test_invalid_selection_or_options_preserve_game (test_play.SelectableOpponentTests.test_invalid_selection_or_options_preserve_game) ... ok
+test_switch_all_opponents_and_independent_options (test_play.SelectableOpponentTests.test_switch_all_opponents_and_independent_options) ... ok
+test_all_on_board_actions_round_trip_and_bad_syntax_rejected (test_players.DisplayAndPlayers.test_all_on_board_actions_round_trip_and_bad_syntax_rejected) ... ok
+test_display_opening_and_canonical_red_keep_physical_colours (test_players.DisplayAndPlayers.test_display_opening_and_canonical_red_keep_physical_colours) ... ok
+test_greedy_avoids_reply_capturing_its_last_piece (test_players.DisplayAndPlayers.test_greedy_avoids_reply_capturing_its_last_piece) ... ok
+test_greedy_capture_then_distance_then_lowest_action (test_players.DisplayAndPlayers.test_greedy_capture_then_distance_then_lowest_action) ... ok
+test_greedy_immediate_corner_win_for_both_physical_colours (test_players.DisplayAndPlayers.test_greedy_immediate_corner_win_for_both_physical_colours) ... ok
+test_greedy_prevents_corner_loss_before_more_advanced_capture (test_players.DisplayAndPlayers.test_greedy_prevents_corner_loss_before_more_advanced_capture) ... ok
+test_greedy_stalemate_win_beats_target_distance (test_players.DisplayAndPlayers.test_greedy_stalemate_win_beats_target_distance) ... ok
+test_human_eof_and_interrupt_propagate (test_players.DisplayAndPlayers.test_human_eof_and_interrupt_propagate) ... ok
+test_human_retries_without_mutation_for_both_colours (test_players.DisplayAndPlayers.test_human_retries_without_mutation_for_both_colours) ... ok
+test_occupied_goal_keeps_piece_and_goal_labels (test_players.DisplayAndPlayers.test_occupied_goal_keeps_piece_and_goal_labels) ... ok
+test_pit_player_factory_callback_contract (test_players.DisplayAndPlayers.test_pit_player_factory_callback_contract) ... ok
+test_seeded_arena_games_both_assignments_preserve_opening_and_states (test_players.DisplayAndPlayers.test_seeded_arena_games_both_assignments_preserve_opening_and_states) ... ok
+test_seeded_random_only_legal_and_canonical_action_equivalence (test_players.DisplayAndPlayers.test_seeded_random_only_legal_and_canonical_action_equivalence) ... ok
+test_terminal_players_fail_without_input_and_arena_skips_callbacks (test_players.DisplayAndPlayers.test_terminal_players_fail_without_input_and_arena_skips_callbacks) ... ok
+test_all_type_pairings_for_both_colours (test_rules.MovementAndCaptures.test_all_type_pairings_for_both_colours) ... ok
+test_capture_removes_only_defender_and_preserves_attacker (test_rules.MovementAndCaptures.test_capture_removes_only_defender_and_preserves_attacker) ... ok
+test_each_colour_executes_its_capture_cycle (test_rules.MovementAndCaptures.test_each_colour_executes_its_capture_cycle) ... ok
+test_edges_and_diagonal_clearance (test_rules.MovementAndCaptures.test_edges_and_diagonal_clearance) ... ok
+test_noncapture_and_optional_capture (test_rules.MovementAndCaptures.test_noncapture_and_optional_capture) ... ok
+test_public_action_errors_are_atomic (test_rules.MovementAndCaptures.test_public_action_errors_are_atomic) ... ok
+test_compiled_board_path (test_rules.OfficialWins.test_compiled_board_path) ... ok
+test_each_player_wins_by_entering_opponents_corner (test_rules.OfficialWins.test_each_player_wins_by_entering_opponents_corner) ... ok
+test_losing_one_type_has_no_special_effect (test_rules.OfficialWins.test_losing_one_type_has_no_special_effect) ... ok
+test_no_pieces_and_blocked_army_are_stalemates (test_rules.OfficialWins.test_no_pieces_and_blocked_army_are_stalemates) ... ok
+test_occupied_goal_requires_legal_capture (test_rules.OfficialWins.test_occupied_goal_requires_legal_capture) ... ok
+test_own_corner_can_be_entered_and_left (test_rules.OfficialWins.test_own_corner_can_be_entered_and_left) ... ok
+test_simultaneous_corner_winners_are_rejected_without_mutation (test_rules.OfficialWins.test_simultaneous_corner_winners_are_rejected_without_mutation) ... ok
+test_transformed_corner_ownership_is_respected (test_rules.OfficialWins.test_transformed_corner_ownership_is_respected) ... ok
+test_all_actions (test_state.CoordinatesAndActions.test_all_actions) ... ok
+test_bad_actions (test_state.CoordinatesAndActions.test_bad_actions) ... ok
+test_coordinates (test_state.CoordinatesAndActions.test_coordinates) ... ok
+test_capacity_and_capture_reset (test_state.StateContract.test_capacity_and_capture_reset) ... ok
+test_malformed_state_rejected_without_mutation (test_state.StateContract.test_malformed_state_rejected_without_mutation) ... ok
+test_maximum_ply_and_atomic_overflow (test_state.StateContract.test_maximum_ply_and_atomic_overflow) ... ok
+test_official_setup_and_initial_bytes (test_state.StateContract.test_official_setup_and_initial_bytes) ... ok
+test_ownership_queries_and_branches (test_state.StateContract.test_ownership_queries_and_branches) ... ok
+test_total_ply_survives_127_and_serialization (test_state.StateContract.test_total_ply_survives_127_and_serialization) ... ok
+test_actions_exhaustively (test_symmetries.Symmetries.test_actions_exhaustively) ... ok
+test_full_state (test_symmetries.Symmetries.test_full_state) ... ok
+test_group (test_symmetries.Symmetries.test_group) ... ok
+test_invalid_arguments (test_symmetries.Symmetries.test_invalid_arguments) ... ok
+test_only_allowed_transforms_and_official_initialization (test_symmetries.Symmetries.test_only_allowed_transforms_and_official_initialization) ... ok
+test_policy_mask_values_and_compiled_call (test_symmetries.Symmetries.test_policy_mask_values_and_compiled_call) ... ok
+test_printed_coordinate_fixtures (test_symmetries.Symmetries.test_printed_coordinate_fixtures) ... ok
+test_actual_optimizer_steps_are_independent_of_replay_length (test_symmetry_efficiency.SymmetryEfficiency.test_actual_optimizer_steps_are_independent_of_replay_length) ... ok
+test_enabled_covers_all_ids_and_disabled_is_owned_identity (test_symmetry_efficiency.SymmetryEfficiency.test_enabled_covers_all_ids_and_disabled_is_owned_identity) ... /Users/work/orca/workspaces/alpha-zero-general/issue-34-intransitive-build-alpha-beta/intransitive/tests/test_symmetry_efficiency.py:27: RuntimeWarning: invalid value encountered in divide
+  policy /= policy.sum()
+ok
+test_invalid_update_budgets_and_short_replay_fail (test_symmetry_efficiency.SymmetryEfficiency.test_invalid_update_budgets_and_short_replay_fail) ... ok
+test_pairing_rejects_changed_seeds_and_accounts_for_draws (test_symmetry_efficiency.SymmetryEfficiency.test_pairing_rejects_changed_seeds_and_accounts_for_draws) ... ok
+test_protocol_caps_equal_original_positions_and_fixed_updates (test_symmetry_efficiency.SymmetryEfficiency.test_protocol_caps_equal_original_positions_and_fixed_updates) ... ok
+
+----------------------------------------------------------------------
+Ran 152 tests in 66.952s
+
+OK
