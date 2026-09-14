@@ -106,7 +106,7 @@ class ProofLimit(Exception):
     pass
 
 
-def prove(game, state, config, budget):
+def prove_reference(game, state, config, budget, *, compiled_order=False):
     """Terminal-only bounded adversarial search; exhausted/horizon = unknown.
 
     Unknown leaves have neutral utility only inside this proof search. They can
@@ -133,9 +133,14 @@ def prove(game, state, config, budget):
                                            int(position[:, :, 32].flat[2]), depth):
                 return 0., []
         best, pv = -inf, []
-        actions = list(map(int, np.flatnonzero(game.getValidMoves(position, side))))
+        mask = game.getValidMoves(position, side)
         goal = 80 if side == int(position[:, :, 32].flat[2]) else 0
-        actions.sort(key=lambda a: action_destination(a) != (goal % 9, goal // 9))
+        if compiled_order:
+            from .proof import order_legal_actions
+            actions = order_legal_actions(mask, side, int(position[:, :, 32].flat[2]))
+        else:
+            actions = list(map(int, np.flatnonzero(mask)))
+            actions.sort(key=lambda a: action_destination(a) != (goal % 9, goal // 9))
         for action in actions:
             budget.charge()
             child, _ = game.getNextState(position, side, action)
@@ -158,6 +163,45 @@ def prove(game, state, config, budget):
         return dict(status='unknown', reason='horizon', nodes=used)
     except ProofLimit:
         return dict(status='unknown', reason='proof budget', nodes=used)
+    finally:
+        budget.module_seconds['proof'] += perf_counter() - start
+        budget.module_calls['proof'] += 1
+
+
+def prove(game, state, config, budget, *, specialised=True):
+    """Use a warmed, bounded native call; preserve reference for larger proofs.
+
+    Each logical visit and traversed edge costs one work, plus the root bound
+    query, exactly as in the reference. Specialisation saves physical work;
+    it does not rename the counted unit. An interrupted call publishes no proof.
+    """
+    from . import proof as kernels
+    from ..IntransitiveGame import IntransitiveGame
+    if (not kernels.READY or not state.flags.c_contiguous or not state.flags.writeable
+            or type(game) is not IntransitiveGame
+            or config.proof_nodes > kernels.NATIVE_NODE_LIMIT
+            or config.proof_depth == 0 or config.proof_nodes == 0):
+        return prove_reference(game, state, config, budget)
+    start = perf_counter()
+    try:
+        budget.check()
+        score, line, counts = kernels.native_proof(
+            state, config.proof_depth, config.proof_nodes,
+            min(2 * kernels.NATIVE_NODE_LIMIT + 1, max(0, budget.limit - budget.work)),
+            specialised)
+        work, nodes, stop = map(int, counts)
+        budget.work += work
+        budget.nodes += nodes
+        budget.proof_nodes += nodes
+        budget.check()
+        if stop == 2:
+            raise BudgetExpired('work')
+        if stop == 1:
+            return dict(status='unknown', reason='proof budget', nodes=nodes)
+        if abs(score) > MATE_THRESHOLD:
+            return dict(status='proven', score=score, pv=list(map(int, line[line >= 0])),
+                        plies=int(MATE - abs(score)), nodes=nodes)
+        return dict(status='unknown', reason='horizon', nodes=nodes)
     finally:
         budget.module_seconds['proof'] += perf_counter() - start
         budget.module_calls['proof'] += 1
@@ -186,8 +230,11 @@ class AlphaBetaPlayer:
         self._hints.clear()
         self.last_result = None
 
-    def _prepare(self):
+    def _prepare(self, *, warm_proof=True):
         warm_search_kernels()
+        if warm_proof:
+            from .proof import warm_proof_kernel
+            warm_proof_kernel()
         if self.config.attack_enabled or self.config.defence_enabled or self.config.overload_enabled:
             warm_route_kernels()
         identity = self.config.identity()
@@ -303,7 +350,7 @@ class AlphaBetaPlayer:
                 self._hints[key] = depth
 
     def analyze(self, state, budget=None):
-        self._prepare()
+        self._prepare(warm_proof=budget is None)
         budget = budget or Budget(self.config.node_limit, self.config.time_limit)
         side = int(state[:, :, 32].flat[1])
         # Validation/one legal fallback is required even for a zero budget.
