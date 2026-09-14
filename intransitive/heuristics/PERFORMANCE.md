@@ -4,6 +4,9 @@ This records the earlier evaluation optimisation. Subsequent
 [deadline and transposition changes](ANYTIME_SEARCH.md) improve move ordering,
 retain completed branches at interruption, and replace wire-format cache keys
 with equivalent future-play identities.
+The later [incremental-material report](../benchmarks/material/README.md) records
+paired fixed-depth/equal-time measurements, allocations and numerical guards
+from the merged compiled-proof baseline.
 
 These changes preserve the v2 evaluation formulas, binary clear-run scoring,
 move ordering, full game history and fixed-depth minimax results. A time-limited

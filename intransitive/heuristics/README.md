@@ -7,6 +7,8 @@ The standalone player is implemented. See [implementation, formulas and runnable
 and [measured ablation results](MEASUREMENTS.md). The default bounded proof uses
 [compiled traversal and last-ply specialisation](../benchmarks/proof/README.md),
 with unchanged accounting and a reference fallback for larger proof budgets.
+Core scalar leaves use [incremental counts and exact material reuse](../benchmarks/material/README.md),
+preserving board-order floating-point sums and the public detailed evaluator.
 The original design follows below.
 
 Tracked in [implementation issue #34](https://github.com/lukekh/alpha-zero-general/issues/34),
