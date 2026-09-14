@@ -33,6 +33,8 @@
   h3 { font-size: 16px; margin: 0 0 10px; }
   p { margin: 8px 0 16px; }
   .controls { display: flex; gap: 8px; }
+  select { font: inherit; padding: 6px; margin-left: 8px; }
+  #model { font-size: 13px; }
   .controls button { border: 1px solid #c8cec3; background: white; border-radius: 7px; font: inherit; padding: 8px 14px; cursor: pointer; }
   .controls button:disabled { opacity: .45; cursor: default; }
   .counts { display: flex; justify-content: space-between; font-weight: 600; margin: 16px 0; }
@@ -46,7 +48,7 @@
   @media (max-width: 760px) { main { margin: 20px auto; padding: 0 12px; } .layout { grid-template-columns: 1fr; gap: 16px; } header { align-items: start; } h1 { font-size: 30px; } .piece { font-size: clamp(16px, 4vw, 26px); } .coordinate { font-size: 9px; } }
 </style>
 <main>
-  <header><div><p class="eyebrow">The corner is the goal</p><h1>Intransitive</h1></div><span class="muted">Local · Play both sides</span></header>
+  <header><div><p class="eyebrow">The corner is the goal</p><h1>Intransitive</h1></div><span class="muted" id="mode">Local game</span></header>
   <div class="layout">
     <section><div id="board" class="board" aria-label="Intransitive board"></div><p class="muted">Blue targets I9 ↗ &nbsp; · &nbsp; Red targets A1 ↙</p></section>
     <aside>
@@ -54,8 +56,10 @@
         <p class="eyebrow" id="turn">Loading game</p>
         <h2 id="status" aria-live="polite">Getting the board ready…</h2>
         <p id="hint">Select a piece, then a highlighted destination.</p>
+        <p id="ai-options" hidden><label for="colour">Your colour <select id="colour"><option value="0">Blue · move first</option><option value="1">Red · AI moves first</option></select></label></p>
+        <p class="muted" id="model" hidden></p>
         <div class="counts"><span id="blue-count"></span><span id="red-count"></span></div>
-        <div class="controls"><button id="undo" disabled>Undo</button><button id="restart" disabled>New game</button></div>
+        <div class="controls"><button id="undo" disabled>Undo</button><button id="restart" disabled>New game</button><button id="retry" hidden>Retry AI</button></div>
         <p id="error" role="alert" hidden></p>
       </div>
       <div class="card">
@@ -71,7 +75,7 @@
   </div>
 </main>
 <script>
-  let state, selected = null, busy = false;
+  let state, selected = null, busy = false, pendingCommand = null;
   const $ = id => document.getElementById(id);
   const names = ['', 'rock', 'scissors', 'paper'];
   const symbols = ['', 'R', 'S', 'P'];
@@ -81,6 +85,8 @@
   async function request(command, extra = {}) {
     if (busy) return;
     busy = true;
+    pendingCommand = command;
+    let succeeded = false;
     if (state) render();
     $('error').hidden = true;
     try {
@@ -92,17 +98,27 @@
       if (!response.ok) throw new Error(data.error || 'Unable to update the board.');
       state = data;
       selected = null;
+      if (!command || command === 'restart') $('colour').value = String(state.human_player);
+      succeeded = true;
     } catch (error) {
-      $('error').textContent = error.message + ' Reload the page to reconnect.';
+      // Recover the authoritative board after a stale request or lost response.
+      try {
+        const response = await fetch('/api/state');
+        if (response.ok) state = await response.json();
+      } catch (_) { /* Keep the last visible board while disconnected. */ }
+      selected = null;
+      $('error').textContent = error.message;
       $('error').hidden = false;
     } finally {
       busy = false;
+      pendingCommand = null;
       if (state) render();
     }
+    if (succeeded && state.ai_turn) await request('ai');
   }
 
   function choose(x, y) {
-    if (busy || state.reason !== 'ongoing') return;
+    if (busy || state.ai_turn || state.reason !== 'ongoing') return;
     const move = state.legal.find(m => same(m.source, selected) && same(m.target, [x, y]));
     if (move) { request('move', {action: move.action}); return; }
     const piece = state.board[y][x];
@@ -115,17 +131,28 @@
   function render() {
     const player = state.player === 0 ? 'Blue' : 'Red';
     const ongoing = state.reason === 'ongoing';
+    const ai = state.mode === 'ai';
+    const human = state.human_player === 0 ? 'Blue' : 'Red';
+    $('mode').textContent = ai ? 'You: ' + human + ' · AI: ' + (state.human_player === 0 ? 'Red' : 'Blue') : 'Local · Play both sides';
+    $('ai-options').hidden = !ai;
+    $('colour').disabled = busy;
+    $('model').hidden = !ai;
+    $('model').textContent = ai ? state.model + '. New game loads the latest saved model and your selected colour.' : '';
     $('turn').textContent = ongoing ? 'Turn ' + (state.ply + 1) : 'Game complete';
-    $('status').textContent = ongoing ? player + ' to move' :
-      state.winner !== null ? (state.winner === 0 ? 'Blue' : 'Red') + ' wins!' : 'Draw';
+    $('status').textContent = ongoing ? ai ? state.ai_turn ? (busy ? 'AI is thinking…' : 'AI to move') : 'Your turn · ' + human : player + ' to move' :
+      state.winner !== null ? ai ? state.winner === state.human_player ? 'You win!' : 'AI wins' : (state.winner === 0 ? 'Blue' : 'Red') + ' wins!' : 'Draw';
     const options = state.legal.filter(m => same(m.source, selected));
     $('hint').textContent = ongoing ? selected ?
       coord(...selected) + ' selected · ' + options.length + ' legal destinations.' :
       'Select a ' + player.toLowerCase() + ' piece, then a highlighted destination.' :
       ({corner: 'The opposite corner was reached.', stalemate: player + ' has no legal moves.',
         repetition: 'This position occurred three times.', 'no-capture limit': '30 turns passed without a capture.'})[state.reason];
-    $('undo').disabled = busy || state.ply === 0;
+    if (state.ai_turn) $('hint').textContent = busy ? 'The AI is choosing its move.' : 'Use Retry AI to continue.';
+    if (pendingCommand === 'restart') $('hint').textContent = 'Loading the latest model for your new game…';
+    $('undo').disabled = busy || !state.can_undo;
+    $('undo').textContent = ai ? 'Undo turn' : 'Undo';
     $('restart').disabled = busy;
+    $('retry').hidden = !state.ai_turn || busy;
     $('counters').textContent = state.noncapture + '/30 turns without capture · Position seen ' + state.repetition + ' time(s)';
     $('blue-count').textContent = 'Blue · ' + state.board.flat().filter(p => p > 0).length + ' pieces';
     $('red-count').textContent = 'Red · ' + state.board.flat().filter(p => p < 0).length + ' pieces';
@@ -143,7 +170,7 @@
       square.setAttribute('aria-label', label + (piece ? ' ' + (piece > 0 ? 'Blue ' : 'Red ') + names[Math.abs(piece)] : ' empty') +
         (goal ? x === 0 ? ', Red target' : ', Blue target' : '') + (legal ? ', legal destination' : ''));
       square.setAttribute('aria-pressed', String(!!same(selected, [x, y])));
-      square.disabled = busy || !ongoing;
+      square.disabled = busy || !ongoing || state.ai_turn;
       square.innerHTML = '<span class="coordinate">' + label + '</span>' +
         (piece ? '<span class="piece ' + (piece > 0 ? 'blue' : 'red') + '">' + symbols[Math.abs(piece)] + '</span>' : '') +
         (goal ? '<span class="goal">GOAL</span>' : '');
@@ -157,7 +184,8 @@
     $('history').scrollTop = $('history').scrollHeight;
   }
   $('undo').onclick = () => request('undo');
-  $('restart').onclick = () => request('restart');
+  $('restart').onclick = () => request('restart', {human_player: Number($('colour').value)});
+  $('retry').onclick = () => request('ai');
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && state) { selected = null; render(); }
   });

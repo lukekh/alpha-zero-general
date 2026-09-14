@@ -2,6 +2,8 @@
 
 import argparse
 import json
+import logging
+import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
@@ -11,12 +13,62 @@ from .IntransitiveConstants import action_destination, decode_action, format_coo
 from .IntransitiveLogicNumba import Board
 
 
+class ModelOpponent:
+    """A fixed model per game; reload the checkpoint when starting a new game."""
+
+    def __init__(self, checkpoint, simulations=32):
+        if simulations < 2:
+            raise ValueError("Use at least two search simulations.")
+        self.checkpoint = Path(checkpoint).resolve()
+        self.simulations = simulations
+        self.reload()
+
+    def reload(self):
+        os.environ['ORT_DISABLE_TELEMETRY'] = '1'
+        import onnxruntime as ort
+        ort.disable_telemetry_events()
+        from MCTS import MCTS
+        from .IntransitiveGame import IntransitiveGame
+        from .NNet import NNetWrapper
+
+        game = IntransitiveGame()
+        net = NNetWrapper(game, dict(nn_version=-1, dropout=0.))
+        metadata = net.load_checkpoint(str(self.checkpoint.parent), self.checkpoint.name)
+        args = argparse.Namespace(numMCTSSims=self.simulations, prob_fullMCTS=1.,
+            ratio_fullMCTS=1, universes=0, cpuct=metadata.get('cpuct', 1.25),
+            fpu=metadata.get('fpu', 0.), forced_playouts=False, no_mem_optim=False)
+        # Prepare inference before replacing the previous working opponent.
+        board = game.getInitBoard()
+        net.predict(board, game.getValidMoves(board, 0))
+        self.game, self.search = game, MCTS(game, net, args)
+        iteration = metadata.get('run_iteration', metadata.get('candidate_iteration'))
+        self.label = f"Saved model · iteration {iteration}" if iteration is not None else "Saved model"
+
+    def choose(self, board, player):
+        canonical = self.game.getCanonicalForm(board, player)
+        # Start fresh after undo as well as after a normal turn.
+        self.search.nodes_data.clear()
+        policy, _, _ = self.search.getActionProb(canonical, temp=0, force_full_search=True)
+        return int(np.argmax(policy))
+
+
 class GameSession:
-    def __init__(self):
+    def __init__(self, opponent=None, human_player=0):
         self.board = Board()
         self.history = []
         self.moves = []
         self.revision = 0
+        self.opponent = opponent
+        self.human_player = human_player
+
+    def ai_turn(self):
+        return (self.opponent is not None
+                and self.board.get_next_player() != self.human_player
+                and self.board.get_terminal_reason() == 'ongoing')
+
+    def can_undo(self):
+        # Red cannot undo the AI's opening before making a move of their own.
+        return len(self.history) > (1 if self.opponent and self.human_player == 1 else 0)
 
     def snapshot(self):
         player = self.board.get_next_player()
@@ -34,29 +86,51 @@ class GameSession:
             repetition=self.board.get_repetition_count(),
             ply=self.board.get_total_ply(), moves=self.moves.copy(),
             revision=self.revision,
+            mode='ai' if self.opponent else 'local', human_player=self.human_player,
+            ai_turn=self.ai_turn(), can_undo=self.can_undo(),
+            model=self.opponent.label if self.opponent else None,
         )
+
+    def make_move(self, action):
+        before = self.board.get_state()
+        self.board.make_move(action, self.board.get_next_player())
+        x, y, _ = decode_action(action)
+        dx, dy = action_destination(action)
+        capture = before[dy, dx, 0] != 0
+        self.history.append(before)
+        self.moves.append(format_coordinate(x, y) + (" × " if capture else " → ")
+                          + format_coordinate(dx, dy))
 
     def update(self, command, data):
         if type(data.get("revision")) is not int or data["revision"] != self.revision:
             raise ValueError("The board changed. Refresh and try again.")
         if command == "move":
+            if self.ai_turn():
+                raise ValueError("It is the AI's turn.")
             action = data.get("action")
             if type(action) is not int:
                 raise ValueError("Choose a legal move.")
-            before = self.board.get_state()
-            self.board.make_move(action, self.board.get_next_player())
-            x, y, _ = decode_action(action)
-            dx, dy = action_destination(action)
-            capture = before[dy, dx, 0] != 0
-            self.history.append(before)
-            self.moves.append(format_coordinate(x, y) + (" × " if capture else " → ")
-                              + format_coordinate(dx, dy))
+            self.make_move(action)
+        elif command == "ai":
+            if not self.ai_turn():
+                raise ValueError("It is not the AI's turn.")
+            action = self.opponent.choose(self.board.get_state(), self.board.get_next_player())
+            self.make_move(action)
         elif command == "undo":
-            if not self.history:
+            if not self.can_undo():
                 raise ValueError("There are no moves to undo.")
-            self.board.copy_state(self.history.pop(), True)
-            self.moves.pop()
+            while self.history:
+                self.board.copy_state(self.history.pop(), True)
+                self.moves.pop()
+                if not self.opponent or self.board.get_next_player() == self.human_player:
+                    break
         elif command == "restart":
+            human = data.get('human_player', self.human_player)
+            if type(human) is not int or human not in (0, 1):
+                raise ValueError("Choose Blue or Red.")
+            if self.opponent:
+                self.opponent.reload()
+            self.human_player = human
             self.board.init_game()
             self.history.clear()
             self.moves.clear()
@@ -95,7 +169,7 @@ class PlayHandler(BaseHTTPRequestHandler):
         if self.headers.get("Content-Type") != "application/json":
             self.respond(415, {"error": "Expected JSON."})
             return
-        if self.path not in ("/api/move", "/api/undo", "/api/restart"):
+        if self.path not in ("/api/move", "/api/ai", "/api/undo", "/api/restart"):
             self.respond(404, {"error": "Not found"})
             return
         try:
@@ -109,19 +183,30 @@ class PlayHandler(BaseHTTPRequestHandler):
         except (ValueError, UnicodeDecodeError) as exc:
             self.respond(400, {"error": str(exc)})
             return
+        except Exception:
+            logging.exception("Game request failed")
+            self.respond(500, {"error": "The AI could not complete this request. Try again."})
+            return
         self.respond(200, state)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--checkpoint", type=Path, help="Model to play against; reloaded for each new game")
+    parser.add_argument("--human-colour", choices=('blue', 'red'), default='blue')
+    parser.add_argument("--simulations", type=int, default=32)
     args = parser.parse_args()
+    if args.simulations < 2:
+        parser.error('--simulations must be at least 2')
     print("Preparing Intransitive rules…", flush=True)
-    game = GameSession()
+    warmup = GameSession()
     # Compile queries and transitions before accepting the first request.
-    first = game.snapshot()["legal"][0]["action"]
-    game.update("move", {"action": first, "revision": 0})
-    game.update("undo", {"revision": 1})
+    first = warmup.snapshot()["legal"][0]["action"]
+    warmup.update("move", {"action": first, "revision": 0})
+    warmup.update("undo", {"revision": 1})
+    opponent = ModelOpponent(args.checkpoint, args.simulations) if args.checkpoint else None
+    game = GameSession(opponent, human_player=0 if args.human_colour == 'blue' else 1)
     with HTTPServer(("127.0.0.1", args.port), PlayHandler) as server:
         server.game = game
         print(f"Play Intransitive at http://127.0.0.1:{server.server_port}", flush=True)

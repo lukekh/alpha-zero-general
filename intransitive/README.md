@@ -93,8 +93,23 @@ python -m intransitive.play
 Open <http://127.0.0.1:8765>. Use `--port 8766` if that port is busy.
 The first launch compiles the rules engine before printing the ready URL.
 Click a piece, then a highlighted destination. You control both Blue and Red;
-there is no AI opponent in this UI. Undo restores the complete position and
-draw history. New game restores the official setup.
+this command starts a local game with both sides controlled by you. Undo restores
+the complete position and draw history. New game restores the official setup.
+
+To play against a trained model, use the pinned training environment and pass a
+checkpoint (for an active run, use its `retained.pt`):
+
+```sh
+ORT_DISABLE_TELEMETRY=1 python -m intransitive.play --checkpoint checkpoints/my-run/retained.pt
+```
+
+Choose your colour and click **New game**; Blue moves first. The AI replies
+automatically using 32 MCTS simulations per move (`--simulations` changes this).
+**Undo turn** takes back your move and the AI's reply. New game reloads the latest
+checkpoint, while an ongoing game keeps its model fixed. The model label identifies
+the saved iteration when available. Training can continue in its separate process.
+Use **Retry AI** if an AI request fails. Model loading requires the training packages
+above; local play without `--checkpoint` still needs only NumPy and Numba.
 
 The board uses the existing compiled engine, including its modelling-only
 threefold repetition and 30-noncapture draw rules, which are explained in the UI.
