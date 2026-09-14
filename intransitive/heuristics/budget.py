@@ -4,13 +4,18 @@ from time import perf_counter
 
 
 class BudgetExpired(Exception):
-    pass
+    """Cooperative search interruption with the limit that was observed first."""
+
+    def __init__(self, reason):
+        self.reason = reason
+        super().__init__(reason)
 
 
 class Budget:
     def __init__(self, nodes, seconds, clock=perf_counter):
         self.clock = clock
         self.start = clock()
+        self.seconds = seconds
         self.deadline = self.start + seconds
         self.limit = nodes
         self.work = 0
@@ -22,12 +27,14 @@ class Budget:
 
     def check(self):
         if self.clock() >= self.deadline:
-            raise BudgetExpired
+            # Time deliberately wins a simultaneous time/work observation:
+            # every charged operation checks the deadline before the work cap.
+            raise BudgetExpired('time')
 
     def charge(self, amount=1):
         self.check()
         if self.work + amount > self.limit:
-            raise BudgetExpired
+            raise BudgetExpired('work')
         self.work += amount
 
     def visit(self, proof=False):

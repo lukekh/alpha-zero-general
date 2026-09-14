@@ -1,0 +1,21 @@
+[Variant "Intransitive"]
+[Format "Intransitive-PGN-1"]
+[Rules "threefold;30-plies-without-capture"]
+[Blue "Human"]
+[Red "alphabeta"]
+[Result "1-0"]
+[PlyCount "79"]
+[StateSHA256 "ccebb0cda1373506e4d180bd12d547ec0441b80fa63b9abe8678e8a6f6e16a85"]
+[HeuristicConfig "{\"evaluator_version\":\"intransitive-heuristics-v2\",\"count_weight\":100.0,\"race_weight\":0.0,\"advantage_weight\":25.0,\"attack_weight\":12.0,\"defence_weight\":10.0,\"overload_weight\":5.0,\"predator_zero_bonus\":1.0,\"predator_scarcity_bonus\":0.5,\"prey_bonus\":0.25,\"attack_enabled\":false,\"defence_enabled\":false,\"overload_enabled\":false,\"max_depth\":20,\"node_limit\":200000,\"time_limit\":5,\"proof_depth\":2,\"proof_nodes\":64,\"table_entries\":10000}"]
+[LastAI "{\"ply\":77,\"action\":429,\"state_sha256\":\"fa30a9bbb4c077e396d4f83e7524ae5fb7d583101301b83b766619c85279e786\",\"search\":{\"action\":429,\"score\":-99998.0,\"completed_depth\":1,\"pv\":[429,561],\"nodes\":27,\"work\":63,\"proof_nodes\":21,\"elapsed\":0.005630167084746063,\"stopped\":false,\"table_bytes\":29262592,\"explanation\":{\"score\":-99998.0,\"terminal\":false,\"proof\":{\"status\":\"proven\",\"plies\":2,\"winner\":0},\"features\":{\"own\":{\"clear_run\":0.0},\"opponent\":{\"clear_run\":1.0}},\"terms\":{\"clear_run\":-99998.0},\"skipped_modules\":[\"piece_count\",\"piece_advantage\",\"attacking_position\",\"defensive_position\",\"overload\"]},\"module_seconds\":{\"proof\":0.00040670798625797033},\"module_calls\":{\"proof\":6}}}"]
+
+1. D4-E5 G5-F4 2. C3-D4 F4-F5 3. D4-E4 F5-E6 4. D2-C3 E6-D6
+5. E4-D5 D6-D7 6. E5-F5 G6-H7 7. E3-F4 H6-G5 8. D3-E4 G5xF5
+9. E4xF5 F6xF5 10. D5-E5 F5-G6 11. E5-D6 G6-F5 12. C3-D4 F5-F6
+13. D4-E5 F6-E6 14. C5-C6 E6-F6 15. D6xD7 E8xD7 16. C6xD7 F6-G6
+17. F4-G5 H5-I6 18. C4-D5 G7-F6 19. G5-F4 F6-F5 20. F4-E3 F5-F6
+21. E5-F5 G6-G7 22. E3-F4 E7-D6 23. B4-C5 D6-E7 24. F4-G4 F6-G6
+25. E2-F3 G6-F6 26. F3-F4 F6-G6 27. F4-G5 F7-F6 28. G5xG6 F6xF5
+29. G4xF5 G7xG6 30. F5-G5 G6-F5 31. G5-H6 F8-E8 32. H6xH7 E8xD7
+33. H7-H8 F5-E4 34. C5-D4 E4xD5 35. D4xD5 D7-E6 36. D5-D6 E6-E5
+37. D6xE7 E5-D4 38. B5-C4 D4-C3 39. C4xC3 I6-H5 40. H8-I9 1-0

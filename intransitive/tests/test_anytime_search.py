@@ -7,7 +7,7 @@ from unittest.mock import patch
 import numpy as np
 
 from intransitive.heuristics import AlphaBetaPlayer, SearchConfig, exhaustive_minimax
-from intransitive.heuristics.budget import Budget
+from intransitive.heuristics.budget import Budget, BudgetExpired
 from intransitive.heuristics.evaluation import MATE
 from intransitive.heuristics.search import from_table, position_key
 from intransitive.tests.reference_rules import Position, position
@@ -62,6 +62,10 @@ class AnytimeSearchTests(unittest.TestCase):
         budget = Budget(10**7, 1, clock=player.clock)
         result = player.analyze(self.state, budget)
         self.assertTrue(result.stopped)
+        self.assertEqual(result.stop_reason, 'time')
+        self.assertEqual(result.diagnostics_status, 'skipped_budget')
+        self.assertEqual(result.effective_limits,
+                         {'max_depth': 2, 'time_limit': 1, 'work_limit': 10**7})
         self.assertEqual(result.completed_depth, 1)
         self.assertNotIn((position_key(self.state), 2), player.table)
         return player, result
@@ -113,6 +117,44 @@ class AnytimeSearchTests(unittest.TestCase):
 
         with patch.object(Evaluator, 'explain', explain):
             player.analyze(self.state, Budget(10**7, 1, clock=player.clock))
+
+    def test_budget_reasons_and_simultaneous_limit_precedence(self):
+        clock = Clock()
+        with self.assertRaises(BudgetExpired) as expired:
+            Budget(0, 1, clock=clock).charge()
+        self.assertEqual(expired.exception.reason, 'work')
+        with self.assertRaises(BudgetExpired) as expired:
+            Budget(0, 0, clock=clock).charge()
+        self.assertEqual(expired.exception.reason, 'time')
+
+        work = AlphaBetaPlayer(config=SearchConfig(
+            max_depth=2, proof_nodes=0, node_limit=0, time_limit=60)).analyze(self.state)
+        elapsed = AlphaBetaPlayer(config=SearchConfig(
+            max_depth=2, proof_nodes=0, node_limit=10**7, time_limit=0)).analyze(self.state)
+        self.assertEqual((work.stop_reason, elapsed.stop_reason), ('work', 'time'))
+        self.assertEqual((work.selection_source, elapsed.selection_source),
+                         ('legal_fallback', 'legal_fallback'))
+
+    def test_natural_stop_reasons_and_diagnostics_are_independent(self):
+        config = SearchConfig(max_depth=1, proof_nodes=0, node_limit=10**7, time_limit=60)
+        completed = AlphaBetaPlayer(config=config).analyze(self.state)
+        self.assertFalse(completed.stopped)
+        self.assertEqual(completed.stop_reason, 'maximum_depth')
+        self.assertEqual(completed.diagnostics_status, 'completed')
+
+        winning = Position.fixture(position({'H8': 3, 'C4': -2})).storage()
+        proven = AlphaBetaPlayer(config=config).analyze(winning)
+        self.assertFalse(proven.stopped)
+        self.assertEqual(proven.stop_reason, 'proven_result')
+
+        from intransitive.heuristics.evaluation import Evaluator
+        with patch.object(Evaluator, 'explain', side_effect=BudgetExpired('work')):
+            skipped = AlphaBetaPlayer(config=config).analyze(self.state)
+        self.assertFalse(skipped.stopped)
+        self.assertEqual(skipped.stop_reason, 'maximum_depth')
+        self.assertEqual(skipped.diagnostics_status, 'skipped_budget')
+        self.assertEqual(skipped.explanation['stop_reason'], 'maximum_depth')
+        self.assertEqual(skipped.explanation['diagnostics_status'], 'skipped_budget')
 
     def test_move_number_does_not_prevent_exact_cache_reuse(self):
         other = replace(self.reference, ply=100).storage()

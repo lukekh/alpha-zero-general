@@ -211,6 +211,13 @@ independent booleans for modules 4–6, and search/proof budgets. The core prese
 all optional booleans false. Weights require measurement; a large feature range
 must not accidentally make the intended slight overload penalty dominant.
 
+The opt-in [`time-first.json`](configs/time-first.json) preset keeps core-only
+evaluation, searches to at most depth 20 for five seconds, and retains a
+1,000,000,000-work safety cap. This high cap avoids the measured premature
+200,000-work stop without redefining zero, changing the existing presets, or
+preventing callers from selecting a lower explicit cap. The comparison and
+replay fixture are in [the search-budget report](../benchmarks/search_budget/README.md).
+
 Provide an explanation containing raw own/opponent features, weighted terms,
 race proof/unknown status and selected principal variation. Disabling a module
 must skip its computation as well as its contribution. Record configuration in

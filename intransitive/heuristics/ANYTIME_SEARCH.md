@@ -23,6 +23,15 @@ An iteration finished exactly at the deadline is retained. Root diagnostics run
 after move search, using only remaining budget. One-time rule/search kernel
 compilation is warmed before starting the timed search.
 
+Time, work, maximum depth and a proven result are independent stopping limits.
+The first limit observed ends search. Every charged operation checks time before
+work, so `time` is the deterministic reason when both become observable at the
+same check. A proof completed within budget takes precedence over maximum depth;
+using exactly the allowed work is not exhaustion unless another operation is
+needed. Zero time or zero work retains the existing legal-fallback behaviour.
+Post-search diagnostics use only remaining budget and never change the recorded
+search stop reason.
+
 Search remains depth-first inside each candidate. An unfinished branch may use
 the remaining time, but its completed descendants remain cached and completed
 root siblings remain available for the final choice.
@@ -62,6 +71,9 @@ Search results, including those copied into game records, expose:
 | `selection_source` | `completed_iteration`, `partial_iteration`, `unrefuted_fallback`, or `legal_fallback`. |
 | `score_bound` | Exact or upper-bound value for the selected move; null if unavailable. |
 | `tt_hits` | Completed cache entries encountered. |
+| `stop_reason` | `time`, `work`, `maximum_depth`, or `proven_result`. |
+| `diagnostics_status` | `completed` or `skipped_budget`; separate from search termination. |
+| `effective_limits` | The actual maximum depth, time limit and work limit used, including an explicitly supplied `Budget`. |
 
 `explanation.search_scope` distinguishes a full position search from a
 selected-move result. Partial iterations do not prove all alternatives worse.
@@ -74,8 +86,9 @@ uv run --locked python -m unittest intransitive.tests.test_anytime_search -v
 ```
 
 Deterministic-clock tests interrupt before/after child completion, refute an
-incumbent, and expire at the end of a full iteration. Real work-limited search
-values are checked against exhaustive minimax. Other tests cover move-number
+incumbent, expire at the end of a full iteration, identify simultaneous limits,
+and keep skipped diagnostics separate. Real work-limited search values are
+checked against exhaustive minimax. Other tests cover move-number
 reuse, reordered histories, distinct repetition counts, third-occurrence draws,
 bounded hints, leaf reuse and input preservation.
 

@@ -13,6 +13,7 @@ From the repository root:
 ```sh
 python pit.py intransitive human alphabeta --ab-depth 3 --ab-time 1
 python pit.py intransitive alphabeta greedy -n 2 --ab-config intransitive/heuristics/configs/core.json
+python pit.py intransitive human alphabeta --ab-config intransitive/heuristics/configs/time-first.json
 python pit.py intransitive human alphabeta --ab-attack --ab-defence --no-ab-overload
 python -m intransitive.play --opponent alphabeta
 python -m intransitive.play --checkpoint /path/to/frozen.pt --opponent alphabeta
@@ -23,9 +24,11 @@ and choose maximum depth (0–64 plies), time per move in seconds, and work limi
 per move. These fields start with the server's configuration, including any
 `--ab-config` file. Search stops at the first limit reached; work includes
 heuristic calculations as well as search visits. A zero limit uses a legal
-fallback. Press **New game** to apply changes; the current game's settings remain
+fallback. **Time first · 5 seconds** sets depth 20, five seconds and a
+1,000,000,000-work safety cap; it does not disable the cap or alter evaluation
+toggles. Press **New game** to apply changes; the current game's settings remain
 fixed until then. **Core only** clears the three evaluation toggles and leaves
-search limits unchanged. Choose either colour;
+search limits unchanged. Either preset only changes the pending form. Choose either colour;
 Blue always starts. Local, random, greedy and (when a checkpoint is supplied)
 model opponents remain available. Expand **Last AI analysis** for the previous
 AI root's features, weighted contributions, configuration, proof status and PV.
@@ -41,8 +44,17 @@ print(asdict(result))
 ```
 
 The JSON examples in [configs](configs/) contain every weight, switch, evaluator
-version and budget. CLI overrides apply after loading a config. Assigning a new
-immutable config clears the transposition table on the next search.
+version and budget. [`time-first.json`](configs/time-first.json) is the same
+five-second preset for the browser server and record analyser:
+
+```sh
+uv run intransitive --opponent alphabeta --ab-config intransitive/heuristics/configs/time-first.json
+uv run intransitive-analyze position.pgn --ply 35 --config intransitive/heuristics/configs/time-first.json
+```
+
+CLI overrides apply after loading a config. Assigning a new immutable config
+clears the transposition table on the next search. Existing defaults and presets
+remain unchanged; an explicit lower work cap still wins when reached first.
 
 ## Search and budget contract
 
@@ -57,6 +69,14 @@ yield to an unrefuted alternative. With no completed child, a legal fallback has
 `score: null`. `completed_depth` and `selected_depth` distinguish full iteration
 coverage from the chosen branch's depth. Terminal roots reject move selection.
 See [ANYTIME_SEARCH.md](ANYTIME_SEARCH.md) for result fields and draw-safe folding.
+
+Each result reports `stop_reason` (`time`, `work`, `maximum_depth`, or
+`proven_result`), `effective_limits`, and `diagnostics_status`. Time is checked
+before work on each charged operation and therefore wins a simultaneous
+observation. Diagnostics skipped after search are reported separately and do
+not make a maximum-depth or proven-result search look budget-stopped. These
+fields are retained in the exported `LastAI` record beside completed, selected
+and partial depth.
 
 `node_limit` caps **work units**, not just tree nodes. Each tree/proof visit,
 transition, ordering item, immediate-win probe, bounded no-win check and interceptor check costs one unit; each occupied-board

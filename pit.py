@@ -253,7 +253,8 @@ def main():
 
 	parser.add_argument('--ab-config', help='Alpha-beta JSON configuration')
 	parser.add_argument('--ab-depth', type=int)
-	parser.add_argument('--ab-nodes', type=int)
+	parser.add_argument('--ab-nodes', '--ab-work', dest='ab_nodes', type=int,
+	                    help='Work units per alpha-beta move (zero uses a legal fallback)')
 	parser.add_argument('--ab-time', type=float, help='Seconds per alpha-beta move')
 	for module in ('attack', 'defence', 'overload'):
 		parser.add_argument('--ab-' + module, action=argparse.BooleanOptionalAction, default=None)

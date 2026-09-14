@@ -39,9 +39,13 @@ The command supports `--opponent`, `--checkpoint`, `--human-colour`, `--simulati
 ```sh
 uv run intransitive --opponent model --checkpoint checkpoints/my-run/retained.pt --human-colour red --simulations 64 --port 8766
 uv run intransitive --opponent alphabeta --ab-config intransitive/heuristics/configs/core.json
+uv run intransitive --opponent alphabeta --ab-config intransitive/heuristics/configs/time-first.json
 ```
 
-The second example loads the bundled core preset; see the
+The second example loads the bundled core preset. The third loads the opt-in
+time-first preset: depth 20, five seconds and a one-billion-work safety cap, so
+ordinary unsolved searches are expected to stop on time while an explicit hard
+cap remains. See the
 [heuristic configuration guide](heuristics/IMPLEMENTATION.md) for other presets
 and the configuration format. Use `uv run python` for the existing training commands:
 
@@ -156,7 +160,8 @@ The overlapping-squares icon at the top right of **Moves** copies the current ga
 as an Intransitive PGN-style record. Paste it into a message for analysis, or save
 it as `position.pgn`. It includes the full move history, draw rules, a state hash,
 active heuristic settings (including weights and disabled modules), and the last
-AI decision with its original search statistics. Pending changes in the settings
+AI decision with its original search statistics, effective limits, stopping
+reason, and independent diagnostic status. Pending changes in the settings
 form are not exported. If clipboard access fails, a selected text box appears for
 manual copying. Refresh after updating the server to load the button.
 
@@ -165,6 +170,8 @@ manual copying. Refresh after updating the server to load the button.
 uv run intransitive-analyze position.pgn --last-ai --move C5-D5
 # Inspect after six individual moves, using more search time.
 uv run intransitive-analyze position.pgn --ply 6 --depth 4 --time 10
+# Use the documented five-second time-first policy, including its safety cap.
+uv run intransitive-analyze position.pgn --ply 35 --config intransitive/heuristics/configs/time-first.json
 # Read a pasted record from standard input (finish with Ctrl+D).
 uv run intransitive-analyze - --last-ai
 ```
@@ -173,7 +180,8 @@ Only specify a candidate move that is legal in the selected position. Omit
 `--last-ai`/`--ply` to analyse the current position. `--config path.json` overrides
 the exported configuration for experiments; `--move` can be repeated. Output is
 JSON with the board, raw features, weighted heuristic terms, proof status, search
-depth/work/score, principal variation, and candidate evaluations. Positive scores
+depth/work/score, effective limits, stop reason, diagnostic status, principal
+variation, and candidate evaluations. Positive scores
 favour the named perspective player, including when evaluating the opponent's
 turn after a candidate. Candidate scores are static evaluations, separate from
 minimax continuation scores. Budget exhaustion is reported explicitly.

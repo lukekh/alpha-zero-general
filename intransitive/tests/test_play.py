@@ -203,13 +203,21 @@ class SelectableOpponentTests(unittest.TestCase):
     def test_search_limits_round_trip_and_reach_the_player(self):
         from intransitive.play import OpponentFactory
         from intransitive.heuristics import SearchConfig
+        from intransitive.heuristics.config import TIME_FIRST_LIMITS
         factory = OpponentFactory(config=SearchConfig(max_depth=6, time_limit=2.5, node_limit=700000))
         session = GameSession(opponent_factory=factory)
         # A page opened in local mode must still show the configured defaults.
         self.assertEqual(session.snapshot()['ab_options']['max_depth'], 6)
         self.assertEqual(session.snapshot()['ab_options']['time_limit'], 2.5)
+        self.assertEqual(session.snapshot()['ab_presets']['time_first'], TIME_FIRST_LIMITS)
+        state = session.update('restart', dict(revision=0, opponent='alphabeta', human_player=0,
+                                               ab_options=TIME_FIRST_LIMITS))
+        for key, value in TIME_FIRST_LIMITS.items():
+            self.assertEqual(state['ab_options'][key], value)
+            self.assertEqual(getattr(session.opponent.config, key), value)
+        # Applying another New game can still select an explicit lower cap.
         options = dict(max_depth=1, time_limit=5., node_limit=500000, attack_enabled=True)
-        state = session.update('restart', dict(revision=0, opponent='alphabeta',
+        state = session.update('restart', dict(revision=state['revision'], opponent='alphabeta',
                                                human_player=1, ab_options=options))
         for key, value in options.items():
             self.assertEqual(state['ab_options'][key], value)
@@ -219,6 +227,14 @@ class SelectableOpponentTests(unittest.TestCase):
         for key, value in options.items():
             self.assertEqual(reply['analysis']['config'][key], value)
         self.assertLessEqual(session.opponent.last_result.completed_depth, 1)
+        self.assertEqual(reply['analysis']['completed_depth'],
+                         session.opponent.last_result.completed_depth)
+        self.assertEqual(reply['analysis']['selected_depth'],
+                         session.opponent.last_result.selected_depth)
+        self.assertEqual(reply['analysis']['partial_depth'],
+                         session.opponent.last_result.partial_depth)
+        self.assertEqual(reply['analysis']['stop_reason'],
+                         session.opponent.last_result.stop_reason)
         # Per-game settings do not mutate the factory's CLI defaults.
         self.assertEqual(factory.config.max_depth, 6)
 
@@ -265,7 +281,9 @@ class PlayServerTests(unittest.TestCase):
                 state = json.load(response)
             self.assertEqual(state['pgn'], self.initial['pgn'])
             with urlopen(self.url, timeout=2) as response:
-                self.assertIn(b'id="copy-position"', response.read())
+                page = response.read()
+                self.assertIn(b'id="copy-position"', page)
+                self.assertIn(b'id="time-first"', page)
 
     def test_concurrent_moves_with_same_revision_apply_only_once(self):
         barrier = Barrier(2)
