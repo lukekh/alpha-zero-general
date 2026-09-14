@@ -3,11 +3,13 @@ from dataclasses import replace
 from itertools import product
 from math import inf
 import json
+from pathlib import Path
 import unittest
 from unittest.mock import patch
 import numpy as np
 
 from intransitive.heuristics import AlphaBetaPlayer, SearchConfig, exhaustive_minimax
+from intransitive.heuristics.config import TIME_FIRST_LIMITS
 from intransitive.heuristics.search import position_key
 from intransitive.heuristics.budget import Budget, BudgetExpired
 from intransitive.heuristics.evaluation import (
@@ -277,6 +279,10 @@ class HeuristicTests(unittest.TestCase):
                    {'max_depth': 1000}, {'node_limit': True}, {'proof_depth': 9}):
             with self.assertRaises(ValueError):
                 SearchConfig(**kw)
+        preset = SearchConfig.from_file(
+            Path(__file__).parents[1] / 'heuristics' / 'configs' / 'time-first.json')
+        self.assertEqual({name: getattr(preset, name) for name in TIME_FIRST_LIMITS},
+                         TIME_FIRST_LIMITS)
 
     def test_search_matches_exhaustive_with_and_without_cache(self):
         for entries, depth in (({'G7': 3, 'C3': -1}, 2),
@@ -372,6 +378,10 @@ class HeuristicTests(unittest.TestCase):
             self.assertIsNone(r.score)
             self.assertTrue(self.game.getValidMoves(s, 0)[r.action])
             self.assertTrue(r.stopped)
+        self.assertEqual(AlphaBetaPlayer(config=replace(self.config, node_limit=0)).analyze(s).stop_reason,
+                         'work')
+        self.assertEqual(AlphaBetaPlayer(config=replace(self.config, time_limit=0)).analyze(s).stop_reason,
+                         'time')
         first = AlphaBetaPlayer(config=replace(self.config, max_depth=1)).analyze(s)
         limited = AlphaBetaPlayer(config=replace(self.config, node_limit=first.work + 1, max_depth=3)).analyze(s)
         self.assertEqual(limited.completed_depth, 1)

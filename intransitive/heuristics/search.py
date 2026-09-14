@@ -83,6 +83,9 @@ class SearchResult:
     selection_source: str = 'completed_iteration'
     score_bound: str | None = None
     tt_hits: int = 0
+    stop_reason: str = 'maximum_depth'
+    diagnostics_status: str = 'completed'
+    effective_limits: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -314,6 +317,7 @@ class AlphaBetaPlayer:
         explanation = {'status': 'diagnostics deferred to prioritise search',
                        'proof': {'status': 'unknown'}}
         stopped = False
+        stop_reason = 'maximum_depth'
         try:
             for target in range(1, self.config.max_depth + 1):
                 self._root_progress = RootProgress(target, len(actions), action if depth else None)
@@ -325,9 +329,11 @@ class AlphaBetaPlayer:
                 self._root_progress.finished = True
                 budget.check()
                 if abs(score) > MATE_THRESHOLD:
+                    stop_reason = 'proven_result'
                     break
-        except BudgetExpired:
+        except BudgetExpired as exc:
             stopped = True
+            stop_reason = exc.reason
             progress = self._root_progress
             if progress is not None and progress.moves:
                 best = max(progress.moves.values(), key=lambda row: row['score'])
@@ -356,11 +362,12 @@ class AlphaBetaPlayer:
                     selected_depth, score_bound = choice['depth'], choice['bound']
         # Explanations must not consume the move budget before a single useful
         # branch is searched. Emit them only if budget remains after search.
+        diagnostics_status = 'skipped_budget'
         try:
             explanation = self.evaluator.explain(state, side, budget, diagnostics=False)
+            diagnostics_status = 'completed'
         except BudgetExpired:
-            if not depth and score is None:
-                stopped = True
+            pass
         progress = self._root_progress
         partial_depth = progress.depth if progress is not None and not progress.finished else 0
         completed_moves = len(progress.moves) if progress is not None else 0
@@ -370,6 +377,11 @@ class AlphaBetaPlayer:
         explanation['search_score'] = score
         explanation['search_scope'] = 'position' if source == 'completed_iteration' else 'selected_move'
         explanation['search_score_bound'] = score_bound
+        effective_limits = dict(max_depth=self.config.max_depth,
+                                time_limit=budget.seconds, work_limit=budget.limit)
+        explanation['stop_reason'] = stop_reason
+        explanation['diagnostics_status'] = diagnostics_status
+        explanation['effective_limits'] = effective_limits
         if score is not None and abs(score) > MATE_THRESHOLD:
             explanation['proof'] = dict(status='proven', plies=int(MATE - abs(score)),
                                         winner=side if score > 0 else 1 - side,
@@ -382,7 +394,8 @@ class AlphaBetaPlayer:
                               budget.proof_nodes, budget.clock() - budget.start, stopped, table_bytes,
                               explanation, dict(budget.module_seconds), dict(budget.module_calls),
                               selected_depth, partial_depth, completed_moves, len(actions),
-                              source, score_bound, budget.tt_hits)
+                              source, score_bound, budget.tt_hits, stop_reason,
+                              diagnostics_status, effective_limits)
         self.last_result = result
         return result
 

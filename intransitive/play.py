@@ -132,9 +132,18 @@ class GameSession:
         result = self.board.check_end_game(player)
         config = (self.opponent.config if getattr(self.opponent, 'kind', None) == 'alphabeta'
                   else self.opponent_factory.config if self.opponent_factory else None)
-        from .heuristics.config import SearchConfig
+        from .heuristics.config import SearchConfig, TIME_FIRST_LIMITS
         from .record import export_record
         last_ai = self.ai_decisions[max(self.ai_decisions)] if self.ai_decisions else None
+        analysis_result = getattr(self.opponent, 'last_result', None)
+        analysis = None
+        if analysis_result is not None:
+            analysis = dict(analysis_result.explanation)
+            for name in ('completed_depth', 'selected_depth', 'partial_depth',
+                         'root_moves_completed', 'root_moves_total', 'selection_source',
+                         'score_bound', 'stop_reason', 'diagnostics_status',
+                         'effective_limits'):
+                analysis[name] = getattr(analysis_result, name)
         return dict(
             board=self.board.get_board().tolist(), player=player, legal=legal,
             reason=self.board.get_terminal_reason(),
@@ -149,11 +158,11 @@ class GameSession:
             opponent=getattr(self.opponent, 'kind', 'model') if self.opponent else 'local',
             opponents=self.opponent_factory.choices if self.opponent_factory else [],
             ab_options={name: getattr(config, name) for name in AB_OPTION_FIELDS} if config else {},
+            ab_presets={'time_first': TIME_FIRST_LIMITS.copy()},
             pgn=export_record(self.moves, self.board, config or SearchConfig(),
                               opponent=getattr(self.opponent, 'kind', 'model') if self.opponent else 'local',
                               human_player=self.human_player, last_ai=last_ai),
-            analysis=self.opponent.last_result.explanation
-                     if getattr(self.opponent, 'last_result', None) else None,
+            analysis=analysis,
         )
 
     def make_move(self, action):

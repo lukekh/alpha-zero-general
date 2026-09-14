@@ -72,12 +72,13 @@
           <label><input id="defence" type="checkbox"> Defence</label>
           <label><input id="overload" type="checkbox"> Overload</label>
           <button id="core" type="button">Core only</button>
+          <button id="time-first" type="button">Time first · 5 seconds</button>
           <div class="search-limits">
             <label for="max-depth">Maximum depth (plies)<input id="max-depth" type="number" min="0" max="64" step="1" value="3" required aria-describedby="search-help"></label>
             <label for="time-limit">Time per move (seconds)<input id="time-limit" type="number" min="0" step="any" value="1" required aria-describedby="search-help"></label>
             <label for="node-limit">Work limit per move<input id="node-limit" type="number" min="0" max="9007199254740991" step="1" value="200000" required aria-describedby="search-help"></label>
           </div>
-          <p class="rule muted" id="search-help">One ply is one player's move. Search stops at the first limit reached; work includes search and heuristic calculations. Zero uses a fallback move.</p>
+          <p class="rule muted" id="search-help">One ply is one player's move. Search stops at the first limit reached; work includes search and heuristic calculations. If time and work are reached together, time is reported. Zero uses a fallback move. Time first applies after New game and retains a high work safety cap.</p>
         </fieldset>
         <p class="muted">Opponent, colour and search settings apply with New game.</p>
         <p id="ai-options"><label for="colour">Your colour <select id="colour"><option value="0">Blue · move first</option><option value="1">Red · AI moves first</option></select></label></p>
@@ -177,7 +178,7 @@
     const human = state.human_player === 0 ? 'Blue' : 'Red';
     $('mode').textContent = ai ? 'You: ' + human + ' · AI: ' + (state.human_player === 0 ? 'Red' : 'Blue') : 'Local · Play both sides';
     $('opponent').disabled = busy;
-    for (const id of ['attack', 'defence', 'overload', 'core']) $(id).disabled = busy;
+    for (const id of ['attack', 'defence', 'overload', 'core', 'time-first']) $(id).disabled = busy;
     for (const id of Object.values(searchFields)) $(id).disabled = busy;
     $('colour').disabled = busy;
     $('model').hidden = !ai;
@@ -272,6 +273,10 @@
   }
   $('opponent').onchange = updateOptions;
   $('core').onclick = () => { for (const module of ['attack', 'defence', 'overload']) $(module).checked = false; };
+  $('time-first').onclick = () => {
+    const preset = state.ab_presets.time_first;
+    for (const [name, id] of Object.entries(searchFields)) $(id).value = preset[name];
+  };
   $('restart').onclick = () => {
     const options = Object.fromEntries(['attack', 'defence', 'overload'].map(module => [module + '_enabled', $(module).checked]));
     if ($('opponent').value === 'alphabeta') {

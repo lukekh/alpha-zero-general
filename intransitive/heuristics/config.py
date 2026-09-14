@@ -4,6 +4,15 @@ import json
 import math
 
 
+TIME_FIRST_LIMITS = {
+    'max_depth': 20,
+    'time_limit': 5.,
+    # A retained safety ceiling, deliberately far above measured five-second
+    # work. Zero keeps its existing legal-fallback meaning.
+    'node_limit': 1_000_000_000,
+}
+
+
 @dataclass(frozen=True)
 class SearchConfig:
     evaluator_version: str = 'intransitive-heuristics-v2'
