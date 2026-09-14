@@ -1,0 +1,843 @@
+
+PVS=True, aspiration=False
+test_001_immediate_goal_diagonal_finish_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_001_immediate_goal_diagonal_finish_blue)
+Take the empty goal now. ... ok
+test_002_immediate_goal_diagonal_finish_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_002_immediate_goal_diagonal_finish_red)
+Take the empty goal now. ... ok
+test_003_immediate_goal_file_finish_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_003_immediate_goal_file_finish_blue)
+Finish along the edge before the predator approaches. ... ok
+test_004_immediate_goal_file_finish_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_004_immediate_goal_file_finish_red)
+Finish along the edge before the predator approaches. ... ok
+test_005_immediate_goal_rank_finish_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_005_immediate_goal_rank_finish_blue)
+Finish along the board edge. ... ok
+test_006_immediate_goal_rank_finish_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_006_immediate_goal_rank_finish_red)
+Finish along the board edge. ... ok
+test_007_immediate_goal_capture_corner_diagonal_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_007_immediate_goal_capture_corner_diagonal_blue)
+Capture the paper occupying the goal to win immediately. ... ok
+test_008_immediate_goal_capture_corner_diagonal_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_008_immediate_goal_capture_corner_diagonal_red)
+Capture the paper occupying the goal to win immediately. ... ok
+test_009_immediate_goal_capture_corner_file_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_009_immediate_goal_capture_corner_file_blue)
+Capture the rock occupying the goal to win immediately. ... ok
+test_010_immediate_goal_capture_corner_file_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_010_immediate_goal_capture_corner_file_red)
+Capture the rock occupying the goal to win immediately. ... ok
+test_011_immediate_goal_capture_corner_rank_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_011_immediate_goal_capture_corner_rank_blue)
+Capture the scissors occupying the goal to win immediately. ... ok
+test_012_immediate_goal_capture_corner_rank_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_012_immediate_goal_capture_corner_rank_red)
+Capture the scissors occupying the goal to win immediately. ... ok
+test_013_immediate_goal_win_before_diagonal_racer_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_013_immediate_goal_win_before_diagonal_racer_blue)
+Win now instead of taking capture bait or defending the counter-racer. ... ok
+test_014_immediate_goal_win_before_diagonal_racer_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_014_immediate_goal_win_before_diagonal_racer_red)
+Win now instead of taking capture bait or defending the counter-racer. ... ok
+test_015_immediate_goal_win_before_file_racer_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_015_immediate_goal_win_before_file_racer_blue)
+The goal wins before the opposing runner can finish; ignore the free paper. ... ok
+test_016_immediate_goal_win_before_file_racer_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_016_immediate_goal_win_before_file_racer_red)
+The goal wins before the opposing runner can finish; ignore the free paper. ... ok
+test_017_immediate_goal_win_before_rank_racer_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_017_immediate_goal_win_before_rank_racer_blue)
+Finish now; capturing the nearby rock would let the opponent win. ... ok
+test_018_immediate_goal_win_before_rank_racer_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_018_immediate_goal_win_before_rank_racer_red)
+Finish now; capturing the nearby rock would let the opponent win. ... ok
+test_019_immediate_goal_capture_goal_before_counter_race_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_019_immediate_goal_capture_goal_before_counter_race_blue)
+Capture on the goal, rather than the tempting rock away from the finish. ... ok
+test_020_immediate_goal_capture_goal_before_counter_race_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_020_immediate_goal_capture_goal_before_counter_race_red)
+Capture on the goal, rather than the tempting rock away from the finish. ... ok
+test_021_clear_run_unopposed_diagonal_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_021_clear_run_unopposed_diagonal_blue)
+Start the unique two-move goal run; the distant predator cannot intercept. ... ok
+test_022_clear_run_unopposed_diagonal_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_022_clear_run_unopposed_diagonal_red)
+Start the unique two-move goal run; the distant predator cannot intercept. ... ok
+test_023_clear_run_outrun_near_predator_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_023_clear_run_outrun_near_predator_blue)
+Step beyond the predator: every reply still permits the goal next turn. ... ok
+test_024_clear_run_outrun_near_predator_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_024_clear_run_outrun_near_predator_red)
+Step beyond the predator: every reply still permits the goal next turn. ... ok
+test_025_clear_run_avoid_lower_interception_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_025_clear_run_avoid_lower_interception_blue)
+Use the safe edge route; the other short route allows an immediate capture. ... ok
+test_026_clear_run_avoid_lower_interception_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_026_clear_run_avoid_lower_interception_red)
+Use the safe edge route; the other short route allows an immediate capture. ... ok
+test_027_clear_run_edge_run_around_predator_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_027_clear_run_edge_run_around_predator_blue)
+Stay on the board edge so the predator cannot intercept the first step. ... ok
+test_028_clear_run_edge_run_around_predator_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_028_clear_run_edge_run_around_predator_red)
+Stay on the board edge so the predator cannot intercept the first step. ... ok
+test_029_clear_run_avoid_left_interception_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_029_clear_run_avoid_left_interception_blue)
+Use the safe edge route; the other short route moves into the predator capture range. ... ok
+test_030_clear_run_avoid_left_interception_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_030_clear_run_avoid_left_interception_red)
+Use the safe edge route; the other short route moves into the predator capture range. ... ok
+test_031_clear_run_file_run_around_predator_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_031_clear_run_file_run_around_predator_blue)
+Stay on the edge to complete the two-move run without interception. ... ok
+test_032_clear_run_file_run_around_predator_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_032_clear_run_file_run_around_predator_red)
+Stay on the edge to complete the two-move run without interception. ... ok
+test_033_clear_run_capture_to_open_run_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_033_clear_run_capture_to_open_run_blue)
+Capture the blocking paper and force the corner on the following turn. ... ok
+test_034_clear_run_capture_to_open_run_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_034_clear_run_capture_to_open_run_red)
+Capture the blocking paper and force the corner on the following turn. ... ok
+test_035_clear_run_capture_before_defender_arrives_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_035_clear_run_capture_before_defender_arrives_blue)
+Capture the rock; its nearby defender is one move too late to stop the finish. ... ok
+test_036_clear_run_capture_before_defender_arrives_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_036_clear_run_capture_before_defender_arrives_red)
+Capture the rock; its nearby defender is one move too late to stop the finish. ... ok
+test_037_clear_run_run_instead_of_side_capture_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_037_clear_run_run_instead_of_side_capture_blue)
+Take the forced goal run rather than the off-route scissors capture. ... ok
+test_038_clear_run_run_instead_of_side_capture_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_038_clear_run_run_instead_of_side_capture_red)
+Take the forced goal run rather than the off-route scissors capture. ... ok
+test_039_clear_run_run_instead_of_other_piece_capture_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_039_clear_run_run_instead_of_other_piece_capture_blue)
+Start the forced goal run instead of winning material with the other paper. ... ok
+test_040_clear_run_run_instead_of_other_piece_capture_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_040_clear_run_run_instead_of_other_piece_capture_red)
+Start the forced goal run instead of winning material with the other paper. ... ok
+test_041_goal_defence_capture_diagonal_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_041_goal_defence_capture_diagonal_runner_blue)
+Capture the runner: every other move allows an immediate goal loss. ... ok
+test_042_goal_defence_capture_diagonal_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_042_goal_defence_capture_diagonal_runner_red)
+Capture the runner: every other move allows an immediate goal loss. ... ok
+test_043_goal_defence_capture_rank_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_043_goal_defence_capture_rank_runner_blue)
+Capture the paper threatening the corner; advancing cannot defend it. ... ok
+test_044_goal_defence_capture_rank_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_044_goal_defence_capture_rank_runner_red)
+Capture the paper threatening the corner; advancing cannot defend it. ... ok
+test_045_goal_defence_capture_file_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_045_goal_defence_capture_file_runner_blue)
+Capture the rock before it enters the corner. ... ok
+test_046_goal_defence_capture_file_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_046_goal_defence_capture_file_runner_red)
+Capture the rock before it enters the corner. ... ok
+test_047_goal_defence_edge_capture_rank_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_047_goal_defence_edge_capture_rank_runner_blue)
+Capture along the edge; the corner cannot be reached to block in time. ... ok
+test_048_goal_defence_edge_capture_rank_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_048_goal_defence_edge_capture_rank_runner_red)
+Capture along the edge; the corner cannot be reached to block in time. ... ok
+test_049_goal_defence_edge_capture_file_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_049_goal_defence_edge_capture_file_runner_blue)
+Remove the paper on the file; every quiet move loses next turn. ... ok
+test_050_goal_defence_edge_capture_file_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_050_goal_defence_edge_capture_file_runner_red)
+Remove the paper on the file; every quiet move loses next turn. ... ok
+test_051_goal_defence_paper_corner_block_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_051_goal_defence_paper_corner_block_blue)
+Occupy the corner: the same-type paper cannot capture the blocker. ... ok
+test_052_goal_defence_paper_corner_block_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_052_goal_defence_paper_corner_block_red)
+Occupy the corner: the same-type paper cannot capture the blocker. ... ok
+test_053_goal_defence_rock_corner_block_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_053_goal_defence_rock_corner_block_blue)
+Block the goal with the rock; the opposing rock cannot capture it. ... ok
+test_054_goal_defence_rock_corner_block_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_054_goal_defence_rock_corner_block_red)
+Block the goal with the rock; the opposing rock cannot capture it. ... ok
+test_055_goal_defence_scissors_corner_block_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_055_goal_defence_scissors_corner_block_blue)
+Block the goal with scissors rather than running away from the threat. ... ok
+test_056_goal_defence_scissors_corner_block_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_056_goal_defence_scissors_corner_block_red)
+Block the goal with scissors rather than running away from the threat. ... ok
+test_057_goal_defence_block_two_runners_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_057_goal_defence_block_two_runners_blue)
+Block both runners at once; capturing only the scissors leaves a goal loss. ... ok
+test_058_goal_defence_block_two_runners_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_058_goal_defence_block_two_runners_red)
+Block both runners at once; capturing only the scissors leaves a goal loss. ... ok
+test_059_goal_defence_block_two_runners_ignore_bait_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_059_goal_defence_block_two_runners_ignore_bait_blue)
+Block both runners; neither the local paper nor the distant rock capture saves the goal. ... ok
+test_060_goal_defence_block_two_runners_ignore_bait_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_060_goal_defence_block_two_runners_ignore_bait_red)
+Block both runners; neither the local paper nor the distant rock capture saves the goal. ... ok
+test_061_save_piece_three_predators_northwest_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_061_save_piece_three_predators_northwest_exit_blue)
+Retreat through the sole safe square; every other move loses the last rock immediately. ... ok
+test_062_save_piece_three_predators_northwest_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_062_save_piece_three_predators_northwest_exit_red)
+Retreat through the sole safe square; every other move loses the last rock immediately. ... ok
+test_063_save_piece_three_predators_northeast_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_063_save_piece_three_predators_northeast_exit_blue)
+Escape the three rocks through the only square they cannot capture next turn. ... ok
+test_064_save_piece_three_predators_northeast_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_064_save_piece_three_predators_northeast_exit_red)
+Escape the three rocks through the only square they cannot capture next turn. ... ok
+test_065_save_piece_three_predators_west_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_065_save_piece_three_predators_west_exit_blue)
+Preserve the final paper by moving outside all three scissors capture ranges. ... ok
+test_066_save_piece_three_predators_west_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_066_save_piece_three_predators_west_exit_red)
+Preserve the final paper by moving outside all three scissors capture ranges. ... ok
+test_067_save_piece_three_predators_southeast_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_067_save_piece_three_predators_southeast_exit_blue)
+Use the sole safe exit; alternatives lose the final rock next turn. ... ok
+test_068_save_piece_three_predators_southeast_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_068_save_piece_three_predators_southeast_exit_red)
+Use the sole safe exit; alternatives lose the final rock next turn. ... ok
+test_069_save_piece_left_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_069_save_piece_left_edge_escape_blue)
+Stay on the edge: this is the only move surviving the two rocks. ... ok
+test_070_save_piece_left_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_070_save_piece_left_edge_escape_red)
+Stay on the edge: this is the only move surviving the two rocks. ... ok
+test_071_save_piece_right_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_071_save_piece_right_edge_escape_blue)
+Move along the edge to preserve the final paper against two scissors. ... ok
+test_072_save_piece_right_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_072_save_piece_right_edge_escape_red)
+Move along the edge to preserve the final paper against two scissors. ... ok
+test_073_save_piece_bottom_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_073_save_piece_bottom_edge_escape_blue)
+Slide along the edge; every inward move permits capture of the final rock. ... ok
+test_074_save_piece_bottom_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_074_save_piece_bottom_edge_escape_red)
+Slide along the edge; every inward move permits capture of the final rock. ... ok
+test_075_save_piece_top_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_075_save_piece_top_edge_escape_blue)
+Slide along the board edge, outside the immediate capture range of both rocks. ... ok
+test_076_save_piece_top_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_076_save_piece_top_edge_escape_red)
+Slide along the board edge, outside the immediate capture range of both rocks. ... ok
+test_077_save_piece_escape_ignore_poisoned_rock_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_077_save_piece_escape_ignore_poisoned_rock_blue)
+Escape instead of capturing the poisoned rock; its defenders would take the final paper. ... ok
+test_078_save_piece_escape_ignore_poisoned_rock_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_078_save_piece_escape_ignore_poisoned_rock_red)
+Escape instead of capturing the poisoned rock; its defenders would take the final paper. ... ok
+test_079_save_piece_escape_ignore_poisoned_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_079_save_piece_escape_ignore_poisoned_scissors_blue)
+Retreat instead of taking the scissors bait covered by the papers. ... ok
+test_080_save_piece_escape_ignore_poisoned_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_080_save_piece_escape_ignore_poisoned_scissors_red)
+Retreat instead of taking the scissors bait covered by the papers. ... ok
+test_081_safe_capture_free_central_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_081_safe_capture_free_central_scissors_blue)
+Take the free scissors: no reply can recapture or win a compensating piece. ... ok
+test_082_safe_capture_free_central_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_082_safe_capture_free_central_scissors_red)
+Take the free scissors: no reply can recapture or win a compensating piece. ... ok
+test_083_safe_capture_free_edge_paper_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_083_safe_capture_free_edge_paper_blue)
+Capture the undefended paper on the edge for a guaranteed extra piece. ... ok
+test_084_safe_capture_free_edge_paper_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_084_safe_capture_free_edge_paper_red)
+Capture the undefended paper on the edge for a guaranteed extra piece. ... ok
+test_085_safe_capture_scissors_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_085_safe_capture_scissors_safe_or_poisoned_blue)
+Capture the free scissors, not the scissors defended by a paper. ... ok
+test_086_safe_capture_scissors_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_086_safe_capture_scissors_safe_or_poisoned_red)
+Capture the free scissors, not the scissors defended by a paper. ... ok
+test_087_safe_capture_rocks_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_087_safe_capture_rocks_safe_or_poisoned_blue)
+Take the undefended rock; the other rock capture allows immediate recapture. ... ok
+test_088_safe_capture_rocks_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_088_safe_capture_rocks_safe_or_poisoned_red)
+Take the undefended rock; the other rock capture allows immediate recapture. ... ok
+test_089_safe_capture_papers_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_089_safe_capture_papers_safe_or_poisoned_blue)
+Capture the free paper, avoiding the paper protected by a rock. ... ok
+test_090_safe_capture_papers_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_090_safe_capture_papers_safe_or_poisoned_red)
+Capture the free paper, avoiding the paper protected by a rock. ... ok
+test_091_safe_capture_remove_last_paper_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_091_safe_capture_remove_last_paper_blue)
+Win the last enemy paper safely, also removing the predator of the friendly rock. ... ok
+test_092_safe_capture_remove_last_paper_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_092_safe_capture_remove_last_paper_red)
+Win the last enemy paper safely, also removing the predator of the friendly rock. ... ok
+test_093_safe_capture_capture_attacker_to_save_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_093_safe_capture_capture_attacker_to_save_scissors_blue)
+Capture the attacking rock and preserve the threatened friendly scissors. ... ok
+test_094_safe_capture_capture_attacker_to_save_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_094_safe_capture_capture_attacker_to_save_scissors_red)
+Capture the attacking rock and preserve the threatened friendly scissors. ... ok
+test_095_safe_capture_capture_forking_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_095_safe_capture_capture_forking_scissors_blue)
+Capture the scissors forking both friendly papers, with no compensating reply. ... ok
+test_096_safe_capture_capture_forking_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_096_safe_capture_capture_forking_scissors_red)
+Capture the scissors forking both friendly papers, with no compensating reply. ... ok
+test_097_safe_capture_horizontal_rocks_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_097_safe_capture_horizontal_rocks_safe_or_poisoned_blue)
+Take the safe rock rather than the rock covered by scissors. ... ok
+test_098_safe_capture_horizontal_rocks_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_098_safe_capture_horizontal_rocks_safe_or_poisoned_red)
+Take the safe rock rather than the rock covered by scissors. ... ok
+test_099_safe_capture_horizontal_papers_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_099_safe_capture_horizontal_papers_safe_or_poisoned_blue)
+Take the free paper rather than the paper covered by a rock. ... ok
+test_100_safe_capture_horizontal_papers_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_100_safe_capture_horizontal_papers_safe_or_poisoned_red)
+Take the free paper rather than the paper covered by a rock. ... ok
+test_game_blue_19_create_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_19_create_paper_fork)
+Create the paper fork and force a net material gain, accounting for every defensive reply. ... ok
+test_game_blue_32_take_winning_run (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_32_take_winning_run)
+Choose a move that forces the win within five plies, instead of an unrelated scissors move. ... ok
+test_game_blue_34_finish_now (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_34_finish_now)
+Finish immediately in the original history-bearing position rather than continuing the game. ... ok
+test_game_red_14_preserve_material (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)
+Do not give back the material advantage through the D7 capture and recapture tactic. ... FAIL
+test_game_red_18_prevent_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)
+Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6. ... FAIL
+test_game_red_31_keep_goal_defender (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)
+Keep the last rock in time to challenge the runner; do not allow a forced win within five plies. ... FAIL
+test_simplified_unique_last_defender_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal. ... FAIL
+test_simplified_unique_last_defender_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal. ... FAIL
+test_simplified_unique_paper_fork_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_paper_fork_exchanged_colours)
+Only H6 attacks both papers and guarantees an extra piece against every reply. ... ok
+test_simplified_unique_paper_fork_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_paper_fork_original_colours)
+Only H6 attacks both papers and guarantees an extra piece against every reply. ... ok
+test_simplified_unique_three_move_run_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_three_move_run_exchanged_colours)
+Capture on G7, then advance through H8 to I9: the unique move that forces a win within five plies. ... ok
+test_simplified_unique_three_move_run_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_three_move_run_original_colours)
+Capture on G7, then advance through H8 to I9: the unique move that forces a win within five plies. ... ok
+
+======================================================================
+FAIL: test_game_red_14_preserve_material (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)
+Do not give back the material advantage through the D7 capture and recapture tactic.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_14_preserve_material: Do not give back the material advantage through the D7 capture and recapture tactic.
+Selected E6-F6; score=108.95833333333334, depth=3, work=57669, pv=['E6-F6', 'E5-F6', 'F7-F6']
+
+======================================================================
+FAIL: test_game_red_18_prevent_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)
+Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_18_prevent_paper_fork: Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+Selected G7-F6; score=-0.0, depth=3, work=44340, pv=['G7-F6', 'G5-H6', 'F6-F5']
+
+======================================================================
+FAIL: test_game_red_31_keep_goal_defender (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)
+Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_31_keep_goal_defender: Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+Selected F8-E8; score=-0.0, depth=3, work=130339, pv=['F8-E8', 'D7-E6', 'F5-E4']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 161 != 228 : Expected B4-B3. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected C3-D4; score=348.4375, depth=3, work=54832, pv=['C3-D4', 'D2-C2', 'D4-E5']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 485 != 546 : Expected F8-G8. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected G7-F6; score=348.4375, depth=3, work=48793, pv=['G7-F6', 'H6-H7', 'F6-E5']
+
+----------------------------------------------------------------------
+Ran 112 tests in 19.640s
+
+FAILED (failures=5)
+
+PVS=False, aspiration=True
+test_001_immediate_goal_diagonal_finish_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_001_immediate_goal_diagonal_finish_blue)
+Take the empty goal now. ... ok
+test_002_immediate_goal_diagonal_finish_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_002_immediate_goal_diagonal_finish_red)
+Take the empty goal now. ... ok
+test_003_immediate_goal_file_finish_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_003_immediate_goal_file_finish_blue)
+Finish along the edge before the predator approaches. ... ok
+test_004_immediate_goal_file_finish_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_004_immediate_goal_file_finish_red)
+Finish along the edge before the predator approaches. ... ok
+test_005_immediate_goal_rank_finish_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_005_immediate_goal_rank_finish_blue)
+Finish along the board edge. ... ok
+test_006_immediate_goal_rank_finish_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_006_immediate_goal_rank_finish_red)
+Finish along the board edge. ... ok
+test_007_immediate_goal_capture_corner_diagonal_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_007_immediate_goal_capture_corner_diagonal_blue)
+Capture the paper occupying the goal to win immediately. ... ok
+test_008_immediate_goal_capture_corner_diagonal_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_008_immediate_goal_capture_corner_diagonal_red)
+Capture the paper occupying the goal to win immediately. ... ok
+test_009_immediate_goal_capture_corner_file_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_009_immediate_goal_capture_corner_file_blue)
+Capture the rock occupying the goal to win immediately. ... ok
+test_010_immediate_goal_capture_corner_file_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_010_immediate_goal_capture_corner_file_red)
+Capture the rock occupying the goal to win immediately. ... ok
+test_011_immediate_goal_capture_corner_rank_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_011_immediate_goal_capture_corner_rank_blue)
+Capture the scissors occupying the goal to win immediately. ... ok
+test_012_immediate_goal_capture_corner_rank_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_012_immediate_goal_capture_corner_rank_red)
+Capture the scissors occupying the goal to win immediately. ... ok
+test_013_immediate_goal_win_before_diagonal_racer_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_013_immediate_goal_win_before_diagonal_racer_blue)
+Win now instead of taking capture bait or defending the counter-racer. ... ok
+test_014_immediate_goal_win_before_diagonal_racer_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_014_immediate_goal_win_before_diagonal_racer_red)
+Win now instead of taking capture bait or defending the counter-racer. ... ok
+test_015_immediate_goal_win_before_file_racer_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_015_immediate_goal_win_before_file_racer_blue)
+The goal wins before the opposing runner can finish; ignore the free paper. ... ok
+test_016_immediate_goal_win_before_file_racer_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_016_immediate_goal_win_before_file_racer_red)
+The goal wins before the opposing runner can finish; ignore the free paper. ... ok
+test_017_immediate_goal_win_before_rank_racer_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_017_immediate_goal_win_before_rank_racer_blue)
+Finish now; capturing the nearby rock would let the opponent win. ... ok
+test_018_immediate_goal_win_before_rank_racer_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_018_immediate_goal_win_before_rank_racer_red)
+Finish now; capturing the nearby rock would let the opponent win. ... ok
+test_019_immediate_goal_capture_goal_before_counter_race_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_019_immediate_goal_capture_goal_before_counter_race_blue)
+Capture on the goal, rather than the tempting rock away from the finish. ... ok
+test_020_immediate_goal_capture_goal_before_counter_race_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_020_immediate_goal_capture_goal_before_counter_race_red)
+Capture on the goal, rather than the tempting rock away from the finish. ... ok
+test_021_clear_run_unopposed_diagonal_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_021_clear_run_unopposed_diagonal_blue)
+Start the unique two-move goal run; the distant predator cannot intercept. ... ok
+test_022_clear_run_unopposed_diagonal_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_022_clear_run_unopposed_diagonal_red)
+Start the unique two-move goal run; the distant predator cannot intercept. ... ok
+test_023_clear_run_outrun_near_predator_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_023_clear_run_outrun_near_predator_blue)
+Step beyond the predator: every reply still permits the goal next turn. ... ok
+test_024_clear_run_outrun_near_predator_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_024_clear_run_outrun_near_predator_red)
+Step beyond the predator: every reply still permits the goal next turn. ... ok
+test_025_clear_run_avoid_lower_interception_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_025_clear_run_avoid_lower_interception_blue)
+Use the safe edge route; the other short route allows an immediate capture. ... ok
+test_026_clear_run_avoid_lower_interception_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_026_clear_run_avoid_lower_interception_red)
+Use the safe edge route; the other short route allows an immediate capture. ... ok
+test_027_clear_run_edge_run_around_predator_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_027_clear_run_edge_run_around_predator_blue)
+Stay on the board edge so the predator cannot intercept the first step. ... ok
+test_028_clear_run_edge_run_around_predator_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_028_clear_run_edge_run_around_predator_red)
+Stay on the board edge so the predator cannot intercept the first step. ... ok
+test_029_clear_run_avoid_left_interception_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_029_clear_run_avoid_left_interception_blue)
+Use the safe edge route; the other short route moves into the predator capture range. ... ok
+test_030_clear_run_avoid_left_interception_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_030_clear_run_avoid_left_interception_red)
+Use the safe edge route; the other short route moves into the predator capture range. ... ok
+test_031_clear_run_file_run_around_predator_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_031_clear_run_file_run_around_predator_blue)
+Stay on the edge to complete the two-move run without interception. ... ok
+test_032_clear_run_file_run_around_predator_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_032_clear_run_file_run_around_predator_red)
+Stay on the edge to complete the two-move run without interception. ... ok
+test_033_clear_run_capture_to_open_run_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_033_clear_run_capture_to_open_run_blue)
+Capture the blocking paper and force the corner on the following turn. ... ok
+test_034_clear_run_capture_to_open_run_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_034_clear_run_capture_to_open_run_red)
+Capture the blocking paper and force the corner on the following turn. ... ok
+test_035_clear_run_capture_before_defender_arrives_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_035_clear_run_capture_before_defender_arrives_blue)
+Capture the rock; its nearby defender is one move too late to stop the finish. ... ok
+test_036_clear_run_capture_before_defender_arrives_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_036_clear_run_capture_before_defender_arrives_red)
+Capture the rock; its nearby defender is one move too late to stop the finish. ... ok
+test_037_clear_run_run_instead_of_side_capture_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_037_clear_run_run_instead_of_side_capture_blue)
+Take the forced goal run rather than the off-route scissors capture. ... ok
+test_038_clear_run_run_instead_of_side_capture_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_038_clear_run_run_instead_of_side_capture_red)
+Take the forced goal run rather than the off-route scissors capture. ... ok
+test_039_clear_run_run_instead_of_other_piece_capture_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_039_clear_run_run_instead_of_other_piece_capture_blue)
+Start the forced goal run instead of winning material with the other paper. ... ok
+test_040_clear_run_run_instead_of_other_piece_capture_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_040_clear_run_run_instead_of_other_piece_capture_red)
+Start the forced goal run instead of winning material with the other paper. ... ok
+test_041_goal_defence_capture_diagonal_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_041_goal_defence_capture_diagonal_runner_blue)
+Capture the runner: every other move allows an immediate goal loss. ... ok
+test_042_goal_defence_capture_diagonal_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_042_goal_defence_capture_diagonal_runner_red)
+Capture the runner: every other move allows an immediate goal loss. ... ok
+test_043_goal_defence_capture_rank_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_043_goal_defence_capture_rank_runner_blue)
+Capture the paper threatening the corner; advancing cannot defend it. ... ok
+test_044_goal_defence_capture_rank_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_044_goal_defence_capture_rank_runner_red)
+Capture the paper threatening the corner; advancing cannot defend it. ... ok
+test_045_goal_defence_capture_file_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_045_goal_defence_capture_file_runner_blue)
+Capture the rock before it enters the corner. ... ok
+test_046_goal_defence_capture_file_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_046_goal_defence_capture_file_runner_red)
+Capture the rock before it enters the corner. ... ok
+test_047_goal_defence_edge_capture_rank_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_047_goal_defence_edge_capture_rank_runner_blue)
+Capture along the edge; the corner cannot be reached to block in time. ... ok
+test_048_goal_defence_edge_capture_rank_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_048_goal_defence_edge_capture_rank_runner_red)
+Capture along the edge; the corner cannot be reached to block in time. ... ok
+test_049_goal_defence_edge_capture_file_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_049_goal_defence_edge_capture_file_runner_blue)
+Remove the paper on the file; every quiet move loses next turn. ... ok
+test_050_goal_defence_edge_capture_file_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_050_goal_defence_edge_capture_file_runner_red)
+Remove the paper on the file; every quiet move loses next turn. ... ok
+test_051_goal_defence_paper_corner_block_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_051_goal_defence_paper_corner_block_blue)
+Occupy the corner: the same-type paper cannot capture the blocker. ... ok
+test_052_goal_defence_paper_corner_block_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_052_goal_defence_paper_corner_block_red)
+Occupy the corner: the same-type paper cannot capture the blocker. ... ok
+test_053_goal_defence_rock_corner_block_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_053_goal_defence_rock_corner_block_blue)
+Block the goal with the rock; the opposing rock cannot capture it. ... ok
+test_054_goal_defence_rock_corner_block_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_054_goal_defence_rock_corner_block_red)
+Block the goal with the rock; the opposing rock cannot capture it. ... ok
+test_055_goal_defence_scissors_corner_block_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_055_goal_defence_scissors_corner_block_blue)
+Block the goal with scissors rather than running away from the threat. ... ok
+test_056_goal_defence_scissors_corner_block_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_056_goal_defence_scissors_corner_block_red)
+Block the goal with scissors rather than running away from the threat. ... ok
+test_057_goal_defence_block_two_runners_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_057_goal_defence_block_two_runners_blue)
+Block both runners at once; capturing only the scissors leaves a goal loss. ... ok
+test_058_goal_defence_block_two_runners_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_058_goal_defence_block_two_runners_red)
+Block both runners at once; capturing only the scissors leaves a goal loss. ... ok
+test_059_goal_defence_block_two_runners_ignore_bait_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_059_goal_defence_block_two_runners_ignore_bait_blue)
+Block both runners; neither the local paper nor the distant rock capture saves the goal. ... ok
+test_060_goal_defence_block_two_runners_ignore_bait_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_060_goal_defence_block_two_runners_ignore_bait_red)
+Block both runners; neither the local paper nor the distant rock capture saves the goal. ... ok
+test_061_save_piece_three_predators_northwest_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_061_save_piece_three_predators_northwest_exit_blue)
+Retreat through the sole safe square; every other move loses the last rock immediately. ... ok
+test_062_save_piece_three_predators_northwest_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_062_save_piece_three_predators_northwest_exit_red)
+Retreat through the sole safe square; every other move loses the last rock immediately. ... ok
+test_063_save_piece_three_predators_northeast_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_063_save_piece_three_predators_northeast_exit_blue)
+Escape the three rocks through the only square they cannot capture next turn. ... ok
+test_064_save_piece_three_predators_northeast_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_064_save_piece_three_predators_northeast_exit_red)
+Escape the three rocks through the only square they cannot capture next turn. ... ok
+test_065_save_piece_three_predators_west_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_065_save_piece_three_predators_west_exit_blue)
+Preserve the final paper by moving outside all three scissors capture ranges. ... ok
+test_066_save_piece_three_predators_west_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_066_save_piece_three_predators_west_exit_red)
+Preserve the final paper by moving outside all three scissors capture ranges. ... ok
+test_067_save_piece_three_predators_southeast_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_067_save_piece_three_predators_southeast_exit_blue)
+Use the sole safe exit; alternatives lose the final rock next turn. ... ok
+test_068_save_piece_three_predators_southeast_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_068_save_piece_three_predators_southeast_exit_red)
+Use the sole safe exit; alternatives lose the final rock next turn. ... ok
+test_069_save_piece_left_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_069_save_piece_left_edge_escape_blue)
+Stay on the edge: this is the only move surviving the two rocks. ... ok
+test_070_save_piece_left_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_070_save_piece_left_edge_escape_red)
+Stay on the edge: this is the only move surviving the two rocks. ... ok
+test_071_save_piece_right_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_071_save_piece_right_edge_escape_blue)
+Move along the edge to preserve the final paper against two scissors. ... ok
+test_072_save_piece_right_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_072_save_piece_right_edge_escape_red)
+Move along the edge to preserve the final paper against two scissors. ... ok
+test_073_save_piece_bottom_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_073_save_piece_bottom_edge_escape_blue)
+Slide along the edge; every inward move permits capture of the final rock. ... ok
+test_074_save_piece_bottom_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_074_save_piece_bottom_edge_escape_red)
+Slide along the edge; every inward move permits capture of the final rock. ... ok
+test_075_save_piece_top_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_075_save_piece_top_edge_escape_blue)
+Slide along the board edge, outside the immediate capture range of both rocks. ... ok
+test_076_save_piece_top_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_076_save_piece_top_edge_escape_red)
+Slide along the board edge, outside the immediate capture range of both rocks. ... ok
+test_077_save_piece_escape_ignore_poisoned_rock_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_077_save_piece_escape_ignore_poisoned_rock_blue)
+Escape instead of capturing the poisoned rock; its defenders would take the final paper. ... ok
+test_078_save_piece_escape_ignore_poisoned_rock_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_078_save_piece_escape_ignore_poisoned_rock_red)
+Escape instead of capturing the poisoned rock; its defenders would take the final paper. ... ok
+test_079_save_piece_escape_ignore_poisoned_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_079_save_piece_escape_ignore_poisoned_scissors_blue)
+Retreat instead of taking the scissors bait covered by the papers. ... ok
+test_080_save_piece_escape_ignore_poisoned_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_080_save_piece_escape_ignore_poisoned_scissors_red)
+Retreat instead of taking the scissors bait covered by the papers. ... ok
+test_081_safe_capture_free_central_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_081_safe_capture_free_central_scissors_blue)
+Take the free scissors: no reply can recapture or win a compensating piece. ... ok
+test_082_safe_capture_free_central_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_082_safe_capture_free_central_scissors_red)
+Take the free scissors: no reply can recapture or win a compensating piece. ... ok
+test_083_safe_capture_free_edge_paper_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_083_safe_capture_free_edge_paper_blue)
+Capture the undefended paper on the edge for a guaranteed extra piece. ... ok
+test_084_safe_capture_free_edge_paper_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_084_safe_capture_free_edge_paper_red)
+Capture the undefended paper on the edge for a guaranteed extra piece. ... ok
+test_085_safe_capture_scissors_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_085_safe_capture_scissors_safe_or_poisoned_blue)
+Capture the free scissors, not the scissors defended by a paper. ... ok
+test_086_safe_capture_scissors_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_086_safe_capture_scissors_safe_or_poisoned_red)
+Capture the free scissors, not the scissors defended by a paper. ... ok
+test_087_safe_capture_rocks_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_087_safe_capture_rocks_safe_or_poisoned_blue)
+Take the undefended rock; the other rock capture allows immediate recapture. ... ok
+test_088_safe_capture_rocks_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_088_safe_capture_rocks_safe_or_poisoned_red)
+Take the undefended rock; the other rock capture allows immediate recapture. ... ok
+test_089_safe_capture_papers_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_089_safe_capture_papers_safe_or_poisoned_blue)
+Capture the free paper, avoiding the paper protected by a rock. ... ok
+test_090_safe_capture_papers_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_090_safe_capture_papers_safe_or_poisoned_red)
+Capture the free paper, avoiding the paper protected by a rock. ... ok
+test_091_safe_capture_remove_last_paper_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_091_safe_capture_remove_last_paper_blue)
+Win the last enemy paper safely, also removing the predator of the friendly rock. ... ok
+test_092_safe_capture_remove_last_paper_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_092_safe_capture_remove_last_paper_red)
+Win the last enemy paper safely, also removing the predator of the friendly rock. ... ok
+test_093_safe_capture_capture_attacker_to_save_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_093_safe_capture_capture_attacker_to_save_scissors_blue)
+Capture the attacking rock and preserve the threatened friendly scissors. ... ok
+test_094_safe_capture_capture_attacker_to_save_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_094_safe_capture_capture_attacker_to_save_scissors_red)
+Capture the attacking rock and preserve the threatened friendly scissors. ... ok
+test_095_safe_capture_capture_forking_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_095_safe_capture_capture_forking_scissors_blue)
+Capture the scissors forking both friendly papers, with no compensating reply. ... ok
+test_096_safe_capture_capture_forking_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_096_safe_capture_capture_forking_scissors_red)
+Capture the scissors forking both friendly papers, with no compensating reply. ... ok
+test_097_safe_capture_horizontal_rocks_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_097_safe_capture_horizontal_rocks_safe_or_poisoned_blue)
+Take the safe rock rather than the rock covered by scissors. ... ok
+test_098_safe_capture_horizontal_rocks_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_098_safe_capture_horizontal_rocks_safe_or_poisoned_red)
+Take the safe rock rather than the rock covered by scissors. ... ok
+test_099_safe_capture_horizontal_papers_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_099_safe_capture_horizontal_papers_safe_or_poisoned_blue)
+Take the free paper rather than the paper covered by a rock. ... ok
+test_100_safe_capture_horizontal_papers_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_100_safe_capture_horizontal_papers_safe_or_poisoned_red)
+Take the free paper rather than the paper covered by a rock. ... ok
+test_game_blue_19_create_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_19_create_paper_fork)
+Create the paper fork and force a net material gain, accounting for every defensive reply. ... ok
+test_game_blue_32_take_winning_run (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_32_take_winning_run)
+Choose a move that forces the win within five plies, instead of an unrelated scissors move. ... ok
+test_game_blue_34_finish_now (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_34_finish_now)
+Finish immediately in the original history-bearing position rather than continuing the game. ... ok
+test_game_red_14_preserve_material (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)
+Do not give back the material advantage through the D7 capture and recapture tactic. ... FAIL
+test_game_red_18_prevent_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)
+Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6. ... FAIL
+test_game_red_31_keep_goal_defender (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)
+Keep the last rock in time to challenge the runner; do not allow a forced win within five plies. ... FAIL
+test_simplified_unique_last_defender_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal. ... FAIL
+test_simplified_unique_last_defender_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal. ... FAIL
+test_simplified_unique_paper_fork_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_paper_fork_exchanged_colours)
+Only H6 attacks both papers and guarantees an extra piece against every reply. ... ok
+test_simplified_unique_paper_fork_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_paper_fork_original_colours)
+Only H6 attacks both papers and guarantees an extra piece against every reply. ... ok
+test_simplified_unique_three_move_run_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_three_move_run_exchanged_colours)
+Capture on G7, then advance through H8 to I9: the unique move that forces a win within five plies. ... ok
+test_simplified_unique_three_move_run_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_three_move_run_original_colours)
+Capture on G7, then advance through H8 to I9: the unique move that forces a win within five plies. ... ok
+
+======================================================================
+FAIL: test_game_red_14_preserve_material (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)
+Do not give back the material advantage through the D7 capture and recapture tactic.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_14_preserve_material: Do not give back the material advantage through the D7 capture and recapture tactic.
+Selected E6-F6; score=108.95833333333334, depth=3, work=56937, pv=['E6-F6', 'E5-F6', 'F7-F6']
+
+======================================================================
+FAIL: test_game_red_18_prevent_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)
+Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_18_prevent_paper_fork: Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+Selected G7-F6; score=-0.0, depth=3, work=44310, pv=['G7-F6', 'G5-H6', 'F6-F5']
+
+======================================================================
+FAIL: test_game_red_31_keep_goal_defender (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)
+Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_31_keep_goal_defender: Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+Selected F8-E8; score=-0.0, depth=3, work=144912, pv=['F8-E8', 'D7-E6', 'F5-E4']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 161 != 228 : Expected B4-B3. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected C3-D4; score=348.4375, depth=3, work=54943, pv=['C3-D4', 'D2-C2', 'D4-E5']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 485 != 546 : Expected F8-G8. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected G7-F6; score=348.4375, depth=3, work=48904, pv=['G7-F6', 'H6-H7', 'F6-E5']
+
+----------------------------------------------------------------------
+Ran 112 tests in 8.298s
+
+FAILED (failures=5)
+
+PVS=True, aspiration=True
+test_001_immediate_goal_diagonal_finish_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_001_immediate_goal_diagonal_finish_blue)
+Take the empty goal now. ... ok
+test_002_immediate_goal_diagonal_finish_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_002_immediate_goal_diagonal_finish_red)
+Take the empty goal now. ... ok
+test_003_immediate_goal_file_finish_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_003_immediate_goal_file_finish_blue)
+Finish along the edge before the predator approaches. ... ok
+test_004_immediate_goal_file_finish_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_004_immediate_goal_file_finish_red)
+Finish along the edge before the predator approaches. ... ok
+test_005_immediate_goal_rank_finish_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_005_immediate_goal_rank_finish_blue)
+Finish along the board edge. ... ok
+test_006_immediate_goal_rank_finish_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_006_immediate_goal_rank_finish_red)
+Finish along the board edge. ... ok
+test_007_immediate_goal_capture_corner_diagonal_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_007_immediate_goal_capture_corner_diagonal_blue)
+Capture the paper occupying the goal to win immediately. ... ok
+test_008_immediate_goal_capture_corner_diagonal_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_008_immediate_goal_capture_corner_diagonal_red)
+Capture the paper occupying the goal to win immediately. ... ok
+test_009_immediate_goal_capture_corner_file_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_009_immediate_goal_capture_corner_file_blue)
+Capture the rock occupying the goal to win immediately. ... ok
+test_010_immediate_goal_capture_corner_file_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_010_immediate_goal_capture_corner_file_red)
+Capture the rock occupying the goal to win immediately. ... ok
+test_011_immediate_goal_capture_corner_rank_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_011_immediate_goal_capture_corner_rank_blue)
+Capture the scissors occupying the goal to win immediately. ... ok
+test_012_immediate_goal_capture_corner_rank_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_012_immediate_goal_capture_corner_rank_red)
+Capture the scissors occupying the goal to win immediately. ... ok
+test_013_immediate_goal_win_before_diagonal_racer_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_013_immediate_goal_win_before_diagonal_racer_blue)
+Win now instead of taking capture bait or defending the counter-racer. ... ok
+test_014_immediate_goal_win_before_diagonal_racer_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_014_immediate_goal_win_before_diagonal_racer_red)
+Win now instead of taking capture bait or defending the counter-racer. ... ok
+test_015_immediate_goal_win_before_file_racer_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_015_immediate_goal_win_before_file_racer_blue)
+The goal wins before the opposing runner can finish; ignore the free paper. ... ok
+test_016_immediate_goal_win_before_file_racer_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_016_immediate_goal_win_before_file_racer_red)
+The goal wins before the opposing runner can finish; ignore the free paper. ... ok
+test_017_immediate_goal_win_before_rank_racer_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_017_immediate_goal_win_before_rank_racer_blue)
+Finish now; capturing the nearby rock would let the opponent win. ... ok
+test_018_immediate_goal_win_before_rank_racer_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_018_immediate_goal_win_before_rank_racer_red)
+Finish now; capturing the nearby rock would let the opponent win. ... ok
+test_019_immediate_goal_capture_goal_before_counter_race_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_019_immediate_goal_capture_goal_before_counter_race_blue)
+Capture on the goal, rather than the tempting rock away from the finish. ... ok
+test_020_immediate_goal_capture_goal_before_counter_race_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_020_immediate_goal_capture_goal_before_counter_race_red)
+Capture on the goal, rather than the tempting rock away from the finish. ... ok
+test_021_clear_run_unopposed_diagonal_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_021_clear_run_unopposed_diagonal_blue)
+Start the unique two-move goal run; the distant predator cannot intercept. ... ok
+test_022_clear_run_unopposed_diagonal_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_022_clear_run_unopposed_diagonal_red)
+Start the unique two-move goal run; the distant predator cannot intercept. ... ok
+test_023_clear_run_outrun_near_predator_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_023_clear_run_outrun_near_predator_blue)
+Step beyond the predator: every reply still permits the goal next turn. ... ok
+test_024_clear_run_outrun_near_predator_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_024_clear_run_outrun_near_predator_red)
+Step beyond the predator: every reply still permits the goal next turn. ... ok
+test_025_clear_run_avoid_lower_interception_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_025_clear_run_avoid_lower_interception_blue)
+Use the safe edge route; the other short route allows an immediate capture. ... ok
+test_026_clear_run_avoid_lower_interception_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_026_clear_run_avoid_lower_interception_red)
+Use the safe edge route; the other short route allows an immediate capture. ... ok
+test_027_clear_run_edge_run_around_predator_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_027_clear_run_edge_run_around_predator_blue)
+Stay on the board edge so the predator cannot intercept the first step. ... ok
+test_028_clear_run_edge_run_around_predator_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_028_clear_run_edge_run_around_predator_red)
+Stay on the board edge so the predator cannot intercept the first step. ... ok
+test_029_clear_run_avoid_left_interception_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_029_clear_run_avoid_left_interception_blue)
+Use the safe edge route; the other short route moves into the predator capture range. ... ok
+test_030_clear_run_avoid_left_interception_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_030_clear_run_avoid_left_interception_red)
+Use the safe edge route; the other short route moves into the predator capture range. ... ok
+test_031_clear_run_file_run_around_predator_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_031_clear_run_file_run_around_predator_blue)
+Stay on the edge to complete the two-move run without interception. ... ok
+test_032_clear_run_file_run_around_predator_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_032_clear_run_file_run_around_predator_red)
+Stay on the edge to complete the two-move run without interception. ... ok
+test_033_clear_run_capture_to_open_run_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_033_clear_run_capture_to_open_run_blue)
+Capture the blocking paper and force the corner on the following turn. ... ok
+test_034_clear_run_capture_to_open_run_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_034_clear_run_capture_to_open_run_red)
+Capture the blocking paper and force the corner on the following turn. ... ok
+test_035_clear_run_capture_before_defender_arrives_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_035_clear_run_capture_before_defender_arrives_blue)
+Capture the rock; its nearby defender is one move too late to stop the finish. ... ok
+test_036_clear_run_capture_before_defender_arrives_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_036_clear_run_capture_before_defender_arrives_red)
+Capture the rock; its nearby defender is one move too late to stop the finish. ... ok
+test_037_clear_run_run_instead_of_side_capture_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_037_clear_run_run_instead_of_side_capture_blue)
+Take the forced goal run rather than the off-route scissors capture. ... ok
+test_038_clear_run_run_instead_of_side_capture_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_038_clear_run_run_instead_of_side_capture_red)
+Take the forced goal run rather than the off-route scissors capture. ... ok
+test_039_clear_run_run_instead_of_other_piece_capture_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_039_clear_run_run_instead_of_other_piece_capture_blue)
+Start the forced goal run instead of winning material with the other paper. ... ok
+test_040_clear_run_run_instead_of_other_piece_capture_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_040_clear_run_run_instead_of_other_piece_capture_red)
+Start the forced goal run instead of winning material with the other paper. ... ok
+test_041_goal_defence_capture_diagonal_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_041_goal_defence_capture_diagonal_runner_blue)
+Capture the runner: every other move allows an immediate goal loss. ... ok
+test_042_goal_defence_capture_diagonal_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_042_goal_defence_capture_diagonal_runner_red)
+Capture the runner: every other move allows an immediate goal loss. ... ok
+test_043_goal_defence_capture_rank_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_043_goal_defence_capture_rank_runner_blue)
+Capture the paper threatening the corner; advancing cannot defend it. ... ok
+test_044_goal_defence_capture_rank_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_044_goal_defence_capture_rank_runner_red)
+Capture the paper threatening the corner; advancing cannot defend it. ... ok
+test_045_goal_defence_capture_file_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_045_goal_defence_capture_file_runner_blue)
+Capture the rock before it enters the corner. ... ok
+test_046_goal_defence_capture_file_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_046_goal_defence_capture_file_runner_red)
+Capture the rock before it enters the corner. ... ok
+test_047_goal_defence_edge_capture_rank_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_047_goal_defence_edge_capture_rank_runner_blue)
+Capture along the edge; the corner cannot be reached to block in time. ... ok
+test_048_goal_defence_edge_capture_rank_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_048_goal_defence_edge_capture_rank_runner_red)
+Capture along the edge; the corner cannot be reached to block in time. ... ok
+test_049_goal_defence_edge_capture_file_runner_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_049_goal_defence_edge_capture_file_runner_blue)
+Remove the paper on the file; every quiet move loses next turn. ... ok
+test_050_goal_defence_edge_capture_file_runner_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_050_goal_defence_edge_capture_file_runner_red)
+Remove the paper on the file; every quiet move loses next turn. ... ok
+test_051_goal_defence_paper_corner_block_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_051_goal_defence_paper_corner_block_blue)
+Occupy the corner: the same-type paper cannot capture the blocker. ... ok
+test_052_goal_defence_paper_corner_block_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_052_goal_defence_paper_corner_block_red)
+Occupy the corner: the same-type paper cannot capture the blocker. ... ok
+test_053_goal_defence_rock_corner_block_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_053_goal_defence_rock_corner_block_blue)
+Block the goal with the rock; the opposing rock cannot capture it. ... ok
+test_054_goal_defence_rock_corner_block_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_054_goal_defence_rock_corner_block_red)
+Block the goal with the rock; the opposing rock cannot capture it. ... ok
+test_055_goal_defence_scissors_corner_block_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_055_goal_defence_scissors_corner_block_blue)
+Block the goal with scissors rather than running away from the threat. ... ok
+test_056_goal_defence_scissors_corner_block_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_056_goal_defence_scissors_corner_block_red)
+Block the goal with scissors rather than running away from the threat. ... ok
+test_057_goal_defence_block_two_runners_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_057_goal_defence_block_two_runners_blue)
+Block both runners at once; capturing only the scissors leaves a goal loss. ... ok
+test_058_goal_defence_block_two_runners_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_058_goal_defence_block_two_runners_red)
+Block both runners at once; capturing only the scissors leaves a goal loss. ... ok
+test_059_goal_defence_block_two_runners_ignore_bait_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_059_goal_defence_block_two_runners_ignore_bait_blue)
+Block both runners; neither the local paper nor the distant rock capture saves the goal. ... ok
+test_060_goal_defence_block_two_runners_ignore_bait_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_060_goal_defence_block_two_runners_ignore_bait_red)
+Block both runners; neither the local paper nor the distant rock capture saves the goal. ... ok
+test_061_save_piece_three_predators_northwest_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_061_save_piece_three_predators_northwest_exit_blue)
+Retreat through the sole safe square; every other move loses the last rock immediately. ... ok
+test_062_save_piece_three_predators_northwest_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_062_save_piece_three_predators_northwest_exit_red)
+Retreat through the sole safe square; every other move loses the last rock immediately. ... ok
+test_063_save_piece_three_predators_northeast_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_063_save_piece_three_predators_northeast_exit_blue)
+Escape the three rocks through the only square they cannot capture next turn. ... ok
+test_064_save_piece_three_predators_northeast_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_064_save_piece_three_predators_northeast_exit_red)
+Escape the three rocks through the only square they cannot capture next turn. ... ok
+test_065_save_piece_three_predators_west_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_065_save_piece_three_predators_west_exit_blue)
+Preserve the final paper by moving outside all three scissors capture ranges. ... ok
+test_066_save_piece_three_predators_west_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_066_save_piece_three_predators_west_exit_red)
+Preserve the final paper by moving outside all three scissors capture ranges. ... ok
+test_067_save_piece_three_predators_southeast_exit_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_067_save_piece_three_predators_southeast_exit_blue)
+Use the sole safe exit; alternatives lose the final rock next turn. ... ok
+test_068_save_piece_three_predators_southeast_exit_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_068_save_piece_three_predators_southeast_exit_red)
+Use the sole safe exit; alternatives lose the final rock next turn. ... ok
+test_069_save_piece_left_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_069_save_piece_left_edge_escape_blue)
+Stay on the edge: this is the only move surviving the two rocks. ... ok
+test_070_save_piece_left_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_070_save_piece_left_edge_escape_red)
+Stay on the edge: this is the only move surviving the two rocks. ... ok
+test_071_save_piece_right_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_071_save_piece_right_edge_escape_blue)
+Move along the edge to preserve the final paper against two scissors. ... ok
+test_072_save_piece_right_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_072_save_piece_right_edge_escape_red)
+Move along the edge to preserve the final paper against two scissors. ... ok
+test_073_save_piece_bottom_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_073_save_piece_bottom_edge_escape_blue)
+Slide along the edge; every inward move permits capture of the final rock. ... ok
+test_074_save_piece_bottom_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_074_save_piece_bottom_edge_escape_red)
+Slide along the edge; every inward move permits capture of the final rock. ... ok
+test_075_save_piece_top_edge_escape_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_075_save_piece_top_edge_escape_blue)
+Slide along the board edge, outside the immediate capture range of both rocks. ... ok
+test_076_save_piece_top_edge_escape_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_076_save_piece_top_edge_escape_red)
+Slide along the board edge, outside the immediate capture range of both rocks. ... ok
+test_077_save_piece_escape_ignore_poisoned_rock_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_077_save_piece_escape_ignore_poisoned_rock_blue)
+Escape instead of capturing the poisoned rock; its defenders would take the final paper. ... ok
+test_078_save_piece_escape_ignore_poisoned_rock_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_078_save_piece_escape_ignore_poisoned_rock_red)
+Escape instead of capturing the poisoned rock; its defenders would take the final paper. ... ok
+test_079_save_piece_escape_ignore_poisoned_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_079_save_piece_escape_ignore_poisoned_scissors_blue)
+Retreat instead of taking the scissors bait covered by the papers. ... ok
+test_080_save_piece_escape_ignore_poisoned_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_080_save_piece_escape_ignore_poisoned_scissors_red)
+Retreat instead of taking the scissors bait covered by the papers. ... ok
+test_081_safe_capture_free_central_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_081_safe_capture_free_central_scissors_blue)
+Take the free scissors: no reply can recapture or win a compensating piece. ... ok
+test_082_safe_capture_free_central_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_082_safe_capture_free_central_scissors_red)
+Take the free scissors: no reply can recapture or win a compensating piece. ... ok
+test_083_safe_capture_free_edge_paper_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_083_safe_capture_free_edge_paper_blue)
+Capture the undefended paper on the edge for a guaranteed extra piece. ... ok
+test_084_safe_capture_free_edge_paper_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_084_safe_capture_free_edge_paper_red)
+Capture the undefended paper on the edge for a guaranteed extra piece. ... ok
+test_085_safe_capture_scissors_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_085_safe_capture_scissors_safe_or_poisoned_blue)
+Capture the free scissors, not the scissors defended by a paper. ... ok
+test_086_safe_capture_scissors_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_086_safe_capture_scissors_safe_or_poisoned_red)
+Capture the free scissors, not the scissors defended by a paper. ... ok
+test_087_safe_capture_rocks_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_087_safe_capture_rocks_safe_or_poisoned_blue)
+Take the undefended rock; the other rock capture allows immediate recapture. ... ok
+test_088_safe_capture_rocks_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_088_safe_capture_rocks_safe_or_poisoned_red)
+Take the undefended rock; the other rock capture allows immediate recapture. ... ok
+test_089_safe_capture_papers_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_089_safe_capture_papers_safe_or_poisoned_blue)
+Capture the free paper, avoiding the paper protected by a rock. ... ok
+test_090_safe_capture_papers_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_090_safe_capture_papers_safe_or_poisoned_red)
+Capture the free paper, avoiding the paper protected by a rock. ... ok
+test_091_safe_capture_remove_last_paper_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_091_safe_capture_remove_last_paper_blue)
+Win the last enemy paper safely, also removing the predator of the friendly rock. ... ok
+test_092_safe_capture_remove_last_paper_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_092_safe_capture_remove_last_paper_red)
+Win the last enemy paper safely, also removing the predator of the friendly rock. ... ok
+test_093_safe_capture_capture_attacker_to_save_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_093_safe_capture_capture_attacker_to_save_scissors_blue)
+Capture the attacking rock and preserve the threatened friendly scissors. ... ok
+test_094_safe_capture_capture_attacker_to_save_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_094_safe_capture_capture_attacker_to_save_scissors_red)
+Capture the attacking rock and preserve the threatened friendly scissors. ... ok
+test_095_safe_capture_capture_forking_scissors_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_095_safe_capture_capture_forking_scissors_blue)
+Capture the scissors forking both friendly papers, with no compensating reply. ... ok
+test_096_safe_capture_capture_forking_scissors_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_096_safe_capture_capture_forking_scissors_red)
+Capture the scissors forking both friendly papers, with no compensating reply. ... ok
+test_097_safe_capture_horizontal_rocks_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_097_safe_capture_horizontal_rocks_safe_or_poisoned_blue)
+Take the safe rock rather than the rock covered by scissors. ... ok
+test_098_safe_capture_horizontal_rocks_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_098_safe_capture_horizontal_rocks_safe_or_poisoned_red)
+Take the safe rock rather than the rock covered by scissors. ... ok
+test_099_safe_capture_horizontal_papers_safe_or_poisoned_blue (intransitive.tests.test_tactics.TacticalRegressionTests.test_099_safe_capture_horizontal_papers_safe_or_poisoned_blue)
+Take the free paper rather than the paper covered by a rock. ... ok
+test_100_safe_capture_horizontal_papers_safe_or_poisoned_red (intransitive.tests.test_tactics.TacticalRegressionTests.test_100_safe_capture_horizontal_papers_safe_or_poisoned_red)
+Take the free paper rather than the paper covered by a rock. ... ok
+test_game_blue_19_create_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_19_create_paper_fork)
+Create the paper fork and force a net material gain, accounting for every defensive reply. ... ok
+test_game_blue_32_take_winning_run (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_32_take_winning_run)
+Choose a move that forces the win within five plies, instead of an unrelated scissors move. ... ok
+test_game_blue_34_finish_now (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_34_finish_now)
+Finish immediately in the original history-bearing position rather than continuing the game. ... ok
+test_game_red_14_preserve_material (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)
+Do not give back the material advantage through the D7 capture and recapture tactic. ... FAIL
+test_game_red_18_prevent_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)
+Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6. ... FAIL
+test_game_red_31_keep_goal_defender (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)
+Keep the last rock in time to challenge the runner; do not allow a forced win within five plies. ... FAIL
+test_simplified_unique_last_defender_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal. ... FAIL
+test_simplified_unique_last_defender_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal. ... FAIL
+test_simplified_unique_paper_fork_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_paper_fork_exchanged_colours)
+Only H6 attacks both papers and guarantees an extra piece against every reply. ... ok
+test_simplified_unique_paper_fork_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_paper_fork_original_colours)
+Only H6 attacks both papers and guarantees an extra piece against every reply. ... ok
+test_simplified_unique_three_move_run_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_three_move_run_exchanged_colours)
+Capture on G7, then advance through H8 to I9: the unique move that forces a win within five plies. ... ok
+test_simplified_unique_three_move_run_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_three_move_run_original_colours)
+Capture on G7, then advance through H8 to I9: the unique move that forces a win within five plies. ... ok
+
+======================================================================
+FAIL: test_game_red_14_preserve_material (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)
+Do not give back the material advantage through the D7 capture and recapture tactic.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_14_preserve_material: Do not give back the material advantage through the D7 capture and recapture tactic.
+Selected E6-F6; score=108.95833333333334, depth=3, work=57039, pv=['E6-F6', 'E5-F6', 'F7-F6']
+
+======================================================================
+FAIL: test_game_red_18_prevent_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)
+Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_18_prevent_paper_fork: Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+Selected G7-F6; score=-0.0, depth=3, work=42299, pv=['G7-F6', 'G5-H6', 'F6-F5']
+
+======================================================================
+FAIL: test_game_red_31_keep_goal_defender (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)
+Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_31_keep_goal_defender: Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+Selected F8-E8; score=-0.0, depth=3, work=130715, pv=['F8-E8', 'D7-E6', 'F5-E4']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 161 != 228 : Expected B4-B3. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected C3-D4; score=348.4375, depth=3, work=54943, pv=['C3-D4', 'D2-C2', 'D4-E5']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-41-intransitive-add-principal/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 485 != 546 : Expected F8-G8. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected G7-F6; score=348.4375, depth=3, work=48904, pv=['G7-F6', 'H6-H7', 'F6-E5']
+
+----------------------------------------------------------------------
+Ran 112 tests in 8.170s
+
+FAILED (failures=5)

@@ -1,11 +1,11 @@
-"""Full-width iterative alpha-beta and an independent exhaustive reference.
+"""Iterative alpha-beta, optional PVS/aspiration and an exhaustive reference.
 
 Search organization reference: Stockfish src/search.cpp (iterative deepening,
 TT bounds, mate-distance conversion). No selective/chess-specific pruning.
 """
 from dataclasses import dataclass, field
 from functools import lru_cache
-from math import inf
+from math import inf, isfinite, nextafter
 from time import perf_counter
 import sys
 import numpy as np
@@ -90,6 +90,11 @@ class SearchResult:
     stop_reason: str = 'maximum_depth'
     diagnostics_status: str = 'completed'
     effective_limits: dict = field(default_factory=dict)
+    pvs_probes: int = 0
+    pvs_researches: int = 0
+    aspiration_researches: int = 0
+    aspiration_fail_highs: int = 0
+    aspiration_fail_lows: int = 0
 
 
 @dataclass
@@ -100,10 +105,15 @@ class RootProgress:
     moves: dict = field(default_factory=dict)
     finished: bool = False
 
-    def record(self, action, score, line, alpha):
+    def record(self, action, score, line, alpha, beta=inf):
+        bound = 'upper' if score <= alpha else 'lower' if score >= beta else 'exact'
+        previous = self.moves.get(action)
+        # Recovery passes can return a weaker bound on an already verified
+        # sibling. Keep its exact value and PV available across retries.
+        if previous is not None and previous['bound'] == 'exact' and bound != 'exact':
+            return
         self.moves[action] = dict(action=action, score=score, pv=[action] + line,
-                                  depth=self.depth,
-                                  bound='upper' if score <= alpha else 'exact')
+                                  depth=self.depth, bound=bound)
 
 
 class ProofLimit(Exception):
@@ -358,7 +368,8 @@ class AlphaBetaPlayer:
         if progress is not None and progress.incumbent is not None:
             preferred = progress.incumbent
         best, pv = -inf, []
-        for action, child in self._ordered(state, side, preferred, budget, root=progress is not None):
+        for index, (action, child) in enumerate(self._ordered(
+                state, side, preferred, budget, root=progress is not None)):
             counts = self._material_counts
             if compact:
                 state.push(action)
@@ -368,7 +379,20 @@ class AlphaBetaPlayer:
                 x, y = action_destination(action)
                 self._material_counts = after_capture(counts, int(state[y, x, 0]))
             try:
-                value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
+                # Scores are binary64, including fractional heuristics. Adjacent
+                # representable endpoints leave no possible score between them.
+                # nextafter also handles -0 correctly; infinite alpha uses the
+                # ordinary path. A probe is a bound until its challenger returns
+                # from a full re-search. Never publish an intermediate probe.
+                probe_beta = nextafter(alpha, inf)
+                if self.config.pvs_enabled and index and isfinite(alpha) and probe_beta < beta:
+                    budget.pvs_probes += 1
+                    value, line = self._search(child, depth - 1, -probe_beta, -alpha, ply + 1, budget)
+                    if alpha < -value < beta:
+                        budget.pvs_researches += 1
+                        value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
+                else:
+                    value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
             finally:
                 if compact:
                     state.pop()
@@ -377,14 +401,14 @@ class AlphaBetaPlayer:
             if progress is not None:
                 # Publish only a fully returned child, never an interrupted
                 # subtree or an intermediate optimistic score.
-                progress.record(action, value, line, alpha)
+                progress.record(action, value, line, alpha, beta)
             if value > best:
                 best, pv = value, [action] + line
             alpha = max(alpha, best)
             if alpha >= beta or best == MATE - ply - 1:
                 break
         if progress is not None:
-            progress.finished = True
+            progress.finished = alpha_original < best < beta_original
         budget.check()
         bound = 'upper' if best <= alpha_original else 'lower' if best >= beta_original else 'exact'
         self._store(key, depth, best, bound, pv, ply)
@@ -429,7 +453,29 @@ class AlphaBetaPlayer:
         try:
             for target in range(1, self.config.max_depth + 1):
                 self._root_progress = RootProgress(target, len(actions), action if depth else None)
-                value, line = self._search(search_state, target, -inf, inf, 0, budget)
+                low, high = -inf, inf
+                width = self.config.aspiration_window
+                if self.config.aspiration_enabled and depth and isfinite(score):
+                    low = min(score - width, nextafter(score, -inf))
+                    high = max(score + width, nextafter(score, inf))
+                retries = 0
+                while True:
+                    value, line = self._search(search_state, target, low, high, 0, budget)
+                    if low < value < high:
+                        break
+                    budget.aspiration_researches += 1
+                    retries += 1
+                    width *= 2
+                    if value <= low:
+                        budget.aspiration_fail_lows += 1
+                        low = min(value - width, nextafter(value, -inf))
+                    else:
+                        budget.aspiration_fail_highs += 1
+                        high = max(value + width, nextafter(value, inf))
+                    # A bounded number of recovery passes, even for subnormal
+                    # widths or mate-distance jumps. The reference always exists.
+                    if retries >= 8:
+                        low, high = -inf, inf
                 score, pv, action, depth = value, line, line[0], target
                 selected_depth, source, score_bound = target, 'completed_iteration', 'exact'
                 if self._root_progress.moves:
@@ -444,12 +490,26 @@ class AlphaBetaPlayer:
             stop_reason = exc.reason
             progress = self._root_progress
             if progress is not None and progress.moves:
-                best = max(progress.moves.values(), key=lambda row: row['score'])
+                exact = [row for row in progress.moves.values() if row['bound'] == 'exact']
+                upper = [row for row in progress.moves.values() if row['bound'] == 'upper']
+                # Lower bounds from aspiration fail-highs are not verified
+                # challengers. Upper bounds cannot beat an exact sibling either.
+                candidates = exact or upper
+                best = max(candidates, key=lambda row: row['score']) if candidates else None
+                incumbent_row = progress.moves.get(progress.incumbent)
+                if (not exact and incumbent_row is not None
+                        and incumbent_row['bound'] == 'upper'
+                        and incumbent_row['score'] < -MATE_THRESHOLD):
+                    # A failed-low pass may have visited other moves only with
+                    # upper bounds. They are still unrefuted alternatives to an
+                    # incumbent whose upper bound already proves it loses.
+                    best = incumbent_row
                 # Re-search the incumbent first, then compare completed siblings
                 # at the SAME depth. Never compare a half-searched branch, or
                 # substitute a shallow optimistic score for a deeper result.
-                if (progress.incumbent is None or progress.incumbent in progress.moves
-                        or best['score'] > MATE_THRESHOLD):
+                if (best is not None and (exact or best['score'] < -MATE_THRESHOLD)
+                        and (progress.incumbent is None or progress.incumbent in progress.moves
+                             or best['score'] > MATE_THRESHOLD)):
                     choice = best
                     source = 'partial_iteration'
                     if progress.finished:
@@ -459,12 +519,16 @@ class AlphaBetaPlayer:
                         # the root. Prefer an alternative not yet refuted.
                         known = self._root_previous.copy()
                         known.update(progress.moves)
-                        remaining = [int(a) for a in actions if a not in progress.moves
-                                     and (a not in known or known[a]['score'] >= -MATE_THRESHOLD)]
+                        remaining = [int(a) for a in actions
+                                     if a not in known or known[a]['bound'] == 'lower'
+                                     or known[a]['score'] >= -MATE_THRESHOLD]
                         if remaining:
                             alternative = max(remaining, key=lambda a: known.get(a, {}).get('score', -inf))
                             choice = known.get(alternative, dict(action=alternative, score=None,
                                 pv=[alternative], depth=0, bound=None))
+                            if choice['bound'] == 'lower':
+                                choice = dict(action=alternative, score=None, pv=[alternative],
+                                              depth=0, bound=None)
                             source = 'unrefuted_fallback'
                     action, score, pv = choice['action'], choice['score'], choice['pv']
                     selected_depth, score_bound = choice['depth'], choice['bound']
@@ -505,7 +569,10 @@ class AlphaBetaPlayer:
                               explanation, dict(budget.module_seconds), dict(budget.module_calls),
                               selected_depth, partial_depth, completed_moves, len(actions),
                               source, score_bound, budget.tt_hits, stop_reason,
-                              diagnostics_status, effective_limits)
+                              diagnostics_status, effective_limits,
+                              budget.pvs_probes, budget.pvs_researches,
+                              budget.aspiration_researches, budget.aspiration_fail_highs,
+                              budget.aspiration_fail_lows)
         self.last_result = result
         return result
 

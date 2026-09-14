@@ -26,7 +26,13 @@ This work preserves the current version-2 `(9,9,84)` / **80-turn** contract,
 including official-play history rollover. Tests explicitly check that 30 quiet
 moves remain playable under the current rules.
 
-From the repository root, using the pinned Python 3.11 environment:
+Performance measurements below were taken at implementation commit `d7c4fb9`.
+To reproduce those historical timings, use a separate checkout of that revision
+and the pinned Python 3.11 environment. The harness intentionally rejects drift
+in shared dependencies; later PVS/aspiration integration is validated separately
+below and does not change the archived performance claims.
+
+From the repository root:
 
 ```sh
 python intransitive/benchmarks/compact/reproduce.py > results.json
@@ -171,3 +177,25 @@ against the baseline.
 - [Final full suite](evidence/full-validation.txt).
 - [Focused compact/material/proof/anytime suite](evidence/focused-validation.txt).
 - [Repository suite](evidence/repository-validation.txt).
+
+
+## Integration with PR #47 before merge
+
+Master advanced to `cd368a2` while this PR was in review. The integration keeps
+PVS probes and their full re-search inside the same compact push/pop lifetime;
+every aspiration retry starts from the restored compact root. Both window
+switches retain their existing disabled defaults. The window test fixture now
+exports compact states before checking its original byte-indexed expectations.
+A new differential test compares compact/public results, completed branches,
+logical work and window counters for all four switch combinations at work caps
+0/100/500/3000 and sufficient budget through depth three.
+
+Post-integration validation: **358/363 full-suite tests pass**, with exactly the
+same five baseline defensive failures, **58/58 focused tests** and **7/7 repository
+tests** pass. The historical timings above still refer to `d7c4fb9`; no combined
+PVS/aspiration performance claim is inferred from the integration checks.
+
+- [Full integration validation](evidence/merge-full-validation.txt).
+- [Focused integration validation](evidence/merge-focused-validation.txt).
+- [Repository integration validation](evidence/merge-repository-validation.txt).
+- [Failure-name comparison with baseline](evidence/merge-validation.json).

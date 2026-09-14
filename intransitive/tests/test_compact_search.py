@@ -377,6 +377,20 @@ class CompactSearchTests(unittest.TestCase):
         self.assertEqual((resumed.score, resumed.action, resumed.pv),
                          (previous.score, previous.action, previous.pv))
 
+    def test_search_windows_match_public_under_work_caps_and_full_depth(self):
+        state = Position.fixture(position({'D4': 1, 'E5': -2, 'G7': -3})).storage()
+        for pvs, aspiration, work in product((False, True), (False, True), (0, 100, 500, 3000, 10**9)):
+            config = replace(self.config, pvs_enabled=pvs, aspiration_enabled=aspiration,
+                             aspiration_window=.125, node_limit=work, proof_nodes=64)
+            expected = AlphaBetaPlayer(config=config, use_compact=False).analyze(state)
+            actual = AlphaBetaPlayer(config=config).analyze(state)
+            for name in ('action', 'score', 'pv', 'work', 'nodes', 'proof_nodes', 'completed_depth',
+                         'selected_depth', 'root_moves_completed', 'selection_source', 'score_bound',
+                         'stop_reason', 'pvs_probes', 'pvs_researches', 'aspiration_researches',
+                         'aspiration_fail_lows', 'aspiration_fail_highs'):
+                self.assertEqual(getattr(actual, name), getattr(expected, name),
+                                 (pvs, aspiration, work, name))
+
     def test_no_public_transitions_or_cold_compilation_inside_compact_search(self):
         state = self.game.getInitBoard()
         player = AlphaBetaPlayer(config=replace(self.config, max_depth=2, proof_nodes=64))

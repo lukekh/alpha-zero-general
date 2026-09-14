@@ -1,0 +1,26 @@
+{
+  "merge-full-validation": {
+    "tests": 363,
+    "failures": [
+      "test_game_red_14_preserve_material (test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)",
+      "test_game_red_18_prevent_paper_fork (test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)",
+      "test_game_red_31_keep_goal_defender (test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)",
+      "test_simplified_unique_last_defender_exchanged_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)",
+      "test_simplified_unique_last_defender_original_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)"
+    ],
+    "errors": [],
+    "passed": 358
+  },
+  "merge-focused-validation": {
+    "tests": 58,
+    "failures": [],
+    "errors": [],
+    "passed": 58
+  },
+  "merge-repository-validation": {
+    "tests": 7,
+    "failures": [],
+    "errors": [],
+    "passed": 7
+  }
+}

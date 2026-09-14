@@ -34,6 +34,9 @@ class SearchConfig:
     proof_depth: int = 2
     proof_nodes: int = 64
     table_entries: int = 10000
+    pvs_enabled: bool = False
+    aspiration_enabled: bool = False
+    aspiration_window: float = 25.
 
     def __post_init__(self):
         if self.evaluator_version == 'intransitive-heuristics-v1':
@@ -51,6 +54,10 @@ class SearchConfig:
             value = getattr(self, name)
             if type(value) is not int or value < 0:
                 raise ValueError(f'{name} must be a nonnegative integer')
+        if (isinstance(self.aspiration_window, bool)
+                or not isinstance(self.aspiration_window, (int, float))
+                or not math.isfinite(self.aspiration_window) or self.aspiration_window <= 0):
+            raise ValueError('aspiration_window must be finite and positive')
         if self.max_depth > 64 or self.proof_depth > 8:
             raise ValueError('Maximum search depth is 64; maximum proof depth is 8')
 
