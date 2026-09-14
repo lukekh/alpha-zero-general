@@ -220,6 +220,22 @@ class Continuation(unittest.TestCase):
             (source/'status.json').write_text(json.dumps(dict(status,phase=phase)))
             with self.assertRaises(ValueError):
                 capture_legacy(source,source/'refused.pt')
+        # Even equal-sized replay generations cannot prove consistency once
+        # the last rollout status has been written and replay may be replaced.
+        (source/'status.json').write_text(json.dumps(dict(status,episodes_completed=8)))
+        with self.assertRaisesRegex(ValueError,'last rollout'):
+            capture_legacy(source,source/'refused.pt')
+        (source/'status.json').write_text(json.dumps(dict(status,episodes_completed=7)))
+        read_text=Path.read_text
+        observations=[]
+        def crossed(path,*args,**kwargs):
+            if path==source/'status.json':
+                observations.append(path)
+                return json.dumps(dict(status,episodes_completed=7 if len(observations)==1 else 8))
+            return read_text(path,*args,**kwargs)
+        with patch.object(Path,'read_text',crossed):
+            with self.assertRaisesRegex(ValueError,'last rollout'):
+                capture_legacy(source,source/'refused.pt')
         (source/'status.json').write_text(json.dumps(status))
         (source/'replay.pkl').write_bytes(pickle.dumps([]))
         with self.assertRaises(ValueError):

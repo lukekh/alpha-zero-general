@@ -53,7 +53,7 @@ in the relevant cold/complete totals; they are not treated as free.
 
 **Recommendation:** on this measured M1 workload, opt into **four game workers**
 for throughput when roughly **2.1 GiB of aggregate benchmark-process RSS** is
-acceptable. Two workers are a useful lower-memory option (roughly **1.2 GiB**).
+acceptable. Two workers are a useful lower-memory option (up to **1.32 GiB**).
 The gains are repeated and substantially smaller than linear: single-thread
 optimization remains the largest serial cost. Keep the portable **one-worker
 default**, and leave the active 24-hour job unchanged. These results justify the
@@ -155,6 +155,10 @@ the measured seeds, not a playing-strength sample.
   not private physical memory or a claim about system-wide peak memory. The
   supervising suite and competing training process are outside that sum.
 
+Timing sources are preserved at [18c9728](https://github.com/lukekh/alpha-zero-general/commit/18c9728).
+The subsequent legacy-capture boundary guard is outside the timed path and is
+validated separately.
+
 The hardware and package versions, Python workload inventory, exact source
 hashes, raw timing phases, per-game records and memory samples are in
 [evidence](evidence/manifest.json). The Apple M1 has eight logical CPUs (four
@@ -214,7 +218,10 @@ uv run python -m intransitive.greedy_training \
 
 Capture exits without starting or controlling training. It accepts only a stable
 `opponent_rollouts` boundary, when the previous iteration and scheduled selection
-are complete. It checks status before/after the reads, checkpoint/progress/update
+are complete, with fewer than eight finished rollouts in **both** status reads.
+The legacy script can publish replay immediately after its eighth-game status,
+before changing phase; that window is explicitly rejected even if replay sizes
+happen to agree. Capture checks status before/after the reads, checkpoint/progress/update
 agreement, replay-generation sizes, exact logged game quotas/seeds/colours and
 selection metadata. If the source advances through publication while being read,
 or is in optimization/selection, capture fails and must be retried at a valid
@@ -225,3 +232,31 @@ old job runs would create another training run; that is outside this experiment.
 All repetition and **80-noncapture-ply** cutoffs here are **modelling-only**.
 Neither official-play termination nor unfinished official-game reporting changes.
 No architecture, game count, search budget or selection policy changes are made.
+
+## Validation
+
+All **nine new tests** pass. They cover inline/spawn trajectory and target parity,
+colour-balanced exact quotas, startup failures/timeouts, worker exceptions and
+SIGKILL, deadline/keyboard cancellation and cleanup, optimizer isolation,
+interruption before/after publication, exact AdamW continuation, strict best-model
+promotion and legacy snapshot consistency. The final legacy-capture guard also
+passed the separate **six-test continuation suite**.
+
+The full Intransitive suite ran **372 tests: 367 passed, five failed**. The same
+five failures reproduce on untouched base commit `8aabd7a`, with **identical
+selected moves, scores, completed depths, work counts and principal variations**.
+They are the explicitly documented existing `test_game_blunders` defences: three
+original-game cases (red 14/18/31) and both colours of the simplified last-defender
+case. The reference-greedy/MCTS path measured here does not use that alpha-beta
+player. All **seven repository tests** pass. No hosted CI workflow is configured.
+
+[Validation manifest](evidence/validation.json),
+[full Intransitive log](evidence/intransitive-tests.log),
+[untouched-base comparison](evidence/base-blunders.log),
+[repository tests](evidence/repository-tests.log),
+[focused process tests](evidence/focused.log),
+[final continuation tests](evidence/continuation-tests.log).
+
+`uv build --wheel` succeeded. The resulting wheel was inspected to verify that
+all three new modules and the complete checkpoint/replay fixture are included
+with bytes identical to the source checkout. `git diff --check` passes.

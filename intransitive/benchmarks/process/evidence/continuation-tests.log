@@ -1,0 +1,11 @@
+test_corruption_and_expired_deadline_are_rejected (intransitive.tests.test_greedy_process.Continuation.test_corruption_and_expired_deadline_are_rejected) ... ok
+test_interruption_boundaries_never_publish_mixed_generations (intransitive.tests.test_greedy_process.Continuation.test_interruption_boundaries_never_publish_mixed_generations) ... ok
+test_legacy_capture_accepts_only_consistent_rollout_boundaries (intransitive.tests.test_greedy_process.Continuation.test_legacy_capture_accepts_only_consistent_rollout_boundaries) ... ok
+test_mid_update_cancellation_cannot_mutate_committed_adamw_or_best (intransitive.tests.test_greedy_process.Continuation.test_mid_update_cancellation_cannot_mutate_committed_adamw_or_best) ... ok
+test_restarts_preserve_adamw_replay_numbering_best_and_deadline (intransitive.tests.test_greedy_process.Continuation.test_restarts_preserve_adamw_replay_numbering_best_and_deadline) ... ok
+test_selection_promotes_only_strict_improvement (intransitive.tests.test_greedy_process.Continuation.test_selection_promotes_only_strict_improvement) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 8.316s
+
+OK

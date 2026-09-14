@@ -182,13 +182,17 @@ def capture_legacy(source, destination):
     names = ('latest.pt','best.pt','replay.pkl','settings.json','progress.json',
              'training-games.jsonl','evaluations.jsonl')
     raw = {name:(source/name).read_bytes() for name in names}
+    settings = json.loads(raw['settings.json'])
     after = json.loads((source/'status.json').read_text())
     if any(before[key] != after[key] for key in ('phase','iteration','completed_iterations',
                                                 'started_epoch','deadline_epoch')):
         raise ValueError('Legacy run crossed a publication boundary; retry snapshot')
+    # The legacy script replaces replay after logging the last rollout, before
+    # changing phase to optimization. Reject both sides of that status window.
+    if max(before.get('episodes_completed', 0), after.get('episodes_completed', 0)) >= settings['episodes_per_iteration']:
+        raise ValueError('Legacy last rollout may be publishing replay; retry at the next iteration')
     current = torch.load(io.BytesIO(raw['latest.pt']),map_location='cpu',weights_only=False)
     best = torch.load(io.BytesIO(raw['best.pt']),map_location='cpu',weights_only=False)
-    settings = json.loads(raw['settings.json'])
     progress = json.loads(raw['progress.json'])
     if current['run_iteration'] != number or progress['iteration'] != number:
         raise ValueError('Legacy checkpoint/progress iteration mismatch')
