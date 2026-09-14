@@ -17,5 +17,8 @@
 checkpoints/
 results/
 
+# Local game datasets
+/intransitive/data/
+
 # For PyCharm users
 .idea/
