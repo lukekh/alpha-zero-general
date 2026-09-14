@@ -1,0 +1,95 @@
+........................./Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/dev/alpha-zero-general/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+..../Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/dev/alpha-zero-general/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+/Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/dev/alpha-zero-general/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+../Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/dev/alpha-zero-general/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+..../Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/dev/alpha-zero-general/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+/Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/chkpt_to_onnx.py:33: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+........................................................FFFFF........................................./Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/dev/alpha-zero-general/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+.............2026-09-14 22:26:19 Octavius main[64085] INFO Saved run sources and settings to /private/var/folders/9s/b0plnkhx1bz465j5xqhr3mw80000gr/T/tmpr_f5e4xa/source_backups/20260914T125619.933656Z-f088c235f39d4ee0a76c77f8a1bc0530
+....2026-09-14 22:26:53 Octavius Coach[64085] INFO Iter #1 - new vs previous: 0-0  (2 draws) --> REJECTED (1)
+.NN version: 88, network i/o shape: (5, 5, 3) -> 1782, total nb of nnet params: 456924
+MCTS seed=17: plies=156, reason=no-capture limit
+MCTS seed=170: plies=242, reason=no-capture limit
+Random seed=4: plies=439, reason=no-capture limit
+Random seed=7: plies=329, reason=no-capture limit
+Random seed=11: plies=176, reason=no-capture limit
+Generated gate: states=12, transformed branches=6600, captures=23
+Self Play:   0%|                                                                                  | 0/2 [00:00<?, ?it/s]Self Play: 100%|███████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00, 23831.27it/s]
+.......127.0.0.1 - - [14/Sep/2026 22:26:53] "POST /api/move HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 22:26:53] "POST /api/move HTTP/1.1" 400 -
+.127.0.0.1 - - [14/Sep/2026 22:26:54] "GET /api/state HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 22:26:54] "GET / HTTP/1.1" 200 -
+........................................................................................................................................................................................................
+======================================================================
+FAIL: test_game_red_14_preserve_material (test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)
+Do not give back the material advantage through the D7 capture and recapture tactic.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_14_preserve_material: Do not give back the material advantage through the D7 capture and recapture tactic.
+Selected E6-F6; score=108.95833333333334, depth=3, work=57391, pv=['E6-F6', 'E5-F6', 'F7-F6']
+
+======================================================================
+FAIL: test_game_red_18_prevent_paper_fork (test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)
+Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_18_prevent_paper_fork: Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+Selected G7-F6; score=-0.0, depth=3, work=56866, pv=['G7-F6', 'G5-H6', 'F6-F5']
+
+======================================================================
+FAIL: test_game_red_31_keep_goal_defender (test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)
+Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_31_keep_goal_defender: Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+Selected F8-E8; score=-0.0, depth=3, work=144536, pv=['F8-E8', 'D7-E6', 'F5-E4']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_exchanged_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 161 != 228 : Expected B4-B3. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected C3-D4; score=348.4375, depth=3, work=54832, pv=['C3-D4', 'D2-C2', 'D4-E5']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_original_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-40-intransitive-add-compact/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 485 != 546 : Expected F8-G8. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected G7-F6; score=348.4375, depth=3, work=48793, pv=['G7-F6', 'H6-H7', 'F6-E5']
+
+----------------------------------------------------------------------
+Ran 363 tests in 104.466s
+
+FAILED (failures=5)

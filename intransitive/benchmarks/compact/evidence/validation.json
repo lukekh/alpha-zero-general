@@ -1,0 +1,38 @@
+{
+  "baseline-tests": {
+    "tests": 332,
+    "failures": [
+      "test_game_red_14_preserve_material (test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)",
+      "test_game_red_18_prevent_paper_fork (test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)",
+      "test_game_red_31_keep_goal_defender (test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)",
+      "test_simplified_unique_last_defender_exchanged_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)",
+      "test_simplified_unique_last_defender_original_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)"
+    ],
+    "errors": [],
+    "passed": 327
+  },
+  "full-validation": {
+    "tests": 347,
+    "failures": [
+      "test_game_red_14_preserve_material (test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)",
+      "test_game_red_18_prevent_paper_fork (test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)",
+      "test_game_red_31_keep_goal_defender (test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)",
+      "test_simplified_unique_last_defender_exchanged_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)",
+      "test_simplified_unique_last_defender_original_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)"
+    ],
+    "errors": [],
+    "passed": 342
+  },
+  "focused-validation": {
+    "tests": 42,
+    "failures": [],
+    "errors": [],
+    "passed": 42
+  },
+  "repository-validation": {
+    "tests": 7,
+    "failures": [],
+    "errors": [],
+    "passed": 7
+  }
+}

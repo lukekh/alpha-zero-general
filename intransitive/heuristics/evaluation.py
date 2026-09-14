@@ -14,6 +14,12 @@ MODULES = ('piece_count', 'clear_run', 'piece_advantage', 'attacking_position',
 
 
 def terminal_value(game, state, side, ply=0):
+    from .position import SearchPosition
+    if isinstance(state, SearchPosition):
+        winner, reason = state.terminal()
+        if winner >= 0:
+            return MATE - ply if winner == side else -MATE + ply
+        return None if reason == 'ongoing' else 0.
     result = game.getGameEnded(state, int(state[:, :, 82:84].flat[1]))
     if not result.any():
         return None
@@ -180,7 +186,8 @@ class Evaluator:
             from .search import prove
             proof = prove(self.game, state, self.config, budget)
         if proof['status'] == 'proven':
-            turn = int(state[:, :, 82:84].flat[1])
+            from .position import SearchPosition
+            turn = state.side if isinstance(state, SearchPosition) else int(state[:, :, 82:84].flat[1])
             score = proof['score'] if side == turn else -proof['score']
             winner = side if score > 0 else 1 - side
             budget.check()
@@ -192,6 +199,10 @@ class Evaluator:
                                   'opponent': {'clear_run': float(winner != side)}},
                         terms={'clear_run': score}, races={},
                         skipped_modules=[name for name in MODULES if name != 'clear_run'])
+        from .position import SearchPosition
+        compact = isinstance(state, SearchPosition)
+        if compact and counts is None:
+            counts = state.counts
         config = self.config
         if not explain and not (config.attack_enabled or config.defence_enabled or config.overload_enabled):
             start = perf_counter()
@@ -203,12 +214,14 @@ class Evaluator:
                 budget.charge(sum(counts) + 2)
                 if self.material.config is not config:
                     self.material = MaterialCache(config)
-                total = self.material.score(state, side, counts)
+                total = self.material.score(state.material_state if compact else state, side, counts)
                 budget.check()
                 return max(-HEURISTIC_LIMIT, min(HEURISTIC_LIMIT, total))
             finally:
                 budget.module_seconds['material'] += perf_counter() - start
                 budget.module_calls['material'] += 1
+        if compact:
+            state = state.export()
         own, opponent = {}, {}
         details = {}
         config = self.config

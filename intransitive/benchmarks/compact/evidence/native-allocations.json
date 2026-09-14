@@ -1,0 +1,141 @@
+{
+  "baseline_revision": "516b150e967dd6a40cd5824ba2bc982c36f0fe73",
+  "native_allocation_counts": [
+    {
+      "ply": 0,
+      "kind": "public_make_1000",
+      "alloc": 7000,
+      "free": 7000,
+      "mi_alloc": 7000,
+      "mi_free": 7000
+    },
+    {
+      "ply": 0,
+      "kind": "compact_make_unmake_1000",
+      "alloc": 0,
+      "free": 0,
+      "mi_alloc": 0,
+      "mi_free": 0
+    },
+    {
+      "ply": 0,
+      "kind": "search_depth4",
+      "variant": "baseline",
+      "alloc": 200021,
+      "free": 200021,
+      "mi_alloc": 200021,
+      "mi_free": 200021
+    },
+    {
+      "ply": 0,
+      "kind": "search_depth4",
+      "variant": "compact",
+      "alloc": 184381,
+      "free": 184381,
+      "mi_alloc": 184381,
+      "mi_free": 184381
+    },
+    {
+      "ply": 27,
+      "kind": "public_make_1000",
+      "alloc": 7000,
+      "free": 7000,
+      "mi_alloc": 7000,
+      "mi_free": 7000
+    },
+    {
+      "ply": 27,
+      "kind": "compact_make_unmake_1000",
+      "alloc": 0,
+      "free": 0,
+      "mi_alloc": 0,
+      "mi_free": 0
+    },
+    {
+      "ply": 27,
+      "kind": "search_depth4",
+      "variant": "baseline",
+      "alloc": 247693,
+      "free": 247693,
+      "mi_alloc": 247693,
+      "mi_free": 247693
+    },
+    {
+      "ply": 27,
+      "kind": "search_depth4",
+      "variant": "compact",
+      "alloc": 236824,
+      "free": 236824,
+      "mi_alloc": 236824,
+      "mi_free": 236824
+    },
+    {
+      "ply": 35,
+      "kind": "public_make_1000",
+      "alloc": 7000,
+      "free": 7000,
+      "mi_alloc": 7000,
+      "mi_free": 7000
+    },
+    {
+      "ply": 35,
+      "kind": "compact_make_unmake_1000",
+      "alloc": 0,
+      "free": 0,
+      "mi_alloc": 0,
+      "mi_free": 0
+    },
+    {
+      "ply": 35,
+      "kind": "search_depth4",
+      "variant": "baseline",
+      "alloc": 288738,
+      "free": 288738,
+      "mi_alloc": 288738,
+      "mi_free": 288738
+    },
+    {
+      "ply": 35,
+      "kind": "search_depth4",
+      "variant": "compact",
+      "alloc": 272807,
+      "free": 272807,
+      "mi_alloc": 272807,
+      "mi_free": 272807
+    },
+    {
+      "ply": 61,
+      "kind": "public_make_1000",
+      "alloc": 7000,
+      "free": 7000,
+      "mi_alloc": 7000,
+      "mi_free": 7000
+    },
+    {
+      "ply": 61,
+      "kind": "compact_make_unmake_1000",
+      "alloc": 0,
+      "free": 0,
+      "mi_alloc": 0,
+      "mi_free": 0
+    },
+    {
+      "ply": 61,
+      "kind": "search_depth4",
+      "variant": "baseline",
+      "alloc": 1564990,
+      "free": 1564990,
+      "mi_alloc": 1266580,
+      "mi_free": 1266580
+    },
+    {
+      "ply": 61,
+      "kind": "search_depth4",
+      "variant": "compact",
+      "alloc": 1125753,
+      "free": 1125753,
+      "mi_alloc": 887025,
+      "mi_free": 887025
+    }
+  ]
+}

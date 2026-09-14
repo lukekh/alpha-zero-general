@@ -195,7 +195,7 @@ class MaterialTests(unittest.TestCase):
         player = AlphaBetaPlayer(config=replace(self.config, max_depth=2, count_weight=100, advantage_weight=25))
         player._prepare()
         from intransitive.heuristics.material import ordered_score
-        with (patch('intransitive.heuristics.search.count_pieces', wraps=count_pieces) as count,
+        with (patch('intransitive.heuristics.position.count_pieces', wraps=count_pieces) as count,
               patch.object(count_pieces, 'compile', side_effect=AssertionError('cold count')),
               patch.object(ordered_score, 'compile', side_effect=AssertionError('cold score'))):
             result = player.analyze(self.game.getInitBoard())

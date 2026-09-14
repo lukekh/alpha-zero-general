@@ -6,6 +6,7 @@ import unittest
 
 from intransitive.heuristics import AlphaBetaPlayer, SearchConfig, exhaustive_minimax
 from intransitive.heuristics.budget import Budget
+from intransitive.heuristics.position import SearchPosition
 from intransitive.heuristics.search import RootProgress, from_table, position_key, to_table
 from intransitive.heuristics.evaluation import MATE
 from intransitive.tests.reference_rules import Position, position
@@ -38,7 +39,8 @@ class WindowChildren(AlphaBetaPlayer):
     def _search(self, state, depth, alpha, beta, ply, budget):
         if ply != 1:
             return super()._search(state, depth, alpha, beta, ply, budget)
-        index = self.indices[state.tobytes()]
+        snapshot = state.export() if isinstance(state, SearchPosition) else state
+        index = self.indices[snapshot.tobytes()]
         event = (depth, index, alpha, beta)
         self.calls.append(event)
         if self.interrupt and self.interrupt(self, event):
