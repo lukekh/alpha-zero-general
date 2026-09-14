@@ -13,6 +13,7 @@ from .budget import Budget, BudgetExpired
 from .config import SearchConfig
 from .evaluation import Evaluator, MATE, MATE_THRESHOLD, terminal_value
 from .kernels import no_terminal_win_in_horizon, winning_actions, warm_search_kernels
+from .material import after_capture, count_pieces, warm_material_kernels
 from ..IntransitiveConstants import action_destination
 
 
@@ -232,6 +233,7 @@ class AlphaBetaPlayer:
 
     def _prepare(self, *, warm_proof=True):
         warm_search_kernels()
+        warm_material_kernels()
         if warm_proof:
             from .proof import warm_proof_kernel
             warm_proof_kernel()
@@ -243,12 +245,14 @@ class AlphaBetaPlayer:
             self._hints.clear()
             self._identity = identity
         self.evaluator = Evaluator(self.game, self.config)
+        self._material_root = None
+        self._material_counts = None
 
     def _leaf(self, state, side, ply, budget):
         proof = prove(self.game, state, self.config, budget)
         if proof['status'] == 'proven':
             return from_table(proof['score'], ply), proof['pv']
-        return self.evaluator.score(state, side, budget, proof=proof), []
+        return self.evaluator.score(state, side, budget, proof=proof, counts=self._material_counts), []
 
     def _ordered(self, state, side, preferred, budget, root=False):
         actions = list(map(int, np.flatnonzero(self.game.getValidMoves(state, side))))
@@ -280,6 +284,8 @@ class AlphaBetaPlayer:
 
     def _search(self, state, depth, alpha, beta, ply, budget):
         budget.visit()
+        if ply == 0 and self._material_root is not state:
+            self._material_counts = count_pieces(state)
         side = int(state[:, :, 32].flat[1])
         terminal = terminal_value(self.game, state, side, ply)
         if terminal is not None:
@@ -318,7 +324,14 @@ class AlphaBetaPlayer:
             preferred = progress.incumbent
         best, pv = -inf, []
         for action, child in self._ordered(state, side, preferred, budget, root=progress is not None):
-            value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
+            counts = self._material_counts
+            if int(child[:, :, 32].flat[3]) == 0:
+                x, y = action_destination(action)
+                self._material_counts = after_capture(counts, int(state[y, x, 0]))
+            try:
+                value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
+            finally:
+                self._material_counts = counts
             value = -value
             if progress is not None:
                 # Publish only a fully returned child, never an interrupted
@@ -357,6 +370,8 @@ class AlphaBetaPlayer:
         if terminal_value(self.game, state, side) is not None:
             raise ValueError('Cannot select a move from a terminal position')
         actions = np.flatnonzero(self.game.getValidMoves(state, side))
+        self._material_counts = count_pieces(state)
+        self._material_root = state
         action, score, depth, pv = int(actions[0]), None, 0, [int(actions[0])]
         selected_depth, source, score_bound = 0, 'legal_fallback', None
         self._root_previous = {}
@@ -407,6 +422,8 @@ class AlphaBetaPlayer:
                             source = 'unrefuted_fallback'
                     action, score, pv = choice['action'], choice['score'], choice['pv']
                     selected_depth, score_bound = choice['depth'], choice['bound']
+        finally:
+            self._material_root = None
         # Explanations must not consume the move budget before a single useful
         # branch is searched. Emit them only if budget remains after search.
         diagnostics_status = 'skipped_budget'

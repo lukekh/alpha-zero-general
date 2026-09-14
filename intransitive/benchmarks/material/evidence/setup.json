@@ -1,0 +1,6 @@
+{
+  "import_seconds": 0.24372562500047934,
+  "cold_material_compile_seconds": 0.6457492909994471,
+  "warm_prepare_seconds": 6.250002115848474e-07,
+  "method": "Fresh temporary NUMBA_CACHE_DIR; imports excluded from compile timer"
+}

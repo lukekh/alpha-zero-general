@@ -4,6 +4,7 @@ from itertools import combinations
 from time import perf_counter
 import numpy as np
 from .geometry import Geometry, arrival, captures
+from .material import MaterialCache, count_pieces
 
 MATE = 100000.
 HEURISTIC_LIMIT = 10000.
@@ -157,15 +158,16 @@ def overload(geometry, side, config, game):
 class Evaluator:
     def __init__(self, game, config):
         self.game, self.config = game, config
+        self.material = MaterialCache(config)
 
-    def score(self, state, side, budget, proof=None):
+    def score(self, state, side, budget, proof=None, *, counts=None):
         """Search value without allocating explanations or route diagnostics."""
-        return self._evaluate(state, side, budget, proof, explain=False, diagnostics=False)
+        return self._evaluate(state, side, budget, proof, explain=False, diagnostics=False, counts=counts)
 
     def explain(self, state, side, budget, proof=None, *, diagnostics=True):
         return self._evaluate(state, side, budget, proof, explain=True, diagnostics=diagnostics)
 
-    def _evaluate(self, state, side, budget, proof, *, explain, diagnostics):
+    def _evaluate(self, state, side, budget, proof, *, explain, diagnostics, counts=None):
         terminal = terminal_value(self.game, state, side)
         if terminal is not None:
             if not explain:
@@ -190,6 +192,23 @@ class Evaluator:
                                   'opponent': {'clear_run': float(winner != side)}},
                         terms={'clear_run': score}, races={},
                         skipped_modules=[name for name in MODULES if name != 'clear_run'])
+        config = self.config
+        if not explain and not (config.attack_enabled or config.defence_enabled or config.overload_enabled):
+            start = perf_counter()
+            try:
+                if counts is None:
+                    counts = count_pieces(state)
+                # Preserve the existing logical work allowance for piece
+                # indexing and the two material modules, including cache hits.
+                budget.charge(sum(counts) + 2)
+                if self.material.config is not config:
+                    self.material = MaterialCache(config)
+                total = self.material.score(state, side, counts)
+                budget.check()
+                return max(-HEURISTIC_LIMIT, min(HEURISTIC_LIMIT, total))
+            finally:
+                budget.module_seconds['material'] += perf_counter() - start
+                budget.module_calls['material'] += 1
         own, opponent = {}, {}
         details = {}
         config = self.config

@@ -1,0 +1,527 @@
+test_budget_reasons_and_simultaneous_limit_precedence (test_anytime_search.AnytimeSearchTests.test_budget_reasons_and_simultaneous_limit_precedence) ... ok
+test_deeper_entry_orders_moves_without_replacing_shallower_score (test_anytime_search.AnytimeSearchTests.test_deeper_entry_orders_moves_without_replacing_shallower_score) ... ok
+test_diagnostics_follow_move_search (test_anytime_search.AnytimeSearchTests.test_diagnostics_follow_move_search) ... ok
+test_history_order_folds_but_repetition_counts_do_not (test_anytime_search.AnytimeSearchTests.test_history_order_folds_but_repetition_counts_do_not) ... ok
+test_interrupted_child_is_not_published_or_mixed_with_shallow_scores (test_anytime_search.AnytimeSearchTests.test_interrupted_child_is_not_published_or_mixed_with_shallow_scores) ... ok
+test_iteration_finished_at_deadline_is_not_discarded (test_anytime_search.AnytimeSearchTests.test_iteration_finished_at_deadline_is_not_discarded) ... ok
+test_leaf_reuse_and_full_depth_score_match_exhaustive (test_anytime_search.AnytimeSearchTests.test_leaf_reuse_and_full_depth_score_match_exhaustive) ... ok
+test_move_number_does_not_prevent_exact_cache_reuse (test_anytime_search.AnytimeSearchTests.test_move_number_does_not_prevent_exact_cache_reuse) ... ok
+test_natural_stop_reasons_and_diagnostics_are_independent (test_anytime_search.AnytimeSearchTests.test_natural_stop_reasons_and_diagnostics_are_independent) ... ok
+test_proved_losing_incumbent_yields_to_an_unrefuted_alternative (test_anytime_search.AnytimeSearchTests.test_proved_losing_incumbent_yields_to_an_unrefuted_alternative) ... ok
+test_timeout_keeps_better_fully_searched_sibling (test_anytime_search.AnytimeSearchTests.test_timeout_keeps_better_fully_searched_sibling) ... ok
+test_work_limited_real_search_publishes_only_valid_completed_values (test_anytime_search.AnytimeSearchTests.test_work_limited_real_search_publishes_only_valid_completed_values) ... ok
+test_both_winners_keep_relative_outcome_and_q_order (test_augmentation.CoachAugmentation.test_both_winners_keep_relative_outcome_and_q_order) ... ok
+test_official_blue_first_selfplay_and_compressed_draw_targets (test_augmentation.CoachAugmentation.test_official_blue_first_selfplay_and_compressed_draw_targets) ... ok
+test_absolute_targets_swap_only_for_e (test_augmentation.TrainingAugmentation.test_absolute_targets_swap_only_for_e) ... ok
+test_all_twelve_full_histories_masks_and_inverse_policies (test_augmentation.TrainingAugmentation.test_all_twelve_full_histories_masks_and_inverse_policies) ... ok
+test_deduplication_uses_history_policy_and_mask (test_augmentation.TrainingAugmentation.test_deduplication_uses_history_policy_and_mask) ... ok
+test_e_reflection_retains_square_actions_and_changes_goal (test_augmentation.TrainingAugmentation.test_e_reflection_retains_square_actions_and_changes_goal) ... ok
+test_exact_repetitions_survive_recanonicalization (test_augmentation.TrainingAugmentation.test_exact_repetitions_survive_recanonicalization) ... ok
+test_owned_outputs_and_invalid_shapes_or_mover (test_augmentation.TrainingAugmentation.test_owned_outputs_and_invalid_shapes_or_mover) ... ok
+test_colour_swap_and_nonzero_draw_reward (test_baseline.BaselineAccounting.test_colour_swap_and_nonzero_draw_reward) ... ok
+test_draws_remain_in_denominator_and_intervals_are_nonzero (test_baseline.BaselineAccounting.test_draws_remain_in_denominator_and_intervals_are_nonzero) ... ok
+test_selection_keeps_rejection_visible (test_baseline.BaselineAccounting.test_selection_keeps_rejection_visible) ... ok
+test_distribution_includes_empty_and_tail (test_benchmark_training.BenchmarkAccounting.test_distribution_includes_empty_and_tail) ... ok
+test_replay_accounting_includes_all_fields_and_compression (test_benchmark_training.BenchmarkAccounting.test_replay_accounting_includes_all_fields_and_compression) ... ok
+test_dynamic_batch_and_single_onnx_match_pytorch_and_masks (test_checkpoints.Checkpoints.test_dynamic_batch_and_single_onnx_match_pytorch_and_masks) ... /Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+ok
+test_incompatible_metadata_and_weights_fail_without_replacing_model (test_checkpoints.Checkpoints.test_incompatible_metadata_and_weights_fail_without_replacing_model) ... ok
+test_legacy_feature_config_checkpoint_is_supported (test_checkpoints.Checkpoints.test_legacy_feature_config_checkpoint_is_supported) ... ok
+test_missing_metadata_weights_and_unreadable_files_fail_clearly (test_checkpoints.Checkpoints.test_missing_metadata_weights_and_unreadable_files_fail_clearly) ... ok
+test_pit_checkpoint_opponents_play_complete_games_as_both_colours (test_checkpoints.Checkpoints.test_pit_checkpoint_opponents_play_complete_games_as_both_colours) ... /Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+ok
+test_reload_invalidates_existing_onnx_session (test_checkpoints.Checkpoints.test_reload_invalidates_existing_onnx_session) ... ok
+test_resumed_training_recreates_optimizer_and_uses_caller_settings (test_checkpoints.Checkpoints.test_resumed_training_recreates_optimizer_and_uses_caller_settings) ... /Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+ok
+test_round_trip_reconstructs_architecture_features_and_settings (test_checkpoints.Checkpoints.test_round_trip_reconstructs_architecture_features_and_settings) ... ok
+test_standalone_converter_rejects_incompatible_features (test_checkpoints.Checkpoints.test_standalone_converter_rejects_incompatible_features) ... ok
+test_standalone_export_cli_dynamic_batch_parity (test_checkpoints.Checkpoints.test_standalone_export_cli_dynamic_batch_parity) ... ok
+test_unrelated_game_shared_checkpoint_and_export_regression (test_checkpoints.Checkpoints.test_unrelated_game_shared_checkpoint_and_export_regression) ... /Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/chkpt_to_onnx.py:33: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+ok
+test_all_supported_depths_and_larger_budget_fallback (test_compiled_proof.CompiledProofTests.test_all_supported_depths_and_larger_budget_fallback) ... ok
+test_differential_outcomes_pvs_and_exact_work (test_compiled_proof.CompiledProofTests.test_differential_outcomes_pvs_and_exact_work) ... ok
+test_disabled_cold_and_timed_out_proofs_are_sound (test_compiled_proof.CompiledProofTests.test_disabled_cold_and_timed_out_proofs_are_sound) ... ok
+test_draw_histories_and_official_win_precedence (test_compiled_proof.CompiledProofTests.test_draw_histories_and_official_win_precedence) ... ok
+test_every_small_work_cap_and_proof_exhaustion (test_compiled_proof.CompiledProofTests.test_every_small_work_cap_and_proof_exhaustion) ... ok
+test_sufficient_budget_matches_independent_minimax (test_compiled_proof.CompiledProofTests.test_sufficient_budget_matches_independent_minimax) ... ok
+test_warmed_production_call_cannot_compile_another_signature (test_compiled_proof.CompiledProofTests.test_warmed_production_call_cannot_compile_another_signature) ... ok
+test_work_interruption_retains_identical_completed_root_work (test_compiled_proof.CompiledProofTests.test_work_interruption_retains_identical_completed_root_work) ... ok
+test_29_and_30_individual_noncaptures (test_draws.ModellingDraws.test_29_and_30_individual_noncaptures) ... ok
+test_captures_on_29th_and_30th_move_reset_history (test_draws.ModellingDraws.test_captures_on_29th_and_30th_move_reset_history) ... ok
+test_compiled_repetition_branch_does_not_contaminate_sibling (test_draws.ModellingDraws.test_compiled_repetition_branch_does_not_contaminate_sibling) ... ok
+test_compiled_siblings_keep_independent_draws_and_counters (test_draws.ModellingDraws.test_compiled_siblings_keep_independent_draws_and_counters) ... ok
+test_corner_on_30th_move_wins (test_draws.ModellingDraws.test_corner_on_30th_move_wins) ... ok
+test_exact_piece_type_colour_square_and_turn (test_draws.ModellingDraws.test_exact_piece_type_colour_square_and_turn) ... ok
+test_initial_second_and_third_nonconsecutive_occurrence (test_draws.ModellingDraws.test_initial_second_and_third_nonconsecutive_occurrence) ... ok
+test_official_wins_precede_both_draw_conditions (test_draws.ModellingDraws.test_official_wins_precede_both_draw_conditions) ... ok
+test_repetition_precedes_simultaneous_capture_limit (test_draws.ModellingDraws.test_repetition_precedes_simultaneous_capture_limit) ... ok
+test_same_type_piece_identities_are_interchangeable (test_draws.ModellingDraws.test_same_type_piece_identities_are_interchangeable) ... ok
+test_serialization_and_all_symmetries_preserve_draws (test_draws.ModellingDraws.test_serialization_and_all_symmetries_preserve_draws) ... ok
+test_stalemate_on_30th_move_wins (test_draws.ModellingDraws.test_stalemate_on_30th_move_wins) ... ok
+test_symmetry_equivalent_physical_positions_do_not_repeat (test_draws.ModellingDraws.test_symmetry_equivalent_physical_positions_do_not_repeat) ... ok
+test_complete_seeded_mcts_games_match_reference (test_equivalence.IndependentEquivalence.test_complete_seeded_mcts_games_match_reference) ... ok
+test_rare_transition_thresholds_and_canonical_i9_defender (test_equivalence.IndependentEquivalence.test_rare_transition_thresholds_and_canonical_i9_defender) ... ok
+test_repetition_orbits_and_simultaneous_precedence (test_equivalence.IndependentEquivalence.test_repetition_orbits_and_simultaneous_precedence) ... ok
+test_seeded_reachable_transitions_all_actions_all_symmetries (test_equivalence.IndependentEquivalence.test_seeded_reachable_transitions_all_actions_all_symmetries) ... ok
+test_adapter_contract_and_owned_augmentation_hook (test_game.CanonicalGameIntegration.test_adapter_contract_and_owned_augmentation_hook) ... ok
+test_all_legal_action_round_trips_both_players_and_goals (test_game.CanonicalGameIntegration.test_all_legal_action_round_trips_both_players_and_goals) ... ok
+test_capture_crosses_127_without_resetting_round (test_game.CanonicalGameIntegration.test_capture_crosses_127_without_resetting_round) ... ok
+test_compiled_draw_branches_keep_history_and_reward_perspective (test_game.CanonicalGameIntegration.test_compiled_draw_branches_keep_history_and_reward_perspective) ... ok
+test_display_and_invalid_public_inputs (test_game.CanonicalGameIntegration.test_display_and_invalid_public_inputs) ... ok
+test_mcts_selects_playable_physical_actions_and_cleans_by_total_ply (test_game.CanonicalGameIntegration.test_mcts_selects_playable_physical_actions_and_cleans_by_total_ply) ... ok
+test_player_zero_defending_i9_can_win_at_a1 (test_game.CanonicalGameIntegration.test_player_zero_defending_i9_can_win_at_a1) ... ok
+test_search_keys_cover_history_counters_and_goals (test_game.CanonicalGameIntegration.test_search_keys_cover_history_counters_and_goals) ... ok
+test_swap_complete_history_involution_and_borrowed_ownership (test_game.CanonicalGameIntegration.test_swap_complete_history_involution_and_borrowed_ownership) ... ok
+test_game_blue_19_create_paper_fork (test_game_blunders.GameBlunderRegressionTests.test_game_blue_19_create_paper_fork)
+Create the paper fork and force a net material gain, accounting for every defensive reply. ... ok
+test_game_blue_32_take_winning_run (test_game_blunders.GameBlunderRegressionTests.test_game_blue_32_take_winning_run)
+Choose a move that forces the win within five plies, instead of an unrelated scissors move. ... ok
+test_game_blue_34_finish_now (test_game_blunders.GameBlunderRegressionTests.test_game_blue_34_finish_now)
+Finish immediately in the original history-bearing position rather than continuing the game. ... ok
+test_game_red_14_preserve_material (test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)
+Do not give back the material advantage through the D7 capture and recapture tactic. ... FAIL
+test_game_red_18_prevent_paper_fork (test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)
+Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6. ... FAIL
+test_game_red_31_keep_goal_defender (test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)
+Keep the last rock in time to challenge the runner; do not allow a forced win within five plies. ... FAIL
+test_simplified_unique_last_defender_exchanged_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal. ... FAIL
+test_simplified_unique_last_defender_original_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal. ... FAIL
+test_simplified_unique_paper_fork_exchanged_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_paper_fork_exchanged_colours)
+Only H6 attacks both papers and guarantees an extra piece against every reply. ... ok
+test_simplified_unique_paper_fork_original_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_paper_fork_original_colours)
+Only H6 attacks both papers and guarantees an extra piece against every reply. ... ok
+test_simplified_unique_three_move_run_exchanged_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_three_move_run_exchanged_colours)
+Capture on G7, then advance through H8 to I9: the unique move that forces a win within five plies. ... ok
+test_simplified_unique_three_move_run_original_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_three_move_run_original_colours)
+Capture on G7, then advance through H8 to I9: the unique move that forces a win within five plies. ... ok
+test_all_module_combinations_skip_disabled_computation (test_heuristics.HeuristicTests.test_all_module_combinations_skip_disabled_computation) ... ok
+test_attack_safe_progress_and_unreachable_capture (test_heuristics.HeuristicTests.test_attack_safe_progress_and_unreachable_capture) ... ok
+test_bound_entries_are_not_exact_and_research_agrees (test_heuristics.HeuristicTests.test_bound_entries_are_not_exact_and_research_agrees) ... ok
+test_capture_increases_material_and_preserves_state (test_heuristics.HeuristicTests.test_capture_increases_material_and_preserves_state) ... ok
+test_clear_run_has_no_partial_positional_score (test_heuristics.HeuristicTests.test_clear_run_has_no_partial_positional_score) ... ok
+test_config_validation_clamp_and_roundtrip (test_heuristics.HeuristicTests.test_config_validation_clamp_and_roundtrip) ... ok
+test_cycle_zero_predator_bonus_and_gradual_scarcity (test_heuristics.HeuristicTests.test_cycle_zero_predator_bonus_and_gradual_scarcity) ... ok
+test_defence_timing_safety_and_capture_vs_block (test_heuristics.HeuristicTests.test_defence_timing_safety_and_capture_vs_block) ... ok
+test_draws_and_official_win_precedence (test_heuristics.HeuristicTests.test_draws_and_official_win_precedence) ... ok
+test_faster_enemy_run_is_a_decisive_loss (test_heuristics.HeuristicTests.test_faster_enemy_run_is_a_decisive_loss) ... ok
+test_goal_blockade_capturable_corner_and_interceptor (test_heuristics.HeuristicTests.test_goal_blockade_capturable_corner_and_interceptor) ... ok
+test_history_separation_and_config_invalidation (test_heuristics.HeuristicTests.test_history_separation_and_config_invalidation) ... ok
+test_immediate_stalemate_is_ordered_and_selected_as_a_win (test_heuristics.HeuristicTests.test_immediate_stalemate_is_ordered_and_selected_as_a_win) ... ok
+test_mate_normalization_and_parent_to_child_reuse (test_heuristics.HeuristicTests.test_mate_normalization_and_parent_to_child_reuse) ... ok
+test_old_race_weight_cannot_change_binary_scoring (test_heuristics.HeuristicTests.test_old_race_weight_cannot_change_binary_scoring) ... ok
+test_overload_and_real_redundancy (test_heuristics.HeuristicTests.test_overload_and_real_redundancy) ... ok
+test_proof_exhaustion_is_unknown (test_heuristics.HeuristicTests.test_proof_exhaustion_is_unknown) ... ok
+test_proven_run_overrides_material_and_is_json_safe (test_heuristics.HeuristicTests.test_proven_run_overrides_material_and_is_json_safe) ... ok
+test_random_positions_and_leaf_proofs_match_reference (test_heuristics.HeuristicTests.test_random_positions_and_leaf_proofs_match_reference) ... ok
+test_same_type_and_friendly_detours (test_heuristics.HeuristicTests.test_same_type_and_friendly_detours) ... ok
+test_search_matches_exhaustive_with_and_without_cache (test_heuristics.HeuristicTests.test_search_matches_exhaustive_with_and_without_cache) ... ok
+test_symmetries_canonical_colour_and_state_preservation (test_heuristics.HeuristicTests.test_symmetries_canonical_colour_and_state_preservation) ... ok
+test_tempo_competing_type_and_proven_clear_run (test_heuristics.HeuristicTests.test_tempo_competing_type_and_proven_clear_run) ... ok
+test_zero_budget_and_last_completed_iteration (test_heuristics.HeuristicTests.test_zero_budget_and_last_completed_iteration) ... ok
+test_all_capture_pairings_and_type_extinction (test_material.MaterialTests.test_all_capture_pairings_and_type_extinction) ... ok
+test_configuration_identity_clamping_and_bounded_cache (test_material.MaterialTests.test_configuration_identity_clamping_and_bounded_cache) ... ok
+test_generated_games_branching_and_all_symmetries (test_material.MaterialTests.test_generated_games_branching_and_all_symmetries) ... ok
+test_quiet_positions_draws_wins_proofs_and_optional_modules_are_not_cached (test_material.MaterialTests.test_quiet_positions_draws_wins_proofs_and_optional_modules_are_not_cached) ... ok
+test_quiet_reordering_preserves_bit_exact_reference_sum (test_material.MaterialTests.test_quiet_reordering_preserves_bit_exact_reference_sum) ... ok
+test_root_counts_initialized_once_and_no_warm_compilation (test_material.MaterialTests.test_root_counts_initialized_once_and_no_warm_compilation) ... ok
+test_search_counts_restore_after_cutoff_interrupt_error_and_resume (test_material.MaterialTests.test_search_counts_restore_after_cutoff_interrupt_error_and_resume) ... ok
+test_canonical_features_and_value_q_label_order (test_network.HistoryNetwork.test_canonical_features_and_value_q_label_order) ... ok
+test_categorical_goals_and_scalar_oracle_all_history_lengths (test_network.HistoryNetwork.test_categorical_goals_and_scalar_oracle_all_history_lengths) ... ok
+test_finite_gradients_parameter_update_and_legal_mask (test_network.HistoryNetwork.test_finite_gradients_parameter_update_and_legal_mask) ... ok
+test_padding_and_reserved_bytes_do_not_leak_through_encoder_bias (test_network.HistoryNetwork.test_padding_and_reserved_bytes_do_not_leak_through_encoder_bias) ... ok
+test_repetition_includes_turn_and_ignores_padding (test_network.HistoryNetwork.test_repetition_includes_turn_and_ignores_padding) ... ok
+test_same_board_distinguishes_history_order_turns_goals_and_clock (test_network.HistoryNetwork.test_same_board_distinguishes_history_order_turns_goals_and_clock) ... ok
+test_shared_training_checkpoint_placeholder_and_onnx_dynamic_batch (test_network.HistoryNetwork.test_shared_training_checkpoint_placeholder_and_onnx_dynamic_batch) ... /Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/GenericNNetWrapper.py:374: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/.venv/lib/python3.11/site-packages/torch/onnx/utils.py:179: DeprecationWarning: The feature will be removed. Please remove usage of this function
+  setup_onnx_logging(verbose) as log_ctx,
+ok
+test_square_major_action_mapping_exhaustive (test_network.HistoryNetwork.test_square_major_action_mapping_exhaustive) ... ok
+test_unsupported_version_fails_at_construction (test_network.HistoryNetwork.test_unsupported_version_fails_at_construction) ... ok
+test_arena_assigns_wins_losses_draws_when_agents_swap (test_pipeline.SharedPipeline.test_arena_assigns_wins_losses_draws_when_agents_swap) ... ok
+test_arena_restore_preserves_subsequent_draws_and_terminal_mcts (test_pipeline.SharedPipeline.test_arena_restore_preserves_subsequent_draws_and_terminal_mcts) ... ok
+test_arena_restore_rejects_wrong_size_or_player (test_pipeline.SharedPipeline.test_arena_restore_rejects_wrong_size_or_player) ... ok
+test_candidate_acceptance_excludes_draws_and_rejects_all_draws (test_pipeline.SharedPipeline.test_candidate_acceptance_excludes_draws_and_rejects_all_draws) ... ok
+test_coach_draw_labels_replay_roundtrips_and_real_training (test_pipeline.SharedPipeline.test_coach_draw_labels_replay_roundtrips_and_real_training) ... ok
+test_episode_sampling_seed_is_independent_of_global_rng_and_worker (test_pipeline.SharedPipeline.test_episode_sampling_seed_is_independent_of_global_rng_and_worker) ... ok
+test_main_cli_selects_real_game_network_coach_and_starts_blue (test_pipeline.SharedPipeline.test_main_cli_selects_real_game_network_coach_and_starts_blue) ... 2026-09-14 21:29:33 Octavius main[88387] INFO Saved run sources and settings to /private/var/folders/9s/b0plnkhx1bz465j5xqhr3mw80000gr/T/tmp_qgizivv/source_backups/20260914T115933.271401Z-0a59eb72ad7742359b1f402b58609e77
+ok
+test_parallel_real_onnx_workers_have_independent_complete_states (test_pipeline.SharedPipeline.test_parallel_real_onnx_workers_have_independent_complete_states) ... ok
+test_pit_cli_random_opponents (test_pipeline.SharedPipeline.test_pit_cli_random_opponents) ... ok
+test_registry_official_start_and_unrelated_game_smoke (test_pipeline.SharedPipeline.test_registry_official_start_and_unrelated_game_smoke) ... ok
+test_rejected_trained_candidate_survives_rollback_and_reload (test_pipeline.SharedPipeline.test_rejected_trained_candidate_survives_rollback_and_reload) ... 2026-09-14 21:30:16 Octavius Coach[88387] INFO Iter #1 - new vs previous: 0-0  (2 draws) --> REJECTED (1)
+ok
+test_sequential_episodes_receive_fresh_search_trees (test_pipeline.SharedPipeline.test_sequential_episodes_receive_fresh_search_trees) ... NN version: 88, network i/o shape: (5, 5, 3) -> 1782, total nb of nnet params: 456924
+MCTS seed=17: plies=54, reason=no-capture limit
+MCTS seed=170: plies=30, reason=no-capture limit
+Random seed=4: plies=47, reason=no-capture limit
+Random seed=7: plies=30, reason=no-capture limit
+Random seed=11: plies=46, reason=no-capture limit
+Generated gate: states=11, transformed branches=6072, captures=2
+Self Play:   0%|                                                                                  | 0/2 [00:00<?, ?it/s]Self Play: 100%|███████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00, 19239.93it/s]
+ok
+test_human_can_undo_before_ai_reply (test_play.AIPlaySessionTests.test_human_can_undo_before_ai_reply) ... ok
+test_inference_and_reload_failure_preserve_game (test_play.AIPlaySessionTests.test_inference_and_reload_failure_preserve_game) ... ok
+test_red_opening_and_undo_keep_ai_opening (test_play.AIPlaySessionTests.test_red_opening_and_undo_keep_ai_opening) ... ok
+test_reply_and_undo_restore_complete_human_turn (test_play.AIPlaySessionTests.test_reply_and_undo_restore_complete_human_turn) ... ok
+test_terminal_human_move_does_not_request_ai (test_play.AIPlaySessionTests.test_terminal_human_move_does_not_request_ai) ... ok
+test_turn_ownership_and_stale_ai_requests_are_atomic (test_play.AIPlaySessionTests.test_turn_ownership_and_stale_ai_requests_are_atomic) ... ok
+test_concurrent_moves_with_same_revision_apply_only_once (test_play.PlayServerTests.test_concurrent_moves_with_same_revision_apply_only_once) ... 127.0.0.1 - - [14/Sep/2026 21:30:16] "POST /api/move HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 21:30:16] "POST /api/move HTTP/1.1" 400 -
+ok
+test_idle_browser_connection_does_not_block_state_or_page (test_play.PlayServerTests.test_idle_browser_connection_does_not_block_state_or_page) ... 127.0.0.1 - - [14/Sep/2026 21:30:16] "GET /api/state HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 21:30:16] "GET / HTTP/1.1" 200 -
+ok
+test_capture_and_undo_restore_exact_history (test_play.PlaySessionTests.test_capture_and_undo_restore_exact_history) ... ok
+test_invalid_and_stale_moves_are_atomic (test_play.PlaySessionTests.test_invalid_and_stale_moves_are_atomic) ... ok
+test_repetition_terminal_and_undo (test_play.PlaySessionTests.test_repetition_terminal_and_undo) ... ok
+test_restart_clears_history_and_counters (test_play.PlaySessionTests.test_restart_clears_history_and_counters) ... ok
+test_invalid_search_limits_leave_existing_game_unchanged (test_play.SelectableOpponentTests.test_invalid_search_limits_leave_existing_game_unchanged) ... ok
+test_invalid_selection_or_options_preserve_game (test_play.SelectableOpponentTests.test_invalid_selection_or_options_preserve_game) ... ok
+test_search_limits_round_trip_and_reach_the_player (test_play.SelectableOpponentTests.test_search_limits_round_trip_and_reach_the_player) ... ok
+test_switch_all_opponents_and_independent_options (test_play.SelectableOpponentTests.test_switch_all_opponents_and_independent_options) ... ok
+test_all_on_board_actions_round_trip_and_bad_syntax_rejected (test_players.DisplayAndPlayers.test_all_on_board_actions_round_trip_and_bad_syntax_rejected) ... ok
+test_display_opening_and_canonical_red_keep_physical_colours (test_players.DisplayAndPlayers.test_display_opening_and_canonical_red_keep_physical_colours) ... ok
+test_greedy_avoids_reply_capturing_its_last_piece (test_players.DisplayAndPlayers.test_greedy_avoids_reply_capturing_its_last_piece) ... ok
+test_greedy_capture_then_distance_then_lowest_action (test_players.DisplayAndPlayers.test_greedy_capture_then_distance_then_lowest_action) ... ok
+test_greedy_immediate_corner_win_for_both_physical_colours (test_players.DisplayAndPlayers.test_greedy_immediate_corner_win_for_both_physical_colours) ... ok
+test_greedy_prevents_corner_loss_before_more_advanced_capture (test_players.DisplayAndPlayers.test_greedy_prevents_corner_loss_before_more_advanced_capture) ... ok
+test_greedy_stalemate_win_beats_target_distance (test_players.DisplayAndPlayers.test_greedy_stalemate_win_beats_target_distance) ... ok
+test_human_eof_and_interrupt_propagate (test_players.DisplayAndPlayers.test_human_eof_and_interrupt_propagate) ... ok
+test_human_retries_without_mutation_for_both_colours (test_players.DisplayAndPlayers.test_human_retries_without_mutation_for_both_colours) ... ok
+test_occupied_goal_keeps_piece_and_goal_labels (test_players.DisplayAndPlayers.test_occupied_goal_keeps_piece_and_goal_labels) ... ok
+test_pit_player_factory_callback_contract (test_players.DisplayAndPlayers.test_pit_player_factory_callback_contract) ... ok
+test_seeded_arena_games_both_assignments_preserve_opening_and_states (test_players.DisplayAndPlayers.test_seeded_arena_games_both_assignments_preserve_opening_and_states) ... ok
+test_seeded_random_only_legal_and_canonical_action_equivalence (test_players.DisplayAndPlayers.test_seeded_random_only_legal_and_canonical_action_equivalence) ... ok
+test_terminal_players_fail_without_input_and_arena_skips_callbacks (test_players.DisplayAndPlayers.test_terminal_players_fail_without_input_and_arena_skips_callbacks) ... ok
+test_candidate_scores_use_original_player_and_do_not_mutate (test_record.RecordTests.test_candidate_scores_use_original_player_and_do_not_mutate) ... ok
+test_capture_round_trip_and_every_prior_ply (test_record.RecordTests.test_capture_round_trip_and_every_prior_ply) ... ok
+test_corrupt_records_and_illegal_moves_rejected (test_record.RecordTests.test_corrupt_records_and_illegal_moves_rejected) ... ok
+test_invalid_selection_and_exhausted_evaluation (test_record.RecordTests.test_invalid_selection_and_exhausted_evaluation) ... ok
+test_original_ai_search_and_active_configuration (test_record.RecordTests.test_original_ai_search_and_active_configuration) ... ok
+test_repetition_and_terminal_analysis (test_record.RecordTests.test_repetition_and_terminal_analysis) ... ok
+test_stdin_cli (test_record.RecordTests.test_stdin_cli) ... ok
+test_all_type_pairings_for_both_colours (test_rules.MovementAndCaptures.test_all_type_pairings_for_both_colours) ... ok
+test_capture_removes_only_defender_and_preserves_attacker (test_rules.MovementAndCaptures.test_capture_removes_only_defender_and_preserves_attacker) ... ok
+test_each_colour_executes_its_capture_cycle (test_rules.MovementAndCaptures.test_each_colour_executes_its_capture_cycle) ... ok
+test_edges_and_diagonal_clearance (test_rules.MovementAndCaptures.test_edges_and_diagonal_clearance) ... ok
+test_noncapture_and_optional_capture (test_rules.MovementAndCaptures.test_noncapture_and_optional_capture) ... ok
+test_public_action_errors_are_atomic (test_rules.MovementAndCaptures.test_public_action_errors_are_atomic) ... ok
+test_compiled_board_path (test_rules.OfficialWins.test_compiled_board_path) ... ok
+test_each_player_wins_by_entering_opponents_corner (test_rules.OfficialWins.test_each_player_wins_by_entering_opponents_corner) ... ok
+test_losing_one_type_has_no_special_effect (test_rules.OfficialWins.test_losing_one_type_has_no_special_effect) ... ok
+test_no_pieces_and_blocked_army_are_stalemates (test_rules.OfficialWins.test_no_pieces_and_blocked_army_are_stalemates) ... ok
+test_occupied_goal_requires_legal_capture (test_rules.OfficialWins.test_occupied_goal_requires_legal_capture) ... ok
+test_own_corner_can_be_entered_and_left (test_rules.OfficialWins.test_own_corner_can_be_entered_and_left) ... ok
+test_simultaneous_corner_winners_are_rejected_without_mutation (test_rules.OfficialWins.test_simultaneous_corner_winners_are_rejected_without_mutation) ... ok
+test_transformed_corner_ownership_is_respected (test_rules.OfficialWins.test_transformed_corner_ownership_is_respected) ... ok
+test_core_search_never_builds_routes_or_route_explanations (test_search_performance.SearchPerformanceTests.test_core_search_never_builds_routes_or_route_explanations) ... ok
+test_move_ordering_creates_history_states_only_when_visited (test_search_performance.SearchPerformanceTests.test_move_ordering_creates_history_states_only_when_visited) ... ok
+test_no_win_bound_against_complete_two_ply_trees (test_search_performance.SearchPerformanceTests.test_no_win_bound_against_complete_two_ply_trees) ... ok
+test_saved_games_keep_original_fixed_depth_scores_and_moves (test_search_performance.SearchPerformanceTests.test_saved_games_keep_original_fixed_depth_scores_and_moves) ... ok
+test_scalar_and_detailed_evaluations_agree_for_every_module_combination (test_search_performance.SearchPerformanceTests.test_scalar_and_detailed_evaluations_agree_for_every_module_combination) ... ok
+test_winning_move_flags_match_full_engine_including_stalemate (test_search_performance.SearchPerformanceTests.test_winning_move_flags_match_full_engine_including_stalemate) ... ok
+test_all_actions (test_state.CoordinatesAndActions.test_all_actions) ... ok
+test_bad_actions (test_state.CoordinatesAndActions.test_bad_actions) ... ok
+test_coordinates (test_state.CoordinatesAndActions.test_coordinates) ... ok
+test_capacity_and_capture_reset (test_state.StateContract.test_capacity_and_capture_reset) ... ok
+test_malformed_state_rejected_without_mutation (test_state.StateContract.test_malformed_state_rejected_without_mutation) ... ok
+test_maximum_ply_and_atomic_overflow (test_state.StateContract.test_maximum_ply_and_atomic_overflow) ... ok
+test_official_setup_and_initial_bytes (test_state.StateContract.test_official_setup_and_initial_bytes) ... ok
+test_ownership_queries_and_branches (test_state.StateContract.test_ownership_queries_and_branches) ... ok
+test_total_ply_survives_127_and_serialization (test_state.StateContract.test_total_ply_survives_127_and_serialization) ... ok
+test_actions_exhaustively (test_symmetries.Symmetries.test_actions_exhaustively) ... ok
+test_full_state (test_symmetries.Symmetries.test_full_state) ... ok
+test_group (test_symmetries.Symmetries.test_group) ... ok
+test_invalid_arguments (test_symmetries.Symmetries.test_invalid_arguments) ... ok
+test_only_allowed_transforms_and_official_initialization (test_symmetries.Symmetries.test_only_allowed_transforms_and_official_initialization) ... ok
+test_policy_mask_values_and_compiled_call (test_symmetries.Symmetries.test_policy_mask_values_and_compiled_call) ... ok
+test_printed_coordinate_fixtures (test_symmetries.Symmetries.test_printed_coordinate_fixtures) ... ok
+test_actual_optimizer_steps_are_independent_of_replay_length (test_symmetry_efficiency.SymmetryEfficiency.test_actual_optimizer_steps_are_independent_of_replay_length) ... ok
+test_enabled_covers_all_ids_and_disabled_is_owned_identity (test_symmetry_efficiency.SymmetryEfficiency.test_enabled_covers_all_ids_and_disabled_is_owned_identity) ... /Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/intransitive/tests/test_symmetry_efficiency.py:27: RuntimeWarning: invalid value encountered in divide
+  policy /= policy.sum()
+ok
+test_invalid_update_budgets_and_short_replay_fail (test_symmetry_efficiency.SymmetryEfficiency.test_invalid_update_budgets_and_short_replay_fail) ... ok
+test_pairing_rejects_changed_seeds_and_accounts_for_draws (test_symmetry_efficiency.SymmetryEfficiency.test_pairing_rejects_changed_seeds_and_accounts_for_draws) ... ok
+test_protocol_caps_equal_original_positions_and_fixed_updates (test_symmetry_efficiency.SymmetryEfficiency.test_protocol_caps_equal_original_positions_and_fixed_updates) ... ok
+test_001_immediate_goal_diagonal_finish_blue (test_tactics.TacticalRegressionTests.test_001_immediate_goal_diagonal_finish_blue)
+Take the empty goal now. ... ok
+test_002_immediate_goal_diagonal_finish_red (test_tactics.TacticalRegressionTests.test_002_immediate_goal_diagonal_finish_red)
+Take the empty goal now. ... ok
+test_003_immediate_goal_file_finish_blue (test_tactics.TacticalRegressionTests.test_003_immediate_goal_file_finish_blue)
+Finish along the edge before the predator approaches. ... ok
+test_004_immediate_goal_file_finish_red (test_tactics.TacticalRegressionTests.test_004_immediate_goal_file_finish_red)
+Finish along the edge before the predator approaches. ... ok
+test_005_immediate_goal_rank_finish_blue (test_tactics.TacticalRegressionTests.test_005_immediate_goal_rank_finish_blue)
+Finish along the board edge. ... ok
+test_006_immediate_goal_rank_finish_red (test_tactics.TacticalRegressionTests.test_006_immediate_goal_rank_finish_red)
+Finish along the board edge. ... ok
+test_007_immediate_goal_capture_corner_diagonal_blue (test_tactics.TacticalRegressionTests.test_007_immediate_goal_capture_corner_diagonal_blue)
+Capture the paper occupying the goal to win immediately. ... ok
+test_008_immediate_goal_capture_corner_diagonal_red (test_tactics.TacticalRegressionTests.test_008_immediate_goal_capture_corner_diagonal_red)
+Capture the paper occupying the goal to win immediately. ... ok
+test_009_immediate_goal_capture_corner_file_blue (test_tactics.TacticalRegressionTests.test_009_immediate_goal_capture_corner_file_blue)
+Capture the rock occupying the goal to win immediately. ... ok
+test_010_immediate_goal_capture_corner_file_red (test_tactics.TacticalRegressionTests.test_010_immediate_goal_capture_corner_file_red)
+Capture the rock occupying the goal to win immediately. ... ok
+test_011_immediate_goal_capture_corner_rank_blue (test_tactics.TacticalRegressionTests.test_011_immediate_goal_capture_corner_rank_blue)
+Capture the scissors occupying the goal to win immediately. ... ok
+test_012_immediate_goal_capture_corner_rank_red (test_tactics.TacticalRegressionTests.test_012_immediate_goal_capture_corner_rank_red)
+Capture the scissors occupying the goal to win immediately. ... ok
+test_013_immediate_goal_win_before_diagonal_racer_blue (test_tactics.TacticalRegressionTests.test_013_immediate_goal_win_before_diagonal_racer_blue)
+Win now instead of taking capture bait or defending the counter-racer. ... ok
+test_014_immediate_goal_win_before_diagonal_racer_red (test_tactics.TacticalRegressionTests.test_014_immediate_goal_win_before_diagonal_racer_red)
+Win now instead of taking capture bait or defending the counter-racer. ... ok
+test_015_immediate_goal_win_before_file_racer_blue (test_tactics.TacticalRegressionTests.test_015_immediate_goal_win_before_file_racer_blue)
+The goal wins before the opposing runner can finish; ignore the free paper. ... ok
+test_016_immediate_goal_win_before_file_racer_red (test_tactics.TacticalRegressionTests.test_016_immediate_goal_win_before_file_racer_red)
+The goal wins before the opposing runner can finish; ignore the free paper. ... ok
+test_017_immediate_goal_win_before_rank_racer_blue (test_tactics.TacticalRegressionTests.test_017_immediate_goal_win_before_rank_racer_blue)
+Finish now; capturing the nearby rock would let the opponent win. ... ok
+test_018_immediate_goal_win_before_rank_racer_red (test_tactics.TacticalRegressionTests.test_018_immediate_goal_win_before_rank_racer_red)
+Finish now; capturing the nearby rock would let the opponent win. ... ok
+test_019_immediate_goal_capture_goal_before_counter_race_blue (test_tactics.TacticalRegressionTests.test_019_immediate_goal_capture_goal_before_counter_race_blue)
+Capture on the goal, rather than the tempting rock away from the finish. ... ok
+test_020_immediate_goal_capture_goal_before_counter_race_red (test_tactics.TacticalRegressionTests.test_020_immediate_goal_capture_goal_before_counter_race_red)
+Capture on the goal, rather than the tempting rock away from the finish. ... ok
+test_021_clear_run_unopposed_diagonal_blue (test_tactics.TacticalRegressionTests.test_021_clear_run_unopposed_diagonal_blue)
+Start the unique two-move goal run; the distant predator cannot intercept. ... ok
+test_022_clear_run_unopposed_diagonal_red (test_tactics.TacticalRegressionTests.test_022_clear_run_unopposed_diagonal_red)
+Start the unique two-move goal run; the distant predator cannot intercept. ... ok
+test_023_clear_run_outrun_near_predator_blue (test_tactics.TacticalRegressionTests.test_023_clear_run_outrun_near_predator_blue)
+Step beyond the predator: every reply still permits the goal next turn. ... ok
+test_024_clear_run_outrun_near_predator_red (test_tactics.TacticalRegressionTests.test_024_clear_run_outrun_near_predator_red)
+Step beyond the predator: every reply still permits the goal next turn. ... ok
+test_025_clear_run_avoid_lower_interception_blue (test_tactics.TacticalRegressionTests.test_025_clear_run_avoid_lower_interception_blue)
+Use the safe edge route; the other short route allows an immediate capture. ... ok
+test_026_clear_run_avoid_lower_interception_red (test_tactics.TacticalRegressionTests.test_026_clear_run_avoid_lower_interception_red)
+Use the safe edge route; the other short route allows an immediate capture. ... ok
+test_027_clear_run_edge_run_around_predator_blue (test_tactics.TacticalRegressionTests.test_027_clear_run_edge_run_around_predator_blue)
+Stay on the board edge so the predator cannot intercept the first step. ... ok
+test_028_clear_run_edge_run_around_predator_red (test_tactics.TacticalRegressionTests.test_028_clear_run_edge_run_around_predator_red)
+Stay on the board edge so the predator cannot intercept the first step. ... ok
+test_029_clear_run_avoid_left_interception_blue (test_tactics.TacticalRegressionTests.test_029_clear_run_avoid_left_interception_blue)
+Use the safe edge route; the other short route moves into the predator capture range. ... ok
+test_030_clear_run_avoid_left_interception_red (test_tactics.TacticalRegressionTests.test_030_clear_run_avoid_left_interception_red)
+Use the safe edge route; the other short route moves into the predator capture range. ... ok
+test_031_clear_run_file_run_around_predator_blue (test_tactics.TacticalRegressionTests.test_031_clear_run_file_run_around_predator_blue)
+Stay on the edge to complete the two-move run without interception. ... ok
+test_032_clear_run_file_run_around_predator_red (test_tactics.TacticalRegressionTests.test_032_clear_run_file_run_around_predator_red)
+Stay on the edge to complete the two-move run without interception. ... ok
+test_033_clear_run_capture_to_open_run_blue (test_tactics.TacticalRegressionTests.test_033_clear_run_capture_to_open_run_blue)
+Capture the blocking paper and force the corner on the following turn. ... ok
+test_034_clear_run_capture_to_open_run_red (test_tactics.TacticalRegressionTests.test_034_clear_run_capture_to_open_run_red)
+Capture the blocking paper and force the corner on the following turn. ... ok
+test_035_clear_run_capture_before_defender_arrives_blue (test_tactics.TacticalRegressionTests.test_035_clear_run_capture_before_defender_arrives_blue)
+Capture the rock; its nearby defender is one move too late to stop the finish. ... ok
+test_036_clear_run_capture_before_defender_arrives_red (test_tactics.TacticalRegressionTests.test_036_clear_run_capture_before_defender_arrives_red)
+Capture the rock; its nearby defender is one move too late to stop the finish. ... ok
+test_037_clear_run_run_instead_of_side_capture_blue (test_tactics.TacticalRegressionTests.test_037_clear_run_run_instead_of_side_capture_blue)
+Take the forced goal run rather than the off-route scissors capture. ... ok
+test_038_clear_run_run_instead_of_side_capture_red (test_tactics.TacticalRegressionTests.test_038_clear_run_run_instead_of_side_capture_red)
+Take the forced goal run rather than the off-route scissors capture. ... ok
+test_039_clear_run_run_instead_of_other_piece_capture_blue (test_tactics.TacticalRegressionTests.test_039_clear_run_run_instead_of_other_piece_capture_blue)
+Start the forced goal run instead of winning material with the other paper. ... ok
+test_040_clear_run_run_instead_of_other_piece_capture_red (test_tactics.TacticalRegressionTests.test_040_clear_run_run_instead_of_other_piece_capture_red)
+Start the forced goal run instead of winning material with the other paper. ... ok
+test_041_goal_defence_capture_diagonal_runner_blue (test_tactics.TacticalRegressionTests.test_041_goal_defence_capture_diagonal_runner_blue)
+Capture the runner: every other move allows an immediate goal loss. ... ok
+test_042_goal_defence_capture_diagonal_runner_red (test_tactics.TacticalRegressionTests.test_042_goal_defence_capture_diagonal_runner_red)
+Capture the runner: every other move allows an immediate goal loss. ... ok
+test_043_goal_defence_capture_rank_runner_blue (test_tactics.TacticalRegressionTests.test_043_goal_defence_capture_rank_runner_blue)
+Capture the paper threatening the corner; advancing cannot defend it. ... ok
+test_044_goal_defence_capture_rank_runner_red (test_tactics.TacticalRegressionTests.test_044_goal_defence_capture_rank_runner_red)
+Capture the paper threatening the corner; advancing cannot defend it. ... ok
+test_045_goal_defence_capture_file_runner_blue (test_tactics.TacticalRegressionTests.test_045_goal_defence_capture_file_runner_blue)
+Capture the rock before it enters the corner. ... ok
+test_046_goal_defence_capture_file_runner_red (test_tactics.TacticalRegressionTests.test_046_goal_defence_capture_file_runner_red)
+Capture the rock before it enters the corner. ... ok
+test_047_goal_defence_edge_capture_rank_runner_blue (test_tactics.TacticalRegressionTests.test_047_goal_defence_edge_capture_rank_runner_blue)
+Capture along the edge; the corner cannot be reached to block in time. ... ok
+test_048_goal_defence_edge_capture_rank_runner_red (test_tactics.TacticalRegressionTests.test_048_goal_defence_edge_capture_rank_runner_red)
+Capture along the edge; the corner cannot be reached to block in time. ... ok
+test_049_goal_defence_edge_capture_file_runner_blue (test_tactics.TacticalRegressionTests.test_049_goal_defence_edge_capture_file_runner_blue)
+Remove the paper on the file; every quiet move loses next turn. ... ok
+test_050_goal_defence_edge_capture_file_runner_red (test_tactics.TacticalRegressionTests.test_050_goal_defence_edge_capture_file_runner_red)
+Remove the paper on the file; every quiet move loses next turn. ... ok
+test_051_goal_defence_paper_corner_block_blue (test_tactics.TacticalRegressionTests.test_051_goal_defence_paper_corner_block_blue)
+Occupy the corner: the same-type paper cannot capture the blocker. ... ok
+test_052_goal_defence_paper_corner_block_red (test_tactics.TacticalRegressionTests.test_052_goal_defence_paper_corner_block_red)
+Occupy the corner: the same-type paper cannot capture the blocker. ... ok
+test_053_goal_defence_rock_corner_block_blue (test_tactics.TacticalRegressionTests.test_053_goal_defence_rock_corner_block_blue)
+Block the goal with the rock; the opposing rock cannot capture it. ... ok
+test_054_goal_defence_rock_corner_block_red (test_tactics.TacticalRegressionTests.test_054_goal_defence_rock_corner_block_red)
+Block the goal with the rock; the opposing rock cannot capture it. ... ok
+test_055_goal_defence_scissors_corner_block_blue (test_tactics.TacticalRegressionTests.test_055_goal_defence_scissors_corner_block_blue)
+Block the goal with scissors rather than running away from the threat. ... ok
+test_056_goal_defence_scissors_corner_block_red (test_tactics.TacticalRegressionTests.test_056_goal_defence_scissors_corner_block_red)
+Block the goal with scissors rather than running away from the threat. ... ok
+test_057_goal_defence_block_two_runners_blue (test_tactics.TacticalRegressionTests.test_057_goal_defence_block_two_runners_blue)
+Block both runners at once; capturing only the scissors leaves a goal loss. ... ok
+test_058_goal_defence_block_two_runners_red (test_tactics.TacticalRegressionTests.test_058_goal_defence_block_two_runners_red)
+Block both runners at once; capturing only the scissors leaves a goal loss. ... ok
+test_059_goal_defence_block_two_runners_ignore_bait_blue (test_tactics.TacticalRegressionTests.test_059_goal_defence_block_two_runners_ignore_bait_blue)
+Block both runners; neither the local paper nor the distant rock capture saves the goal. ... ok
+test_060_goal_defence_block_two_runners_ignore_bait_red (test_tactics.TacticalRegressionTests.test_060_goal_defence_block_two_runners_ignore_bait_red)
+Block both runners; neither the local paper nor the distant rock capture saves the goal. ... ok
+test_061_save_piece_three_predators_northwest_exit_blue (test_tactics.TacticalRegressionTests.test_061_save_piece_three_predators_northwest_exit_blue)
+Retreat through the sole safe square; every other move loses the last rock immediately. ... ok
+test_062_save_piece_three_predators_northwest_exit_red (test_tactics.TacticalRegressionTests.test_062_save_piece_three_predators_northwest_exit_red)
+Retreat through the sole safe square; every other move loses the last rock immediately. ... ok
+test_063_save_piece_three_predators_northeast_exit_blue (test_tactics.TacticalRegressionTests.test_063_save_piece_three_predators_northeast_exit_blue)
+Escape the three rocks through the only square they cannot capture next turn. ... ok
+test_064_save_piece_three_predators_northeast_exit_red (test_tactics.TacticalRegressionTests.test_064_save_piece_three_predators_northeast_exit_red)
+Escape the three rocks through the only square they cannot capture next turn. ... ok
+test_065_save_piece_three_predators_west_exit_blue (test_tactics.TacticalRegressionTests.test_065_save_piece_three_predators_west_exit_blue)
+Preserve the final paper by moving outside all three scissors capture ranges. ... ok
+test_066_save_piece_three_predators_west_exit_red (test_tactics.TacticalRegressionTests.test_066_save_piece_three_predators_west_exit_red)
+Preserve the final paper by moving outside all three scissors capture ranges. ... ok
+test_067_save_piece_three_predators_southeast_exit_blue (test_tactics.TacticalRegressionTests.test_067_save_piece_three_predators_southeast_exit_blue)
+Use the sole safe exit; alternatives lose the final rock next turn. ... ok
+test_068_save_piece_three_predators_southeast_exit_red (test_tactics.TacticalRegressionTests.test_068_save_piece_three_predators_southeast_exit_red)
+Use the sole safe exit; alternatives lose the final rock next turn. ... ok
+test_069_save_piece_left_edge_escape_blue (test_tactics.TacticalRegressionTests.test_069_save_piece_left_edge_escape_blue)
+Stay on the edge: this is the only move surviving the two rocks. ... ok
+test_070_save_piece_left_edge_escape_red (test_tactics.TacticalRegressionTests.test_070_save_piece_left_edge_escape_red)
+Stay on the edge: this is the only move surviving the two rocks. ... ok
+test_071_save_piece_right_edge_escape_blue (test_tactics.TacticalRegressionTests.test_071_save_piece_right_edge_escape_blue)
+Move along the edge to preserve the final paper against two scissors. ... ok
+test_072_save_piece_right_edge_escape_red (test_tactics.TacticalRegressionTests.test_072_save_piece_right_edge_escape_red)
+Move along the edge to preserve the final paper against two scissors. ... ok
+test_073_save_piece_bottom_edge_escape_blue (test_tactics.TacticalRegressionTests.test_073_save_piece_bottom_edge_escape_blue)
+Slide along the edge; every inward move permits capture of the final rock. ... ok
+test_074_save_piece_bottom_edge_escape_red (test_tactics.TacticalRegressionTests.test_074_save_piece_bottom_edge_escape_red)
+Slide along the edge; every inward move permits capture of the final rock. ... ok
+test_075_save_piece_top_edge_escape_blue (test_tactics.TacticalRegressionTests.test_075_save_piece_top_edge_escape_blue)
+Slide along the board edge, outside the immediate capture range of both rocks. ... ok
+test_076_save_piece_top_edge_escape_red (test_tactics.TacticalRegressionTests.test_076_save_piece_top_edge_escape_red)
+Slide along the board edge, outside the immediate capture range of both rocks. ... ok
+test_077_save_piece_escape_ignore_poisoned_rock_blue (test_tactics.TacticalRegressionTests.test_077_save_piece_escape_ignore_poisoned_rock_blue)
+Escape instead of capturing the poisoned rock; its defenders would take the final paper. ... ok
+test_078_save_piece_escape_ignore_poisoned_rock_red (test_tactics.TacticalRegressionTests.test_078_save_piece_escape_ignore_poisoned_rock_red)
+Escape instead of capturing the poisoned rock; its defenders would take the final paper. ... ok
+test_079_save_piece_escape_ignore_poisoned_scissors_blue (test_tactics.TacticalRegressionTests.test_079_save_piece_escape_ignore_poisoned_scissors_blue)
+Retreat instead of taking the scissors bait covered by the papers. ... ok
+test_080_save_piece_escape_ignore_poisoned_scissors_red (test_tactics.TacticalRegressionTests.test_080_save_piece_escape_ignore_poisoned_scissors_red)
+Retreat instead of taking the scissors bait covered by the papers. ... ok
+test_081_safe_capture_free_central_scissors_blue (test_tactics.TacticalRegressionTests.test_081_safe_capture_free_central_scissors_blue)
+Take the free scissors: no reply can recapture or win a compensating piece. ... ok
+test_082_safe_capture_free_central_scissors_red (test_tactics.TacticalRegressionTests.test_082_safe_capture_free_central_scissors_red)
+Take the free scissors: no reply can recapture or win a compensating piece. ... ok
+test_083_safe_capture_free_edge_paper_blue (test_tactics.TacticalRegressionTests.test_083_safe_capture_free_edge_paper_blue)
+Capture the undefended paper on the edge for a guaranteed extra piece. ... ok
+test_084_safe_capture_free_edge_paper_red (test_tactics.TacticalRegressionTests.test_084_safe_capture_free_edge_paper_red)
+Capture the undefended paper on the edge for a guaranteed extra piece. ... ok
+test_085_safe_capture_scissors_safe_or_poisoned_blue (test_tactics.TacticalRegressionTests.test_085_safe_capture_scissors_safe_or_poisoned_blue)
+Capture the free scissors, not the scissors defended by a paper. ... ok
+test_086_safe_capture_scissors_safe_or_poisoned_red (test_tactics.TacticalRegressionTests.test_086_safe_capture_scissors_safe_or_poisoned_red)
+Capture the free scissors, not the scissors defended by a paper. ... ok
+test_087_safe_capture_rocks_safe_or_poisoned_blue (test_tactics.TacticalRegressionTests.test_087_safe_capture_rocks_safe_or_poisoned_blue)
+Take the undefended rock; the other rock capture allows immediate recapture. ... ok
+test_088_safe_capture_rocks_safe_or_poisoned_red (test_tactics.TacticalRegressionTests.test_088_safe_capture_rocks_safe_or_poisoned_red)
+Take the undefended rock; the other rock capture allows immediate recapture. ... ok
+test_089_safe_capture_papers_safe_or_poisoned_blue (test_tactics.TacticalRegressionTests.test_089_safe_capture_papers_safe_or_poisoned_blue)
+Capture the free paper, avoiding the paper protected by a rock. ... ok
+test_090_safe_capture_papers_safe_or_poisoned_red (test_tactics.TacticalRegressionTests.test_090_safe_capture_papers_safe_or_poisoned_red)
+Capture the free paper, avoiding the paper protected by a rock. ... ok
+test_091_safe_capture_remove_last_paper_blue (test_tactics.TacticalRegressionTests.test_091_safe_capture_remove_last_paper_blue)
+Win the last enemy paper safely, also removing the predator of the friendly rock. ... ok
+test_092_safe_capture_remove_last_paper_red (test_tactics.TacticalRegressionTests.test_092_safe_capture_remove_last_paper_red)
+Win the last enemy paper safely, also removing the predator of the friendly rock. ... ok
+test_093_safe_capture_capture_attacker_to_save_scissors_blue (test_tactics.TacticalRegressionTests.test_093_safe_capture_capture_attacker_to_save_scissors_blue)
+Capture the attacking rock and preserve the threatened friendly scissors. ... ok
+test_094_safe_capture_capture_attacker_to_save_scissors_red (test_tactics.TacticalRegressionTests.test_094_safe_capture_capture_attacker_to_save_scissors_red)
+Capture the attacking rock and preserve the threatened friendly scissors. ... ok
+test_095_safe_capture_capture_forking_scissors_blue (test_tactics.TacticalRegressionTests.test_095_safe_capture_capture_forking_scissors_blue)
+Capture the scissors forking both friendly papers, with no compensating reply. ... ok
+test_096_safe_capture_capture_forking_scissors_red (test_tactics.TacticalRegressionTests.test_096_safe_capture_capture_forking_scissors_red)
+Capture the scissors forking both friendly papers, with no compensating reply. ... ok
+test_097_safe_capture_horizontal_rocks_safe_or_poisoned_blue (test_tactics.TacticalRegressionTests.test_097_safe_capture_horizontal_rocks_safe_or_poisoned_blue)
+Take the safe rock rather than the rock covered by scissors. ... ok
+test_098_safe_capture_horizontal_rocks_safe_or_poisoned_red (test_tactics.TacticalRegressionTests.test_098_safe_capture_horizontal_rocks_safe_or_poisoned_red)
+Take the safe rock rather than the rock covered by scissors. ... ok
+test_099_safe_capture_horizontal_papers_safe_or_poisoned_blue (test_tactics.TacticalRegressionTests.test_099_safe_capture_horizontal_papers_safe_or_poisoned_blue)
+Take the free paper rather than the paper covered by a rock. ... ok
+test_100_safe_capture_horizontal_papers_safe_or_poisoned_red (test_tactics.TacticalRegressionTests.test_100_safe_capture_horizontal_papers_safe_or_poisoned_red)
+Take the free paper rather than the paper covered by a rock. ... ok
+test_all_symmetries_and_split_orbits_are_isolated (test_teacher_learning.TeacherLearningTests.test_all_symmetries_and_split_orbits_are_isolated) ... ok
+test_annealed_mix_records_effective_sampling_weight (test_teacher_learning.TeacherLearningTests.test_annealed_mix_records_effective_sampling_weight) ... ok
+test_hybrid_uses_exact_win_and_loss_filter_without_mutation (test_teacher_learning.TeacherLearningTests.test_hybrid_uses_exact_win_and_loss_filter_without_mutation) ... ok
+test_mixed_legacy_and_teacher_records_train_together (test_teacher_learning.TeacherLearningTests.test_mixed_legacy_and_teacher_records_train_together) ... ok
+test_persistent_optimizer_round_trip_continues_moments_and_count (test_teacher_learning.TeacherLearningTests.test_persistent_optimizer_round_trip_continues_moments_and_count) ... ok
+test_value_and_q_masks_do_not_fabricate_teacher_targets (test_teacher_learning.TeacherLearningTests.test_value_and_q_masks_do_not_fabricate_teacher_targets) ... ok
+
+======================================================================
+FAIL: test_game_red_14_preserve_material (test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)
+Do not give back the material advantage through the D7 capture and recapture tactic.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_14_preserve_material: Do not give back the material advantage through the D7 capture and recapture tactic.
+Selected E6-F6; score=108.95833333333334, depth=3, work=57391, pv=['E6-F6', 'E5-F6', 'F7-F6']
+
+======================================================================
+FAIL: test_game_red_18_prevent_paper_fork (test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)
+Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_18_prevent_paper_fork: Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+Selected G7-F6; score=-0.0, depth=3, work=56866, pv=['G7-F6', 'G5-H6', 'F6-F5']
+
+======================================================================
+FAIL: test_game_red_31_keep_goal_defender (test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)
+Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_31_keep_goal_defender: Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+Selected F8-E8; score=-0.0, depth=3, work=144536, pv=['F8-E8', 'D7-E6', 'F5-E4']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_exchanged_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 161 != 228 : Expected B4-B3. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected C3-D4; score=348.4375, depth=3, work=54832, pv=['C3-D4', 'D2-C2', 'D4-E5']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_original_colours (test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/work/orca/workspaces/alpha-zero-general/issue-39-intransitive-maintain-incremental/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 485 != 546 : Expected F8-G8. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected G7-F6; score=348.4375, depth=3, work=48793, pv=['G7-F6', 'H6-H7', 'F6-E5']
+
+----------------------------------------------------------------------
+Ran 318 tests in 134.355s
+
+FAILED (failures=5)
