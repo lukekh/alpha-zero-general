@@ -37,14 +37,17 @@ class BaselineOpponent:
 
 
 class OpponentFactory:
-    def __init__(self, checkpoint=None, simulations=32, config=None):
+    def __init__(self, checkpoint=None, simulations=32, config=None, flybrain_bank=None):
         from .heuristics import SearchConfig
         self.checkpoint, self.simulations = checkpoint, simulations
         self.config = config or SearchConfig()
+        self.flybrain_bank = flybrain_bank
 
     @property
     def choices(self):
-        return ['local', 'alphabeta', 'greedy', 'reference-greedy', 'random'] + (['model'] if self.checkpoint else [])
+        from .flybrain import DEFAULT_BANK
+        flybrain = ['flybrain'] if Path(self.flybrain_bank or DEFAULT_BANK).is_file() else []
+        return ['local', 'alphabeta', 'greedy', 'reference-greedy', 'random'] + flybrain + (['model'] if self.checkpoint else [])
 
     def create(self, kind, options=None):
         from .heuristics import AlphaBetaPlayer
@@ -54,6 +57,10 @@ class OpponentFactory:
             return None
         if kind == 'model':
             return ModelOpponent(self.checkpoint, self.simulations)
+        if kind == 'flybrain':
+            from .flybrain import FlybrainPlayer
+            from .IntransitiveGame import IntransitiveGame
+            return FlybrainPlayer(IntransitiveGame(), self.flybrain_bank)
         if kind == 'alphabeta':
             options = {} if options is None else options
             if not isinstance(options, dict) or set(options) - set(AB_OPTION_FIELDS):
@@ -317,7 +324,8 @@ def main():
     parser.add_argument("--checkpoint", type=Path, help="Model to play against; reloaded for each new game")
     parser.add_argument("--human-colour", choices=('blue', 'red'), default='blue')
     parser.add_argument("--simulations", type=int, default=32)
-    parser.add_argument('--opponent', choices=('local', 'alphabeta', 'greedy', 'reference-greedy', 'random', 'model'))
+    parser.add_argument('--opponent', choices=('local', 'alphabeta', 'greedy', 'reference-greedy', 'random', 'model', 'flybrain'))
+    parser.add_argument('--flybrain-bank', type=Path)
     parser.add_argument('--ab-config', type=Path)
     args = parser.parse_args()
     if args.simulations < 2:
@@ -330,7 +338,7 @@ def main():
     warmup.update("undo", {"revision": 1})
     from .heuristics import SearchConfig
     config = SearchConfig.from_file(args.ab_config) if args.ab_config else SearchConfig()
-    factory = OpponentFactory(args.checkpoint, args.simulations, config)
+    factory = OpponentFactory(args.checkpoint, args.simulations, config, args.flybrain_bank)
     opponent = factory.create(args.opponent or ('model' if args.checkpoint else 'local'))
     game = GameSession(opponent, human_player=0 if args.human_colour == 'blue' else 1,
                        opponent_factory=factory)

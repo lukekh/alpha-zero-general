@@ -774,6 +774,10 @@ termination is unchanged.
 
 ### Human play and baseline opponents
 
+The [Flybrain opponent](models/README.md) is available as `flybrain` in `pit.py`
+and the browser. Its bundled response bank comes from the actual upstream fly
+connectome simulation; see that guide for checkpoint matches and rebuilding.
+
 `IntransitivePlayers` provides `RandomPlayer(game, seed=None)`,
 `HumanPlayer(game)`, and `GreedyPlayer(game)`. Each exposes the Arena/pit callback
 `play(canonical_state, nb_moves=0)` and returns an integer action in the original

@@ -39,6 +39,12 @@ def create_player(name, args):
 		if args.game != 'intransitive':
 			raise ValueError('reference-greedy is available for Intransitive')
 		return players.ReferenceGreedyPlayer(game).play
+	if name == 'flybrain':
+		if args.game != 'intransitive':
+			raise ValueError('flybrain is available for Intransitive')
+		from intransitive.flybrain import FlybrainPlayer
+		return FlybrainPlayer(game, bank_path=getattr(args, 'flybrain_bank', None),
+		                      seed=getattr(args, 'flybrain_seed', None)).play
 	if name == 'alphabeta':
 		if args.game != 'intransitive':
 			raise ValueError('alphabeta is available for Intransitive')
@@ -245,7 +251,7 @@ def main():
 	parser.add_argument('--fpu'                , '-f' , action='store', default=None, type=float, help='Value for FPU (first play urgency)')
 
 	parser.add_argument('game'                        , action='store', default='splendor', help='The name of the game to play')
-	parser.add_argument('players'                     , metavar='player', nargs='*', help='list of players to test (checkpoint, human, random, greedy, or Intransitive reference-greedy/alphabeta)')
+	parser.add_argument('players'                     , metavar='player', nargs='*', help='list of players to test (checkpoint, human, random, greedy, or Intransitive reference-greedy/alphabeta/flybrain)')
 	parser.add_argument('--reference'          , '-r' , metavar='ref'   , nargs='*', help='list of reference players')
 	parser.add_argument('--vs-ref-only'        , '-z' , action='store_true', help='Use this option to prevent games between players, only players vs references')
 	parser.add_argument('--ratings'            , '-R' , action='store_true', help='Compute ratings based in games results and write ratings on disk')
@@ -256,6 +262,8 @@ def main():
 	parser.add_argument('--max-compare-threads', '-T' , action='store', default=1           , help='No of threads to run comparison on', type=int)
 
 	parser.add_argument('--ab-config', help='Alpha-beta JSON configuration')
+	parser.add_argument('--flybrain-bank', help='Alternative Flybrain neural response bank')
+	parser.add_argument('--flybrain-seed', type=int, help='Seed for Flybrain response sampling and ties')
 	parser.add_argument('--ab-depth', type=int)
 	parser.add_argument('--ab-nodes', '--ab-work', dest='ab_nodes', type=int,
 	                    help='Work units per alpha-beta move (zero uses a legal fallback)')

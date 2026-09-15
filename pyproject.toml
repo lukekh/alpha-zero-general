@@ -55,6 +55,7 @@ namespaces = false
 
 [tool.setuptools.package-data]
 intransitive = [
+    "models/*.npz", "models/*.md", "models/*LICENSE*",
     "play.html", "heuristics/*.json", "heuristics/configs/*.json", "smoke/requirements.txt",
     "benchmarks/training/baseline.json", "benchmarks/symmetry/*.json",
     "benchmarks/teacher/*.json",
