@@ -1,5 +1,5 @@
-"""Six separately timed features. Ordinary estimates never enter the mate range."""
-from collections import Counter
+"""Separately timed features. Ordinary estimates never enter the mate range."""
+from collections import Counter, OrderedDict
 from itertools import combinations
 from time import perf_counter
 import numpy as np
@@ -10,7 +10,7 @@ MATE = 100000.
 HEURISTIC_LIMIT = 10000.
 MATE_THRESHOLD = 90000.
 MODULES = ('piece_count', 'clear_run', 'piece_advantage', 'attacking_position',
-           'defensive_position', 'overload')
+           'defensive_position', 'overload', 'local_pressure')
 
 
 def terminal_value(game, state, side, ply=0):
@@ -165,6 +165,37 @@ class Evaluator:
     def __init__(self, game, config):
         self.game, self.config = game, config
         self.material = MaterialCache(config)
+        self.pressure_cache = OrderedDict()
+
+    def _pressure(self, pieces, budget, count):
+        from .pressure import pressure_totals
+        start = perf_counter()
+        try:
+            # Charge the bounded indexing, pair passes and cumulative rings
+            # before entering native code. No hidden unbounded search work.
+            budget.charge(81 + count*count + self.config.pressure_radius*count + count*(count-1)//2)
+            limit = self.config.pressure_cache_entries
+            # Only board-local pressure is cached. Terminal/proof/draw results
+            # are still checked separately with their full history identities.
+            while len(self.pressure_cache) > limit:
+                self.pressure_cache.popitem(last=False)
+            key = (self.config.pressure_radius,pieces.tobytes()) if limit else None
+            if key is not None and key in self.pressure_cache:
+                result = self.pressure_cache[key]
+                self.pressure_cache.move_to_end(key)
+                budget.module_calls['pressure_cache_hit'] += 1
+                budget.check()
+                return result
+            result = pressure_totals(pieces,self.config.pressure_radius)
+            budget.check()
+            if key is not None:
+                if len(self.pressure_cache) >= limit:
+                    self.pressure_cache.popitem(last=False)
+                self.pressure_cache[key] = result
+            return result
+        finally:
+            budget.module_seconds['local_pressure'] += perf_counter()-start
+            budget.module_calls['local_pressure'] += 1
 
     def score(self, state, side, budget, proof=None, *, counts=None):
         """Search value without allocating explanations or route diagnostics."""
@@ -216,10 +247,13 @@ class Evaluator:
                     self.material = MaterialCache(config)
                 total = self.material.score(state.material_state if compact else state, side, counts)
                 budget.check()
-                return max(-HEURISTIC_LIMIT, min(HEURISTIC_LIMIT, total))
             finally:
                 budget.module_seconds['material'] += perf_counter() - start
                 budget.module_calls['material'] += 1
+            if config.pressure_enabled and config.pressure_weight:
+                blue, red = self._pressure(state.pieces if compact else state[:,:,0], budget, sum(counts))
+                total += config.pressure_weight * (blue-red if side == 0 else red-blue)
+            return max(-HEURISTIC_LIMIT, min(HEURISTIC_LIMIT, total))
         if compact:
             state = state.export()
         own, opponent = {}, {}
@@ -234,16 +268,20 @@ class Evaluator:
             budget.module_seconds[module] += perf_counter() - start
             budget.module_calls[module] += 1
         functions = (piece_count, None, piece_advantage, attacking_position,
-                     defensive_position, None)
-        enabled = (True, diagnostics, True, config.attack_enabled, config.defence_enabled, config.overload_enabled)
+                     defensive_position, None, None)
+        enabled = (True, diagnostics, True, config.attack_enabled, config.defence_enabled, config.overload_enabled,
+                   config.pressure_enabled and bool(config.pressure_weight))
         # Clear-run scoring is decisive proof or zero, never a weighted estimate.
         weights = (config.count_weight, 0., config.advantage_weight,
-                   config.attack_weight, config.defence_weight, -config.overload_weight)
+                   config.attack_weight, config.defence_weight, -config.overload_weight, config.pressure_weight)
         terms = {}
         total = 0.
         for name, function, active, weight in zip(MODULES, functions, enabled, weights):
             values = [0., 0.]
-            if active:
+            if name == 'local_pressure' and active:
+                totals = self._pressure(geometry.board, budget, len(geometry.pieces))
+                values = [totals[side], totals[1-side]]
+            elif active:
                 start = perf_counter()
                 try:
                     budget.charge()

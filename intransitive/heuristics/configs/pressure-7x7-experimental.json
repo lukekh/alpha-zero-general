@@ -1,0 +1,9 @@
+{
+  "evaluator_version": "intransitive-heuristics-v2",
+  "pressure_enabled": true,
+  "pressure_weight": 10.0,
+  "pressure_radius": 3,
+  "max_depth": 5,
+  "node_limit": 1000000000,
+  "time_limit": 120.0
+}

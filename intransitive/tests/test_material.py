@@ -119,6 +119,9 @@ class MaterialTests(unittest.TestCase):
             if name == 'evaluator_version':
                 continue
             changed = not value if type(value) is bool else value + 1
+            if name == 'pressure_radius':
+                # A bounded enum: exercise the other supported window size.
+                changed = 3 if value == 4 else 4
             evaluator.config = replace(self.config, **{name: changed})
             self.assert_score(evaluator, state, count_pieces(state))
         evaluator.config = replace(self.config, count_weight=1e9)

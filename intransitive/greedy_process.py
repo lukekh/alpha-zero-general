@@ -5,6 +5,7 @@ Official-play rules are deliberately outside this module.
 """
 import argparse
 import hashlib
+import json
 import multiprocessing as mp
 import os
 import pickle
@@ -20,7 +21,7 @@ import numpy as np
 import torch
 from MCTS import MCTS
 from .IntransitiveGame import IntransitiveGame
-from .IntransitivePlayers import ReferenceGreedyPlayer
+from .IntransitivePlayers import GreedyPlayer, ReferenceGreedyPlayer
 from .NNet import NNetWrapper
 
 SETTINGS = dict(duration_seconds=86400, seed=2026091422, opponent='ReferenceGreedyPlayer',
@@ -51,15 +52,52 @@ def make_net(settings=SETTINGS):
     return NNetWrapper(IntransitiveGame(), {k: settings[k] for k in NN_KEYS})
 
 
+def make_opponent(game, seed, settings):
+    name = settings.get('opponent', 'ReferenceGreedyPlayer')
+    if name == 'ReferenceGreedyPlayer':
+        return ReferenceGreedyPlayer(game, seed=seed + 100)
+    if name == 'GreedyPlayer':
+        return GreedyPlayer(game)
+    if name == 'AlphaBetaPlayer':
+        from .heuristics import AlphaBetaPlayer, SearchConfig
+        return AlphaBetaPlayer(game, SearchConfig(**settings['opponent_search']))
+    raise ValueError(f'Unknown training opponent: {name}')
+
+
+def game_tasks(snapshot, seeds, training, settings):
+    opponents = settings.get('worker_opponents') if training else None
+    if opponents and len(seeds) % (2 * len(opponents)):
+        raise ValueError('Mixed games require both colours for every opponent')
+    tasks = []
+    for index, seed in enumerate(seeds):
+        selected = settings
+        side = index % 2
+        if opponents:
+            selected = dict(settings, **opponents[index % len(opponents)])
+            side = (index // len(opponents)) % 2
+        tasks.append((index, str(Path(snapshot).resolve()), selected, seed, side, training))
+    return tasks
+
+
+def worker_status(settings, **data):
+    path = settings.get('_status_path')
+    if path:
+        path = Path(path)
+        pending = path.with_suffix('.pending')
+        pending.write_text(json.dumps(dict(data, pid=os.getpid(), updated_epoch=time.time())))
+        os.replace(pending, path)
+
+
 def episode(net, seed, model_side, training, settings=SETTINGS):
     seed_all(seed)
     rng = np.random.default_rng(seed)
     game = IntransitiveGame(modelling_draws=True)
     search = MCTS(game, net, argparse.Namespace(**settings))
     search.rng = np.random.default_rng(seed)
-    greedy = ReferenceGreedyPlayer(game, seed=seed + 100)
+    opponent = make_opponent(game, seed, settings)
     board, player = game.getInitBoard(), 0
     trajectory, actions = [], []
+    search_depths = []
     trace = hashlib.sha256(board.tobytes())
     while True:
         result = game.getGameEnded(board, player)
@@ -68,6 +106,10 @@ def episode(net, seed, model_side, training, settings=SETTINGS):
             break
         canonical = game.getCanonicalForm(board, player)
         valid = game.getValidMoves(canonical, 0)
+        worker_status(settings, phase='model_move' if player == model_side else 'opponent_move',
+                      seed=seed, model_side=model_side, ply=len(actions)+1,
+                      opponent=settings.get('opponent'), opponent_search=settings.get('opponent_search'),
+                      last_search=search_depths[-1] if search_depths else None)
         if player == model_side:
             pi, q, _ = search.getActionProb(canonical, temp=1 if training else 0,
                                            force_full_search=True)
@@ -79,7 +121,14 @@ def episode(net, seed, model_side, training, settings=SETTINGS):
                 for state, policy, mask in game.getSymmetries(canonical, pi, valid):
                     trajectory.append((state, policy, mask))
         else:
-            action = greedy.play(canonical)
+            action = opponent.play(canonical)
+            if settings.get('opponent') == 'AlphaBetaPlayer':
+                result = opponent.last_result
+                target = settings['opponent_search']['max_depth']
+                if result.completed_depth < target and result.stop_reason != 'proven_result':
+                    raise RuntimeError(f'Minimax did not complete requested depth {target}: {result.stop_reason}')
+                search_depths.append(dict(ply=len(actions)+1, completed_depth=result.completed_depth,
+                    stop_reason=result.stop_reason, seconds=result.elapsed))
         assert valid[action], (len(actions), action)
         actions.append(action)
         parent = board
@@ -99,6 +148,8 @@ def episode(net, seed, model_side, training, settings=SETTINGS):
                reason=reason, examples=len(examples), modelling_only=True,
                trajectory_sha256=trace.hexdigest(),
                replay_sha256=hashlib.sha256(b"".join(examples)).hexdigest())
+    row.update(opponent=settings.get('opponent', 'ReferenceGreedyPlayer'),
+               opponent_search=settings.get('opponent_search'), opponent_searches=search_depths)
     return examples, row
 
 
@@ -123,12 +174,15 @@ def _load(snapshot, settings):
 
 def _job(task):
     index, snapshot, settings, seed, side, training = task
+    if settings.get('worker_status_dir'):
+        settings = dict(settings, _status_path=str(Path(settings['worker_status_dir']) / f'worker-{os.getpid()}.json'))
     start, cpu = time.perf_counter(), cpu_seconds()
     net = _load(snapshot, settings)
     loaded = time.perf_counter()
     examples, row = episode(net, seed, side, training, settings)
     row.update(index=index, pid=os.getpid(), worker_seconds=time.perf_counter()-start,
                snapshot_load_seconds=loaded-start, cpu_seconds=cpu_seconds()-cpu)
+    worker_status(settings, phase='game_completed', **row)
     return examples, row
 
 
@@ -170,6 +224,9 @@ class GameProcesses:
         if type(workers) is not int or workers not in (1, 2, 4):
             raise ValueError('workers must be 1, 2 or 4')
         self.settings = dict(settings)
+        opponents = self.settings.get('worker_opponents')
+        if opponents and len(opponents) != workers:
+            raise ValueError('One configured opponent is required per worker')
         self.pool = True
         self.pids = []
         self.connections = []
@@ -224,11 +281,12 @@ class GameProcesses:
         if not seeds or len(seeds) % 2:
             raise ValueError('Game quota must be positive and even for colour balance')
         start = time.perf_counter()
-        tasks = [(i, str(Path(snapshot).resolve()), self.settings, seed, i % 2, training)
-                 for i, seed in enumerate(seeds)]
+        tasks = game_tasks(snapshot, seeds, training, self.settings)
         ordered = [None] * len(tasks)
         active = {}
         next_task = completed = 0
+        affinity = bool(training and self.settings.get('worker_opponents'))
+        queues = [list(range(i, len(tasks), len(self.connections))) for i in range(len(self.connections))]
         send_seconds = receive_seconds = 0.
         try:
             while completed < len(tasks):
@@ -247,12 +305,17 @@ class GameProcesses:
                             raise RuntimeError('Worker returned wrong episode index')
                         ordered[index] = result
                         completed += 1
-                    if worker not in active and next_task < len(tasks):
+                    task_index = (queues[worker][0] if queues[worker] else None) if affinity else (
+                        next_task if next_task < len(tasks) else None)
+                    if worker not in active and task_index is not None:
                         sent = time.perf_counter()
-                        connection.send(tasks[next_task])
+                        connection.send(tasks[task_index])
                         send_seconds += time.perf_counter()-sent
-                        active[worker] = next_task
-                        next_task += 1
+                        active[worker] = task_index
+                        if affinity:
+                            queues[worker].pop(0)
+                        else:
+                            next_task += 1
                 if completed < len(tasks):
                     time.sleep(.01)
             if deadline is not None and time.time() >= deadline:
@@ -262,6 +325,64 @@ class GameProcesses:
                 parent_send_seconds=send_seconds, parent_receive_decode_seconds=receive_seconds,
                 games=len(ordered), worker_seconds=sum(r[1]['worker_seconds'] for r in ordered),
                 worker_cpu_seconds=sum(r[1]['cpu_seconds'] for r in ordered))
+        except BaseException:
+            self.close()
+            raise
+
+    def iter_results(self, snapshot, seeds, training, *, deadline=None):
+        """Yield completed tasks immediately, replenishing that worker first.
+
+        Unlike colour-balanced match collection, a recovered label queue may
+        contain an odd number of pending tasks. Callers persist their seed queue.
+        """
+        if self.pool is None:
+            raise RuntimeError('Pool is closed')
+        tasks = game_tasks(snapshot, list(seeds), training, self.settings)
+        if not tasks:
+            return
+        active, next_task, completed = {}, 0, 0
+        affinity = bool(training and self.settings.get('worker_opponents'))
+        queues = [list(range(i,len(tasks),len(self.connections))) for i in range(len(self.connections))]
+        started = time.perf_counter()
+        def send(worker):
+            nonlocal next_task
+            index = (queues[worker][0] if queues[worker] else None) if affinity else (
+                next_task if next_task < len(tasks) else None)
+            if index is None:
+                return
+            self.connections[worker].send(tasks[index])
+            active[worker] = index
+            if affinity:
+                queues[worker].pop(0)
+            else:
+                next_task += 1
+        try:
+            for worker in range(len(self.connections)):
+                send(worker)
+            while completed < len(tasks):
+                self._check_workers()
+                if deadline is not None and time.time() >= deadline:
+                    raise TimeoutError('Absolute deadline reached during streamed labels')
+                received = False
+                for worker, connection in enumerate(self.connections):
+                    if worker not in active or not connection.poll():
+                        continue
+                    kind, result = connection.recv()
+                    if kind != 'result':
+                        raise RuntimeError(f'Game worker failed: {result}')
+                    if result[1]['index'] != active.pop(worker):
+                        raise RuntimeError('Worker returned wrong task index')
+                    completed += 1
+                    received = True
+                    send(worker)
+                    yield result, dict(seconds=result[1].get('worker_seconds',time.perf_counter()-started),
+                                       completed=completed,tasks=len(tasks))
+                if not received:
+                    time.sleep(.01)
+        except GeneratorExit:
+            if completed < len(tasks):
+                self.close()
+            raise
         except BaseException:
             self.close()
             raise

@@ -1,0 +1,15 @@
+{
+  "pressure_enabled": true,
+  "pressure_radius": 3,
+  "pressure_weight": 10.0,
+  "pvs_enabled": true,
+  "aspiration_enabled": true,
+  "ordering_enabled": true,
+  "compiled_ordering_enabled": true,
+  "depth_replacement_enabled": true,
+  "table_entries": 50000,
+  "pressure_cache_entries": 0,
+  "max_depth": 5,
+  "node_limit": 1000000000,
+  "time_limit": 120.0
+}

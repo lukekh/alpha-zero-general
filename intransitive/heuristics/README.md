@@ -12,6 +12,9 @@ preserving board-order floating-point sums and the public detailed evaluator.
 Independent [PVS and aspiration experiments](../benchmarks/windows/README.md)
 preserve exact-depth values and safe anytime selection. Both remain opt-in;
 the report includes the archived baseline and measured retain/reject decision.
+An opt-in [square-ring pressure experiment](../benchmarks/pressure/README.md)
+adds blocker-blind RPS threats discounted by nearby defenders. It is disabled
+by default and is not enabled in the running supervised generators.
 The original design follows below.
 
 Tracked in [implementation issue #34](https://github.com/lukekh/alpha-zero-general/issues/34),
@@ -21,7 +24,7 @@ remain authoritative. Reuse the existing exact rules engine and action encoding.
 
 ## Evaluation modules
 
-The first three features form the core evaluation. The last three are optional,
+The first three features form the core evaluation. The remaining features are optional,
 independent modules, initially disabled to establish a core-only baseline.
 Each module has a configurable nonnegative weight and reports its contribution.
 
@@ -33,6 +36,7 @@ Each module has a configurable nonnegative weight and reports its contribution.
 | 4 | `attacking_position` | Reward useful progress toward the goal and accessible capture opportunities. | Optional, disabled |
 | 5 | `defensive_position` | Reward defenders that can intercept threats while remaining safe themselves. | Optional, disabled |
 | 6 | `overload` | Apply a small penalty when one defender cannot cover multiple threats. | Optional, disabled |
+| 7 | `local_pressure` | Square-ring RPS attacks/threats discounted by the victim's defenders. | Experimental, disabled |
 
 ### 1. Piece count
 

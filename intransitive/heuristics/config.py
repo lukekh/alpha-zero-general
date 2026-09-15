@@ -28,6 +28,9 @@ class SearchConfig:
     attack_enabled: bool = False
     defence_enabled: bool = False
     overload_enabled: bool = False
+    pressure_enabled: bool = False  # Experimental square-ring RPS pressure.
+    pressure_weight: float = 1.
+    pressure_radius: int = 4  # 3 = 7x7, 4 = original 9x9; keep inner weights.
     max_depth: int = 3
     node_limit: int = 200000
     time_limit: float = 1.
@@ -37,6 +40,10 @@ class SearchConfig:
     pvs_enabled: bool = False
     aspiration_enabled: bool = False
     aspiration_window: float = 25.
+    ordering_enabled: bool = False
+    compiled_ordering_enabled: bool = False
+    depth_replacement_enabled: bool = False
+    pressure_cache_entries: int = 0
 
     def __post_init__(self):
         if self.evaluator_version == 'intransitive-heuristics-v1':
@@ -44,13 +51,15 @@ class SearchConfig:
             object.__setattr__(self, 'evaluator_version', 'intransitive-heuristics-v2')
         if self.evaluator_version != 'intransitive-heuristics-v2':
             raise ValueError('Unsupported evaluator version')
+        if type(self.pressure_radius) is not int or self.pressure_radius not in (3,4):
+            raise ValueError('pressure_radius must be 3 (7x7) or 4 (9x9)')
         for name, value in asdict(self).items():
             if name.endswith('_enabled') and type(value) is not bool:
                 raise ValueError(f'{name} must be a boolean')
             if name.endswith(('_weight', '_bonus')) or name == 'time_limit':
                 if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
                     raise ValueError(f'{name} must be finite and nonnegative')
-        for name in ('max_depth', 'node_limit', 'proof_depth', 'proof_nodes', 'table_entries'):
+        for name in ('max_depth', 'node_limit', 'proof_depth', 'proof_nodes', 'table_entries', 'pressure_cache_entries'):
             value = getattr(self, name)
             if type(value) is not int or value < 0:
                 raise ValueError(f'{name} must be a nonnegative integer')

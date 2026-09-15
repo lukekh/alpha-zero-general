@@ -4,6 +4,8 @@ Search organization reference: Stockfish src/search.cpp (iterative deepening,
 TT bounds, mate-distance conversion). No selective/chess-specific pruning.
 """
 from dataclasses import dataclass, field
+from collections import OrderedDict
+from itertools import islice
 from functools import lru_cache
 from math import inf, isfinite, nextafter
 from time import perf_counter
@@ -257,6 +259,8 @@ class AlphaBetaPlayer:
         self.last_result = None
         self._root_progress = None
         self._root_previous = {}
+        self._killers = np.full((65,2),-1,dtype=np.int64)
+        self._history = np.zeros((2,648),dtype=np.int64)
 
     def reload(self):
         self.table.clear()
@@ -267,6 +271,12 @@ class AlphaBetaPlayer:
         warm_search_kernels()
         warm_material_kernels()
         warm_position_kernels()
+        if self.config.compiled_ordering_enabled or self.config.ordering_enabled:
+            from .ordering import warm_ordering
+            warm_ordering()
+        if self.config.pressure_enabled and self.config.pressure_weight:
+            from .pressure import warm_pressure_kernel
+            warm_pressure_kernel()
         if warm_proof:
             from .proof import warm_proof_kernel
             warm_proof_kernel()
@@ -276,9 +286,11 @@ class AlphaBetaPlayer:
             warm_route_kernels()
         identity = self.config.identity()
         if identity != self._identity:
-            self.table.clear()
+            self.table = OrderedDict() if self.config.depth_replacement_enabled else {}
             self._hints.clear()
             self._identity = identity
+        self._killers.fill(-1)
+        self._history.fill(0)
         self.evaluator = Evaluator(self.game, self.config)
         self._material_root = None
         self._material_counts = None
@@ -289,8 +301,29 @@ class AlphaBetaPlayer:
             return from_table(proof['score'], ply), proof['pv']
         return self.evaluator.score(state, side, budget, proof=proof, counts=self._material_counts), []
 
-    def _ordered(self, state, side, preferred, budget, root=False):
+    def _ordered(self, state, side, preferred, budget, root=False, ply=0):
         compact = isinstance(state, SearchPosition)
+        if self.config.compiled_ordering_enabled or self.config.ordering_enabled:
+            from .ordering import ordered_actions
+            actions = (state.legal() if compact else np.flatnonzero(self.game.getValidMoves(state,side)))
+            pieces = state.pieces if compact else state[:,:,0]
+            a1 = state.a1 if compact else int(state[:,:,82:84].flat[2])
+            # Same baseline rank-work charge when only compilation is enabled.
+            budget.charge(len(actions)*(83 if self.config.ordering_enabled else 2))
+            prior = np.full(648,-np.inf)
+            if root:
+                for action,row in self._root_previous.items():
+                    prior[action] = row['score']
+            kernel = ordered_actions if self.config.compiled_ordering_enabled else ordered_actions.py_func
+            ordered = kernel(pieces,actions,side,80 if side == a1 else 0,
+                -1 if preferred is None else preferred,prior,self._killers[min(ply,64)],
+                self._history[side],self.config.ordering_enabled)
+            budget.check()
+            for action in ordered:
+                budget.charge()
+                action = int(action)
+                yield action, None if compact else self.game.getNextState(state,side,action)[0]
+            return
         actions = list(map(int, state.legal() if compact else
                                np.flatnonzero(self.game.getValidMoves(state, side))))
         pieces = state.pieces if compact else state[:, :, 0]
@@ -369,8 +402,12 @@ class AlphaBetaPlayer:
             preferred = progress.incumbent
         best, pv = -inf, []
         for index, (action, child) in enumerate(self._ordered(
-                state, side, preferred, budget, root=progress is not None)):
+                state, side, preferred, budget, root=progress is not None, ply=ply)):
             counts = self._material_counts
+            capture = False
+            if self.config.ordering_enabled:
+                x,y = action_destination(action)
+                capture = bool(state.pieces[y,x] if compact else state[y,x,0])
             if compact:
                 state.push(action)
                 child = state
@@ -406,6 +443,11 @@ class AlphaBetaPlayer:
                 best, pv = value, [action] + line
             alpha = max(alpha, best)
             if alpha >= beta or best == MATE - ply - 1:
+                if self.config.ordering_enabled and alpha >= beta and not capture:
+                    killers = self._killers[min(ply,64)]
+                    if killers[0] != action:
+                        killers[1],killers[0] = killers[0],action
+                    self._history[side,action] = min(32767,int(self._history[side,action])+depth*depth)
                 break
         if progress is not None:
             progress.finished = alpha_original < best < beta_original
@@ -418,7 +460,13 @@ class AlphaBetaPlayer:
         if self.use_table and self.config.table_entries:
             if ((key, depth) not in self.table
                     and len(self.table) >= self.config.table_entries):
-                old_key, old_depth = next(iter(self.table))
+                if self.config.depth_replacement_enabled:
+                    # Prefer deeper/exact entries among eight oldest candidates.
+                    # OrderedDict keeps this bounded even after many evictions.
+                    old_key,old_depth = min(islice(self.table,8),
+                        key=lambda item:(item[1],self.table[item].bound == 'exact'))
+                else:
+                    old_key, old_depth = next(iter(self.table))
                 self.table.pop((old_key, old_depth))
                 if self._hints.get(old_key) == old_depth:
                     del self._hints[old_key]
