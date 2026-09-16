@@ -90,7 +90,7 @@
       <div class="card">
         <h3>How to play</h3>
         <p class="rule">Move one square in any direction. Reach the opposite corner to win. A player with no legal moves loses.</p>
-        <p class="rule"><b>R</b> Rock captures scissors<br><b>S</b> Scissors captures paper<br><b>P</b> Paper captures rock</p>
+        <p class="rule"><span aria-hidden="true">✊</span> Rock captures scissors<br><span aria-hidden="true">✌️</span> Scissors captures paper<br><span aria-hidden="true">✋</span> Paper captures rock</p>
         <p class="rule">Friendly pieces and enemies you cannot capture block their squares. Captures are optional.</p>
         <p class="rule">Repetition and turns without captures do not end a played game. The AI uses draw limits internally when modelling possible continuations.</p>
         <p class="rule muted" id="counters"></p>
@@ -109,7 +109,7 @@
   let state, selected = null, busy = false, pendingCommand = null;
   const $ = id => document.getElementById(id);
   const names = ['', 'rock', 'scissors', 'paper'];
-  const symbols = ['', 'R', 'S', 'P'];
+  const symbols = ['', '✊', '✌️', '✋'];
   const coord = (x, y) => 'ABCDEFGHI'[x] + (y + 1);
   const same = (a, b) => a && b && a[0] === b[0] && a[1] === b[1];
   const searchFields = {'max_depth': 'max-depth', 'time_limit': 'time-limit', 'node_limit': 'node-limit'};
@@ -222,7 +222,7 @@
       square.setAttribute('aria-pressed', String(!!same(selected, [x, y])));
       square.disabled = busy || !ongoing || state.ai_turn;
       square.innerHTML = '<span class="coordinate">' + label + '</span>' +
-        (piece ? '<span class="piece ' + (piece > 0 ? 'blue' : 'red') + '">' + symbols[Math.abs(piece)] + '</span>' : '') +
+        (piece ? '<span aria-hidden="true" class="piece ' + (piece > 0 ? 'blue' : 'red') + '">' + symbols[Math.abs(piece)] + '</span>' : '') +
         (goal ? '<span class="goal">GOAL</span>' : '');
       square.onclick = () => choose(x, y);
       $('board').append(square);
