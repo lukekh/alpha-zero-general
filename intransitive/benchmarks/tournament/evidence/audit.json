@@ -1,0 +1,26 @@
+{
+  "verified_matches": 32,
+  "verified_candidate_and_protocol_routing_moves": 128,
+  "fixed_depth_pairs_of_runs_equal": 8,
+  "compared_search_fields": [
+    "action",
+    "score",
+    "completed_depth",
+    "selected_depth",
+    "nodes",
+    "work",
+    "stop_reason"
+  ],
+  "outcomes": {
+    "wins": 0,
+    "losses": 0,
+    "unfinished": 32,
+    "failures": 0
+  },
+  "resume": {
+    "matches": 16,
+    "match_files_unchanged": true
+  },
+  "manifest_sha256": "ba2f0361f43366e95f32807115d52f382b400d70b37a2d4b9f8aa8d3ebe89087",
+  "backend_sha256": "89fdac72997a05f53c64e7a35989876e48c83e8c5dc64764c36e1e29940010a0"
+}

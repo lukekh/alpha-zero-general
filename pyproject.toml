@@ -42,6 +42,7 @@ dependencies = [
 [project.scripts]
 intransitive = "intransitive.play:main"
 intransitive-analyze = "intransitive.heuristics.analyze:main"
+intransitive-tournament = "intransitive.tournament.__main__:main"
 
 [tool.setuptools]
 py-modules = [
@@ -60,4 +61,5 @@ intransitive = [
     "benchmarks/training/baseline.json", "benchmarks/symmetry/*.json",
     "benchmarks/teacher/*.json",
     "benchmarks/process/fixture.pt", "benchmarks/process/fixture.json",
+    "tournament/requirements.txt", "tournament/*.md",
 ]

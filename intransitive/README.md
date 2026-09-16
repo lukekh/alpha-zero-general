@@ -19,6 +19,11 @@ The [controlled symmetry comparison](benchmarks/symmetry/README.md) fixes the
 optimizer-update budget for augmentation on/off and reports strength against
 original positions and compute, with per-colour results and sample limitations.
 
+The [paired Minimax tournament](tournament/README.md) supplies resumable official
+match fitness for frozen heuristic candidates, with separate completed-depth
+and equal-time leaderboards, colour pairs, held-out position pools, and explicit
+unfinished/failure outcomes. It includes a bounded smoke and concurrency benchmark.
+
 ## Setup, training, evaluation and human play
 
 Run commands from the repository root. The uv project pins Python 3.11.4 and the
