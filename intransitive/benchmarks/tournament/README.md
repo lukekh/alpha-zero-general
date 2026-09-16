@@ -75,7 +75,25 @@ remained byte-for-byte identical, with no new matches. Unit tests also interrupt
 a partially played game, resume it and compare its trajectory with a fresh game,
 and prove crashed, hung and cancelled child processes are reaped.
 
-Extract the archive and verify records using the same source and runtime:
+The original throughput evidence was captured at commit
+`a4b62c9800adf0c9c71c810e2d77f5a49e0ff630`, before integrating #53 from master.
+The integration uses the shared Genome implementation directly and is covered by
+`evidence/merge-tests.log` (103 tests, one optional native parity test skipped)
+and `evidence/merge-smoke.tar.gz` (four legally replayed games, both colours and
+protocols, eight verified candidate/configuration moves, two-ply safety cap).
+The old timing results have not been relabelled as a
+benchmark of the integrated revision. Prepare new inputs when running current
+master. To replay the frozen evidence, export its original source first:
+
+```sh
+mkdir -p /tmp/fitness-original-source
+git archive a4b62c9800adf0c9c71c810e2d77f5a49e0ff630 | tar -x -C /tmp/fitness-original-source
+cd /tmp/fitness-original-source
+python3.11 -m venv .venv
+.venv/bin/python -m pip install -r intransitive/tournament/requirements.txt
+```
+
+Then extract the evidence and verify it with that source and runtime:
 
 ```sh
 mkdir -p /tmp/fitness-evidence

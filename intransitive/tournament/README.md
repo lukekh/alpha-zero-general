@@ -59,8 +59,8 @@ incumbent/archive member. Reference-versus-reference games are omitted. A
 candidate also accepts `genome` instead of `weights`: the complete versioned
 JSON record from #53 (`intransitive-module-scales-v1`, `backend: python`, and all
 five genes `advantage`, `attack`, `defence`, `overload`, `pressure`). The reader
-supports this serialized contract without requiring the still-separate #53
-implementation to be installed. It checks bounds and reproduces its mapping:
+uses the shared `heuristics.tuning.Genome` validator and `to_config()` mapping
+from #53 directly, so bounds and enable flags have a single implementation:
 
 - Material is fixed at 100. Advantage/attack/defence/overload are in [0,100];
   pressure is in [0,20]. Zero disables an optional module while retaining its

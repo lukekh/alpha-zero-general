@@ -14,19 +14,13 @@ from ..IntransitiveGame import IntransitiveGame
 from ..IntransitiveLogicNumba import deserialize_state
 from ..IntransitiveSymmetries import NUM_SYMMETRIES, transform_state
 from ..heuristics.config import SearchConfig
+from ..heuristics.tuning import EVALUATION_FIELDS, GENES, Genome
 from ..record import state_hash
 
 SCHEMA = 'intransitive-tournament-v1'
 POOLS = ('search', 'validation', 'heldout')
 MODES = ('depth', 'wall')
-SCALES = ('advantage_weight', 'attack_weight', 'defence_weight',
-          'overload_weight', 'pressure_weight')
-GENOME_VERSION = 'intransitive-module-scales-v1'
-SCALE_BOUNDS = dict(zip(SCALES, (100., 100., 100., 100., 20.)))
-EVALUATION_FIELDS = tuple(k for k in SearchConfig().to_dict() if
-    k.endswith(('_weight', '_bonus')) or k in (
-        'evaluator_version', 'attack_enabled', 'defence_enabled',
-        'overload_enabled', 'pressure_enabled', 'pressure_radius'))
+SCALES = tuple(name + '_weight' for name in GENES['python'])
 
 
 def digest(value):
@@ -56,33 +50,24 @@ def candidate(name, weights=None, *, role='population', backend='python', genome
     stays at 100; optional zero scales disable their module. Native arbitrary
     weights are deliberately rejected by capability validation.
     """
-    if genome is not None:
-        if (weights is not None or not isinstance(genome, dict)
-                or set(genome) != {'version', 'backend', 'genes'}
-                or genome['version'] != GENOME_VERSION or genome['backend'] != backend
-                or not isinstance(genome['genes'], dict)
-                or set(genome['genes']) != {k.removesuffix('_weight') for k in SCALES}):
-            raise ValueError('Invalid serialized module-scale genome')
-        weights = {k + '_weight': v for k, v in genome['genes'].items()}
     if not isinstance(name, str) or not name.strip():
         raise ValueError('Candidate name must be nonempty')
     if role not in ('population', 'incumbent', 'archive') or backend != 'python':
         raise ValueError('Unsupported candidate role/backend; only Python scales are supported')
-    weights = {} if weights is None else weights
-    if not isinstance(weights, dict) or set(weights) - set(SCALES):
-        raise ValueError(f'Only effective scales {SCALES} are supported')
-    values = dict(advantage_weight=25., attack_weight=0., defence_weight=0.,
-                  overload_weight=0., pressure_weight=0.)
-    for key, value in weights.items():
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= SCALE_BOUNDS[key]:
-            raise ValueError(f'Weight must be finite in [0, {SCALE_BOUNDS[key]}]')
-        values[key] = float(value) if value else 0.
-    genome = dict(version=GENOME_VERSION, backend=backend,
-                  genes={k.removesuffix('_weight'): v for k, v in values.items()})
-    defaults = SearchConfig().to_dict()
-    config = SearchConfig(**{k: v if k == 'advantage_weight' or v else defaults[k] for k, v in values.items()},
-                          **{key.replace('_weight', '_enabled'): values[key] > 0
-                             for key in SCALES if key != 'advantage_weight'})
+    if genome is not None:
+        if weights is not None:
+            raise ValueError('Specify weights or a serialized genome, not both')
+        validated = Genome.from_json(json.dumps(genome, allow_nan=False))
+        if validated.backend != backend:
+            raise ValueError('Genome backend does not match candidate backend')
+    else:
+        weights = {} if weights is None else weights
+        if not isinstance(weights, dict) or set(weights) - set(SCALES):
+            raise ValueError(f'Only effective scales {SCALES} are supported')
+        validated = Genome.from_genes({k.removesuffix('_weight'): v for k, v in weights.items()},
+                                      backend=backend)
+    genome = validated.to_dict()
+    config = validated.to_config()
     evaluation = {k: v for k, v in config.to_dict().items() if k in EVALUATION_FIELDS}
     identity = dict(backend=backend, backend_version=backend_version(), evaluation=evaluation)
     return dict(name=name, role=role, genome=genome, **identity, sha256=digest(identity))

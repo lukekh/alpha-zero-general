@@ -131,6 +131,17 @@ class TournamentTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             manifest(spec['candidates'], spec['positions'], spec['protocols'], position_limit=2)
 
+    def test_shared_genome_contract_reaches_effective_engine_config(self):
+        from intransitive.heuristics.tuning import Genome
+        limits = protocol('depth', depth=2, seconds=10.)
+        for genes in ({}, {'attack': 12., 'defence': 10., 'overload': 5., 'pressure': 10.},
+                      {'advantage': 0., 'attack': 0., 'pressure': 20.}):
+            genome = Genome.from_genes(genes)
+            frozen = candidate('shared-contract', genome=genome.to_dict())
+            expected = genome.to_config(SearchConfig(**limits['search']))
+            self.assertEqual(effective_config(frozen, limits), expected)
+            self.assertEqual(frozen['genome'], genome.to_dict())
+
     def test_exact_history_and_symmetry_identity(self):
         from intransitive.IntransitiveSymmetries import transform_state
         board = Board()
