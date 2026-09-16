@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "intransitive-module-scales-v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "backend",
+        "genes"
+      ],
+      "properties": {
+        "version": {
+          "const": "intransitive-module-scales-v1"
+        },
+        "backend": {
+          "const": "python"
+        },
+        "genes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "advantage",
+            "attack",
+            "defence",
+            "overload",
+            "pressure"
+          ],
+          "properties": {
+            "advantage": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 100.0,
+              "default": 25.0
+            },
+            "attack": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 100.0,
+              "default": 0.0
+            },
+            "defence": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 100.0,
+              "default": 0.0
+            },
+            "overload": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 100.0,
+              "default": 0.0
+            },
+            "pressure": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 20.0,
+              "default": 0.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "backend",
+        "genes"
+      ],
+      "properties": {
+        "version": {
+          "const": "intransitive-module-scales-v1"
+        },
+        "backend": {
+          "const": "rust"
+        },
+        "genes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pressure"
+          ],
+          "properties": {
+            "pressure": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 20.0,
+              "default": 0.0
+            }
+          }
+        }
+      }
+    }
+  ]
+}
