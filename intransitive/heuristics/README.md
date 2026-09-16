@@ -22,6 +22,10 @@ a focused follow-up to [training-efficiency issue #33](https://github.com/lukekh
 The [game rules and modelling-only draw limits](../README.md#board-and-players)
 remain authoritative. Reuse the existing exact rules engine and action encoding.
 
+The opt-in [versioned module-scale contract](TUNING.md) provides validated genomes,
+backend capability manifests and saturation reporting for future tuning experiments.
+It does not change these defaults or start a tuning run.
+
 ## Evaluation modules
 
 The first three features form the core evaluation. The remaining features are optional,

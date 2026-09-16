@@ -167,6 +167,15 @@ class Evaluator:
         self.material = MaterialCache(config)
         self.pressure_cache = OrderedDict()
 
+    @staticmethod
+    def _clip(total, budget):
+        budget.module_calls['ordinary_evaluations'] += 1
+        if abs(total) >= HEURISTIC_LIMIT:
+            budget.module_calls['heuristic_saturated'] += 1
+        if abs(total) > HEURISTIC_LIMIT:
+            budget.module_calls['heuristic_clipped'] += 1
+        return max(-HEURISTIC_LIMIT, min(HEURISTIC_LIMIT, total))
+
     def _pressure(self, pieces, budget, count):
         from .pressure import pressure_totals
         start = perf_counter()
@@ -253,7 +262,7 @@ class Evaluator:
             if config.pressure_enabled and config.pressure_weight:
                 blue, red = self._pressure(state.pieces if compact else state[:,:,0], budget, sum(counts))
                 total += config.pressure_weight * (blue-red if side == 0 else red-blue)
-            return max(-HEURISTIC_LIMIT, min(HEURISTIC_LIMIT, total))
+            return self._clip(total, budget)
         if compact:
             state = state.export()
         own, opponent = {}, {}
@@ -303,9 +312,10 @@ class Evaluator:
                 own[name], opponent[name] = values
                 terms[name] = term
         budget.check()
-        score = max(-HEURISTIC_LIMIT, min(HEURISTIC_LIMIT, total))
+        score = self._clip(total, budget)
         if not explain:
             return score
-        return dict(score=score,
+        return dict(score=score, raw_score=total, clipped=abs(total) > HEURISTIC_LIMIT,
+                    saturated=abs(total) >= HEURISTIC_LIMIT,
                     terminal=False, features={'own': own, 'opponent': opponent}, terms=terms,
                     races=details, proof=proof)
