@@ -1,0 +1,317 @@
+{
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "binaries": {
+    "before": {
+      "path": "/Users/work/dev/alpha-zero-general/checkpoints/rust-incremental-material-20260916/baseline/target/release/intransitive-rust-teacher",
+      "sha256": "b151a0bdd71e0bd62599a9c6da4fad5f86c285bb72eb5706522523aaabd28b78"
+    },
+    "after": {
+      "path": "/Users/work/dev/alpha-zero-general/intransitive/rust_teacher/target/release/intransitive-rust-teacher",
+      "sha256": "9fa754fa32abdb9d0adc0429d356ad67671426d82bde0a9a5565464ff1f02042"
+    }
+  },
+  "depth": 6,
+  "repeats": 6,
+  "settings": {
+    "proof_depth": 2,
+    "proof_nodes": 64,
+    "table_entries": 50000,
+    "node_limit": 1000000000,
+    "reuse": false
+  },
+  "summary": {
+    "material": {
+      "pairs": 36,
+      "full_depth_pairs": 30,
+      "trials": [
+        {
+          "trial": 0,
+          "before_seconds": 9.101338334032334,
+          "after_seconds": 8.56339237402426,
+          "speedup": 1.0628192585966107,
+          "before_cpu_seconds": 7.262315999999998,
+          "after_cpu_seconds": 7.002252999999999,
+          "cpu_speedup": 1.0371399033996629
+        },
+        {
+          "trial": 1,
+          "before_seconds": 9.810092291998444,
+          "after_seconds": 9.582186666026246,
+          "speedup": 1.0237843024682707,
+          "before_cpu_seconds": 7.6313869999999895,
+          "after_cpu_seconds": 7.270185999999997,
+          "cpu_speedup": 1.0496824978067951
+        },
+        {
+          "trial": 2,
+          "before_seconds": 11.06863129202975,
+          "after_seconds": 10.853216709016124,
+          "speedup": 1.0198479942664993,
+          "before_cpu_seconds": 7.572662999999992,
+          "after_cpu_seconds": 7.517279999999989,
+          "cpu_speedup": 1.0073674254517597
+        },
+        {
+          "trial": 3,
+          "before_seconds": 13.734533292998094,
+          "after_seconds": 13.089009374991292,
+          "speedup": 1.0493180117389314,
+          "before_cpu_seconds": 8.382686000000009,
+          "after_cpu_seconds": 7.844617000000028,
+          "cpu_speedup": 1.0685908566345532
+        },
+        {
+          "trial": 4,
+          "before_seconds": 11.485563248977996,
+          "after_seconds": 14.196262709010625,
+          "speedup": 0.8090554172182163,
+          "before_cpu_seconds": 7.689664999999982,
+          "after_cpu_seconds": 7.906585000000004,
+          "cpu_speedup": 0.9725646407393304
+        },
+        {
+          "trial": 5,
+          "before_seconds": 11.320182999945246,
+          "after_seconds": 11.284529458032921,
+          "speedup": 1.003159506299746,
+          "before_cpu_seconds": 7.525186999999994,
+          "after_cpu_seconds": 7.337125000000049,
+          "cpu_speedup": 1.025631565497377
+        }
+      ],
+      "median_before_seconds": 11.194407145987498,
+      "median_after_seconds": 11.068873083524522,
+      "median_trial_speedup": 1.0218161483673849,
+      "median_before_cpu_seconds": 7.6020249999999905,
+      "median_after_cpu_seconds": 7.4272025000000195,
+      "median_trial_cpu_speedup": 1.03138573444852,
+      "trial_cpu_speedup_range": [
+        0.9725646407393304,
+        1.0685908566345532
+      ],
+      "trial_speedup_range": [
+        0.8090554172182163,
+        1.0628192585966107
+      ],
+      "stages": {
+        "endgame": {
+          "median_before_seconds": 0.9412425420014188,
+          "median_after_seconds": 0.8098125420074211,
+          "median_paired_speedup": 0.990040298050591,
+          "median_cpu_speedup": 1.0216589405850676
+        },
+        "midgame": {
+          "median_before_seconds": 1.4230344795068959,
+          "median_after_seconds": 1.5227316250093281,
+          "median_paired_speedup": 1.0118245709650868,
+          "median_cpu_speedup": 1.0404491920344263
+        },
+        "opening": {
+          "median_before_seconds": 3.252353937510634,
+          "median_after_seconds": 3.178447166501428,
+          "median_paired_speedup": 1.0256063379310292,
+          "median_cpu_speedup": 1.0117290698597095
+        }
+      }
+    },
+    "pressure7": {
+      "pairs": 36,
+      "full_depth_pairs": 30,
+      "trials": [
+        {
+          "trial": 0,
+          "before_seconds": 13.396519251022255,
+          "after_seconds": 12.516650124045555,
+          "speedup": 1.0702958953279678,
+          "before_cpu_seconds": 8.864300999999998,
+          "after_cpu_seconds": 7.977353000000004,
+          "cpu_speedup": 1.1111832458711546
+        },
+        {
+          "trial": 1,
+          "before_seconds": 11.82664800004568,
+          "after_seconds": 9.509146956930635,
+          "speedup": 1.2437128223605756,
+          "before_cpu_seconds": 8.662929999999996,
+          "after_cpu_seconds": 7.403870000000025,
+          "cpu_speedup": 1.1700543094354663
+        },
+        {
+          "trial": 2,
+          "before_seconds": 9.879942166007822,
+          "after_seconds": 7.930926542001544,
+          "speedup": 1.2457487928660604,
+          "before_cpu_seconds": 8.379034999999968,
+          "after_cpu_seconds": 7.151830000000022,
+          "cpu_speedup": 1.1715931446916303
+        },
+        {
+          "trial": 3,
+          "before_seconds": 14.295537416037405,
+          "after_seconds": 12.407461708033225,
+          "speedup": 1.1521726000396797,
+          "before_cpu_seconds": 9.013129000000006,
+          "after_cpu_seconds": 7.953873000000037,
+          "cpu_speedup": 1.1331748696515476
+        },
+        {
+          "trial": 4,
+          "before_seconds": 12.903370707994327,
+          "after_seconds": 12.194593999971403,
+          "speedup": 1.0581222062845705,
+          "before_cpu_seconds": 8.419620000000037,
+          "after_cpu_seconds": 7.636329999999931,
+          "cpu_speedup": 1.1025741422908797
+        },
+        {
+          "trial": 5,
+          "before_seconds": 10.84512949999771,
+          "after_seconds": 11.921382667060243,
+          "speedup": 0.9097207767655754,
+          "before_cpu_seconds": 7.879766000000008,
+          "after_cpu_seconds": 7.480702000000033,
+          "cpu_speedup": 1.0533457956218513
+        }
+      ],
+      "median_before_seconds": 12.365009354020003,
+      "median_after_seconds": 12.057988333515823,
+      "median_trial_speedup": 1.1112342476838237,
+      "median_before_cpu_seconds": 8.541275000000017,
+      "median_after_cpu_seconds": 7.558515999999981,
+      "median_trial_cpu_speedup": 1.122179057761351,
+      "trial_cpu_speedup_range": [
+        1.0533457956218513,
+        1.1715931446916303
+      ],
+      "trial_speedup_range": [
+        0.9097207767655754,
+        1.2457487928660604
+      ],
+      "stages": {
+        "endgame": {
+          "median_before_seconds": 0.3960798750194954,
+          "median_after_seconds": 0.4062544999906095,
+          "median_paired_speedup": 0.9587408065358733,
+          "median_cpu_speedup": 0.9901306049900092
+        },
+        "midgame": {
+          "median_before_seconds": 1.1326927920017624,
+          "median_after_seconds": 0.9917924585024593,
+          "median_paired_speedup": 1.1095958159083548,
+          "median_cpu_speedup": 1.1033352233689615
+        },
+        "opening": {
+          "median_before_seconds": 4.119812374992762,
+          "median_after_seconds": 3.947351520502707,
+          "median_paired_speedup": 1.0892465215726406,
+          "median_cpu_speedup": 1.1380895601367373
+        }
+      }
+    },
+    "pressure9": {
+      "pairs": 36,
+      "full_depth_pairs": 30,
+      "trials": [
+        {
+          "trial": 0,
+          "before_seconds": 11.296816040965496,
+          "after_seconds": 10.316539248917252,
+          "speedup": 1.0950199256161532,
+          "before_cpu_seconds": 8.317630000000007,
+          "after_cpu_seconds": 7.57348899999998,
+          "cpu_speedup": 1.0982560349661865
+        },
+        {
+          "trial": 1,
+          "before_seconds": 13.089925375970779,
+          "after_seconds": 11.182237999048084,
+          "speedup": 1.170599783074291,
+          "before_cpu_seconds": 8.749618000000007,
+          "after_cpu_seconds": 7.597965999999989,
+          "cpu_speedup": 1.1515737238097696
+        },
+        {
+          "trial": 2,
+          "before_seconds": 10.804562500939937,
+          "after_seconds": 10.279072751000058,
+          "speedup": 1.0511222911510918,
+          "before_cpu_seconds": 8.341301000000014,
+          "after_cpu_seconds": 7.4947809999999855,
+          "cpu_speedup": 1.1129479300329161
+        },
+        {
+          "trial": 3,
+          "before_seconds": 10.588000916002784,
+          "after_seconds": 9.810205207963008,
+          "speedup": 1.0792843464078032,
+          "before_cpu_seconds": 8.448088999999971,
+          "after_cpu_seconds": 7.558673999999995,
+          "cpu_speedup": 1.1176681253881273
+        },
+        {
+          "trial": 4,
+          "before_seconds": 11.9274131260172,
+          "after_seconds": 10.295055207971018,
+          "speedup": 1.1585574710451594,
+          "before_cpu_seconds": 8.271255000000007,
+          "after_cpu_seconds": 7.193495000000028,
+          "cpu_speedup": 1.149824250937823
+        },
+        {
+          "trial": 5,
+          "before_seconds": 12.75980441601132,
+          "after_seconds": 10.98479229095392,
+          "speedup": 1.1615881373122676,
+          "before_cpu_seconds": 8.464930000000006,
+          "after_cpu_seconds": 7.319179999999952,
+          "cpu_speedup": 1.1565407600305035
+        }
+      ],
+      "median_before_seconds": 11.612114583491348,
+      "median_after_seconds": 10.305797228444135,
+      "median_trial_speedup": 1.1267886983306563,
+      "median_before_cpu_seconds": 8.394694999999992,
+      "median_after_cpu_seconds": 7.52672749999999,
+      "median_trial_cpu_speedup": 1.1337461881629751,
+      "trial_cpu_speedup_range": [
+        1.0982560349661865,
+        1.1565407600305035
+      ],
+      "trial_speedup_range": [
+        1.0511222911510918,
+        1.170599783074291
+      ],
+      "stages": {
+        "endgame": {
+          "median_before_seconds": 0.46997689599811565,
+          "median_after_seconds": 0.4691835834964877,
+          "median_paired_speedup": 1.0051759810030898,
+          "median_cpu_speedup": 0.9931533631035672
+        },
+        "midgame": {
+          "median_before_seconds": 1.271764749501017,
+          "median_after_seconds": 1.3681096034997609,
+          "median_paired_speedup": 1.170695379663443,
+          "median_cpu_speedup": 1.138914148140441
+        },
+        "opening": {
+          "median_before_seconds": 3.9270517920085695,
+          "median_after_seconds": 3.533258312003454,
+          "median_paired_speedup": 1.1307498798416336,
+          "median_cpu_speedup": 1.1484419301903146
+        }
+      }
+    }
+  },
+  "all_results_identical": true,
+  "started_unix": 1789553938.157063,
+  "finished_unix": 1789554350.291435,
+  "pairs": 108,
+  "full_depth_pairs": 90,
+  "validation": {
+    "rust_debug_tests": 9,
+    "rust_release_tests": 9,
+    "python_integration_tests": 11,
+    "clippy": "passed with -D warnings"
+  }
+}

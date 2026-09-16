@@ -1,0 +1,16 @@
+test_all_100_certified_tactics (intransitive.tests.test_rust_teacher.NativeTeacherTests.test_all_100_certified_tactics) ... ok
+test_incomplete_search_and_invalid_inputs_are_not_labels (intransitive.tests.test_rust_teacher.NativeTeacherTests.test_incomplete_search_and_invalid_inputs_are_not_labels) ... ok
+test_legal_transitions_pressure_and_material_on_random_trajectories (intransitive.tests.test_rust_teacher.NativeTeacherTests.test_legal_transitions_pressure_and_material_on_random_trajectories) ... ok
+test_no_capture_boundary_and_malformed_state_rejection (intransitive.tests.test_rust_teacher.NativeTeacherTests.test_no_capture_boundary_and_malformed_state_rejection) ... ok
+test_random_shallow_search_and_tied_actions (intransitive.tests.test_rust_teacher.NativeTeacherTests.test_random_shallow_search_and_tied_actions) ... ok
+test_repetition_and_clock_are_modelling_only (intransitive.tests.test_rust_teacher.NativeTeacherTests.test_repetition_and_clock_are_modelling_only) ... ok
+test_entire_label_family_uses_native_and_is_recoverable (intransitive.tests.test_rust_label_backend.NativeBackendTests.test_entire_label_family_uses_native_and_is_recoverable) ... ok
+test_migration_only_changes_backend (intransitive.tests.test_rust_label_backend.NativeBackendTests.test_migration_only_changes_backend) ... ok
+test_outboxes_have_separate_backend_namespaces (intransitive.tests.test_rust_label_backend.NativeBackendTests.test_outboxes_have_separate_backend_namespaces) ... ok
+test_pool_reaps_native_even_after_python_worker_is_killed (intransitive.tests.test_rust_label_backend.NativeBackendTests.test_pool_reaps_native_even_after_python_worker_is_killed) ... ok
+test_reuse_keeps_scores_and_separates_configs (intransitive.tests.test_rust_label_backend.NativeBackendTests.test_reuse_keeps_scores_and_separates_configs) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 42.089s
+
+OK

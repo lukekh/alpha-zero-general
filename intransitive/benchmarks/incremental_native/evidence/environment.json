@@ -1,0 +1,18 @@
+{
+  "rustc": "rustc 1.74.1 (a28077b28 2023-12-04)",
+  "baseline_source_sha256": {
+    "Cargo.toml": "847b5df44ecebd06d4d9f6953826e926f32218b0be10a06f75772c763367235d",
+    "Cargo.lock": "7c5be0115b80d4d220145f6721c5600a3043dcb2f681de27978f2c391fca7d95",
+    "src/lib.rs": "f95de3281a8952f49d3ee081ea11480812e376f07da0868c8853fcff832ecd33",
+    "src/main.rs": "32799c17048a5dd5a35c4336cb021097c5f4128c18f29b10983194595c2c6c96"
+  },
+  "final_source_sha256": {
+    "Cargo.toml": "847b5df44ecebd06d4d9f6953826e926f32218b0be10a06f75772c763367235d",
+    "intransitive-rust-teacher": "9fa754fa32abdb9d0adc0429d356ad67671426d82bde0a9a5565464ff1f02042",
+    "Cargo.lock": "7c5be0115b80d4d220145f6721c5600a3043dcb2f681de27978f2c391fca7d95",
+    "incremental_benchmark.py": "f5b88232cce8aab142e5794675cf96a70ce6bbd089be7c3d5df47b3ec7269dd7",
+    "src/pressure_delta.rs": "2db4915899a329798d057caed4e95092f9671634a52715c0479003630d24dcf8",
+    "src/lib.rs": "51ef25dc1b00389670468bf8ecf9f96a98a84741ad8885ed397e52384b4324f7",
+    "src/main.rs": "517dd2bd5095694968f3b71189ea23369c773b0c1a2018c42a7c98ef0faca1f1"
+  }
+}
