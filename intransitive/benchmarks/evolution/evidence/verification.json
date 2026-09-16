@@ -1,0 +1,57 @@
+[
+  {
+    "run": "/tmp/issue55-benchmark-20260917/smoke-pooled",
+    "verified_matches": 16,
+    "verified_moves": 17,
+    "distinct_trajectories": 11,
+    "status": "complete",
+    "outcomes": {
+      "unfinished": 6,
+      "depth_incomplete": 10
+    }
+  },
+  {
+    "run": "/tmp/issue55-benchmark-20260917/benchmark/evolution-55",
+    "verified_matches": 28,
+    "verified_moves": 25,
+    "distinct_trajectories": 14,
+    "status": "complete",
+    "outcomes": {
+      "depth_incomplete": 20,
+      "unfinished": 8
+    }
+  },
+  {
+    "run": "/tmp/issue55-benchmark-20260917/benchmark/random-55",
+    "verified_matches": 32,
+    "verified_moves": 27,
+    "distinct_trajectories": 14,
+    "status": "complete",
+    "outcomes": {
+      "depth_incomplete": 24,
+      "unfinished": 8
+    }
+  },
+  {
+    "run": "/tmp/issue55-benchmark-20260917/benchmark/evolution-56",
+    "verified_matches": 28,
+    "verified_moves": 38,
+    "distinct_trajectories": 13,
+    "status": "complete",
+    "outcomes": {
+      "unfinished": 16,
+      "depth_incomplete": 12
+    }
+  },
+  {
+    "run": "/tmp/issue55-benchmark-20260917/benchmark/random-56",
+    "verified_matches": 32,
+    "verified_moves": 27,
+    "distinct_trajectories": 14,
+    "status": "complete",
+    "outcomes": {
+      "depth_incomplete": 24,
+      "unfinished": 8
+    }
+  }
+]

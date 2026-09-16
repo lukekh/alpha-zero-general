@@ -1,0 +1,32 @@
+[
+  {
+    "match": "c3a6e4dc2e9d858f427d8dbd1d0a48c4f6347faac57dba7eb598c458877228a1",
+    "status": "unfinished",
+    "equal": {
+      "status": true,
+      "winner": true,
+      "trajectory_sha256": true,
+      "final_state_sha256": true
+    }
+  },
+  {
+    "match": "8e2a562e61b724b36725a9d44c7da2a41e5436f0022ac921ef6029e502a0882e",
+    "status": "depth_incomplete",
+    "equal": {
+      "status": true,
+      "winner": true,
+      "trajectory_sha256": true,
+      "final_state_sha256": true
+    }
+  },
+  {
+    "match": "3dd24bd175038ea1cef000830ef1e2e237eca7b8c76b85897f6e715c893a626b",
+    "status": "unfinished",
+    "equal": {
+      "status": true,
+      "winner": true,
+      "trajectory_sha256": true,
+      "final_state_sha256": true
+    }
+  }
+]

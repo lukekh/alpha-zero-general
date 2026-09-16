@@ -4,6 +4,10 @@ This is a configuration contract for Minimax/alpha–beta experiments, not an
 optimizer, tournament, MCTS setting, or migration of a teacher or application
 default. Issues #54–#56 own matches, evolution and held-out adoption respectively.
 
+The opt-in [population optimizer](../evolution/README.md) now consumes this
+contract through the paired match harness. It exports candidates for separate
+held-out acceptance; it does not migrate these defaults.
+
 The version is `intransitive-module-scales-v1`. The checked-in
 [JSON schema](module-scales-v1.schema.json) uses JSON Schema Draft 2020-12.
 `Genome.from_json` validates complete records without an extra dependency and
