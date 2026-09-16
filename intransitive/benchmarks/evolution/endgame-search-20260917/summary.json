@@ -1,0 +1,951 @@
+{
+  "design": {
+    "budget": {
+      "max_comparison_games": 160,
+      "max_comparison_reserved_work": 64000000000,
+      "max_comparison_seconds": 740,
+      "pilot_seconds": 127.47282754199114,
+      "total_seconds": 900
+    },
+    "corpus": {
+      "lines": 36,
+      "max_plies": 240,
+      "seed": 155,
+      "selection": "first by stable hash within preassigned pool",
+      "stage": "endgame"
+    },
+    "optimizer_seeds": [
+      73,
+      74
+    ],
+    "protocol": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 12.0,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "max_depth": 1,
+        "node_limit": 2000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": false,
+        "table_entries": 10000,
+        "time_limit": 2.0
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    },
+    "scope": "Exploratory 12-piece endgames only; no general-strength claim or default migration; original eligibility rules retained.",
+    "settings": {
+      "algorithm": "evolution",
+      "elites": 1,
+      "generations": 2,
+      "hall_size": 2,
+      "log_sigma": 0.5,
+      "max_games": 40,
+      "max_nodes": 16000000000,
+      "max_seconds": 185.0,
+      "min_completed_depth": 1,
+      "mutation_rate": 0.7,
+      "near_default_fraction": 0.5,
+      "population": 2,
+      "random_off_rate": 0.5,
+      "recombination_rate": 0.5,
+      "resident_engines": 4,
+      "search_positions": 1,
+      "seed": 73,
+      "toggle_rate": 0.3,
+      "tournament_size": 2,
+      "validation_positions": 1
+    }
+  },
+  "runs": [
+    {
+      "name": "evolution-73",
+      "status": "complete",
+      "generations": 2,
+      "unique_candidates": 5,
+      "unique_matches": 28,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 7,
+        "win": 21
+      },
+      "games_reserved": 28,
+      "nodes_reserved": 10762560000,
+      "wall_seconds": 161.6200751249853,
+      "known_child_cpu_seconds": 103.69483199999995,
+      "measured_search_work": 72124435,
+      "eligible_exports": 0,
+      "exports": [
+        {
+          "genome": {
+            "backend": "python",
+            "genes": {
+              "advantage": 0.0,
+              "attack": 43.35270462955384,
+              "defence": 93.72801278909321,
+              "overload": 20.24822889817265,
+              "pressure": 17.113135023536053
+            },
+            "version": "intransitive-module-scales-v1"
+          },
+          "generation": 0,
+          "eligible": false,
+          "search": {
+            "wins": 5,
+            "losses": 0,
+            "unfinished": 1,
+            "eligible": true
+          },
+          "validation": {
+            "wins": 2,
+            "losses": 1,
+            "unfinished": 1,
+            "eligible": false,
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "genome": {
+            "backend": "python",
+            "genes": {
+              "advantage": 0.0,
+              "attack": 43.35270462955384,
+              "defence": 93.72801278909321,
+              "overload": 20.24822889817265,
+              "pressure": 17.113135023536053
+            },
+            "version": "intransitive-module-scales-v1"
+          },
+          "generation": 1,
+          "eligible": false,
+          "search": {
+            "wins": 5,
+            "losses": 0,
+            "unfinished": 1,
+            "eligible": true
+          },
+          "validation": {
+            "wins": 1,
+            "losses": 2,
+            "unfinished": 1,
+            "eligible": false,
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "evolution-74",
+      "status": "complete",
+      "generations": 2,
+      "unique_candidates": 5,
+      "unique_matches": 28,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 3,
+        "win": 25
+      },
+      "games_reserved": 28,
+      "nodes_reserved": 10762560000,
+      "wall_seconds": 127.8070394580136,
+      "known_child_cpu_seconds": 89.77984700000002,
+      "measured_search_work": 37942214,
+      "eligible_exports": 0,
+      "exports": [
+        {
+          "genome": {
+            "backend": "python",
+            "genes": {
+              "advantage": 0.0,
+              "attack": 44.59984687779922,
+              "defence": 0.0,
+              "overload": 0.30123493773565047,
+              "pressure": 2.5439084986272587
+            },
+            "version": "intransitive-module-scales-v1"
+          },
+          "generation": 0,
+          "eligible": false,
+          "search": {
+            "wins": 4,
+            "losses": 2,
+            "unfinished": 0,
+            "eligible": true
+          },
+          "validation": {
+            "wins": 2,
+            "losses": 1,
+            "unfinished": 1,
+            "eligible": false,
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "genome": {
+            "backend": "python",
+            "genes": {
+              "advantage": 0.0,
+              "attack": 44.59984687779922,
+              "defence": 0.0,
+              "overload": 0.30123493773565047,
+              "pressure": 0.0
+            },
+            "version": "intransitive-module-scales-v1"
+          },
+          "generation": 1,
+          "eligible": false,
+          "search": {
+            "wins": 4,
+            "losses": 2,
+            "unfinished": 0,
+            "eligible": true
+          },
+          "validation": {
+            "wins": 2,
+            "losses": 1,
+            "unfinished": 1,
+            "eligible": false,
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "random-73",
+      "status": "wall_budget",
+      "generations": 1,
+      "unique_candidates": 6,
+      "unique_matches": 27,
+      "outcomes": {
+        "cancelled": 1,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 4,
+        "win": 22
+      },
+      "games_reserved": 27,
+      "nodes_reserved": 10380540000,
+      "wall_seconds": 185.09611570899142,
+      "known_child_cpu_seconds": 122.45132,
+      "measured_search_work": 67723194,
+      "eligible_exports": 0,
+      "exports": [
+        {
+          "genome": {
+            "backend": "python",
+            "genes": {
+              "advantage": 0.0,
+              "attack": 43.35270462955384,
+              "defence": 93.72801278909321,
+              "overload": 20.24822889817265,
+              "pressure": 17.113135023536053
+            },
+            "version": "intransitive-module-scales-v1"
+          },
+          "generation": 0,
+          "eligible": false,
+          "search": {
+            "wins": 5,
+            "losses": 0,
+            "unfinished": 1,
+            "eligible": true
+          },
+          "validation": {
+            "wins": 2,
+            "losses": 1,
+            "unfinished": 1,
+            "eligible": false,
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "random-74",
+      "status": "wall_budget",
+      "generations": 1,
+      "unique_candidates": 6,
+      "unique_matches": 19,
+      "outcomes": {
+        "cancelled": 1,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 1,
+        "win": 17
+      },
+      "games_reserved": 19,
+      "nodes_reserved": 7308380000,
+      "wall_seconds": 185.0913719579985,
+      "known_child_cpu_seconds": 125.536638,
+      "measured_search_work": 24182701,
+      "eligible_exports": 0,
+      "exports": [
+        {
+          "genome": {
+            "backend": "python",
+            "genes": {
+              "advantage": 0.0,
+              "attack": 44.59984687779922,
+              "defence": 0.0,
+              "overload": 0.30123493773565047,
+              "pressure": 2.5439084986272587
+            },
+            "version": "intransitive-module-scales-v1"
+          },
+          "generation": 0,
+          "eligible": false,
+          "search": {
+            "wins": 4,
+            "losses": 2,
+            "unfinished": 0,
+            "eligible": true
+          },
+          "validation": {
+            "wins": 2,
+            "losses": 1,
+            "unfinished": 1,
+            "eligible": false,
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "final_screen": {
+    "active_game_seconds": 4.276201334025245,
+    "child_peak_rss_bytes": 204177408,
+    "compute_note": "CPU/search/startup totals exclude work lost to hard-killed children; parent-observed active and invocation wall time include that waiting. RSS is process high-water memory, not simultaneous aggregate RSS.",
+    "distinct_starts": 3,
+    "distinct_trajectories": 6,
+    "duplicate_trajectories": 0,
+    "final_matches": 6,
+    "known_child_cpu_seconds": 28.904886000000005,
+    "leaderboards": {
+      "depth": [
+        {
+          "by_colour": {
+            "0": {
+              "completed_depths": {
+                "1": 29
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 3,
+              "distinct_trajectories": 3,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.00549412498367019,
+              "latency_p95_seconds": 0.011977258586557578,
+              "losses": 1,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 3,
+              "peak_candidate_rss_bytes": 204177408,
+              "pending": 0,
+              "scheduled": 3,
+              "search_cpu_seconds": 0.1458430000000046,
+              "search_wall_seconds": 0.1648731259338092,
+              "seed_clusters": 3,
+              "selected_depths": {
+                "1": 29
+              },
+              "startup_cpu_seconds": 12.065633,
+              "startup_wall_seconds": 13.26819054200314,
+              "statuses": {
+                "win": 3
+              },
+              "stop_reasons": {
+                "maximum_depth": 24,
+                "proven_result": 5
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 0.6666666666666666,
+              "win_points_upper": 0.6666666666666666,
+              "wins": 2,
+              "work": 102216
+            },
+            "1": {
+              "completed_depths": {
+                "1": 31
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 3,
+              "distinct_trajectories": 3,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.004100749996723607,
+              "latency_p95_seconds": 0.007014978997176513,
+              "losses": 2,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 3,
+              "peak_candidate_rss_bytes": 204177408,
+              "pending": 0,
+              "scheduled": 3,
+              "search_cpu_seconds": 0.10988600000000837,
+              "search_wall_seconds": 0.12074695900082588,
+              "seed_clusters": 3,
+              "selected_depths": {
+                "1": 31
+              },
+              "startup_cpu_seconds": 0.0,
+              "startup_wall_seconds": 0.0018902089796029031,
+              "statuses": {
+                "win": 3
+              },
+              "stop_reasons": {
+                "maximum_depth": 27,
+                "proven_result": 4
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 0.3333333333333333,
+              "win_points_upper": 0.3333333333333333,
+              "wins": 1,
+              "work": 68090
+            }
+          },
+          "by_opponent": {
+            "9b9c8979695b1be3a58e503c575dd27c386184412e79bf4efbda8133470003cb": {
+              "by_colour": {
+                "0": {
+                  "completed_depths": {
+                    "1": 29
+                  },
+                  "completed_pairs": 0,
+                  "completion_rate": 1.0,
+                  "distinct_starts": 3,
+                  "distinct_trajectories": 3,
+                  "eligible": true,
+                  "failures": 0,
+                  "latency_p50_seconds": 0.00549412498367019,
+                  "latency_p95_seconds": 0.011977258586557578,
+                  "losses": 1,
+                  "paired_interval_95": [
+                    0.0,
+                    1.0
+                  ],
+                  "pairs": 3,
+                  "peak_candidate_rss_bytes": 204177408,
+                  "pending": 0,
+                  "scheduled": 3,
+                  "search_cpu_seconds": 0.1458430000000046,
+                  "search_wall_seconds": 0.1648731259338092,
+                  "seed_clusters": 3,
+                  "selected_depths": {
+                    "1": 29
+                  },
+                  "startup_cpu_seconds": 12.065633,
+                  "startup_wall_seconds": 13.26819054200314,
+                  "statuses": {
+                    "win": 3
+                  },
+                  "stop_reasons": {
+                    "maximum_depth": 24,
+                    "proven_result": 5
+                  },
+                  "stopped_searches": 0,
+                  "unfinished": 0,
+                  "win_points_lower": 0.6666666666666666,
+                  "win_points_upper": 0.6666666666666666,
+                  "wins": 2,
+                  "work": 102216
+                },
+                "1": {
+                  "completed_depths": {
+                    "1": 31
+                  },
+                  "completed_pairs": 0,
+                  "completion_rate": 1.0,
+                  "distinct_starts": 3,
+                  "distinct_trajectories": 3,
+                  "eligible": true,
+                  "failures": 0,
+                  "latency_p50_seconds": 0.004100749996723607,
+                  "latency_p95_seconds": 0.007014978997176513,
+                  "losses": 2,
+                  "paired_interval_95": [
+                    0.0,
+                    1.0
+                  ],
+                  "pairs": 3,
+                  "peak_candidate_rss_bytes": 204177408,
+                  "pending": 0,
+                  "scheduled": 3,
+                  "search_cpu_seconds": 0.10988600000000837,
+                  "search_wall_seconds": 0.12074695900082588,
+                  "seed_clusters": 3,
+                  "selected_depths": {
+                    "1": 31
+                  },
+                  "startup_cpu_seconds": 0.0,
+                  "startup_wall_seconds": 0.0018902089796029031,
+                  "statuses": {
+                    "win": 3
+                  },
+                  "stop_reasons": {
+                    "maximum_depth": 27,
+                    "proven_result": 4
+                  },
+                  "stopped_searches": 0,
+                  "unfinished": 0,
+                  "win_points_lower": 0.3333333333333333,
+                  "win_points_upper": 0.3333333333333333,
+                  "wins": 1,
+                  "work": 68090
+                }
+              },
+              "completed_depths": {
+                "1": 60
+              },
+              "completed_pairs": 3,
+              "completion_rate": 1.0,
+              "distinct_starts": 3,
+              "distinct_trajectories": 6,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.0041781250038184226,
+              "latency_p95_seconds": 0.010536726799909956,
+              "losses": 3,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 3,
+              "peak_candidate_rss_bytes": 204177408,
+              "pending": 0,
+              "scheduled": 6,
+              "search_cpu_seconds": 0.255729000000013,
+              "search_wall_seconds": 0.2856200849346351,
+              "seed_clusters": 3,
+              "selected_depths": {
+                "1": 60
+              },
+              "startup_cpu_seconds": 12.065633,
+              "startup_wall_seconds": 13.270080750982743,
+              "statuses": {
+                "win": 6
+              },
+              "stop_reasons": {
+                "maximum_depth": 51,
+                "proven_result": 9
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 0.5,
+              "win_points_upper": 0.5,
+              "wins": 3,
+              "work": 170306
+            }
+          },
+          "candidate": "54adaf1842f20b4216ec0b6a992968e8de2912fe230cf88849da2843c6b8e971",
+          "completed_depths": {
+            "1": 60
+          },
+          "completed_pairs": 3,
+          "completion_rate": 1.0,
+          "distinct_starts": 3,
+          "distinct_trajectories": 6,
+          "eligible": true,
+          "failures": 0,
+          "latency_p50_seconds": 0.0041781250038184226,
+          "latency_p95_seconds": 0.010536726799909956,
+          "losses": 3,
+          "name": "unchanged-default",
+          "paired_interval_95": [
+            0.0,
+            1.0
+          ],
+          "pairs": 3,
+          "peak_candidate_rss_bytes": 204177408,
+          "pending": 0,
+          "role": "population",
+          "scheduled": 6,
+          "search_cpu_seconds": 0.255729000000013,
+          "search_wall_seconds": 0.2856200849346351,
+          "seed_clusters": 3,
+          "selected_depths": {
+            "1": 60
+          },
+          "startup_cpu_seconds": 12.065633,
+          "startup_wall_seconds": 13.270080750982743,
+          "statuses": {
+            "win": 6
+          },
+          "stop_reasons": {
+            "maximum_depth": 51,
+            "proven_result": 9
+          },
+          "stopped_searches": 0,
+          "unfinished": 0,
+          "win_points_lower": 0.5,
+          "win_points_upper": 0.5,
+          "wins": 3,
+          "work": 170306
+        },
+        {
+          "by_colour": {
+            "0": {
+              "completed_depths": {
+                "1": 31
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 3,
+              "distinct_trajectories": 3,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.02433191699674353,
+              "latency_p95_seconds": 0.09001752099720761,
+              "losses": 1,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 3,
+              "peak_candidate_rss_bytes": 195805184,
+              "pending": 0,
+              "scheduled": 3,
+              "search_cpu_seconds": 0.952459000000001,
+              "search_wall_seconds": 1.0233890830131713,
+              "seed_clusters": 3,
+              "selected_depths": {
+                "1": 31
+              },
+              "startup_cpu_seconds": 0.0,
+              "startup_wall_seconds": 0.0018459169659763575,
+              "statuses": {
+                "win": 3
+              },
+              "stop_reasons": {
+                "maximum_depth": 27,
+                "proven_result": 4
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 0.6666666666666666,
+              "win_points_upper": 0.6666666666666666,
+              "wins": 2,
+              "work": 3737802
+            },
+            "1": {
+              "completed_depths": {
+                "1": 29
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 3,
+              "distinct_trajectories": 3,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.0226775000046473,
+              "latency_p95_seconds": 0.03104729180340655,
+              "losses": 2,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 3,
+              "peak_candidate_rss_bytes": 195805184,
+              "pending": 0,
+              "scheduled": 3,
+              "search_cpu_seconds": 0.6709459999999936,
+              "search_wall_seconds": 0.7617308728804346,
+              "seed_clusters": 3,
+              "selected_depths": {
+                "1": 29
+              },
+              "startup_cpu_seconds": 14.960118999999999,
+              "startup_wall_seconds": 17.005809207010316,
+              "statuses": {
+                "win": 3
+              },
+              "stop_reasons": {
+                "maximum_depth": 25,
+                "proven_result": 4
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 0.3333333333333333,
+              "win_points_upper": 0.3333333333333333,
+              "wins": 1,
+              "work": 1500786
+            }
+          },
+          "by_opponent": {
+            "54adaf1842f20b4216ec0b6a992968e8de2912fe230cf88849da2843c6b8e971": {
+              "by_colour": {
+                "0": {
+                  "completed_depths": {
+                    "1": 31
+                  },
+                  "completed_pairs": 0,
+                  "completion_rate": 1.0,
+                  "distinct_starts": 3,
+                  "distinct_trajectories": 3,
+                  "eligible": true,
+                  "failures": 0,
+                  "latency_p50_seconds": 0.02433191699674353,
+                  "latency_p95_seconds": 0.09001752099720761,
+                  "losses": 1,
+                  "paired_interval_95": [
+                    0.0,
+                    1.0
+                  ],
+                  "pairs": 3,
+                  "peak_candidate_rss_bytes": 195805184,
+                  "pending": 0,
+                  "scheduled": 3,
+                  "search_cpu_seconds": 0.952459000000001,
+                  "search_wall_seconds": 1.0233890830131713,
+                  "seed_clusters": 3,
+                  "selected_depths": {
+                    "1": 31
+                  },
+                  "startup_cpu_seconds": 0.0,
+                  "startup_wall_seconds": 0.0018459169659763575,
+                  "statuses": {
+                    "win": 3
+                  },
+                  "stop_reasons": {
+                    "maximum_depth": 27,
+                    "proven_result": 4
+                  },
+                  "stopped_searches": 0,
+                  "unfinished": 0,
+                  "win_points_lower": 0.6666666666666666,
+                  "win_points_upper": 0.6666666666666666,
+                  "wins": 2,
+                  "work": 3737802
+                },
+                "1": {
+                  "completed_depths": {
+                    "1": 29
+                  },
+                  "completed_pairs": 0,
+                  "completion_rate": 1.0,
+                  "distinct_starts": 3,
+                  "distinct_trajectories": 3,
+                  "eligible": true,
+                  "failures": 0,
+                  "latency_p50_seconds": 0.0226775000046473,
+                  "latency_p95_seconds": 0.03104729180340655,
+                  "losses": 2,
+                  "paired_interval_95": [
+                    0.0,
+                    1.0
+                  ],
+                  "pairs": 3,
+                  "peak_candidate_rss_bytes": 195805184,
+                  "pending": 0,
+                  "scheduled": 3,
+                  "search_cpu_seconds": 0.6709459999999936,
+                  "search_wall_seconds": 0.7617308728804346,
+                  "seed_clusters": 3,
+                  "selected_depths": {
+                    "1": 29
+                  },
+                  "startup_cpu_seconds": 14.960118999999999,
+                  "startup_wall_seconds": 17.005809207010316,
+                  "statuses": {
+                    "win": 3
+                  },
+                  "stop_reasons": {
+                    "maximum_depth": 25,
+                    "proven_result": 4
+                  },
+                  "stopped_searches": 0,
+                  "unfinished": 0,
+                  "win_points_lower": 0.3333333333333333,
+                  "win_points_upper": 0.3333333333333333,
+                  "wins": 1,
+                  "work": 1500786
+                }
+              },
+              "completed_depths": {
+                "1": 60
+              },
+              "completed_pairs": 3,
+              "completion_rate": 1.0,
+              "distinct_starts": 3,
+              "distinct_trajectories": 6,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.0231758954905672,
+              "latency_p95_seconds": 0.07439830269140647,
+              "losses": 3,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 3,
+              "peak_candidate_rss_bytes": 195805184,
+              "pending": 0,
+              "scheduled": 6,
+              "search_cpu_seconds": 1.6234049999999947,
+              "search_wall_seconds": 1.785119955893606,
+              "seed_clusters": 3,
+              "selected_depths": {
+                "1": 60
+              },
+              "startup_cpu_seconds": 14.960118999999999,
+              "startup_wall_seconds": 17.007655123976292,
+              "statuses": {
+                "win": 6
+              },
+              "stop_reasons": {
+                "maximum_depth": 52,
+                "proven_result": 8
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 0.5,
+              "win_points_upper": 0.5,
+              "wins": 3,
+              "work": 5238588
+            }
+          },
+          "candidate": "9b9c8979695b1be3a58e503c575dd27c386184412e79bf4efbda8133470003cb",
+          "completed_depths": {
+            "1": 60
+          },
+          "completed_pairs": 3,
+          "completion_rate": 1.0,
+          "distinct_starts": 3,
+          "distinct_trajectories": 6,
+          "eligible": true,
+          "failures": 0,
+          "latency_p50_seconds": 0.0231758954905672,
+          "latency_p95_seconds": 0.07439830269140647,
+          "losses": 3,
+          "name": "provisional",
+          "paired_interval_95": [
+            0.0,
+            1.0
+          ],
+          "pairs": 3,
+          "peak_candidate_rss_bytes": 195805184,
+          "pending": 0,
+          "role": "population",
+          "scheduled": 6,
+          "search_cpu_seconds": 1.6234049999999947,
+          "search_wall_seconds": 1.785119955893606,
+          "seed_clusters": 3,
+          "selected_depths": {
+            "1": 60
+          },
+          "startup_cpu_seconds": 14.960118999999999,
+          "startup_wall_seconds": 17.007655123976292,
+          "statuses": {
+            "win": 6
+          },
+          "stop_reasons": {
+            "maximum_depth": 52,
+            "proven_result": 8
+          },
+          "stopped_searches": 0,
+          "unfinished": 0,
+          "win_points_lower": 0.5,
+          "win_points_upper": 0.5,
+          "wins": 3,
+          "work": 5238588
+        }
+      ]
+    },
+    "manifest_sha256": "4e08cd5008e67351aa65321801e18fb75dbe48ca8666d7d8e231bb0889f0f3fe",
+    "protocols": [
+      {
+        "cache_policy": "fresh search/evaluation caches per move",
+        "completion_required": 0.8,
+        "game_seconds": 12.0,
+        "max_plies": 192,
+        "mode": "depth",
+        "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+        "search": {
+          "aspiration_enabled": false,
+          "aspiration_window": 25.0,
+          "compiled_ordering_enabled": false,
+          "depth_replacement_enabled": false,
+          "max_depth": 1,
+          "node_limit": 2000000,
+          "ordering_enabled": false,
+          "pressure_cache_entries": 0,
+          "proof_depth": 2,
+          "proof_nodes": 64,
+          "pvs_enabled": false,
+          "table_entries": 10000,
+          "time_limit": 2.0
+        },
+        "startup_seconds": 120.0,
+        "timeout_grace": 5.0
+      }
+    ],
+    "scheduled_matches": 6,
+    "schema": "intransitive-tournament-v1",
+    "startup_wait_seconds": 30.274217710015364,
+    "uncertainty": "95% weighted Hoeffding bounds on colour-paired outcomes clustered by opening-generation seed. Unresolved outcomes span [0,1]. Conditional on the frozen corpus; repeated deterministic trajectories are not independent evidence.",
+    "wall_seconds_including_imports": 43.90432366699679
+  },
+  "distinct_comparison_match_keys": 66,
+  "distinct_comparison_trajectories": 57,
+  "distinct_comparison_configurations": 12,
+  "total_attempts": 116,
+  "recorded_run_seconds": 830.9917534589767,
+  "estimated_cli_seconds": 864.602382183075,
+  "cli_log_durations": {
+    "pilot.log": 80.35022306442261,
+    "pilot-depth1.log": 62.92822885513306,
+    "benchmark.log": 557.4913814067841,
+    "random-74-resume.log": 119.90074729919434,
+    "final-screen.log": 43.931801557540894
+  },
+  "timing_method": "CLI estimates use fresh log birth and last-write timestamps; preparation/read-only audits excluded. Per-run elapsed times come from runner clocks.",
+  "monitor_interruption": "The external priority monitor raised an alert and terminated random-74 after 10 completed games. The offending process was not logged; cause is undetermined. The arm resumed from its checkpoint under nice 19 with the same cumulative budget; resumed live parent/child priorities were all verified at 19. This extra startup makes its compute comparison confounded.",
+  "conclusion": "No confirmed improvement. The selected provisional genome tied unchanged defaults 3-3 on three fresh validation positions. All six games completed, but the paired interval is [0,1]. Earlier optimizer exports failed completion eligibility. No held-out evaluation or application changes."
+}

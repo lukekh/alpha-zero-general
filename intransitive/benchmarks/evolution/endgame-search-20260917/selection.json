@@ -1,0 +1,1131 @@
+{
+  "ranking": [
+    {
+      "active_modules": 2,
+      "completion": 0.75,
+      "config_hash": "6fc4d4ff94262d40e94f743b636214c9cb9fdcd5b692b70e7042c27d4594ff15",
+      "losses": 1,
+      "lower": 0.5,
+      "unique_matches": 4,
+      "unresolved": 1,
+      "wins": 2
+    },
+    {
+      "active_modules": 3,
+      "completion": 0.75,
+      "config_hash": "954418605c55b8bdb53d2ee7aabe3201a6129278c203f01bf04982e428fbc3a2",
+      "losses": 1,
+      "lower": 0.5,
+      "unique_matches": 4,
+      "unresolved": 1,
+      "wins": 2
+    },
+    {
+      "active_modules": 4,
+      "completion": 0.75,
+      "config_hash": "5181248bdceca2c6d5b15e0ff7a4aabdc9245af08d72e49f0262f855744f93ca",
+      "losses": 3,
+      "lower": 0.375,
+      "unique_matches": 8,
+      "unresolved": 2,
+      "wins": 3
+    }
+  ],
+  "scope": "One final development-validation screen; no held-out positions or default adoption.",
+  "selection_rule": "eligible training; highest conservative validation win fraction on unique match keys; then completion, fewer active optional modules, stable identity",
+  "source_export": {
+    "acceptance": "UNACCEPTED: requires separate held-out validation (#56)",
+    "config": {
+      "advantage_weight": 0.0,
+      "aspiration_enabled": false,
+      "aspiration_window": 25.0,
+      "attack_enabled": true,
+      "attack_weight": 44.59984687779922,
+      "compiled_ordering_enabled": false,
+      "count_weight": 100.0,
+      "defence_enabled": false,
+      "defence_weight": 10.0,
+      "depth_replacement_enabled": false,
+      "evaluator_version": "intransitive-heuristics-v2",
+      "max_depth": 1,
+      "node_limit": 2000000,
+      "ordering_enabled": false,
+      "overload_enabled": true,
+      "overload_weight": 0.30123493773565047,
+      "predator_scarcity_bonus": 0.5,
+      "predator_zero_bonus": 1.0,
+      "pressure_cache_entries": 0,
+      "pressure_enabled": false,
+      "pressure_radius": 4,
+      "pressure_weight": 1.0,
+      "prey_bonus": 0.25,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "pvs_enabled": false,
+      "race_weight": 0.0,
+      "table_entries": 10000,
+      "time_limit": 2.0
+    },
+    "eligible": false,
+    "generation": 1,
+    "genome": {
+      "backend": "python",
+      "genes": {
+        "advantage": 0.0,
+        "attack": 44.59984687779922,
+        "defence": 0.0,
+        "overload": 0.30123493773565047,
+        "pressure": 0.0
+      },
+      "version": "intransitive-module-scales-v1"
+    },
+    "manifest": {
+      "backend_limitations": "Route and overload modules can dominate runtime",
+      "backend_version": "python-heuristics-v2",
+      "bounds": {
+        "advantage": [
+          0.0,
+          100.0
+        ],
+        "attack": [
+          0.0,
+          100.0
+        ],
+        "defence": [
+          0.0,
+          100.0
+        ],
+        "overload": [
+          0.0,
+          100.0
+        ],
+        "pressure": [
+          0.0,
+          20.0
+        ]
+      },
+      "cache_policy": "Python full config identity; Rust fresh search per candidate",
+      "config_hash": "6fc4d4ff94262d40e94f743b636214c9cb9fdcd5b692b70e7042c27d4594ff15",
+      "conservative_absolute_bound": 8234.40201050887,
+      "decisive_threshold": 90000.0,
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 0.0,
+          "attack": 44.59984687779922,
+          "defence": 0.0,
+          "overload": 0.30123493773565047,
+          "pressure": 0.0
+        },
+        "version": "intransitive-module-scales-v1"
+      },
+      "heuristic_limit": 10000.0,
+      "implementation_revision": "ac30d8e55a11610006bd578fbe5868484168f3e3:01c5155aba239246bcd5c89216c40c473a1d6dc682818ff825f6961a02cd33bb",
+      "manifest_hash": "e376e5a2884eb4b44272c669d4b06a3fd7efd775afdd97920be7180ac44e3065",
+      "normalization": {
+        "count_weight": 100.0,
+        "zero_disables_optional_module": true
+      },
+      "saturation_policy": "Report observed raw scores and saturation on representative fixtures before fitness",
+      "saturation_possible": false,
+      "search_config": {
+        "advantage_weight": 0.0,
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "attack_enabled": true,
+        "attack_weight": 44.59984687779922,
+        "compiled_ordering_enabled": false,
+        "count_weight": 100.0,
+        "defence_enabled": false,
+        "defence_weight": 10.0,
+        "depth_replacement_enabled": false,
+        "evaluator_version": "intransitive-heuristics-v2",
+        "max_depth": 1,
+        "node_limit": 2000000,
+        "ordering_enabled": false,
+        "overload_enabled": true,
+        "overload_weight": 0.30123493773565047,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_cache_entries": 0,
+        "pressure_enabled": false,
+        "pressure_radius": 4,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": false,
+        "race_weight": 0.0,
+        "table_entries": 10000,
+        "time_limit": 2.0
+      },
+      "tunable_genes": [
+        "advantage",
+        "attack",
+        "defence",
+        "overload",
+        "pressure"
+      ]
+    },
+    "run_manifest": "5d6f911c172d457117b97c57c98931cb5f3afd97d651399cd708b56f687ccd82",
+    "search": {
+      "by_colour": {
+        "0": {
+          "completed_depths": {
+            "1": 38
+          },
+          "completed_pairs": 0,
+          "completion_rate": 1.0,
+          "distinct_starts": 1,
+          "distinct_trajectories": 3,
+          "eligible": true,
+          "failures": 0,
+          "latency_p50_seconds": 0.023743771002045833,
+          "latency_p95_seconds": 0.06226659553940399,
+          "losses": 1,
+          "paired_interval_95": [
+            0.0,
+            1.0
+          ],
+          "pairs": 3,
+          "peak_candidate_rss_bytes": 215842816,
+          "pending": 0,
+          "scheduled": 3,
+          "search_cpu_seconds": 0.9398510000000009,
+          "search_wall_seconds": 1.0102385420177598,
+          "seed_clusters": 1,
+          "selected_depths": {
+            "1": 38
+          },
+          "startup_cpu_seconds": 0.0,
+          "startup_wall_seconds": 0.00309649997507222,
+          "statuses": {
+            "win": 3
+          },
+          "stop_reasons": {
+            "maximum_depth": 34,
+            "proven_result": 4
+          },
+          "stopped_searches": 0,
+          "unfinished": 0,
+          "win_points_lower": 0.6666666666666666,
+          "win_points_upper": 0.6666666666666666,
+          "wins": 2,
+          "work": 2935011
+        },
+        "1": {
+          "completed_depths": {
+            "1": 50
+          },
+          "completed_pairs": 0,
+          "completion_rate": 1.0,
+          "distinct_starts": 1,
+          "distinct_trajectories": 3,
+          "eligible": true,
+          "failures": 0,
+          "latency_p50_seconds": 0.01765070849796757,
+          "latency_p95_seconds": 0.046675747958943234,
+          "losses": 1,
+          "paired_interval_95": [
+            0.0,
+            1.0
+          ],
+          "pairs": 3,
+          "peak_candidate_rss_bytes": 215842816,
+          "pending": 0,
+          "scheduled": 3,
+          "search_cpu_seconds": 1.2187559999999955,
+          "search_wall_seconds": 1.317914664017735,
+          "seed_clusters": 1,
+          "selected_depths": {
+            "1": 50
+          },
+          "startup_cpu_seconds": 12.864409,
+          "startup_wall_seconds": 14.184101207996719,
+          "statuses": {
+            "win": 3
+          },
+          "stop_reasons": {
+            "maximum_depth": 45,
+            "proven_result": 5
+          },
+          "stopped_searches": 0,
+          "unfinished": 0,
+          "win_points_lower": 0.6666666666666666,
+          "win_points_upper": 0.6666666666666666,
+          "wins": 2,
+          "work": 3727710
+        }
+      },
+      "by_opponent": {
+        "54adaf1842f20b4216ec0b6a992968e8de2912fe230cf88849da2843c6b8e971": {
+          "by_colour": {
+            "0": {
+              "completed_depths": {
+                "1": 13
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 1,
+              "distinct_trajectories": 1,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.02474541700212285,
+              "latency_p95_seconds": 0.11467365818680264,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 1,
+              "peak_candidate_rss_bytes": 215842816,
+              "pending": 0,
+              "scheduled": 1,
+              "search_cpu_seconds": 0.43985899999999845,
+              "search_wall_seconds": 0.4796561669500079,
+              "seed_clusters": 1,
+              "selected_depths": {
+                "1": 13
+              },
+              "startup_cpu_seconds": 0.0,
+              "startup_wall_seconds": 0.0018509169749449939,
+              "statuses": {
+                "win": 1
+              },
+              "stop_reasons": {
+                "maximum_depth": 11,
+                "proven_result": 2
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 1.0,
+              "win_points_upper": 1.0,
+              "wins": 1,
+              "work": 1729230
+            },
+            "1": {
+              "completed_depths": {
+                "1": 13
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 1,
+              "distinct_trajectories": 1,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.01805591699667275,
+              "latency_p95_seconds": 0.14471603300189567,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 1,
+              "peak_candidate_rss_bytes": 215842816,
+              "pending": 0,
+              "scheduled": 1,
+              "search_cpu_seconds": 0.5230389999999954,
+              "search_wall_seconds": 0.567468872963218,
+              "seed_clusters": 1,
+              "selected_depths": {
+                "1": 13
+              },
+              "startup_cpu_seconds": 12.864409,
+              "startup_wall_seconds": 14.183294582995586,
+              "statuses": {
+                "win": 1
+              },
+              "stop_reasons": {
+                "maximum_depth": 11,
+                "proven_result": 2
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 1.0,
+              "win_points_upper": 1.0,
+              "wins": 1,
+              "work": 1640500
+            }
+          },
+          "completed_depths": {
+            "1": 26
+          },
+          "completed_pairs": 1,
+          "completion_rate": 1.0,
+          "distinct_starts": 1,
+          "distinct_trajectories": 2,
+          "eligible": true,
+          "failures": 0,
+          "latency_p50_seconds": 0.023479583513108082,
+          "latency_p95_seconds": 0.11482943723240169,
+          "losses": 0,
+          "paired_interval_95": [
+            0.0,
+            1.0
+          ],
+          "pairs": 1,
+          "peak_candidate_rss_bytes": 215842816,
+          "pending": 0,
+          "scheduled": 2,
+          "search_cpu_seconds": 0.9628979999999938,
+          "search_wall_seconds": 1.047125039913226,
+          "seed_clusters": 1,
+          "selected_depths": {
+            "1": 26
+          },
+          "startup_cpu_seconds": 12.864409,
+          "startup_wall_seconds": 14.185145499970531,
+          "statuses": {
+            "win": 2
+          },
+          "stop_reasons": {
+            "maximum_depth": 22,
+            "proven_result": 4
+          },
+          "stopped_searches": 0,
+          "unfinished": 0,
+          "win_points_lower": 1.0,
+          "win_points_upper": 1.0,
+          "wins": 2,
+          "work": 3369730
+        },
+        "8c50c32a8254740afc65c31bad00003f0d23c8aff10130a1fc32c39993fee8fb": {
+          "by_colour": {
+            "0": {
+              "completed_depths": {
+                "1": 20
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 1,
+              "distinct_trajectories": 1,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.023782271004165523,
+              "latency_p95_seconds": 0.03471311222092482,
+              "losses": 1,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 1,
+              "peak_candidate_rss_bytes": 215842816,
+              "pending": 0,
+              "scheduled": 1,
+              "search_cpu_seconds": 0.40795600000000043,
+              "search_wall_seconds": 0.4320662500394974,
+              "seed_clusters": 1,
+              "selected_depths": {
+                "1": 20
+              },
+              "startup_cpu_seconds": 0.0,
+              "startup_wall_seconds": 0.0005017500079702586,
+              "statuses": {
+                "win": 1
+              },
+              "stop_reasons": {
+                "maximum_depth": 19,
+                "proven_result": 1
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 0.0,
+              "win_points_upper": 0.0,
+              "wins": 0,
+              "work": 957811
+            },
+            "1": {
+              "completed_depths": {
+                "1": 15
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 1,
+              "distinct_trajectories": 1,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.013579582999227569,
+              "latency_p95_seconds": 0.0328741957026068,
+              "losses": 1,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 1,
+              "peak_candidate_rss_bytes": 215842816,
+              "pending": 0,
+              "scheduled": 1,
+              "search_cpu_seconds": 0.21015399999999929,
+              "search_wall_seconds": 0.2349343309761025,
+              "seed_clusters": 1,
+              "selected_depths": {
+                "1": 15
+              },
+              "startup_cpu_seconds": 0.0,
+              "startup_wall_seconds": 0.00042012499761767685,
+              "statuses": {
+                "win": 1
+              },
+              "stop_reasons": {
+                "maximum_depth": 14,
+                "proven_result": 1
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 0.0,
+              "win_points_upper": 0.0,
+              "wins": 0,
+              "work": 869334
+            }
+          },
+          "completed_depths": {
+            "1": 35
+          },
+          "completed_pairs": 1,
+          "completion_rate": 1.0,
+          "distinct_starts": 1,
+          "distinct_trajectories": 2,
+          "eligible": true,
+          "failures": 0,
+          "latency_p50_seconds": 0.01887479200377129,
+          "latency_p95_seconds": 0.03594388321216682,
+          "losses": 2,
+          "paired_interval_95": [
+            0.0,
+            1.0
+          ],
+          "pairs": 1,
+          "peak_candidate_rss_bytes": 215842816,
+          "pending": 0,
+          "scheduled": 2,
+          "search_cpu_seconds": 0.6181099999999997,
+          "search_wall_seconds": 0.6670005810155999,
+          "seed_clusters": 1,
+          "selected_depths": {
+            "1": 35
+          },
+          "startup_cpu_seconds": 0.0,
+          "startup_wall_seconds": 0.0009218750055879354,
+          "statuses": {
+            "win": 2
+          },
+          "stop_reasons": {
+            "maximum_depth": 33,
+            "proven_result": 2
+          },
+          "stopped_searches": 0,
+          "unfinished": 0,
+          "win_points_lower": 0.0,
+          "win_points_upper": 0.0,
+          "wins": 0,
+          "work": 1827145
+        },
+        "f717cb6ce1023d04b9e129cadfc7123ca928acdc4bb117e8b179d5eebca9eee8": {
+          "by_colour": {
+            "0": {
+              "completed_depths": {
+                "1": 5
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 1,
+              "distinct_trajectories": 1,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.01845958302146755,
+              "latency_p95_seconds": 0.0346417332009878,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 1,
+              "peak_candidate_rss_bytes": 215842816,
+              "pending": 0,
+              "scheduled": 1,
+              "search_cpu_seconds": 0.092036000000002,
+              "search_wall_seconds": 0.09851612502825446,
+              "seed_clusters": 1,
+              "selected_depths": {
+                "1": 5
+              },
+              "startup_cpu_seconds": 0.0,
+              "startup_wall_seconds": 0.0007438329921569675,
+              "statuses": {
+                "win": 1
+              },
+              "stop_reasons": {
+                "maximum_depth": 4,
+                "proven_result": 1
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 1.0,
+              "win_points_upper": 1.0,
+              "wins": 1,
+              "work": 247970
+            },
+            "1": {
+              "completed_depths": {
+                "1": 22
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 1,
+              "distinct_trajectories": 1,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.026701395996497013,
+              "latency_p95_seconds": 0.039991064617061055,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 1,
+              "peak_candidate_rss_bytes": 215842816,
+              "pending": 0,
+              "scheduled": 1,
+              "search_cpu_seconds": 0.48556300000000086,
+              "search_wall_seconds": 0.5155114600784145,
+              "seed_clusters": 1,
+              "selected_depths": {
+                "1": 22
+              },
+              "startup_cpu_seconds": 0.0,
+              "startup_wall_seconds": 0.0003865000035148114,
+              "statuses": {
+                "win": 1
+              },
+              "stop_reasons": {
+                "maximum_depth": 20,
+                "proven_result": 2
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 1.0,
+              "win_points_upper": 1.0,
+              "wins": 1,
+              "work": 1217876
+            }
+          },
+          "completed_depths": {
+            "1": 27
+          },
+          "completed_pairs": 1,
+          "completion_rate": 1.0,
+          "distinct_starts": 1,
+          "distinct_trajectories": 2,
+          "eligible": true,
+          "failures": 0,
+          "latency_p50_seconds": 0.0264617919747252,
+          "latency_p95_seconds": 0.03984451261349022,
+          "losses": 0,
+          "paired_interval_95": [
+            0.0,
+            1.0
+          ],
+          "pairs": 1,
+          "peak_candidate_rss_bytes": 215842816,
+          "pending": 0,
+          "scheduled": 2,
+          "search_cpu_seconds": 0.5775990000000029,
+          "search_wall_seconds": 0.614027585106669,
+          "seed_clusters": 1,
+          "selected_depths": {
+            "1": 27
+          },
+          "startup_cpu_seconds": 0.0,
+          "startup_wall_seconds": 0.001130332995671779,
+          "statuses": {
+            "win": 2
+          },
+          "stop_reasons": {
+            "maximum_depth": 24,
+            "proven_result": 3
+          },
+          "stopped_searches": 0,
+          "unfinished": 0,
+          "win_points_lower": 1.0,
+          "win_points_upper": 1.0,
+          "wins": 2,
+          "work": 1465846
+        }
+      },
+      "candidate": "9b9c8979695b1be3a58e503c575dd27c386184412e79bf4efbda8133470003cb",
+      "completed_depths": {
+        "1": 88
+      },
+      "completed_pairs": 3,
+      "completion_rate": 1.0,
+      "config_hash": "6fc4d4ff94262d40e94f743b636214c9cb9fdcd5b692b70e7042c27d4594ff15",
+      "depth_violations": 0,
+      "distinct_starts": 1,
+      "distinct_trajectories": 6,
+      "eligible": true,
+      "failures": 0,
+      "latency_p50_seconds": 0.01947060349630192,
+      "latency_p95_seconds": 0.05014715616271131,
+      "losses": 2,
+      "name": "6fc4d4ff94262d40e94f743b636214c9cb9fdcd5b692b70e7042c27d4594ff15",
+      "paired_interval_95": [
+        0.0,
+        1.0
+      ],
+      "pairs": 3,
+      "peak_candidate_rss_bytes": 215842816,
+      "pending": 0,
+      "preflight": {
+        "clipped_positions": 0,
+        "config_hash": "6fc4d4ff94262d40e94f743b636214c9cb9fdcd5b692b70e7042c27d4594ff15",
+        "flagged": false,
+        "max_absolute_raw_score": 13.627730990438653,
+        "ordinary_positions": 1,
+        "saturated_positions": 0,
+        "saturation_fraction": 0.0
+      },
+      "role": "population",
+      "scheduled": 6,
+      "search_cpu_seconds": 2.1586069999999964,
+      "search_wall_seconds": 2.328153206035495,
+      "seed_clusters": 1,
+      "selected_depths": {
+        "1": 88
+      },
+      "startup_cpu_seconds": 12.864409,
+      "startup_wall_seconds": 14.18719770797179,
+      "statuses": {
+        "win": 6
+      },
+      "stop_reasons": {
+        "maximum_depth": 79,
+        "proven_result": 9
+      },
+      "stopped_searches": 0,
+      "unfinished": 0,
+      "win_points_lower": 0.6666666666666666,
+      "win_points_upper": 0.6666666666666666,
+      "wins": 4,
+      "work": 6662721
+    },
+    "validation": {
+      "by_colour": {
+        "0": {
+          "completed_depths": {
+            "1": 115
+          },
+          "completed_pairs": 0,
+          "completion_rate": 0.5,
+          "distinct_starts": 1,
+          "distinct_trajectories": 2,
+          "eligible": false,
+          "failures": 0,
+          "latency_p50_seconds": 0.013637541007483378,
+          "latency_p95_seconds": 0.02151359569397755,
+          "losses": 1,
+          "paired_interval_95": [
+            0.0,
+            1.0
+          ],
+          "pairs": 2,
+          "peak_candidate_rss_bytes": 215842816,
+          "pending": 0,
+          "scheduled": 2,
+          "search_cpu_seconds": 1.4417790000000004,
+          "search_wall_seconds": 1.5557737561466638,
+          "seed_clusters": 1,
+          "selected_depths": {
+            "1": 115
+          },
+          "startup_cpu_seconds": 0.0,
+          "startup_wall_seconds": 0.002422207995550707,
+          "statuses": {
+            "unfinished": 1,
+            "win": 1
+          },
+          "stop_reasons": {
+            "maximum_depth": 114,
+            "proven_result": 1
+          },
+          "stopped_searches": 0,
+          "unfinished": 1,
+          "win_points_lower": 0.0,
+          "win_points_upper": 0.5,
+          "wins": 0,
+          "work": 3708563
+        },
+        "1": {
+          "completed_depths": {
+            "1": 21
+          },
+          "completed_pairs": 0,
+          "completion_rate": 1.0,
+          "distinct_starts": 1,
+          "distinct_trajectories": 2,
+          "eligible": true,
+          "failures": 0,
+          "latency_p50_seconds": 0.019157500006258488,
+          "latency_p95_seconds": 0.03839266698923893,
+          "losses": 0,
+          "paired_interval_95": [
+            0.0,
+            1.0
+          ],
+          "pairs": 2,
+          "peak_candidate_rss_bytes": 215842816,
+          "pending": 0,
+          "scheduled": 2,
+          "search_cpu_seconds": 0.39758999999999567,
+          "search_wall_seconds": 0.4314902480400633,
+          "seed_clusters": 1,
+          "selected_depths": {
+            "1": 21
+          },
+          "startup_cpu_seconds": 0.0,
+          "startup_wall_seconds": 0.0008464169804938138,
+          "statuses": {
+            "win": 2
+          },
+          "stop_reasons": {
+            "maximum_depth": 17,
+            "proven_result": 4
+          },
+          "stopped_searches": 0,
+          "unfinished": 0,
+          "win_points_lower": 1.0,
+          "win_points_upper": 1.0,
+          "wins": 2,
+          "work": 1908145
+        }
+      },
+      "by_opponent": {
+        "54adaf1842f20b4216ec0b6a992968e8de2912fe230cf88849da2843c6b8e971": {
+          "by_colour": {
+            "0": {
+              "completed_depths": {
+                "1": 96
+              },
+              "completed_pairs": 0,
+              "completion_rate": 0.0,
+              "distinct_starts": 1,
+              "distinct_trajectories": 1,
+              "eligible": false,
+              "failures": 0,
+              "latency_p50_seconds": 0.013725500015425496,
+              "latency_p95_seconds": 0.02151294774375856,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 1,
+              "peak_candidate_rss_bytes": 215842816,
+              "pending": 0,
+              "scheduled": 1,
+              "search_cpu_seconds": 1.2211620000000103,
+              "search_wall_seconds": 1.3207448791072238,
+              "seed_clusters": 1,
+              "selected_depths": {
+                "1": 96
+              },
+              "startup_cpu_seconds": 0.0,
+              "startup_wall_seconds": 0.0004740830045193434,
+              "statuses": {
+                "unfinished": 1
+              },
+              "stop_reasons": {
+                "maximum_depth": 96
+              },
+              "stopped_searches": 0,
+              "unfinished": 1,
+              "win_points_lower": 0.0,
+              "win_points_upper": 1.0,
+              "wins": 0,
+              "work": 3113413
+            },
+            "1": {
+              "completed_depths": {
+                "1": 12
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 1,
+              "distinct_trajectories": 1,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.01685389551857952,
+              "latency_p95_seconds": 0.028861291694920504,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 1,
+              "peak_candidate_rss_bytes": 215842816,
+              "pending": 0,
+              "scheduled": 1,
+              "search_cpu_seconds": 0.19885900000000056,
+              "search_wall_seconds": 0.20595787404454313,
+              "seed_clusters": 1,
+              "selected_depths": {
+                "1": 12
+              },
+              "startup_cpu_seconds": 0.0,
+              "startup_wall_seconds": 0.0004590839962475002,
+              "statuses": {
+                "win": 1
+              },
+              "stop_reasons": {
+                "maximum_depth": 10,
+                "proven_result": 2
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 1.0,
+              "win_points_upper": 1.0,
+              "wins": 1,
+              "work": 1101515
+            }
+          },
+          "completed_depths": {
+            "1": 108
+          },
+          "completed_pairs": 0,
+          "completion_rate": 0.5,
+          "distinct_starts": 1,
+          "distinct_trajectories": 2,
+          "eligible": false,
+          "failures": 0,
+          "latency_p50_seconds": 0.013825042013195343,
+          "latency_p95_seconds": 0.021570387386600488,
+          "losses": 0,
+          "paired_interval_95": [
+            0.0,
+            1.0
+          ],
+          "pairs": 1,
+          "peak_candidate_rss_bytes": 215842816,
+          "pending": 0,
+          "scheduled": 2,
+          "search_cpu_seconds": 1.4200210000000109,
+          "search_wall_seconds": 1.526702753151767,
+          "seed_clusters": 1,
+          "selected_depths": {
+            "1": 108
+          },
+          "startup_cpu_seconds": 0.0,
+          "startup_wall_seconds": 0.0009331670007668436,
+          "statuses": {
+            "unfinished": 1,
+            "win": 1
+          },
+          "stop_reasons": {
+            "maximum_depth": 106,
+            "proven_result": 2
+          },
+          "stopped_searches": 0,
+          "unfinished": 1,
+          "win_points_lower": 0.5,
+          "win_points_upper": 1.0,
+          "wins": 1,
+          "work": 4214928
+        },
+        "f717cb6ce1023d04b9e129cadfc7123ca928acdc4bb117e8b179d5eebca9eee8": {
+          "by_colour": {
+            "0": {
+              "completed_depths": {
+                "1": 19
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 1,
+              "distinct_trajectories": 1,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.009300582983996719,
+              "latency_p95_seconds": 0.02189245421322992,
+              "losses": 1,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 1,
+              "peak_candidate_rss_bytes": 215842816,
+              "pending": 0,
+              "scheduled": 1,
+              "search_cpu_seconds": 0.22061699999999007,
+              "search_wall_seconds": 0.23502887703943998,
+              "seed_clusters": 1,
+              "selected_depths": {
+                "1": 19
+              },
+              "startup_cpu_seconds": 0.0,
+              "startup_wall_seconds": 0.0019481249910313636,
+              "statuses": {
+                "win": 1
+              },
+              "stop_reasons": {
+                "maximum_depth": 18,
+                "proven_result": 1
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 0.0,
+              "win_points_upper": 0.0,
+              "wins": 0,
+              "work": 595150
+            },
+            "1": {
+              "completed_depths": {
+                "1": 9
+              },
+              "completed_pairs": 0,
+              "completion_rate": 1.0,
+              "distinct_starts": 1,
+              "distinct_trajectories": 1,
+              "eligible": true,
+              "failures": 0,
+              "latency_p50_seconds": 0.021650625014444813,
+              "latency_p95_seconds": 0.03905474178609438,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "pairs": 1,
+              "peak_candidate_rss_bytes": 215842816,
+              "pending": 0,
+              "scheduled": 1,
+              "search_cpu_seconds": 0.1987309999999951,
+              "search_wall_seconds": 0.22553237399552017,
+              "seed_clusters": 1,
+              "selected_depths": {
+                "1": 9
+              },
+              "startup_cpu_seconds": 0.0,
+              "startup_wall_seconds": 0.00038733298424631357,
+              "statuses": {
+                "win": 1
+              },
+              "stop_reasons": {
+                "maximum_depth": 7,
+                "proven_result": 2
+              },
+              "stopped_searches": 0,
+              "unfinished": 0,
+              "win_points_lower": 1.0,
+              "win_points_upper": 1.0,
+              "wins": 1,
+              "work": 806630
+            }
+          },
+          "completed_depths": {
+            "1": 28
+          },
+          "completed_pairs": 1,
+          "completion_rate": 1.0,
+          "distinct_starts": 1,
+          "distinct_trajectories": 2,
+          "eligible": true,
+          "failures": 0,
+          "latency_p50_seconds": 0.016344208503142,
+          "latency_p95_seconds": 0.038006237593072,
+          "losses": 1,
+          "paired_interval_95": [
+            0.0,
+            1.0
+          ],
+          "pairs": 1,
+          "peak_candidate_rss_bytes": 215842816,
+          "pending": 0,
+          "scheduled": 2,
+          "search_cpu_seconds": 0.4193479999999852,
+          "search_wall_seconds": 0.46056125103496015,
+          "seed_clusters": 1,
+          "selected_depths": {
+            "1": 28
+          },
+          "startup_cpu_seconds": 0.0,
+          "startup_wall_seconds": 0.002335457975277677,
+          "statuses": {
+            "win": 2
+          },
+          "stop_reasons": {
+            "maximum_depth": 25,
+            "proven_result": 3
+          },
+          "stopped_searches": 0,
+          "unfinished": 0,
+          "win_points_lower": 0.5,
+          "win_points_upper": 0.5,
+          "wins": 1,
+          "work": 1401780
+        }
+      },
+      "candidate": "9b9c8979695b1be3a58e503c575dd27c386184412e79bf4efbda8133470003cb",
+      "completed_depths": {
+        "1": 136
+      },
+      "completed_pairs": 1,
+      "completion_rate": 0.75,
+      "config_hash": "6fc4d4ff94262d40e94f743b636214c9cb9fdcd5b692b70e7042c27d4594ff15",
+      "depth_violations": 0,
+      "distinct_starts": 1,
+      "distinct_trajectories": 4,
+      "eligible": false,
+      "failures": 0,
+      "latency_p50_seconds": 0.013831854506861418,
+      "latency_p95_seconds": 0.02533638548629824,
+      "losses": 1,
+      "name": "6fc4d4ff94262d40e94f743b636214c9cb9fdcd5b692b70e7042c27d4594ff15",
+      "paired_interval_95": [
+        0.0,
+        1.0
+      ],
+      "pairs": 2,
+      "peak_candidate_rss_bytes": 215842816,
+      "pending": 0,
+      "preflight": {
+        "clipped_positions": 0,
+        "config_hash": "6fc4d4ff94262d40e94f743b636214c9cb9fdcd5b692b70e7042c27d4594ff15",
+        "flagged": false,
+        "max_absolute_raw_score": 13.627730990438653,
+        "ordinary_positions": 1,
+        "saturated_positions": 0,
+        "saturation_fraction": 0.0
+      },
+      "role": "population",
+      "scheduled": 4,
+      "search_cpu_seconds": 1.839368999999996,
+      "search_wall_seconds": 1.987264004186727,
+      "seed_clusters": 1,
+      "selected_depths": {
+        "1": 136
+      },
+      "startup_cpu_seconds": 0.0,
+      "startup_wall_seconds": 0.0032686249760445207,
+      "statuses": {
+        "unfinished": 1,
+        "win": 3
+      },
+      "stop_reasons": {
+        "maximum_depth": 131,
+        "proven_result": 5
+      },
+      "stopped_searches": 0,
+      "unfinished": 1,
+      "win_points_lower": 0.5,
+      "win_points_upper": 0.75,
+      "wins": 2,
+      "work": 5616708
+    },
+    "validation_match_keys": [
+      "b040d242f253a13215ebeebb4efb6a0f7b61b05ccc1af2ce848a55e4a65f5d35",
+      "f908d20ccf93c384bb70120a162d991f68699efcd65b6c2b03e79c07b4b8623f",
+      "37d217586e6fff49a603e761666faa8734681bb7522038eb1b064302a73cc2e3",
+      "cbe6eb7b39226706f4412335211259e45146b5a8d3b1ea839ad139370925a560",
+      "18893b476a5956a01fa45c8605b5c6e38660a336a31ab0059a547b7eac2d9f92",
+      "ad59d8e8436e7a057b0a9d48cb9ad097bbbf296be1a9ca241e0f332ce56a1731"
+    ]
+  }
+}

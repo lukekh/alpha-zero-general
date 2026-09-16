@@ -1,0 +1,68 @@
+{
+  "budget": {
+    "max_comparison_games": 160,
+    "max_comparison_reserved_work": 64000000000,
+    "max_comparison_seconds": 740,
+    "pilot_seconds": 127.47282754199114,
+    "total_seconds": 900
+  },
+  "corpus": {
+    "lines": 36,
+    "max_plies": 240,
+    "seed": 155,
+    "selection": "first by stable hash within preassigned pool",
+    "stage": "endgame"
+  },
+  "optimizer_seeds": [
+    73,
+    74
+  ],
+  "protocol": {
+    "cache_policy": "fresh search/evaluation caches per move",
+    "completion_required": 0.8,
+    "game_seconds": 12.0,
+    "max_plies": 192,
+    "mode": "depth",
+    "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+    "search": {
+      "aspiration_enabled": false,
+      "aspiration_window": 25.0,
+      "compiled_ordering_enabled": false,
+      "depth_replacement_enabled": false,
+      "max_depth": 1,
+      "node_limit": 2000000,
+      "ordering_enabled": false,
+      "pressure_cache_entries": 0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "pvs_enabled": false,
+      "table_entries": 10000,
+      "time_limit": 2.0
+    },
+    "startup_seconds": 120.0,
+    "timeout_grace": 5.0
+  },
+  "scope": "Exploratory 12-piece endgames only; no general-strength claim or default migration; original eligibility rules retained.",
+  "settings": {
+    "algorithm": "evolution",
+    "elites": 1,
+    "generations": 2,
+    "hall_size": 2,
+    "log_sigma": 0.5,
+    "max_games": 40,
+    "max_nodes": 16000000000,
+    "max_seconds": 185.0,
+    "min_completed_depth": 1,
+    "mutation_rate": 0.7,
+    "near_default_fraction": 0.5,
+    "population": 2,
+    "random_off_rate": 0.5,
+    "recombination_rate": 0.5,
+    "resident_engines": 4,
+    "search_positions": 1,
+    "seed": 73,
+    "toggle_rate": 0.3,
+    "tournament_size": 2,
+    "validation_positions": 1
+  }
+}

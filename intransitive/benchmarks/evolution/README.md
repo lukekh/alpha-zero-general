@@ -13,6 +13,10 @@ search-work ceiling test the machinery and rejection policy, not playing
 strength. All exports remain unaccepted inputs for #56; no defaults, generator
 or trainer settings were updated.
 
+A [follow-up with longer endgames](endgame-search-20260917/README.md) produced
+official outcomes, but its selected provisional genome tied defaults 3–3 on
+three fresh validation positions. That experiment also found no confirmed gain.
+
 ## Configuration and measurements
 
 Both algorithms used population two, two generations, one common search start,
