@@ -1,0 +1,169 @@
+{
+  "budget": {
+    "depth2_screen_seconds": 600,
+    "depth4_screen_seconds": 400,
+    "optimizer_runs": 4,
+    "optimizer_seconds_each": 550,
+    "smoke_seconds": 180,
+    "supervisor_seconds": 3500,
+    "total_seconds": 3600
+  },
+  "corpus": {
+    "lines": 120,
+    "max_plies": 240,
+    "pools": {
+      "heldout": 41,
+      "search": 49,
+      "validation": 28
+    },
+    "seed": 3457
+  },
+  "master": "2ac15df",
+  "protocols": {
+    "1": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 12,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": true,
+        "depth_replacement_enabled": false,
+        "futility_enabled": true,
+        "futility_margin": 1.0,
+        "futility_max_depth": 2,
+        "max_depth": 1,
+        "mvv_lva_enabled": true,
+        "nmp_enabled": true,
+        "nmp_min_depth": 3,
+        "nmp_reduction": 1,
+        "node_limit": 3000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": true,
+        "search_version": "intransitive-selective-v1",
+        "selective_evaluator_enabled": true,
+        "table_entries": 10000,
+        "time_limit": 3
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    },
+    "2": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 30,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": true,
+        "depth_replacement_enabled": false,
+        "futility_enabled": true,
+        "futility_margin": 1.0,
+        "futility_max_depth": 2,
+        "max_depth": 2,
+        "mvv_lva_enabled": true,
+        "nmp_enabled": true,
+        "nmp_min_depth": 3,
+        "nmp_reduction": 1,
+        "node_limit": 30000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": true,
+        "search_version": "intransitive-selective-v1",
+        "selective_evaluator_enabled": true,
+        "table_entries": 10000,
+        "time_limit": 10
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    },
+    "4": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 90,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": true,
+        "depth_replacement_enabled": false,
+        "futility_enabled": true,
+        "futility_margin": 1.0,
+        "futility_max_depth": 2,
+        "max_depth": 4,
+        "mvv_lva_enabled": true,
+        "nmp_enabled": true,
+        "nmp_min_depth": 3,
+        "nmp_reduction": 1,
+        "node_limit": 100000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": true,
+        "search_version": "intransitive-selective-v1",
+        "selective_evaluator_enabled": true,
+        "table_entries": 10000,
+        "time_limit": 30
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    }
+  },
+  "revision": "c20fdb31a03eb82f98ef93eaa8e1648f6b1502bb",
+  "scope": "Variable mode fixed true for all evolved genes; six weights -100..100, initial material5, REG.25 fixed. Official outcomes are fitness; consensus separate. Two seeds crossed with evolution/random identical ceilings and initialization. Fresh development-validation endgames, heldout never played; defaults unchanged.",
+  "screen_positions": {
+    "2": [
+      "3bc7ca3930eda5ad9132683ab68981a70abaa7b3180778a5ccc7cdfbb8e13643",
+      "45c74b27a1509131d6e6178db688a543a6b2709c6ab8519ea36548c21c582996",
+      "4c92d032407ce1e9c3735daf9807444fd23e2744864e05cc85f1a350fd2449de",
+      "4d7c707238ff91dc47a064f2fe6a361df73a6b7cd1fbb3b9109e338bc40c6569"
+    ],
+    "4": [
+      "507f43df3f44db6c26430f85c2530eb01a53e7317b868b31cafe1af056ee905b",
+      "5b487b83dbd18475b8f8bc771ed33233bd6ef129ad157d8e6e6aa57fd8eaef0a"
+    ]
+  },
+  "seeds": [
+    171,
+    172
+  ],
+  "selection": "Evolution-arm completed exports only; eligibility first, then unique validation candidate-game wins/scheduled, completion and stable config hash. If none eligible, deeper screens diagnostic only. Random controls kept separate. Freeze selected genome before fresh deeper screens.",
+  "settings": {
+    "algorithm": "evolution",
+    "elites": 1,
+    "generations": 3,
+    "hall_size": 2,
+    "initial_material": 5,
+    "max_games": 120,
+    "max_nodes": 100000000000,
+    "max_seconds": 550,
+    "min_completed_depth": 1,
+    "mutation_rate": 0.7,
+    "mutation_sigma": 0.05,
+    "near_default_fraction": 0.6666666666666666,
+    "population": 3,
+    "random_off_rate": 0.2,
+    "recombination_rate": 0.5,
+    "resident_engines": 4,
+    "search_positions": 1,
+    "seed": 55,
+    "toggle_rate": 0.1,
+    "tournament_size": 2,
+    "validation_positions": 1,
+    "variable_material_enabled": true
+  }
+}

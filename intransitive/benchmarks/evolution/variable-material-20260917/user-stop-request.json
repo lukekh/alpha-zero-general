@@ -1,0 +1,23 @@
+{
+  "reason": "User requested all compute jobs stop gracefully, then dedicate compute to tuning.",
+  "events": [
+    {
+      "pid": 14325,
+      "command": "/Users/work/dev/alpha-zero-general/.venv/bin/python -u /Users/work/dev/alpha-zero-general/checkpoints/supervised-extra-900k-20260915-101616/run.py",
+      "signal": "SIGTERM",
+      "epoch": 1789644036.691979
+    },
+    {
+      "pid": 50444,
+      "command": "/Users/work/orca/workspaces/alpha-zero-general/issue-55-intransitive-evolve-heuristic/.venv/bin/python /tmp/issue55-variable-evolution-20260917/study.py",
+      "signal": "SIGTERM",
+      "epoch": 1789644036.697124
+    },
+    {
+      "pid": 50444,
+      "signal": "SIGTERM",
+      "epoch": 1789644057.608962,
+      "reason": "Stop next screen after previous screen flushed journals"
+    }
+  ]
+}

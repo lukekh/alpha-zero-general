@@ -182,3 +182,14 @@ winners. No clear improvement emerged. All 31 records / 1,057 moves passed
 replay, and the low-priority run and cleanup finished within 56 minutes.
 The optional coefficient-5 preset gives the requested BASE/20 effect; defaults
 remain unchanged.
+
+
+## Evolving the variable-material coefficients
+
+The [variable-genome evolutionary study](../evolution/variable-material-20260917/README.md)
+merged master’s move-generation improvements and tuned all six signed coefficients
+with variable material fixed on. Two seeds and matching random controls did not
+establish a stronger replacement for flat defaults. One separately checked
+candidate beat the untuned scaled-variable baseline 5–2 with one inconclusive
+after consensus at depth two, but lost 2–5 with one inconclusive against flat
+material. Exact provisional weights, raw outcomes and resource changes are retained.

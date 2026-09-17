@@ -148,3 +148,15 @@ The report gives official and adjudicated wins separately. Its alternative
 ranking excludes inconclusive games from the decided-game win fraction and also
 shows conservative wins over scheduled games. Full score pairs and final-state
 hashes make each adjudication inspectable.
+
+
+## Variable-material evolution after the latest master merge
+
+The [variable-material tuning study](variable-material-20260917/README.md)
+adds an explicit variable v3 genome and compares two evolutionary seeds with
+matching random controls. No newly bred candidate passed both eligibility stages.
+A separate follow-up candidate scored 5–2 with 1 inconclusive against the scaled
+variable baseline at depth 2 after consensus, but 2–5 with 1 inconclusive against
+flat defaults. All 323 records / 26,554 moves passed replay. Defaults remain
+unchanged; the report preserves the completion-gate limitation and the user's
+graceful shutdown / four-job compute reallocation.
