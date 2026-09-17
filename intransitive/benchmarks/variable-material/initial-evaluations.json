@@ -1,0 +1,395 @@
+{
+  "candidates": [
+    {
+      "candidate": "variable",
+      "clipped": 0,
+      "near_saturated_mcts_value": 3,
+      "rows": [
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.9999593132088724,
+          "piece_values": {
+            "opponent": {
+              "paper": 100.0,
+              "rock": 28.667538173074227,
+              "scissors": 581.3776741499454
+            },
+            "own": {
+              "paper": 691.1528830094741,
+              "rock": 24.765567494675615,
+              "scissors": 68.79324304076559
+            }
+          },
+          "raw_score": 2160.546779493945,
+          "score": 2160.546779493945,
+          "seed": 1643,
+          "state": "215c132ea32d242dc5cffde8c731432072b30e9fb24df12698e57f77c9e17981",
+          "terms": {
+            "attacking_position": 45.531021736768864,
+            "clear_run": 0.0,
+            "defensive_position": -6.512860478381079,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 111.84623501784229,
+            "piece_count": 2009.6823832177154
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": -0.9798052595612985,
+          "piece_values": {
+            "opponent": {
+              "paper": 222.8901074520805,
+              "rock": 461.4791034954486,
+              "scissors": 10.255091188787747
+            },
+            "own": {
+              "paper": 223.60679774997897,
+              "rock": 134.16407864998737,
+              "scissors": 55.55555555555556
+            }
+          },
+          "raw_score": -917.0663137824884,
+          "score": -917.0663137824884,
+          "seed": 1680,
+          "state": "43b0b15dd35872aa6f019bf2140cd5781696bbe26608f5053d446541335636ef",
+          "terms": {
+            "attacking_position": -7.857213522481405,
+            "clear_run": 0.0,
+            "defensive_position": 2.1709534927936858,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": -68.90526978777784,
+            "piece_count": -842.4747839650229
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.986742542480011,
+          "piece_values": {
+            "opponent": {
+              "paper": 10.255091188787747,
+              "rock": 138.2305766018948,
+              "scissors": 1384.437310486346
+            },
+            "own": {
+              "paper": 1300.0,
+              "rock": 24.845199749997665,
+              "scissors": 51.6015687115336
+            }
+          },
+          "raw_score": 1001.9382874772612,
+          "score": 1001.9382874772612,
+          "seed": 1652,
+          "state": "3be41689f2bb77f22d02de97d340699a5f21e1a89eae95728053ed183f9867e3",
+          "terms": {
+            "attacking_position": -34.643168712758914,
+            "clear_run": 0.0,
+            "defensive_position": 52.10288382704864,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 16.47734712316426,
+            "piece_count": 968.0012252398071
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.2261331577571604,
+          "piece_values": {
+            "opponent": {
+              "paper": 260.0,
+              "rock": 100.0,
+              "scissors": 38.46153846153846
+            },
+            "own": {
+              "paper": 123.82783747337807,
+              "rock": 76.79476477883046,
+              "scissors": 123.82783747337807
+            }
+          },
+          "raw_score": 92.04418036046326,
+          "score": 92.04418036046326,
+          "seed": 1675,
+          "state": "ea277b381533f9be35972c0651abd6a4b244737debe8fb8442e5cbdbe9a4f96a",
+          "terms": {
+            "attacking_position": 2.2449181492804002,
+            "clear_run": 0.0,
+            "defensive_position": -9.25239702881122,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 19.473228418285043,
+            "piece_count": 79.57843082170903
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.9994160656261352,
+          "piece_values": {
+            "opponent": {
+              "paper": 37.951669503554065,
+              "rock": 80.86898285216186,
+              "scissors": 519.3585787616619
+            },
+            "own": {
+              "paper": 77.96429549831781,
+              "rock": 28.751811537130436,
+              "scissors": 535.7583756107197
+            }
+          },
+          "raw_score": 1627.7154251423615,
+          "score": 1627.7154251423615,
+          "seed": 2616,
+          "state": "f20c769977a094f43840c98559e5740298944aa2bbdca004772b118d99a94b78",
+          "terms": {
+            "attacking_position": 21.989993689542114,
+            "clear_run": 0.0,
+            "defensive_position": 10.854767463968466,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 220.6965887405638,
+            "piece_count": 1374.174075248287
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.9999395819113062,
+          "piece_values": {
+            "opponent": {
+              "paper": 16.77740985615722,
+              "rock": 32.26424972337927,
+              "scissors": 3271.594921950658
+            },
+            "own": {
+              "paper": 628.1841964069015,
+              "rock": 27.962349760262033,
+              "scissors": 112.54628677422755
+            }
+          },
+          "raw_score": 2081.4677974464257,
+          "score": 2081.4677974464257,
+          "seed": 2669,
+          "state": "233b1c8fe409a38db87fdcb5681099be9c617295514da9c2e6212d3cc1b69809",
+          "terms": {
+            "attacking_position": -0.10204173405819969,
+            "clear_run": 0.0,
+            "defensive_position": 78.69706411377138,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 103.85721823085355,
+            "piece_count": 1899.0155568358591
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.4798866033004483,
+          "piece_values": {
+            "opponent": {
+              "paper": 100.0,
+              "rock": 180.0,
+              "scissors": 55.55555555555556
+            },
+            "own": {
+              "paper": 123.82783747337807,
+              "rock": 92.29582069908973,
+              "scissors": 92.29582069908973
+            }
+          },
+          "raw_score": 209.13477721071084,
+          "score": 209.13477721071084,
+          "seed": 2657,
+          "state": "d85a59dc93aee447c4d383412a808116fd4880c56374d375a2b84e8addacf434",
+          "terms": {
+            "attacking_position": 10.602136168646986,
+            "clear_run": 0.0,
+            "defensive_position": 21.10453436041055,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 19.97254196747184,
+            "piece_count": 157.45556471418146
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.9890467339087652,
+          "piece_values": {
+            "opponent": {
+              "paper": 222.65069803019554,
+              "rock": 47.57493547653751,
+              "scissors": 132.56683030472374
+            },
+            "own": {
+              "paper": 500.0,
+              "rock": 16.641005886756876,
+              "scissors": 134.16407864998737
+            }
+          },
+          "raw_score": 1040.3546179602592,
+          "score": 1040.3546179602592,
+          "seed": 2639,
+          "state": "b94cd6573ca7d93a65e715c6f12f8403f519b378e60bb74c2de439e639805608",
+          "terms": {
+            "attacking_position": 16.071573114166505,
+            "clear_run": 0.0,
+            "defensive_position": 23.041710934878516,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 87.3798711076893,
+            "piece_count": 913.8614628035249
+          }
+        }
+      ]
+    },
+    {
+      "candidate": "flat",
+      "clipped": 0,
+      "near_saturated_mcts_value": 0,
+      "rows": [
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.7049942026638853,
+          "piece_values": null,
+          "raw_score": 350.8643962762301,
+          "score": 350.8643962762301,
+          "seed": 1643,
+          "state": "215c132ea32d242dc5cffde8c731432072b30e9fb24df12698e57f77c9e17981",
+          "terms": {
+            "attacking_position": 45.531021736768864,
+            "clear_run": 0.0,
+            "defensive_position": -6.512860478381079,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 111.84623501784229,
+            "piece_count": 200.0
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": -0.5957151720053784,
+          "piece_values": null,
+          "raw_score": -274.5915298174656,
+          "score": -274.5915298174656,
+          "seed": 1680,
+          "state": "43b0b15dd35872aa6f019bf2140cd5781696bbe26608f5053d446541335636ef",
+          "terms": {
+            "attacking_position": -7.857213522481405,
+            "clear_run": 0.0,
+            "defensive_position": 2.1709534927936858,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": -68.90526978777784,
+            "piece_count": -200.0
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": -0.39284293001340176,
+          "piece_values": null,
+          "raw_score": -166.06293776254603,
+          "score": -166.06293776254603,
+          "seed": 1652,
+          "state": "3be41689f2bb77f22d02de97d340699a5f21e1a89eae95728053ed183f9867e3",
+          "terms": {
+            "attacking_position": -34.643168712758914,
+            "clear_run": 0.0,
+            "defensive_position": 52.10288382704864,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 16.47734712316426,
+            "piece_count": -200.0
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.4862706408803142,
+          "piece_values": null,
+          "raw_score": 212.4657495387542,
+          "score": 212.4657495387542,
+          "seed": 1675,
+          "state": "ea277b381533f9be35972c0651abd6a4b244737debe8fb8442e5cbdbe9a4f96a",
+          "terms": {
+            "attacking_position": 2.2449181492804002,
+            "clear_run": 0.0,
+            "defensive_position": -9.25239702881122,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 19.473228418285043,
+            "piece_count": 200.0
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.9723595822429343,
+          "piece_values": null,
+          "raw_score": 853.5413498940743,
+          "score": 853.5413498940743,
+          "seed": 2616,
+          "state": "f20c769977a094f43840c98559e5740298944aa2bbdca004772b118d99a94b78",
+          "terms": {
+            "attacking_position": 21.989993689542114,
+            "clear_run": 0.0,
+            "defensive_position": 10.854767463968466,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 220.6965887405638,
+            "piece_count": 600.0
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.4269253037772944,
+          "piece_values": null,
+          "raw_score": 182.45224061056672,
+          "score": 182.45224061056672,
+          "seed": 2669,
+          "state": "233b1c8fe409a38db87fdcb5681099be9c617295514da9c2e6212d3cc1b69809",
+          "terms": {
+            "attacking_position": -0.10204173405819969,
+            "clear_run": 0.0,
+            "defensive_position": 78.69706411377138,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 103.85721823085355,
+            "piece_count": 0.0
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.5574997506045166,
+          "piece_values": null,
+          "raw_score": 251.67921249652937,
+          "score": 251.67921249652937,
+          "seed": 2657,
+          "state": "d85a59dc93aee447c4d383412a808116fd4880c56374d375a2b84e8addacf434",
+          "terms": {
+            "attacking_position": 10.602136168646986,
+            "clear_run": 0.0,
+            "defensive_position": 21.10453436041055,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 19.97254196747184,
+            "piece_count": 200.0
+          }
+        },
+        {
+          "clipped": false,
+          "mcts_leaf_value": 0.8658440376825048,
+          "piece_values": null,
+          "raw_score": 526.4931551567342,
+          "score": 526.4931551567342,
+          "seed": 2639,
+          "state": "b94cd6573ca7d93a65e715c6f12f8403f519b378e60bb74c2de439e639805608",
+          "terms": {
+            "attacking_position": 16.071573114166505,
+            "clear_run": 0.0,
+            "defensive_position": 23.041710934878516,
+            "local_pressure": 0.0,
+            "overload": -0.0,
+            "piece_advantage": 87.3798711076893,
+            "piece_count": 400.0
+          }
+        }
+      ]
+    }
+  ],
+  "note": "Post-run diagnostic of frozen initial positions; static scores with proof disabled. Never used to select positions or alter play. MCTS near-saturation means absolute tanh(score/400) >= .99."
+}

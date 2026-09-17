@@ -43,8 +43,10 @@ by BASE, so multiplying by `count_weight` reconstructs the material term.
 
 Terminal and proved wins retain their decisive scores. Ordinary evaluation
 keeps the existing ±10,000 clamp; strong composition imbalances can saturate it.
-This mode has formula, search and parity tests, but has not yet had a measured
-strength benchmark or newly tuned weights.
+The [paired depth/MCTS benchmark](../benchmarks/variable-material/README.md)
+tests this mode with the adopted coefficients: it found no clear strength
+improvement. The mode has formula, search and parity tests; its weights have
+not been separately tuned.
 
 ## Use and compare
 

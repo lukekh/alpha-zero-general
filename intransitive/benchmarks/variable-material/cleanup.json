@@ -1,0 +1,7 @@
+{
+  "observed_experiment_pids_still_present": [],
+  "elapsed_from_original_launch": 867.0044441223145,
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "logical_cpus": 8,
+  "note": "Read-only check after supervisor completion; no signals sent to unrelated processes."
+}

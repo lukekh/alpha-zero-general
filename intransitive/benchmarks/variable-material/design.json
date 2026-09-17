@@ -1,0 +1,260 @@
+{
+  "budget": {
+    "main_games": 80,
+    "main_seconds_each": 580,
+    "smoke_games": 4,
+    "smoke_seconds_each": 120,
+    "supervisor_seconds": 3500,
+    "total_seconds": 3600
+  },
+  "candidates": [
+    {
+      "backend": "python",
+      "backend_version": "bf043bc0da6bd225860249a196c1e85ba7f71881806b1dfbfb81057ce93d3147",
+      "evaluation": {
+        "advantage_weight": 23.967050360966205,
+        "attack_enabled": true,
+        "attack_weight": 25.714516982666414,
+        "count_weight": 100.0,
+        "defence_enabled": true,
+        "defence_weight": 32.5643023919054,
+        "evaluator_version": "intransitive-heuristics-v2",
+        "overload_enabled": false,
+        "overload_weight": 5.0,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": false,
+        "pressure_radius": 4,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "race_weight": 0.0,
+        "variable_material_enabled": true
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 23.967050360966205,
+          "attack": 25.714516982666414,
+          "defence": 32.5643023919054,
+          "material": 100.0,
+          "overload": 0.0,
+          "pressure": 0.0
+        },
+        "version": "intransitive-module-scales-v2"
+      },
+      "name": "variable",
+      "role": "population",
+      "sha256": "ffb534b519c0edd60af3c7ada050d3615e4322206c3abbed4dec373d0efad377"
+    },
+    {
+      "backend": "python",
+      "backend_version": "bf043bc0da6bd225860249a196c1e85ba7f71881806b1dfbfb81057ce93d3147",
+      "evaluation": {
+        "advantage_weight": 23.967050360966205,
+        "attack_enabled": true,
+        "attack_weight": 25.714516982666414,
+        "count_weight": 100.0,
+        "defence_enabled": true,
+        "defence_weight": 32.5643023919054,
+        "evaluator_version": "intransitive-heuristics-v2",
+        "overload_enabled": false,
+        "overload_weight": 5.0,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": false,
+        "pressure_radius": 4,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "race_weight": 0.0,
+        "variable_material_enabled": false
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 23.967050360966205,
+          "attack": 25.714516982666414,
+          "defence": 32.5643023919054,
+          "material": 100.0,
+          "overload": 0.0,
+          "pressure": 0.0
+        },
+        "version": "intransitive-module-scales-v2"
+      },
+      "name": "flat",
+      "role": "population",
+      "sha256": "58881d74915f723fc73b473b1a3c5f2e5a99065c16c5db22f5dbde0b6b93b96c"
+    }
+  ],
+  "corpus_seeds": [
+    1601,
+    2601
+  ],
+  "position_hashes": [
+    "215c132ea32d242dc5cffde8c731432072b30e9fb24df12698e57f77c9e17981",
+    "43b0b15dd35872aa6f019bf2140cd5781696bbe26608f5053d446541335636ef",
+    "3be41689f2bb77f22d02de97d340699a5f21e1a89eae95728053ed183f9867e3",
+    "ea277b381533f9be35972c0651abd6a4b244737debe8fb8442e5cbdbe9a4f96a",
+    "f20c769977a094f43840c98559e5740298944aa2bbdca004772b118d99a94b78",
+    "233b1c8fe409a38db87fdcb5681099be9c617295514da9c2e6212d3cc1b69809",
+    "d85a59dc93aee447c4d383412a808116fd4880c56374d375a2b84e8addacf434",
+    "b94cd6573ca7d93a65e715c6f12f8403f519b378e60bb74c2de439e639805608"
+  ],
+  "position_rule": "Four unused validation lines per generated corpus, continued legally to eight pieces before any candidate games. No held-out games.",
+  "position_seeds": [
+    1643,
+    1680,
+    1652,
+    1675,
+    2616,
+    2669,
+    2657,
+    2639
+  ],
+  "protocols": {
+    "mcts-s128": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 30,
+      "max_plies": 192,
+      "mcts": {
+        "cpuct": 1.0,
+        "leaf_value": "tanh(heuristic / value_scale)",
+        "noise": false,
+        "prior": "uniform legal",
+        "simulations": 128,
+        "tree": "fresh per move",
+        "value_scale": 400.0
+      },
+      "mode": "mcts",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "max_depth": 2,
+        "node_limit": 20000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": false,
+        "table_entries": 10000,
+        "time_limit": 8
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    },
+    "mcts-s32": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 30,
+      "max_plies": 192,
+      "mcts": {
+        "cpuct": 1.0,
+        "leaf_value": "tanh(heuristic / value_scale)",
+        "noise": false,
+        "prior": "uniform legal",
+        "simulations": 32,
+        "tree": "fresh per move",
+        "value_scale": 400.0
+      },
+      "mode": "mcts",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "max_depth": 2,
+        "node_limit": 20000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": false,
+        "table_entries": 10000,
+        "time_limit": 8
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    },
+    "minimax-d1": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 30,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "max_depth": 1,
+        "node_limit": 20000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": false,
+        "table_entries": 10000,
+        "time_limit": 8
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    },
+    "minimax-d2": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 30,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "max_depth": 2,
+        "node_limit": 20000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": false,
+        "table_entries": 10000,
+        "time_limit": 8
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    },
+    "minimax-d3": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 30,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "max_depth": 3,
+        "node_limit": 20000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": false,
+        "table_entries": 10000,
+        "time_limit": 8
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    }
+  },
+  "revision": "2228bc6305bc0d5e73dedbf5a44f24bcd49d4a02",
+  "scope": "Identical adopted coefficients; only variable_material_enabled differs. Python strength comparison; Rust separately parity-tested. No weight evolution or automatic default adoption. Same eight legal endgames, both colours, at each setting. MCTS uniform priors/tanh(value/400)/cpuct1. Consensus reported separately."
+}

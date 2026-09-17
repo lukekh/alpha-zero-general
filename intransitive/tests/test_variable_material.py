@@ -146,7 +146,7 @@ class VariableMaterialTests(unittest.TestCase):
         with self.assertRaises(ValueError):SearchConfig(variable_material_enabled=1)
         with self.assertRaises(ValueError):RustTeacher.material_mode(1)
         from intransitive.heuristics.tuning import Genome
-        with self.assertRaises(ValueError):Genome.from_genes().to_config(self.config)
+        with self.assertRaises(ValueError):Genome.from_genes().to_config(SearchConfig(variable_material_enabled=True))
 
     @unittest.skipUnless(BINARY.exists(), 'Build the native teacher first')
     def test_native_parity_and_mode_switch_invalidates_reused_search(self):
