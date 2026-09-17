@@ -538,6 +538,7 @@ impl Weights {
 #[derive(Clone, Debug, PartialEq)]
 pub struct Config {
     pub weights: Weights,
+    pub mvv_lva_enabled: bool,
     pub selective_evaluator_enabled: bool,
     pub nmp_enabled: bool,
     pub nmp_min_depth: usize,
@@ -558,6 +559,7 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             weights: Weights::default(),
+            mvv_lva_enabled: false,
             selective_evaluator_enabled: false,
             nmp_enabled: false,
             nmp_min_depth: 3,
@@ -652,6 +654,7 @@ pub struct Search {
     root_scores: HashMap<u16, f64>,
     pub tt_hits: u64,
     pub selective_stats: [u64; 10],
+    pub mvv_lva_stats: [u64; 2],
     selective_disabled: bool,
 }
 type Line = (f64, Vec<u16>);
@@ -671,6 +674,7 @@ impl Search {
             root_scores: HashMap::new(),
             tt_hits: 0,
             selective_stats: [0; 10],
+            mvv_lva_stats: [0; 2],
             selective_disabled: false,
         })
     }
@@ -776,12 +780,19 @@ impl Search {
             .enumerate()
             .any(|(s, &c)| Some(s) != removed && distance(s, square) <= 1 && captures(c, code))
     }
-    fn ordered(&self, p: &mut Position, preferred: Option<u16>, ply: usize) -> Vec<u16> {
+    fn ordered(&mut self, p: &mut Position, preferred: Option<u16>, ply: usize) -> Vec<u16> {
         let side = p.side;
         let goal = if side == p.a1 { 80 } else { 0 };
         let own_goal = 80 - goal;
         let actions = p.raw_legal(side);
         let mut ranked = Vec::with_capacity(actions.len());
+        let values = if self.config.mvv_lva_enabled && self.config.weights.variable_material_enabled {
+            let counts = &p.material.counts;
+            [variable_piece_values(counts[side as usize], counts[1-side as usize]),
+             variable_piece_values(counts[1-side as usize], counts[side as usize])]
+        } else {[[100.0; 3]; 2]};
+        if self.config.mvv_lva_enabled { self.mvv_lva_stats[0] += 1; }
+
         for a in actions {
             let from = a as usize / 8;
             let to = destination(a).unwrap();
@@ -796,6 +807,7 @@ impl Search {
             let win = to == goal || !p.has_move(1 - side);
             p.board[from] = mover;
             p.board[to] = occupant;
+            if self.config.mvv_lva_enabled && occupant != 0 { self.mvv_lva_stats[1] += 1; }
             let rank = [
                 f64::from(win),
                 f64::from(preferred == Some(a)),
@@ -808,6 +820,8 @@ impl Search {
                 f64::from(occupant != 0 && !unsafe_move),
                 f64::from(escape),
                 f64::from(occupant != 0),
+                if self.config.mvv_lva_enabled && occupant != 0 {values[1][occupant.unsigned_abs() as usize - 1]} else {0.0},
+                if self.config.mvv_lva_enabled && occupant != 0 {-values[0][mover.unsigned_abs() as usize - 1]} else {0.0},
                 if self.killers[ply][0] == Some(a) {
                     2.0
                 } else if self.killers[ply][1] == Some(a) {
@@ -822,7 +836,7 @@ impl Search {
             ranked.push((a, rank));
         }
         ranked.sort_by(|a, b| {
-            for i in 0..11 {
+            for i in 0..13 {
                 if a.1[i] != b.1[i] {
                     return b.1[i].partial_cmp(&a.1[i]).unwrap();
                 }
@@ -1140,6 +1154,7 @@ impl Search {
         self.proof_nodes = 0;
         self.tt_hits = 0;
         self.selective_stats = [0; 10];
+        self.mvv_lva_stats = [0; 2];
         if !reuse {
             self.table.clear();
             self.fifo.clear();
@@ -1662,6 +1677,32 @@ mod tests {
                     assert!(!search.selective_disabled);
                 }
             }
+        }
+    }
+
+    #[test]
+    fn mvv_lva_preserves_legal_moves_state_and_flat_order() {
+        let original=fixture(&[(30,1),(32,2),(47,3),(10,3),(31,-2),(33,-3),(48,-1)]);
+        let mut baseline=Search::new(Config::default()).unwrap();
+        let mut p=original.clone();
+        let old=baseline.ordered(&mut p,None,1);
+        let mut enabled=Search::new(Config {mvv_lva_enabled:true,..Config::default()}).unwrap();
+        assert_eq!(old,enabled.ordered(&mut p,None,1));
+        assert!(enabled.mvv_lva_stats[1]>0);
+        assert_eq!(p,original);
+        let mut cfg=Config {mvv_lva_enabled:true,weights:Weights {variable_material_enabled:true,..Weights::default()},
+            milliseconds:60000,node_limit:1000000,proof_nodes:0,..Config::default()};
+        let mut variable=Search::new(cfg.clone()).unwrap();
+        let order=variable.ordered(&mut p,None,1);
+        let mut sorted=order.clone();sorted.sort();
+        let mut legal=p.raw_legal(p.side);legal.sort();assert_eq!(sorted,legal);
+        let preferred=*order.last().unwrap();
+        assert_eq!(variable.ordered(&mut p,Some(preferred),1)[0],preferred);
+        for cap in [1,10,100] {
+            cfg.node_limit=cap;
+            let mut search=Search::new(cfg.clone()).unwrap();
+            let _=search.search(&mut p,3,-f64::INFINITY,f64::INFINITY,0);
+            assert_eq!(p,original);
         }
     }
 

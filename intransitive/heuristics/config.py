@@ -46,6 +46,7 @@ class SearchConfig:
     proof_depth: int = 2
     proof_nodes: int = 64
     table_entries: int = 10000
+    mvv_lva_enabled: bool = False
     pvs_enabled: bool = False
     aspiration_enabled: bool = False
     aspiration_window: float = 25.

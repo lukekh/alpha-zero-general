@@ -88,3 +88,6 @@ Independent `nmp_enabled` and `futility_enabled` options are available but remai
 **off by default**. See [guards, verification, protocol and label semantics](../heuristics/SELECTIVE_SEARCH.md)
 and the [bounded validation report](../benchmarks/selective/README.md).
 A completed selective search is not an exhaustive label or mate certificate.
+
+Opt-in [MVV-LVA capture ordering](../heuristics/MVV_LVA.md) uses current variable
+piece values via `RustTeacher.analyze(..., mvv_lva_enabled=True)`.

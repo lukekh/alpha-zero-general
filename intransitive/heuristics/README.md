@@ -341,3 +341,5 @@ change the active training run, official rules or modelling draw limits.
 Experimental [guarded null move and forward futility pruning](SELECTIVE_SEARCH.md)
 are independently configurable in Python/native search and default off. Their
 completed depths are selective; they are not exhaustive labels or certificates.
+
+See [variable-value MVV-LVA ordering](MVV_LVA.md) and the [module-scale example](MODULE_SCALE.md).

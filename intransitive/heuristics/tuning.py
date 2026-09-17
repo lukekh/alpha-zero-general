@@ -141,6 +141,7 @@ class Genome:
                     defence=config.defence_weight if config.defence_enabled else 0.,
                     proof_depth=config.proof_depth, proof_nodes=config.proof_nodes,
                     table_entries=config.table_entries, reuse=False,
+                    mvv_lva_enabled=config.mvv_lva_enabled,
                     selective_evaluator_enabled=config.selective_evaluator_enabled,
                     nmp_enabled=config.nmp_enabled, nmp_min_depth=config.nmp_min_depth,
                     nmp_reduction=config.nmp_reduction, futility_enabled=config.futility_enabled,
