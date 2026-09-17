@@ -147,3 +147,14 @@ implementation, after changing the original `/tmp/issue55-variable-material-2026
 output root if needed. A new run requires its own bounded allocation and
 available or explicitly authorized shared resources. Earlier archived studies
 must be read with their recorded revisions because evaluator fingerprints differ.
+
+
+## Depth-four follow-up
+
+A [Minimax depth-four comparison](depth4/README.md) reused these eight openings
+with larger search/game limits. Variable material scored 6–6 officially, with
+three unfinished games and one incomplete-depth failure; after consensus it
+scored 6–7, with two inconclusive games and the failure excluded. A separate
+larger-budget retry of the affected opening in both colours completed without
+failures and split 1–1 after consensus. This provides no clear evidence of an
+improvement; the different caps also prevent attributing changes solely to depth.
