@@ -1,0 +1,79 @@
+test_game_blue_19_create_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_19_create_paper_fork)
+Create the paper fork and force a net material gain, accounting for every defensive reply. ... ok
+test_game_blue_32_take_winning_run (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_32_take_winning_run)
+Choose a move that forces the win within five plies, instead of an unrelated scissors move. ... ok
+test_game_blue_34_finish_now (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_blue_34_finish_now)
+Finish immediately in the original history-bearing position rather than continuing the game. ... ok
+test_game_red_14_preserve_material (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)
+Do not give back the material advantage through the D7 capture and recapture tactic. ... FAIL
+test_game_red_18_prevent_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)
+Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6. ... FAIL
+test_game_red_31_keep_goal_defender (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)
+Keep the last rock in time to challenge the runner; do not allow a forced win within five plies. ... FAIL
+test_simplified_unique_last_defender_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal. ... FAIL
+test_simplified_unique_last_defender_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal. ... FAIL
+test_simplified_unique_paper_fork_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_paper_fork_exchanged_colours)
+Only H6 attacks both papers and guarantees an extra piece against every reply. ... ok
+test_simplified_unique_paper_fork_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_paper_fork_original_colours)
+Only H6 attacks both papers and guarantees an extra piece against every reply. ... ok
+test_simplified_unique_three_move_run_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_three_move_run_exchanged_colours)
+Capture on G7, then advance through H8 to I9: the unique move that forces a win within five plies. ... ok
+test_simplified_unique_three_move_run_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_three_move_run_original_colours)
+Capture on G7, then advance through H8 to I9: the unique move that forces a win within five plies. ... ok
+
+======================================================================
+FAIL: test_game_red_14_preserve_material (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_14_preserve_material)
+Do not give back the material advantage through the D7 capture and recapture tactic.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/issue60-baseline-source/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_14_preserve_material: Do not give back the material advantage through the D7 capture and recapture tactic.
+Selected E6-F6; score=108.95833333333334, depth=3, work=57391, pv=['E6-F6', 'E5-F6', 'F7-F6']
+
+======================================================================
+FAIL: test_game_red_18_prevent_paper_fork (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_18_prevent_paper_fork)
+Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/issue60-baseline-source/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_18_prevent_paper_fork: Prevent G5-H6 from forcing a material gain by forking the papers on H7 and I6.
+Selected G7-F6; score=-0.0, depth=3, work=56866, pv=['G7-F6', 'G5-H6', 'F6-F5']
+
+======================================================================
+FAIL: test_game_red_31_keep_goal_defender (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_game_red_31_keep_goal_defender)
+Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/issue60-baseline-source/intransitive/tests/test_game_blunders.py", line 96, in test
+    self.assertTrue(meets_objective(board, action, case), detail)
+AssertionError: False is not true : red_31_keep_goal_defender: Keep the last rock in time to challenge the runner; do not allow a forced win within five plies.
+Selected F8-E8; score=-0.0, depth=3, work=144536, pv=['F8-E8', 'D7-E6', 'F5-E4']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_exchanged_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_exchanged_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/issue60-baseline-source/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 161 != 228 : Expected B4-B3. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected C3-D4; score=348.4375, depth=3, work=54832, pv=['C3-D4', 'D2-C2', 'D4-E5']
+
+======================================================================
+FAIL: test_simplified_unique_last_defender_original_colours (intransitive.tests.test_game_blunders.GameBlunderRegressionTests.test_simplified_unique_last_defender_original_colours)
+Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/issue60-baseline-source/intransitive/tests/test_game_blunders.py", line 111, in test
+    self.assertEqual(action, expected,
+AssertionError: 485 != 546 : Expected F8-G8. unique_last_defender: Only F8-G8 prevents a forced five-ply win; advancing a paper abandons the goal.
+Selected G7-F6; score=348.4375, depth=3, work=48793, pv=['G7-F6', 'H6-H7', 'F6-E5']
+
+----------------------------------------------------------------------
+Ran 12 tests in 26.159s
+
+FAILED (failures=5)

@@ -15,6 +15,13 @@ TIME_FIRST_LIMITS = {
 
 @dataclass(frozen=True)
 class SearchConfig:
+    search_version: str = 'intransitive-selective-v1'
+    nmp_enabled: bool = False
+    nmp_min_depth: int = 3
+    nmp_reduction: int = 1
+    futility_enabled: bool = False
+    futility_max_depth: int = 2
+    futility_margin: float = 1.
     evaluator_version: str = 'intransitive-heuristics-v2'
     count_weight: float = 100.
     race_weight: float = 0.  # Legacy config field; binary clear-run scoring ignores it.
@@ -46,6 +53,17 @@ class SearchConfig:
     pressure_cache_entries: int = 0
 
     def __post_init__(self):
+        if self.search_version != 'intransitive-selective-v1':
+            raise ValueError('Unsupported search version')
+        for name, low, high in (('nmp_min_depth', 3, 32), ('nmp_reduction', 1, 8), ('futility_max_depth', 1, 2)):
+            value = getattr(self, name)
+            if type(value) is not int or not low <= value <= high:
+                raise ValueError(f'{name} must be an integer in {low}..{high}')
+        if self.nmp_reduction > self.nmp_min_depth - 2:
+            raise ValueError('NMP must retain at least one probe ply')
+        if (type(self.futility_margin) not in (int, float) or not math.isfinite(self.futility_margin)
+                or not 1 <= self.futility_margin <= 16):
+            raise ValueError('futility_margin must be finite in 1..16')
         if self.evaluator_version == 'intransitive-heuristics-v1':
             # Preserve old preset loading while recording the actual new semantics.
             object.__setattr__(self, 'evaluator_version', 'intransitive-heuristics-v2')

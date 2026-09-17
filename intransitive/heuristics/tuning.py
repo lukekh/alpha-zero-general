@@ -137,7 +137,10 @@ class Genome:
                     node_limit=config.node_limit, radius=config.pressure_radius,
                     weight=config.pressure_weight if config.pressure_enabled else 0.,
                     proof_depth=config.proof_depth, proof_nodes=config.proof_nodes,
-                    table_entries=config.table_entries, reuse=False)
+                    table_entries=config.table_entries, reuse=False,
+                    nmp_enabled=config.nmp_enabled, nmp_min_depth=config.nmp_min_depth,
+                    nmp_reduction=config.nmp_reduction, futility_enabled=config.futility_enabled,
+                    futility_max_depth=config.futility_max_depth, futility_margin=config.futility_margin)
 
     def manifest(self, base=None, *, implementation_revision):
         """Record exact supported dimensions, fixed rules, bounds and run settings."""

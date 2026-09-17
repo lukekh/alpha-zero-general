@@ -1,7 +1,7 @@
 """Iterative alpha-beta, optional PVS/aspiration and an exhaustive reference.
 
 Search organization reference: Stockfish src/search.cpp (iterative deepening,
-TT bounds, mate-distance conversion). No selective/chess-specific pruning.
+TT bounds, mate-distance conversion). Opt-in guarded selective search; no chess-specific eligibility tests.
 """
 from dataclasses import dataclass, field
 from collections import OrderedDict
@@ -12,6 +12,7 @@ from time import perf_counter
 import sys
 import numpy as np
 from .budget import Budget, BudgetExpired
+from . import selective
 from .config import SearchConfig
 from .evaluation import Evaluator, MATE, MATE_THRESHOLD, terminal_value
 from .kernels import no_terminal_win_in_horizon, winning_actions, warm_search_kernels
@@ -97,6 +98,7 @@ class SearchResult:
     aspiration_researches: int = 0
     aspiration_fail_highs: int = 0
     aspiration_fail_lows: int = 0
+    selective: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -261,6 +263,9 @@ class AlphaBetaPlayer:
         self._root_previous = {}
         self._killers = np.full((65,2),-1,dtype=np.int64)
         self._history = np.zeros((2,648),dtype=np.int64)
+        self._selective_disabled = False
+        self._null_context = False
+        self._selective_stats = {}
 
     def reload(self):
         self.table.clear()
@@ -268,6 +273,11 @@ class AlphaBetaPlayer:
         self.last_result = None
 
     def _prepare(self, *, warm_proof=True):
+        if (self.config.nmp_enabled or self.config.futility_enabled) and not self.use_compact:
+            raise ValueError("Selective search requires the compact Python backend")
+        self._selective_stats = dict.fromkeys(("nmp_attempts", "nmp_cutoffs", "nmp_skips",
+            "verification_searches", "verification_failures", "futility_eligible",
+            "futility_pruned", "static_evaluations", "null_nodes", "verification_nodes"), 0)
         warm_search_kernels()
         warm_material_kernels()
         warm_position_kernels()
@@ -296,7 +306,8 @@ class AlphaBetaPlayer:
         self._material_counts = None
 
     def _leaf(self, state, side, ply, budget):
-        proof = prove(self.game, state, self.config, budget)
+        proof = ({'status': 'unknown'} if self._null_context else
+                 prove(self.game, state, self.config, budget))
         if proof['status'] == 'proven':
             return from_table(proof['score'], ply), proof['pv']
         return self.evaluator.score(state, side, budget, proof=proof, counts=self._material_counts), []
@@ -376,6 +387,8 @@ class AlphaBetaPlayer:
         # Fold positions only when all future-play/draw information agrees.
         # Different-depth heuristic scores remain ordering hints, not values.
         key = position_key(state) if self.use_table else b''
+        if self.use_table and (self.config.nmp_enabled or self.config.futility_enabled):
+            key = b'selective-v1\0' + key
         progress = self._root_progress if ply == 0 else None
         entry = self.table.get((key, depth)) if self.use_table else None
         alpha_original, beta_original = alpha, beta
@@ -400,9 +413,58 @@ class AlphaBetaPlayer:
         preferred = hint.best_move if hint else None
         if progress is not None and progress.incumbent is not None:
             preferred = progress.incumbent
+        static = None
+        cfg = self.config
+        active = ((cfg.nmp_enabled or cfg.futility_enabled)
+                  and compact and not self._selective_disabled and selective.supported(cfg)
+                  and ply > 0 and isfinite(alpha) and isfinite(beta)
+                  and nextafter(alpha_original, inf) >= beta_original
+                  and max(abs(alpha), abs(beta)) < 10000)
+        candidate = active and ((cfg.nmp_enabled and depth >= cfg.nmp_min_depth)
+                               or (cfg.futility_enabled and depth <= cfg.futility_max_depth))
+        safe = candidate and selective.guarded(state, depth, budget)
+        if safe:
+            self._selective_stats['static_evaluations'] += 1
+            evaluation_start = perf_counter()
+            try:
+                static = self.evaluator.score(state, side, budget, proof={'status': 'unknown'}, counts=state.counts)
+            finally:
+                budget.module_seconds['selective_static'] += perf_counter() - evaluation_start
+        if cfg.nmp_enabled:
+            if safe and depth >= cfg.nmp_min_depth and static >= beta:
+                self._selective_stats['nmp_attempts'] += 1
+                probe_nodes = budget.nodes
+                try:
+                    with selective.unpruned(self, null=True), state.null_turn():
+                        value, _ = self._search(state, depth - 1 - cfg.nmp_reduction,
+                                                -beta, nextafter(-beta, inf), ply + 1, budget)
+                finally:
+                    self._selective_stats['null_nodes'] += budget.nodes - probe_nodes
+                if -value >= beta and abs(value) < MATE_THRESHOLD:
+                    self._selective_stats['verification_searches'] += 1
+                    verification_nodes = budget.nodes
+                    try:
+                        with selective.unpruned(self):
+                            verified, line = self._search(state, depth - cfg.nmp_reduction,
+                                                         nextafter(beta, -inf), beta, ply, budget)
+                    finally:
+                        self._selective_stats['verification_nodes'] += budget.nodes - verification_nodes
+                    if verified >= beta and abs(verified) < MATE_THRESHOLD:
+                        self._selective_stats['nmp_cutoffs'] += 1
+                        self._store(key, depth, beta, 'lower', line, ply)
+                        return beta, line
+                    self._selective_stats['verification_failures'] += 1
+            else:
+                self._selective_stats['nmp_skips'] += 1
         best, pv = -inf, []
         for index, (action, child) in enumerate(self._ordered(
                 state, side, preferred, budget, root=progress is not None, ply=ply)):
+            if (safe and cfg.futility_enabled and depth <= cfg.futility_max_depth
+                    and index and selective.quiet(state, action)):
+                self._selective_stats['futility_eligible'] += 1
+                if static + selective.margin(cfg, depth) <= alpha and abs(best) < MATE_THRESHOLD:
+                    self._selective_stats['futility_pruned'] += 1
+                    continue
             counts = self._material_counts
             capture = False
             if self.config.ordering_enabled:
@@ -443,7 +505,7 @@ class AlphaBetaPlayer:
                 best, pv = value, [action] + line
             alpha = max(alpha, best)
             if alpha >= beta or best == MATE - ply - 1:
-                if self.config.ordering_enabled and alpha >= beta and not capture:
+                if self.config.ordering_enabled and not self._selective_disabled and alpha >= beta and not capture:
                     killers = self._killers[min(ply,64)]
                     if killers[0] != action:
                         killers[1],killers[0] = killers[0],action
@@ -480,6 +542,8 @@ class AlphaBetaPlayer:
         budget = budget or Budget(self.config.node_limit, self.config.time_limit)
         from ..IntransitiveGame import IntransitiveGame
         compact = self.use_compact and type(self.game) is IntransitiveGame
+        if (self.config.nmp_enabled or self.config.futility_enabled) and not compact:
+            raise ValueError("Selective search requires the Intransitive compact backend")
         # Validate/copy once on entry, including for a zero-budget fallback.
         search_state = (SearchPosition(state, modelling_draws=self.game.board.modelling_draws)
                         if compact else state)
@@ -531,7 +595,8 @@ class AlphaBetaPlayer:
                 self._root_progress.finished = True
                 budget.check()
                 if abs(score) > MATE_THRESHOLD:
-                    stop_reason = 'proven_result'
+                    stop_reason = ('selective_result' if self.config.nmp_enabled or self.config.futility_enabled
+                                   else 'proven_result')
                     break
         except BudgetExpired as exc:
             stopped = True
@@ -604,7 +669,13 @@ class AlphaBetaPlayer:
         explanation['stop_reason'] = stop_reason
         explanation['diagnostics_status'] = diagnostics_status
         explanation['effective_limits'] = effective_limits
-        if score is not None and abs(score) > MATE_THRESHOLD:
+        selective_mode = self.config.nmp_enabled or self.config.futility_enabled
+        if selective_mode:
+            if score_bound is not None:
+                score_bound = 'selective_' + score_bound
+            explanation['search_score_bound'] = score_bound
+            explanation['proof'] = dict(status='unknown', reason='selective search is not a certificate')
+        if not selective_mode and score is not None and abs(score) > MATE_THRESHOLD:
             explanation['proof'] = dict(status='proven', plies=int(MATE - abs(score)),
                                         winner=side if score > 0 else 1 - side,
                                         scope=explanation['search_scope'])
@@ -621,6 +692,10 @@ class AlphaBetaPlayer:
                               budget.pvs_probes, budget.pvs_researches,
                               budget.aspiration_researches, budget.aspiration_fail_highs,
                               budget.aspiration_fail_lows)
+        result.selective = dict(self._selective_stats, enabled=selective_mode,
+            effective=selective_mode and selective.supported(self.config),
+            disabled_reason=None if selective.supported(self.config) else 'unsupported evaluator scales',
+            depth=selected_depth, identity=self.config.identity())
         self.last_result = result
         return result
 
