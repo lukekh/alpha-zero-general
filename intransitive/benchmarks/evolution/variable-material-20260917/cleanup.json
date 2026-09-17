@@ -1,0 +1,5 @@
+{
+  "observed_pids_still_present": [],
+  "elapsed_since_launch": 3432.6879227161407,
+  "note": "Read-only cleanup check. At explicit user request, the competing dataset generator and its workers were gracefully stopped; their data and pending seeds were preserved. No teacher binaries changed."
+}

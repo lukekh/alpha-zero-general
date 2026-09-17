@@ -1,0 +1,223 @@
+{
+  "environment": {
+    "python": "3.11.4 (main, Nov 30 2023, 10:49:11) [Clang 15.0.0 (clang-1500.0.40.1)]",
+    "platform": "macOS-15.6.1-arm64-arm-64bit",
+    "logical_cpus": 8,
+    "memory_bytes": 8589934592,
+    "nice": 19,
+    "concurrent_training": true,
+    "max_concurrent_games": 1,
+    "resident_engines": 4,
+    "baseline_revision": "c31ab1625720a1dd0d256d56f83d048f218b3012"
+  },
+  "runs": [
+    {
+      "name": "evolution-55",
+      "status": "complete",
+      "generations": 2,
+      "unique_candidates": 5,
+      "unique_matches": 28,
+      "unique_trajectories": 14,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 20,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 8,
+        "win": 0
+      },
+      "games_reserved": 28,
+      "nodes_reserved": 3610000,
+      "measured_search_work": 1340265,
+      "known_child_cpu_seconds": 79.77357800000001,
+      "wall_seconds": 115.97412508298294,
+      "reused_process_handshakes": 51,
+      "child_peak_rss_bytes": 216334336,
+      "eligible_exports": 0,
+      "diversity": [
+        {
+          "mean_normalized_distance": 0.39973886012270965,
+          "off_fraction": 0.5,
+          "unique": 2
+        },
+        {
+          "mean_normalized_distance": 0.17812802775126138,
+          "off_fraction": 0.2,
+          "unique": 2
+        }
+      ],
+      "cache_hits": 4
+    },
+    {
+      "name": "evolution-56",
+      "status": "complete",
+      "generations": 2,
+      "unique_candidates": 5,
+      "unique_matches": 28,
+      "unique_trajectories": 13,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 12,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 16,
+        "win": 0
+      },
+      "games_reserved": 28,
+      "nodes_reserved": 3610000,
+      "measured_search_work": 1266492,
+      "known_child_cpu_seconds": 71.591678,
+      "wall_seconds": 81.88904541698867,
+      "reused_process_handshakes": 51,
+      "child_peak_rss_bytes": 261029888,
+      "eligible_exports": 0,
+      "diversity": [
+        {
+          "mean_normalized_distance": 0.2736167972878472,
+          "off_fraction": 0.6,
+          "unique": 2
+        },
+        {
+          "mean_normalized_distance": 0.21566617777559718,
+          "off_fraction": 0.5,
+          "unique": 2
+        }
+      ],
+      "cache_hits": 4
+    },
+    {
+      "name": "random-55",
+      "status": "complete",
+      "generations": 2,
+      "unique_candidates": 6,
+      "unique_matches": 32,
+      "unique_trajectories": 14,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 24,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 8,
+        "win": 0
+      },
+      "games_reserved": 32,
+      "nodes_reserved": 4140000,
+      "measured_search_work": 1569390,
+      "known_child_cpu_seconds": 90.490845,
+      "wall_seconds": 115.52787254098803,
+      "reused_process_handshakes": 58,
+      "child_peak_rss_bytes": 228687872,
+      "eligible_exports": 0,
+      "diversity": [
+        {
+          "mean_normalized_distance": 0.39973886012270965,
+          "off_fraction": 0.5,
+          "unique": 2
+        },
+        {
+          "mean_normalized_distance": 0.32808682802573624,
+          "off_fraction": 0.4,
+          "unique": 2
+        }
+      ],
+      "cache_hits": 0
+    },
+    {
+      "name": "random-56",
+      "status": "complete",
+      "generations": 2,
+      "unique_candidates": 6,
+      "unique_matches": 32,
+      "unique_trajectories": 14,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 24,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 8,
+        "win": 0
+      },
+      "games_reserved": 32,
+      "nodes_reserved": 4140000,
+      "measured_search_work": 1569010,
+      "known_child_cpu_seconds": 94.92627700000001,
+      "wall_seconds": 132.29478883300908,
+      "reused_process_handshakes": 58,
+      "child_peak_rss_bytes": 203915264,
+      "eligible_exports": 0,
+      "diversity": [
+        {
+          "mean_normalized_distance": 0.2736167972878472,
+          "off_fraction": 0.6,
+          "unique": 2
+        },
+        {
+          "mean_normalized_distance": 0.2812872101396093,
+          "off_fraction": 0.5,
+          "unique": 2
+        }
+      ],
+      "cache_hits": 0
+    }
+  ],
+  "measurements": {
+    "smoke-pooled": {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        ".venv/bin/python",
+        "-m",
+        "intransitive.evolution",
+        "smoke",
+        "--output",
+        "/tmp/issue55-benchmark-20260917/smoke-pooled"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 76.41256712502218,
+      "sampled_tree_peak_rss_bytes": 404832256,
+      "peak_process_count": 6,
+      "nice": 19,
+      "sample_interval_seconds": 1
+    },
+    "benchmark": {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        ".venv/bin/python",
+        "-m",
+        "intransitive.evolution",
+        "benchmark",
+        "--manifest",
+        "/tmp/issue55-benchmark-20260917/input.json",
+        "--smoke",
+        "/tmp/issue55-benchmark-20260917/smoke-pooled",
+        "--seeds",
+        "55",
+        "56",
+        "--output",
+        "/tmp/issue55-benchmark-20260917/benchmark"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 456.5725332919974,
+      "sampled_tree_peak_rss_bytes": 705069056,
+      "peak_process_count": 6,
+      "nice": 19,
+      "sample_interval_seconds": 1
+    }
+  },
+  "total_attempts_including_retired_smoke": 140,
+  "total_reserved_work_including_retired_smoke": 18300000,
+  "total_run_wall_seconds_including_retired_smoke": 631.5437022069818,
+  "measured_cli_wall_plus_retired_run_seconds": 642.2524936250411,
+  "comparison_physical_matches": 120,
+  "comparison_distinct_match_keys": 80,
+  "comparison_distinct_trajectories": 15,
+  "comparison_distinct_candidates": 12,
+  "caveat": "No independent pooling of repeated match keys, trajectories, generations, or shared opening-line clusters. All candidates ineligible; no strength or superiority conclusion."
+}

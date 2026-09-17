@@ -1,0 +1,44 @@
+{
+  "checks": [
+    {
+      "outcomes": {
+        "depth_incomplete": 4,
+        "unfinished": 4
+      },
+      "run": "/tmp/issue55-variable-evolution-20260917/focused/primary-depth4/screen-depth4",
+      "verified_matches": 8,
+      "verified_moves": 33
+    },
+    {
+      "outcomes": {
+        "unfinished": 6,
+        "win": 10
+      },
+      "run": "/tmp/issue55-variable-evolution-20260917/focused/raw-a-depth2/screen-depth2",
+      "verified_matches": 16,
+      "verified_moves": 1578
+    },
+    {
+      "outcomes": {
+        "cancelled": 1,
+        "depth_incomplete": 3,
+        "unfinished": 3
+      },
+      "run": "/tmp/issue55-variable-evolution-20260917/focused/raw-a-depth4/screen-depth4",
+      "verified_matches": 7,
+      "verified_moves": 29
+    },
+    {
+      "outcomes": {
+        "unfinished": 5,
+        "win": 11
+      },
+      "run": "/tmp/issue55-variable-evolution-20260917/focused/raw-b-depth2/screen-depth2",
+      "verified_matches": 16,
+      "verified_moves": 1602
+    }
+  ],
+  "epoch": 1789644832.08722,
+  "reason": "Report uses floating-point sums in input order. Filesystem order changed aggregate CPU seconds by ~2e-13 seconds. Exact reconstruction passes when replayed in the original declared interleaved play order. Original journals/reports and failed-worker exit codes preserved.",
+  "status": "complete"
+}

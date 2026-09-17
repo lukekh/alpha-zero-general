@@ -155,7 +155,7 @@ class PressureTests(unittest.TestCase):
 
     def test_compact_public_and_explanation_agree_without_routes(self):
         state = position({'D4':1,'F5':-2,'G5':-3,'C6':3})
-        config = SearchConfig(pressure_enabled=True,pressure_weight=10.,proof_nodes=0)
+        config = SearchConfig(attack_enabled=False,defence_enabled=False,pressure_enabled=True,pressure_weight=10.,proof_nodes=0)
         evaluator = Evaluator(IntransitiveGame(),config)
         original = state.tobytes()
         with patch('intransitive.heuristics.evaluation.Geometry',side_effect=AssertionError('no routes')):
@@ -185,7 +185,7 @@ class PressureTests(unittest.TestCase):
         config = SearchConfig(pressure_enabled=True,pressure_weight=10.)
         self.assertEqual(SearchConfig(**json.loads(config.identity())),config)
         self.assertNotEqual(config.identity(),replace(config,pressure_weight=20.).identity())
-        for kwargs in (dict(pressure_enabled=1),dict(pressure_weight=-1),dict(pressure_weight=float('nan'))):
+        for kwargs in (dict(pressure_enabled=1),dict(pressure_weight=float('inf')),dict(pressure_weight=float('nan'))):
             with self.assertRaises(ValueError):
                 SearchConfig(**kwargs)
         with patch('intransitive.heuristics.pressure.pressure_totals',side_effect=AssertionError('over budget')):
@@ -235,7 +235,7 @@ class PressureTests(unittest.TestCase):
         game = IntransitiveGame()
         scores = {}
         for weight in (0.,10.):
-            config = SearchConfig(pressure_enabled=bool(weight),pressure_weight=weight,
+            config = SearchConfig(attack_enabled=False,defence_enabled=False,advantage_weight=25.,pressure_enabled=bool(weight),pressure_weight=weight,
                                   max_depth=4,node_limit=1_000_000_000,time_limit=60.)
             scores[weight] = []
             for move in ('F6 E5','F6 F5'):

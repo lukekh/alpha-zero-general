@@ -1,0 +1,20 @@
+[
+  {
+    "moves": 4,
+    "outcomes": {
+      "unfinished": 2
+    },
+    "records": 2,
+    "setting": "smoke-depth4"
+  },
+  {
+    "moves": 534,
+    "outcomes": {
+      "depth_incomplete": 1,
+      "unfinished": 3,
+      "win": 12
+    },
+    "records": 16,
+    "setting": "minimax-d4"
+  }
+]

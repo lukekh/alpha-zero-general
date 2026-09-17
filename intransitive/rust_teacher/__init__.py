@@ -40,16 +40,27 @@ class RustTeacher:
         validate_state(state)
         return state.tobytes().hex()
 
-    def inspect(self, state, radius=3, weight=10.):
-        return self.request(f'inspect {radius} {weight} {self.encode(state)}')
+    @staticmethod
+    def material_mode(enabled):
+        if type(enabled) is not bool:
+            raise ValueError('variable_material_enabled must be a boolean')
+        # Preserve compatibility with existing flat-material native binaries.
+        return ' 1' if enabled else ''
+
+    def inspect(self, state, radius=4, weight=0., *, material=100., advantage=23.967050360966205,
+                attack=25.714516982666414, defence=32.5643023919054, variable_material_enabled=False):
+        mode = self.material_mode(variable_material_enabled)
+        return self.request(f'inspect {radius} {weight} {material} {advantage} {attack} {defence}{mode} {self.encode(state)}')
 
     def apply(self, state, action, modelling=True):
         result = self.request(f'apply {action} {int(modelling)} {self.encode(state)}')
         return np.frombuffer(bytes.fromhex(result['state_hex']), dtype=np.int8).reshape(9, 9, 84).copy()
 
-    def analyze(self, state, *, depth=6, seconds=60., radius=3, weight=10.,
+    def analyze(self, state, *, depth=6, seconds=60., radius=4, weight=0.,
                 proof_depth=2, proof_nodes=64, table_entries=50000, node_limit=1_000_000_000, reuse=False,
-                nmp_enabled=False, nmp_min_depth=3, nmp_reduction=1,
+                material=100., advantage=23.967050360966205,
+                attack=25.714516982666414, defence=32.5643023919054, variable_material_enabled=False,
+                mvv_lva_enabled=False, selective_evaluator_enabled=False, nmp_enabled=False, nmp_min_depth=3, nmp_reduction=1,
                 futility_enabled=False, futility_max_depth=2, futility_margin=1.):
         if not np.isfinite(seconds) or seconds < 0:
             raise ValueError('seconds must be finite and nonnegative')
@@ -57,18 +68,32 @@ class RustTeacher:
         settings = dict(nmp_enabled=nmp_enabled, nmp_min_depth=nmp_min_depth,
             nmp_reduction=nmp_reduction, futility_enabled=futility_enabled,
             futility_max_depth=futility_max_depth, futility_margin=futility_margin)
-        SearchConfig(**settings)
+        SearchConfig(mvv_lva_enabled=mvv_lva_enabled, selective_evaluator_enabled=selective_evaluator_enabled, **settings)
+        mode = self.material_mode(variable_material_enabled)
         options = f'{str(nmp_enabled).lower()} {nmp_min_depth} {nmp_reduction} ' + \
                   f'{str(futility_enabled).lower()} {futility_max_depth} {futility_margin}'
+        if selective_evaluator_enabled or mvv_lva_enabled:
+            mode = f' {int(variable_material_enabled)}'
+            options += ' ' + str(selective_evaluator_enabled).lower()
+            if mvv_lva_enabled:
+                options += ' true'
+        # Preserve the existing wire forms when all selective options are defaults.
+        options = (' ' + options) if selective_evaluator_enabled or mvv_lva_enabled or settings != dict(nmp_enabled=False, nmp_min_depth=3,
+            nmp_reduction=1, futility_enabled=False, futility_max_depth=2, futility_margin=1.) else ''
         command = 'search_reuse' if reuse else 'search'
         result = self.request(f'{command} {depth} {int(seconds*1000)} {node_limit} {radius} {weight} '
-            f'{proof_depth} {proof_nodes} {table_entries} {options} {self.encode(state)}', timeout=seconds+10.)
+            f'{proof_depth} {proof_nodes} {table_entries} {material} {advantage} {attack} {defence}{mode}{options} {self.encode(state)}', timeout=seconds+10.)
         result['search_identity'] = dict(version='intransitive-selective-v1', backend='rust',
             depth=depth, seconds=seconds, node_limit=node_limit, radius=radius, weight=weight,
-            proof_depth=proof_depth, proof_nodes=proof_nodes, table_entries=table_entries, **settings)
-        result['selective']['depth'] = result['completed_depth']
+            proof_depth=proof_depth, proof_nodes=proof_nodes, table_entries=table_entries,
+            material=material, advantage=advantage, attack=attack, defence=defence,
+            variable_material_enabled=variable_material_enabled,
+            mvv_lva_enabled=mvv_lva_enabled, selective_evaluator_enabled=selective_evaluator_enabled, **settings)
+        if 'selective' in result:
+            result['selective']['depth'] = result['completed_depth']
         result['score_bound'] = ('selective_exact' if nmp_enabled or futility_enabled else 'exact') if result['score'] is not None else None
         return result
+
 
     def close(self):
         if self.process.poll() is None:

@@ -1,4 +1,5 @@
 """Frozen inputs, exact position identity, and completion-order-free schedules."""
+from dataclasses import replace
 import base64
 import hashlib
 from itertools import combinations
@@ -19,8 +20,8 @@ from ..record import state_hash
 
 SCHEMA = 'intransitive-tournament-v1'
 POOLS = ('search', 'validation', 'heldout')
-MODES = ('depth', 'wall')
-SCALES = tuple(name + '_weight' for name in GENES['python'])
+MODES = ('depth', 'wall', 'mcts')
+SCALES = tuple(('count' if name == 'material' else name) + '_weight' for name in GENES['python'])
 
 
 def digest(value):
@@ -34,7 +35,7 @@ def backend_version():
     files = sorted(root.glob('heuristics/*.py')) + sorted(root.glob('Intransitive*.py'))
     files += sorted(Path(__file__).parent.glob('*.py'))
     return digest(dict(files={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
-                              for p in files}, runtime=runtime_versions()))
+                              for p in files}, runtime=runtime_versions(), mcts_source=hashlib.sha256((root.parent / 'MCTS.py').read_bytes()).hexdigest()))
 
 
 def runtime_versions():
@@ -43,12 +44,12 @@ def runtime_versions():
                 llvmlite=llvmlite.__version__)
 
 
-def candidate(name, weights=None, *, role='population', backend='python', genome=None):
+def candidate(name, weights=None, *, role='population', backend='python', genome=None, variable_material_enabled=None):
     """Consume #53's serialized module-scale contract, restricted to Python.
 
-    This is a frozen match input, not an optimizer. Material
-    stays at 100; optional zero scales disable their module. Native arbitrary
-    weights are deliberately rejected by capability validation.
+    Material mode is a fixed per-candidate choice; signed scales are tunable.
+    Optional zero scales disable their modules. Only Python match engines are
+    supported by this harness.
     """
     if not isinstance(name, str) or not name.strip():
         raise ValueError('Candidate name must be nonempty')
@@ -64,10 +65,14 @@ def candidate(name, weights=None, *, role='population', backend='python', genome
         weights = {} if weights is None else weights
         if not isinstance(weights, dict) or set(weights) - set(SCALES):
             raise ValueError(f'Only effective scales {SCALES} are supported')
-        validated = Genome.from_genes({k.removesuffix('_weight'): v for k, v in weights.items()},
+        validated = Genome.from_genes({('material' if k == 'count_weight' else k.removesuffix('_weight')): v for k, v in weights.items()},
                                       backend=backend)
+    if variable_material_enabled is None:
+        variable_material_enabled = validated.variable_material_enabled
+    elif validated.variable_material_enabled and not variable_material_enabled:
+        raise ValueError('Variable genome cannot be overridden to flat material')
     genome = validated.to_dict()
-    config = validated.to_config()
+    config = replace(validated.to_config(), variable_material_enabled=variable_material_enabled)
     evaluation = {k: v for k, v in config.to_dict().items() if k in EVALUATION_FIELDS}
     identity = dict(backend=backend, backend_version=backend_version(), evaluation=evaluation)
     return dict(name=name, role=role, genome=genome, **identity, sha256=digest(identity))
@@ -79,10 +84,10 @@ def effective_config(item, protocol):
 
 def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
              proof_nodes=64, max_plies=200, game_seconds=120., startup_seconds=120.,
-             timeout_grace=5., completion_required=.8):
+             timeout_grace=5., completion_required=.8, simulations=32, cpuct=1., value_scale=400.):
     if mode not in MODES:
         raise ValueError('Expected depth or wall protocol')
-    search = SearchConfig(max_depth=depth if mode == 'depth' else 64,
+    search = SearchConfig(max_depth=64 if mode == 'wall' else depth,
                           time_limit=seconds, node_limit=node_limit,
                           proof_depth=proof_depth, proof_nodes=proof_nodes)
     if search.max_depth < 1 or search.time_limit <= 0 or search.node_limit < 1:
@@ -94,7 +99,12 @@ def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
             raise ValueError('Safety limits must be finite and positive')
     if not 0 <= completion_required <= 1:
         raise ValueError('Invalid completion requirement')
-    return dict(mode=mode, search={k: v for k, v in search.to_dict().items()
+    if type(simulations) is not int or simulations < 2 or simulations > 100000:
+        raise ValueError('MCTS simulations must be in [2, 100000]')
+    for value in (cpuct, value_scale):
+        if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
+            raise ValueError('MCTS cpuct and value_scale must be positive and finite')
+    result = dict(mode=mode, search={k: v for k, v in search.to_dict().items()
                                  if k not in EVALUATION_FIELDS},
                 max_plies=max_plies, game_seconds=game_seconds,
                 startup_seconds=startup_seconds, timeout_grace=timeout_grace,
@@ -102,6 +112,10 @@ def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
                 cache_policy='fresh search/evaluation caches per move',
                 ranking='wins / scheduled games; unresolved worth zero; upper bound includes unresolved; '
                         'eligibility requires completion threshold, all games attempted, no failures')
+    if mode == 'mcts':
+        result['mcts'] = dict(simulations=simulations, cpuct=cpuct, value_scale=value_scale,
+            prior='uniform legal', leaf_value='tanh(heuristic / value_scale)', tree='fresh per move', noise=False)
+    return result
 
 
 def pack(state):
@@ -180,7 +194,8 @@ def manifest(candidates, positions, protocols, *, pool='search', position_limit=
         raise ValueError('Candidates, protocols and a valid pool are required')
     names, hashes = set(), set()
     for item in candidates:
-        rebuilt = candidate(item['name'], genome=item['genome'], role=item['role'], backend=item['backend'])
+        rebuilt = candidate(item['name'], genome=item['genome'], role=item['role'], backend=item['backend'],
+                            variable_material_enabled=item['evaluation'].get('variable_material_enabled', False))
         if rebuilt != item or item['name'] in names or item['sha256'] in hashes:
             raise ValueError('Invalid, stale or duplicate deterministic candidate')
         names.add(item['name'])
@@ -212,7 +227,8 @@ def manifest(candidates, positions, protocols, *, pool='search', position_limit=
                            node_limit=settings['node_limit'], proof_depth=settings['proof_depth'],
                            proof_nodes=settings['proof_nodes'], max_plies=limits['max_plies'],
                            game_seconds=limits['game_seconds'], startup_seconds=limits['startup_seconds'],
-                           timeout_grace=limits['timeout_grace'], completion_required=limits['completion_required'])
+                           timeout_grace=limits['timeout_grace'], completion_required=limits['completion_required'],
+                           **({k: limits['mcts'][k] for k in ('simulations', 'cpuct', 'value_scale')} if limits['mode'] == 'mcts' else {}))
         # Other supported common SearchConfig options remain configurable.
         if set(settings) != set(rebuilt['search']):
             raise ValueError('Invalid shared search settings')

@@ -31,7 +31,7 @@ class MaterialTests(unittest.TestCase):
     def setUpClass(cls):
         warm_material_kernels()
         cls.game = IntransitiveGame()
-        cls.config = SearchConfig(proof_nodes=0, max_depth=3, time_limit=60, node_limit=10**9)
+        cls.config = SearchConfig(attack_enabled=False, defence_enabled=False, proof_nodes=0, max_depth=3, time_limit=60, node_limit=10**9)
 
     def assert_score(self, evaluator, state, counts):
         self.assertEqual(counts, recount(state))

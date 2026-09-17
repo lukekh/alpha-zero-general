@@ -1,0 +1,12 @@
+{
+  "backend": "python",
+  "genes": {
+    "advantage": 69.73261445458894,
+    "attack": 42.33762277619854,
+    "defence": 29.31117881909708,
+    "material": -36.697281772317815,
+    "overload": 82.71756110820638,
+    "pressure": 13.140116669179605
+  },
+  "version": "intransitive-variable-module-scales-v3"
+}

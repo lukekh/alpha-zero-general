@@ -49,13 +49,52 @@ source or destination. The shared guard also protects immediate quiet wins,
 corner defence and low-mobility forced replies. No reverse futility, razoring,
 late-move reductions or weight tuning is included.
 
-Selection is effective only with count=100, advantage=25 and the standard
+Without the experimental evaluator option below, selection is effective only with flat material, count=100, advantage=25 and the standard
 predator/prey bonuses (1, .5, .25), no attack/defence/overload modules, and
-pressure disabled or weight ≤20 (radius 3 or 4). Unsupported evolved scales
+pressure disabled or weight in 0..20 (radius 3 or 4). Unsupported evolved scales
 keep the requested flags in provenance but disable **both** pruning methods;
 `effective=false` explains this in diagnostics. Ordinary evaluation continues
 unchanged. Python's legacy expanded-state/custom-game backend explicitly
 rejects selective options. Native's unsupported arguments raise errors.
+
+## Experimental evolved and variable-material evaluators
+
+`selective_evaluator_enabled=True` explicitly permits pruning with the adopted
+route weights, signed coefficients, and variable material. It defaults to false
+and does not enable either pruning method by itself. The full configuration,
+including this flag, enters search/cache identity and result diagnostics.
+Board eligibility, non-PV windows, null verification and proof isolation remain
+unchanged. Enable PVS to create the non-PV narrow windows used by these guards.
+
+The experimental futility allowance per remaining ply is:
+
+```
+piece_scale/2
++ abs(advantage_weight) * (max(predator_zero_bonus, predator_scarcity_bonus) + prey_bonus)
++ 3*abs(enabled attack_weight) + 4*abs(enabled defence_weight)
++ 2*abs(enabled overload_weight) + 8*abs(enabled pressure_weight)
+```
+
+Multiply by remaining depth and `futility_margin`. `piece_scale` starts at
+`abs(count_weight)`; in variable mode it is the larger of that and the greatest
+current value of an occupied piece type on either side, multiplied by
+`abs(count_weight)/BASE`. Both sides use the same local scale. Native uses its
+fixed predator/prey bonuses and has no overload module. This is a heuristic
+allowance, **not an upper bound**: variable values can change nonlinearly after
+captures. It has not been calibrated to establish general strength or tactical
+safety. The original margin remains unchanged when this option is false.
+
+A selective mate-range score no longer ends iterative deepening early: the
+requested depth must finish, since such a score is not a mate certificate.
+Unpruned proven results can still finish early. Tournament depth validation
+continues to exclude incomplete requested selective searches.
+
+The combined native wire form appends four coefficients, a `0/1` variable-mode
+flag, the six selective parameters, then a `true/false` experimental-evaluator
+flag before state. Existing shorter weight-only and selective-only forms remain
+accepted. `RustTeacher.analyze(..., selective_evaluator_enabled=True)` uses the
+combined form. All evaluator and selective settings invalidate reused search
+state when changed.
 
 ## Hypothetical state and caches
 

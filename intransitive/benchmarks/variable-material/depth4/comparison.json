@@ -1,0 +1,415 @@
+{
+  "note": "Variable-material candidate perspective. Identical adopted weights; methods and repeated positions not pooled as independent evidence.",
+  "settings": [
+    {
+      "setting": "minimax-d4",
+      "official": {
+        "wins": 6,
+        "losses": 6,
+        "unfinished": 3,
+        "failures": 1,
+        "pending": 0,
+        "scheduled": 16,
+        "eligible": false,
+        "paired_interval_95": [
+          0.0,
+          1.0
+        ],
+        "completed_depths": {
+          "1": 14,
+          "2": 7,
+          "3": 5,
+          "4": 241
+        },
+        "completed_simulations": {
+          "0": 267
+        },
+        "observed_tree_depths": {
+          "0": 267
+        },
+        "work": 1782156998,
+        "search_wall_seconds": 675.8996206322918,
+        "by_colour": {
+          "0": {
+            "completed_depths": {
+              "1": 8,
+              "2": 2,
+              "3": 4,
+              "4": 93
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 107
+            },
+            "completion_rate": 0.75,
+            "distinct_starts": 8,
+            "distinct_trajectories": 8,
+            "eligible": false,
+            "failures": 1,
+            "latency_p50_seconds": 1.4967602910182904,
+            "latency_p95_seconds": 11.211423912702564,
+            "losses": 2,
+            "observed_tree_depths": {
+              "0": 107
+            },
+            "paired_interval_95": [
+              0.019838604340039645,
+              1.0
+            ],
+            "pairs": 8,
+            "peak_candidate_rss_bytes": 225542144,
+            "pending": 0,
+            "scheduled": 8,
+            "search_cpu_seconds": 295.25466799999987,
+            "search_wall_seconds": 315.0000612110307,
+            "seed_clusters": 8,
+            "selected_depths": {
+              "1": 8,
+              "2": 2,
+              "3": 4,
+              "4": 93
+            },
+            "startup_cpu_seconds": 14.71723,
+            "startup_wall_seconds": 17.786737290996825,
+            "statuses": {
+              "depth_incomplete": 1,
+              "unfinished": 1,
+              "win": 6
+            },
+            "stop_reasons": {
+              "maximum_depth": 91,
+              "proven_result": 16
+            },
+            "stopped_searches": 0,
+            "unfinished": 1,
+            "win_points_lower": 0.5,
+            "win_points_upper": 0.75,
+            "wins": 4,
+            "work": 835075204
+          },
+          "1": {
+            "completed_depths": {
+              "1": 6,
+              "2": 5,
+              "3": 1,
+              "4": 148
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 160
+            },
+            "completion_rate": 0.75,
+            "distinct_starts": 8,
+            "distinct_trajectories": 8,
+            "eligible": false,
+            "failures": 0,
+            "latency_p50_seconds": 1.423013396008173,
+            "latency_p95_seconds": 6.16913793959683,
+            "losses": 4,
+            "observed_tree_depths": {
+              "0": 160
+            },
+            "paired_interval_95": [
+              0.0,
+              0.9801613956599604
+            ],
+            "pairs": 8,
+            "peak_candidate_rss_bytes": 225542144,
+            "pending": 0,
+            "scheduled": 8,
+            "search_cpu_seconds": 335.8035119999994,
+            "search_wall_seconds": 360.8995594212611,
+            "seed_clusters": 8,
+            "selected_depths": {
+              "1": 6,
+              "2": 5,
+              "3": 1,
+              "4": 148
+            },
+            "startup_cpu_seconds": 12.050493,
+            "startup_wall_seconds": 12.927737832971616,
+            "statuses": {
+              "unfinished": 2,
+              "win": 6
+            },
+            "stop_reasons": {
+              "maximum_depth": 143,
+              "proven_result": 17
+            },
+            "stopped_searches": 0,
+            "unfinished": 2,
+            "win_points_lower": 0.25,
+            "win_points_upper": 0.5,
+            "wins": 2,
+            "work": 947081794
+          }
+        }
+      },
+      "consensus": {
+        "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+        "consensus_losses": 1,
+        "decided": 13,
+        "excluded": 1,
+        "inconclusive": 2,
+        "losses": 7,
+        "official_losses": 6,
+        "official_wins": 6,
+        "scheduled": 16,
+        "win_fraction_decided": 0.46153846153846156,
+        "wins": 6,
+        "wins_over_scheduled": 0.375
+      },
+      "wall_seconds": 1337.0328037499858,
+      "records": 16,
+      "analysis_complete": true,
+      "positions": [
+        {
+          "seed": 1643,
+          "sha256": "215c132ea32d242dc5cffde8c731432072b30e9fb24df12698e57f77c9e17981",
+          "official": {
+            "losses": 1,
+            "wins": 1
+          },
+          "consensus": {
+            "losses": 1,
+            "wins": 1
+          }
+        },
+        {
+          "seed": 1680,
+          "sha256": "43b0b15dd35872aa6f019bf2140cd5781696bbe26608f5053d446541335636ef",
+          "official": {
+            "wins": 1,
+            "losses": 1
+          },
+          "consensus": {
+            "wins": 1,
+            "losses": 1
+          }
+        },
+        {
+          "seed": 1652,
+          "sha256": "3be41689f2bb77f22d02de97d340699a5f21e1a89eae95728053ed183f9867e3",
+          "official": {
+            "unfinished": 2
+          },
+          "consensus": {
+            "inconclusive": 2
+          }
+        },
+        {
+          "seed": 1675,
+          "sha256": "ea277b381533f9be35972c0651abd6a4b244737debe8fb8442e5cbdbe9a4f96a",
+          "official": {
+            "losses": 1,
+            "wins": 1
+          },
+          "consensus": {
+            "losses": 1,
+            "wins": 1
+          }
+        },
+        {
+          "seed": 2616,
+          "sha256": "f20c769977a094f43840c98559e5740298944aa2bbdca004772b118d99a94b78",
+          "official": {
+            "losses": 1,
+            "wins": 1
+          },
+          "consensus": {
+            "losses": 1,
+            "wins": 1
+          }
+        },
+        {
+          "seed": 2669,
+          "sha256": "233b1c8fe409a38db87fdcb5681099be9c617295514da9c2e6212d3cc1b69809",
+          "official": {
+            "depth_incomplete": 1,
+            "unfinished": 1
+          },
+          "consensus": {
+            "excluded": 1,
+            "losses": 1
+          }
+        },
+        {
+          "seed": 2657,
+          "sha256": "d85a59dc93aee447c4d383412a808116fd4880c56374d375a2b84e8addacf434",
+          "official": {
+            "wins": 1,
+            "losses": 1
+          },
+          "consensus": {
+            "wins": 1,
+            "losses": 1
+          }
+        },
+        {
+          "seed": 2639,
+          "sha256": "b94cd6573ca7d93a65e715c6f12f8403f519b378e60bb74c2de439e639805608",
+          "official": {
+            "losses": 1,
+            "wins": 1
+          },
+          "consensus": {
+            "losses": 1,
+            "wins": 1
+          }
+        }
+      ]
+    },
+    {
+      "setting": "smoke-depth4",
+      "official": {
+        "wins": 0,
+        "losses": 0,
+        "unfinished": 2,
+        "failures": 0,
+        "pending": 0,
+        "scheduled": 2,
+        "eligible": false,
+        "paired_interval_95": [
+          0.0,
+          1.0
+        ],
+        "completed_depths": {
+          "4": 2
+        },
+        "completed_simulations": {
+          "0": 2
+        },
+        "observed_tree_depths": {
+          "0": 2
+        },
+        "work": 11409325,
+        "search_wall_seconds": 2.3234186669869814,
+        "by_colour": {
+          "0": {
+            "completed_depths": {
+              "4": 1
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 1
+            },
+            "completion_rate": 0.0,
+            "distinct_starts": 1,
+            "distinct_trajectories": 1,
+            "eligible": false,
+            "failures": 0,
+            "latency_p50_seconds": 0.9416341249889228,
+            "latency_p95_seconds": 0.9416341249889228,
+            "losses": 0,
+            "observed_tree_depths": {
+              "0": 1
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 1,
+            "peak_candidate_rss_bytes": 211451904,
+            "pending": 0,
+            "scheduled": 1,
+            "search_cpu_seconds": 0.917186000000001,
+            "search_wall_seconds": 0.9416341249889228,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "4": 1
+            },
+            "startup_cpu_seconds": 0.0,
+            "startup_wall_seconds": 0.0002937499957624823,
+            "statuses": {
+              "unfinished": 1
+            },
+            "stop_reasons": {
+              "maximum_depth": 1
+            },
+            "stopped_searches": 0,
+            "unfinished": 1,
+            "win_points_lower": 0.0,
+            "win_points_upper": 1.0,
+            "wins": 0,
+            "work": 4017737
+          },
+          "1": {
+            "completed_depths": {
+              "4": 1
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 1
+            },
+            "completion_rate": 0.0,
+            "distinct_starts": 1,
+            "distinct_trajectories": 1,
+            "eligible": false,
+            "failures": 0,
+            "latency_p50_seconds": 1.3817845419980586,
+            "latency_p95_seconds": 1.3817845419980586,
+            "losses": 0,
+            "observed_tree_depths": {
+              "0": 1
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 1,
+            "peak_candidate_rss_bytes": 211369984,
+            "pending": 0,
+            "scheduled": 1,
+            "search_cpu_seconds": 1.3742800000000006,
+            "search_wall_seconds": 1.3817845419980586,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "4": 1
+            },
+            "startup_cpu_seconds": 13.109202999999999,
+            "startup_wall_seconds": 14.227843500004383,
+            "statuses": {
+              "unfinished": 1
+            },
+            "stop_reasons": {
+              "maximum_depth": 1
+            },
+            "stopped_searches": 0,
+            "unfinished": 1,
+            "win_points_lower": 0.0,
+            "win_points_upper": 1.0,
+            "wins": 0,
+            "work": 7391588
+          }
+        }
+      },
+      "consensus": {
+        "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+        "consensus_losses": 1,
+        "consensus_wins": 1,
+        "decided": 2,
+        "losses": 1,
+        "scheduled": 2,
+        "win_fraction_decided": 0.5,
+        "wins": 1,
+        "wins_over_scheduled": 0.5
+      },
+      "wall_seconds": 34.58489716699114,
+      "records": 2,
+      "analysis_complete": true,
+      "positions": [
+        {
+          "seed": 1643,
+          "sha256": "215c132ea32d242dc5cffde8c731432072b30e9fb24df12698e57f77c9e17981",
+          "official": {
+            "unfinished": 2
+          },
+          "consensus": {
+            "wins": 1,
+            "losses": 1
+          }
+        }
+      ]
+    }
+  ]
+}

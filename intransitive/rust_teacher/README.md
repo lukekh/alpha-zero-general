@@ -52,19 +52,29 @@ with RustTeacher() as teacher:
 ```
 
 `state` is the existing `(9, 9, 84)` int8 board including active history. The
-client also provides `inspect` and `apply`. Set `weight=0` for material-only
-search. `reuse=True` retains compatible history-aware table entries between
+client also provides `inspect` and `apply`. Set `weight=0, attack=0, defence=0` for material-only search. `reuse=True` retains compatible history-aware table entries between
 requests. Incomplete searches are explicitly marked and should not become
 training labels. Rust library callers read a position through `board()` and
 change it through `apply`, preserving derived evaluation state.
 
 ## Supported scoring
 
-Material weights match the current defaults: count 100, advantage 25,
-predator-zero 1, scarcity 0.5 and prey 0.25. Pressure supports radius 3 or 4 and
-a configurable weight. Boards above 32 pieces use the reference pressure kernel
-to preserve floating-point summation semantics. Legacy route-based attack,
-defence and overload modules are outside this native implementation.
+The adopted defaults are material 100, advantage 23.967050360966205,
+attack 25.714516982666414 and defence 32.5643023919054; pressure and overload
+are off. Advantage bonuses remain 1/.5/.25. Attack and defence use the same
+static occupied-board routes, capture safety, interception timing and goal
+blocking as Python. Cross-language tests cover both goal orientations, legal
+trajectories, signed coefficients and candidate changes. Overload is not
+implemented in Rust and is rejected by the native genome contract.
+
+`analyze` and `inspect` accept signed `material`, `advantage`, `attack`, `defence`
+and pressure `weight` arguments; omitted arguments use the adopted defaults and
+radius four. Explicit old coefficients remain usable. Library searches include
+`Weights` in `Config`, and all coefficients participate in cache compatibility.
+The wire protocol retains old requests (using the new defaults) and additionally
+accepts material/advantage/attack/defence before the state hex. The Python adapter
+sends all weights explicitly. Pressure supports radius three or four; boards
+above 32 pieces retain the reference pressure kernel's summation order.
 
 Proof depths 0–2 and up to 64 proof nodes are supported. Native node limits
 count actual search/proof visits; Python's logical work allowance uses different
@@ -75,9 +85,17 @@ choices from the Python teacher while preserving optimal completed-depth scores.
 Importing this module or building its binary does not select it for existing
 browser or dataset processes. Callers explicitly instantiate `RustTeacher`.
 
+The optional [variable-material replacement](../heuristics/VARIABLE_MATERIAL.md)
+uses the same BASE=100, REG=0.25 formula as Python. Pass
+`variable_material_enabled=True` to `RustTeacher.inspect` or `.analyze`.
+Flat material remains the default; switching modes resets reused search state.
+
 ## Experimental selective search
 
 Independent `nmp_enabled` and `futility_enabled` options are available but remain
 **off by default**. See [guards, verification, protocol and label semantics](../heuristics/SELECTIVE_SEARCH.md)
 and the [bounded validation report](../benchmarks/selective/README.md).
 A completed selective search is not an exhaustive label or mate certificate.
+
+Opt-in [MVV-LVA capture ordering](../heuristics/MVV_LVA.md) uses current variable
+piece values via `RustTeacher.analyze(..., mvv_lva_enabled=True)`.

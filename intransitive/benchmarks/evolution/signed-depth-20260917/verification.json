@@ -1,0 +1,138 @@
+[
+  {
+    "distinct_trajectories": 10,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 7,
+      "win": 2
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/runs/mcts-s128-91",
+    "status": "wall_budget",
+    "verified_matches": 10,
+    "verified_moves": 715
+  },
+  {
+    "distinct_trajectories": 9,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 7,
+      "win": 1
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/runs/mcts-s128-92",
+    "status": "wall_budget",
+    "verified_matches": 9,
+    "verified_moves": 412
+  },
+  {
+    "distinct_trajectories": 21,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 17,
+      "win": 4
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/runs/mcts-s32-91",
+    "status": "wall_budget",
+    "verified_matches": 22,
+    "verified_moves": 3631
+  },
+  {
+    "distinct_trajectories": 20,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 13,
+      "win": 7
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/runs/mcts-s32-92",
+    "status": "wall_budget",
+    "verified_matches": 21,
+    "verified_moves": 3472
+  },
+  {
+    "distinct_trajectories": 31,
+    "outcomes": {
+      "unfinished": 7,
+      "win": 25
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/runs/minimax-d1-91",
+    "status": "complete",
+    "verified_matches": 32,
+    "verified_moves": 2557
+  },
+  {
+    "distinct_trajectories": 32,
+    "outcomes": {
+      "unfinished": 4,
+      "win": 28
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/runs/minimax-d1-92",
+    "status": "complete",
+    "verified_matches": 32,
+    "verified_moves": 2050
+  },
+  {
+    "distinct_trajectories": 12,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 5,
+      "win": 7
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/runs/minimax-d2-91",
+    "status": "wall_budget",
+    "verified_matches": 13,
+    "verified_moves": 495
+  },
+  {
+    "distinct_trajectories": 10,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 7,
+      "win": 2
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/runs/minimax-d2-92",
+    "status": "wall_budget",
+    "verified_matches": 10,
+    "verified_moves": 394
+  },
+  {
+    "distinct_trajectories": 7,
+    "outcomes": {
+      "depth_incomplete": 26,
+      "unfinished": 2
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/runs/minimax-d3-91",
+    "status": "complete",
+    "verified_matches": 28,
+    "verified_moves": 25
+  },
+  {
+    "distinct_trajectories": 8,
+    "outcomes": {
+      "depth_incomplete": 26,
+      "unfinished": 2
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/runs/minimax-d3-92",
+    "status": "complete",
+    "verified_matches": 28,
+    "verified_moves": 20
+  },
+  {
+    "distinct_trajectories": 2,
+    "outcomes": {
+      "depth_incomplete": 16
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/smoke-depth",
+    "status": "complete",
+    "verified_matches": 16,
+    "verified_moves": 0
+  },
+  {
+    "distinct_trajectories": 2,
+    "outcomes": {
+      "unfinished": 16
+    },
+    "run": "/tmp/issue55-signed-depth-20260917/smoke-mcts",
+    "status": "complete",
+    "verified_matches": 16,
+    "verified_moves": 32
+  }
+]

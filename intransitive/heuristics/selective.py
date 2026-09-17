@@ -6,13 +6,15 @@ from ..IntransitiveLogicNumba import raw_movement_mask
 
 
 def supported(config):
-    # Evolved/route scales are intentionally unsupported in v1. Configuration
-    # remains loadable, but diagnostics report that selection is disabled.
-    return (config.count_weight == 100 and config.advantage_weight == 25
+    # Evolved/route scales require an explicit experimental opt-in.
+    # Otherwise diagnostics report that selection is disabled.
+    if config.selective_evaluator_enabled:
+        return True
+    return (not config.variable_material_enabled and config.count_weight == 100 and config.advantage_weight == 25
             and config.predator_zero_bonus == 1 and config.predator_scarcity_bonus == .5
             and config.prey_bonus == .25
             and not (config.attack_enabled or config.defence_enabled or config.overload_enabled)
-            and (not config.pressure_enabled or config.pressure_weight <= 20))
+            and (not config.pressure_enabled or 0 <= config.pressure_weight <= 20))
 
 
 def distance(a, b):
@@ -61,7 +63,28 @@ def quiet(position, action):
     return distance(target, goal) > 3
 
 
-def margin(config, depth):
+def margin(config, depth, position=None):
+    if config.selective_evaluator_enabled:
+        # A local heuristic allowance, not a bound on future evaluation changes.
+        piece_scale = abs(config.count_weight)
+        if config.variable_material_enabled:
+            if position is None:
+                raise ValueError('Variable-material pruning needs current piece counts')
+            from .material import variable_piece_values, BASE
+            for side in (0, 1):
+                own = position.counts[side*3:side*3+3]
+                enemy = position.counts[(1-side)*3:(1-side)*3+3]
+                values = variable_piece_values(own, enemy)
+                piece_scale = max([piece_scale] + [abs(config.count_weight)*v/BASE
+                                  for n, v in zip(own, values) if n])
+        advantage_scale = max(abs(config.predator_zero_bonus),
+                              abs(config.predator_scarcity_bonus)) + abs(config.prey_bonus)
+        allowance = piece_scale/2 + abs(config.advantage_weight)*advantage_scale
+        for name, scale in (('attack', 3), ('defence', 4), ('overload', 2), ('pressure', 8)):
+            if getattr(config, name+'_enabled'):
+                allowance += scale*abs(getattr(config, name+'_weight'))
+        return depth*config.futility_margin*allowance
+
     weight = config.pressure_weight if config.pressure_enabled else 0.
     return depth * config.futility_margin * (config.count_weight / 2 + config.advantage_weight + 8 * weight)
 

@@ -1,0 +1,63 @@
+[
+  {
+    "moves": 4,
+    "outcomes": {
+      "unfinished": 2
+    },
+    "records": 2,
+    "setting": "smoke-depth"
+  },
+  {
+    "moves": 4,
+    "outcomes": {
+      "unfinished": 2
+    },
+    "records": 2,
+    "setting": "smoke-mcts"
+  },
+  {
+    "moves": 995,
+    "outcomes": {
+      "unfinished": 3,
+      "win": 13
+    },
+    "records": 16,
+    "setting": "minimax-d1"
+  },
+  {
+    "moves": 1006,
+    "outcomes": {
+      "unfinished": 2,
+      "win": 14
+    },
+    "records": 16,
+    "setting": "minimax-d2"
+  },
+  {
+    "moves": 506,
+    "outcomes": {
+      "unfinished": 2,
+      "win": 14
+    },
+    "records": 16,
+    "setting": "minimax-d3"
+  },
+  {
+    "moves": 2178,
+    "outcomes": {
+      "unfinished": 9,
+      "win": 7
+    },
+    "records": 16,
+    "setting": "mcts-s32"
+  },
+  {
+    "moves": 1349,
+    "outcomes": {
+      "unfinished": 4,
+      "win": 12
+    },
+    "records": 16,
+    "setting": "mcts-s128"
+  }
+]

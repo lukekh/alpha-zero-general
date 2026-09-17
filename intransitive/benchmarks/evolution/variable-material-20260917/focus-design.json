@@ -1,0 +1,1619 @@
+{
+  "jobs": {
+    "raw-a-depth2": {
+      "depth": 2,
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 23.967050360966205,
+          "attack": 25.714516982666414,
+          "defence": 32.5643023919054,
+          "material": 5.0,
+          "overload": 17.08870008844581,
+          "pressure": 11.962064510184447
+        },
+        "version": "intransitive-variable-module-scales-v3"
+      },
+      "training": {
+        "by_colour": {
+          "0": {
+            "completed_depths": {
+              "1": 62
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 62
+            },
+            "completion_rate": 1.0,
+            "distinct_starts": 1,
+            "distinct_trajectories": 3,
+            "eligible": true,
+            "failures": 0,
+            "latency_p50_seconds": 0.043547125009354204,
+            "latency_p95_seconds": 0.07034655414609005,
+            "losses": 1,
+            "observed_tree_depths": {
+              "0": 62
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 4,
+            "peak_candidate_rss_bytes": 264814592,
+            "pending": 0,
+            "scheduled": 4,
+            "search_cpu_seconds": 2.564366000000005,
+            "search_wall_seconds": 2.6397204979439266,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 62
+            },
+            "startup_cpu_seconds": 11.358281,
+            "startup_wall_seconds": 12.123952791996999,
+            "statuses": {
+              "win": 4
+            },
+            "stop_reasons": {
+              "maximum_depth": 58,
+              "selective_result": 4
+            },
+            "stopped_searches": 0,
+            "unfinished": 0,
+            "win_points_lower": 0.75,
+            "win_points_upper": 0.75,
+            "wins": 3,
+            "work": 4754757
+          },
+          "1": {
+            "completed_depths": {
+              "1": 247
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 247
+            },
+            "completion_rate": 0.5,
+            "distinct_starts": 1,
+            "distinct_trajectories": 3,
+            "eligible": false,
+            "failures": 0,
+            "latency_p50_seconds": 0.031822584016481414,
+            "latency_p95_seconds": 0.07035610010207165,
+            "losses": 0,
+            "observed_tree_depths": {
+              "0": 247
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 4,
+            "peak_candidate_rss_bytes": 264814592,
+            "pending": 0,
+            "scheduled": 4,
+            "search_cpu_seconds": 8.515922000000016,
+            "search_wall_seconds": 8.837950757122599,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 247
+            },
+            "startup_cpu_seconds": 11.075747,
+            "startup_wall_seconds": 11.711060250963783,
+            "statuses": {
+              "unfinished": 2,
+              "win": 2
+            },
+            "stop_reasons": {
+              "maximum_depth": 243,
+              "selective_result": 4
+            },
+            "stopped_searches": 0,
+            "unfinished": 2,
+            "win_points_lower": 0.5,
+            "win_points_upper": 1.0,
+            "wins": 2,
+            "work": 18221518
+          }
+        },
+        "by_opponent": {
+          "0bbf106ccf0a72b69d3e7186416707747b315fe7bd41639b51d830f695ec713f": {
+            "by_colour": {
+              "0": {
+                "completed_depths": {
+                  "1": 31
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 31
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.043296624993672594,
+                "latency_p95_seconds": 0.05530477099819109,
+                "losses": 1,
+                "observed_tree_depths": {
+                  "0": 31
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 252313600,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 1.1751530000000017,
+                "search_wall_seconds": 1.215452791977441,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 31
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.0011016670032404363,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 30,
+                  "selective_result": 1
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 0.0,
+                "win_points_upper": 0.0,
+                "wins": 0,
+                "work": 2270202
+              },
+              "1": {
+                "completed_depths": {
+                  "1": 29
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 29
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.04230554201058112,
+                "latency_p95_seconds": 0.07415539101348258,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 29
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 252313600,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 1.197617999999995,
+                "search_wall_seconds": 1.2346832509501837,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 29
+                },
+                "startup_cpu_seconds": 11.075747,
+                "startup_wall_seconds": 11.709679499996128,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 27,
+                  "selective_result": 2
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 1.0,
+                "win_points_upper": 1.0,
+                "wins": 1,
+                "work": 2509666
+              }
+            },
+            "completed_depths": {
+              "1": 60
+            },
+            "completed_pairs": 1,
+            "completed_simulations": {
+              "0": 60
+            },
+            "completion_rate": 1.0,
+            "distinct_starts": 1,
+            "distinct_trajectories": 2,
+            "eligible": true,
+            "failures": 0,
+            "latency_p50_seconds": 0.04326470800151583,
+            "latency_p95_seconds": 0.06959877077897544,
+            "losses": 1,
+            "observed_tree_depths": {
+              "0": 60
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 1,
+            "peak_candidate_rss_bytes": 252313600,
+            "pending": 0,
+            "scheduled": 2,
+            "search_cpu_seconds": 2.3727709999999966,
+            "search_wall_seconds": 2.4501360429276247,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 60
+            },
+            "startup_cpu_seconds": 11.075747,
+            "startup_wall_seconds": 11.710781166999368,
+            "statuses": {
+              "win": 2
+            },
+            "stop_reasons": {
+              "maximum_depth": 57,
+              "selective_result": 3
+            },
+            "stopped_searches": 0,
+            "unfinished": 0,
+            "win_points_lower": 0.5,
+            "win_points_upper": 0.5,
+            "wins": 1,
+            "work": 4779868
+          },
+          "af822a426ad5bcb047fe443e140e5313b7aad61878200d83e98c3e2a46bc96db": {
+            "by_colour": {
+              "0": {
+                "completed_depths": {
+                  "1": 8
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 8
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.042156770490692,
+                "latency_p95_seconds": 0.05757555844029411,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 8
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 264814592,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 0.29814000000000007,
+                "search_wall_seconds": 0.3079994569416158,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 8
+                },
+                "startup_cpu_seconds": 11.358281,
+                "startup_wall_seconds": 12.121251707983902,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 7,
+                  "selective_result": 1
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 1.0,
+                "win_points_upper": 1.0,
+                "wins": 1,
+                "work": 537053
+              },
+              "1": {
+                "completed_depths": {
+                  "1": 96
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 96
+                },
+                "completion_rate": 0.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": false,
+                "failures": 0,
+                "latency_p50_seconds": 0.03371966701524798,
+                "latency_p95_seconds": 0.07350487524672644,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 96
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 264814592,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 3.454417000000001,
+                "search_wall_seconds": 3.679017005080823,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 96
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.0005513340001925826,
+                "statuses": {
+                  "unfinished": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 96
+                },
+                "stopped_searches": 0,
+                "unfinished": 1,
+                "win_points_lower": 0.0,
+                "win_points_upper": 1.0,
+                "wins": 0,
+                "work": 6577676
+              }
+            },
+            "completed_depths": {
+              "1": 104
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 104
+            },
+            "completion_rate": 0.5,
+            "distinct_starts": 1,
+            "distinct_trajectories": 2,
+            "eligible": false,
+            "failures": 0,
+            "latency_p50_seconds": 0.03510247898520902,
+            "latency_p95_seconds": 0.07308615449874196,
+            "losses": 0,
+            "observed_tree_depths": {
+              "0": 104
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 1,
+            "peak_candidate_rss_bytes": 264814592,
+            "pending": 0,
+            "scheduled": 2,
+            "search_cpu_seconds": 3.7525570000000013,
+            "search_wall_seconds": 3.9870164620224386,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 104
+            },
+            "startup_cpu_seconds": 11.358281,
+            "startup_wall_seconds": 12.121803041984094,
+            "statuses": {
+              "unfinished": 1,
+              "win": 1
+            },
+            "stop_reasons": {
+              "maximum_depth": 103,
+              "selective_result": 1
+            },
+            "stopped_searches": 0,
+            "unfinished": 1,
+            "win_points_lower": 0.5,
+            "win_points_upper": 1.0,
+            "wins": 1,
+            "work": 7114729
+          },
+          "ba49db920f0ebc62b334027d4c64e85c55465d7a20f4d5feec446c8af5c239b2": {
+            "by_colour": {
+              "0": {
+                "completed_depths": {
+                  "1": 15
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 15
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.06294400000479072,
+                "latency_p95_seconds": 0.07465507881133816,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 15
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 264814592,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 0.8520900000000058,
+                "search_wall_seconds": 0.876291206019232,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 15
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.0010646250157151371,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 14,
+                  "selective_result": 1
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 1.0,
+                "win_points_upper": 1.0,
+                "wins": 1,
+                "work": 1410449
+              },
+              "1": {
+                "completed_depths": {
+                  "1": 26
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 26
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.04937308351509273,
+                "latency_p95_seconds": 0.07670415651955409,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 26
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 264814592,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 1.289155000000001,
+                "search_wall_seconds": 1.3371608740417287,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 26
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.0005485419824253768,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 24,
+                  "selective_result": 2
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 1.0,
+                "win_points_upper": 1.0,
+                "wins": 1,
+                "work": 2556500
+              }
+            },
+            "completed_depths": {
+              "1": 41
+            },
+            "completed_pairs": 1,
+            "completed_simulations": {
+              "0": 41
+            },
+            "completion_rate": 1.0,
+            "distinct_starts": 1,
+            "distinct_trajectories": 2,
+            "eligible": true,
+            "failures": 0,
+            "latency_p50_seconds": 0.053527167008724064,
+            "latency_p95_seconds": 0.07879366702400148,
+            "losses": 0,
+            "observed_tree_depths": {
+              "0": 41
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 1,
+            "peak_candidate_rss_bytes": 264814592,
+            "pending": 0,
+            "scheduled": 2,
+            "search_cpu_seconds": 2.1412450000000067,
+            "search_wall_seconds": 2.2134520800609607,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 41
+            },
+            "startup_cpu_seconds": 0.0,
+            "startup_wall_seconds": 0.001613166998140514,
+            "statuses": {
+              "win": 2
+            },
+            "stop_reasons": {
+              "maximum_depth": 38,
+              "selective_result": 3
+            },
+            "stopped_searches": 0,
+            "unfinished": 0,
+            "win_points_lower": 1.0,
+            "win_points_upper": 1.0,
+            "wins": 2,
+            "work": 3966949
+          },
+          "f230866102527ce676f098751da6594c0e1e5e2097f8df77882586f35bece117": {
+            "by_colour": {
+              "0": {
+                "completed_depths": {
+                  "1": 8
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 8
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.035048270496190526,
+                "latency_p95_seconds": 0.03784957894386025,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 8
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 264814592,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 0.2389829999999975,
+                "search_wall_seconds": 0.23997704300563782,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 8
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.0005347919941414148,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 7,
+                  "selective_result": 1
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 1.0,
+                "win_points_upper": 1.0,
+                "wins": 1,
+                "work": 537053
+              },
+              "1": {
+                "completed_depths": {
+                  "1": 96
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 96
+                },
+                "completion_rate": 0.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": false,
+                "failures": 0,
+                "latency_p50_seconds": 0.022856208495795727,
+                "latency_p95_seconds": 0.048066333518363535,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 96
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 264814592,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 2.5747320000000187,
+                "search_wall_seconds": 2.5870896270498633,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 96
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.0002808749850373715,
+                "statuses": {
+                  "unfinished": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 96
+                },
+                "stopped_searches": 0,
+                "unfinished": 1,
+                "win_points_lower": 0.0,
+                "win_points_upper": 1.0,
+                "wins": 0,
+                "work": 6577676
+              }
+            },
+            "completed_depths": {
+              "1": 104
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 104
+            },
+            "completion_rate": 0.5,
+            "distinct_starts": 1,
+            "distinct_trajectories": 2,
+            "eligible": false,
+            "failures": 0,
+            "latency_p50_seconds": 0.023131937996367924,
+            "latency_p95_seconds": 0.04738166702300077,
+            "losses": 0,
+            "observed_tree_depths": {
+              "0": 104
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 1,
+            "peak_candidate_rss_bytes": 264814592,
+            "pending": 0,
+            "scheduled": 2,
+            "search_cpu_seconds": 2.813715000000016,
+            "search_wall_seconds": 2.827066670055501,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 104
+            },
+            "startup_cpu_seconds": 0.0,
+            "startup_wall_seconds": 0.0008156669791787863,
+            "statuses": {
+              "unfinished": 1,
+              "win": 1
+            },
+            "stop_reasons": {
+              "maximum_depth": 103,
+              "selective_result": 1
+            },
+            "stopped_searches": 0,
+            "unfinished": 1,
+            "win_points_lower": 0.5,
+            "win_points_upper": 1.0,
+            "wins": 1,
+            "work": 7114729
+          }
+        },
+        "candidate": "2cbe093e49aa0196c41a8897144739f628d0a7aed94a903a00984528183b8c8b",
+        "completed_depths": {
+          "1": 309
+        },
+        "completed_pairs": 2,
+        "completed_simulations": {
+          "0": 309
+        },
+        "completion_rate": 0.75,
+        "config_hash": "5cc4c8acae9cd1723ab9f79fe200d47aac3e6d4f5fc46ba20fdd2731a5fe5007",
+        "depth_violations": 0,
+        "distinct_starts": 1,
+        "distinct_trajectories": 6,
+        "eligible": false,
+        "failures": 0,
+        "latency_p50_seconds": 0.03398466599173844,
+        "latency_p95_seconds": 0.07041067500249483,
+        "losses": 1,
+        "name": "5cc4c8acae9cd1723ab9f79fe200d47aac3e6d4f5fc46ba20fdd2731a5fe5007",
+        "observed_tree_depths": {
+          "0": 309
+        },
+        "paired_interval_95": [
+          0.0,
+          1.0
+        ],
+        "pairs": 4,
+        "peak_candidate_rss_bytes": 264814592,
+        "pending": 0,
+        "preflight": {
+          "clipped_positions": 0,
+          "config_hash": "5cc4c8acae9cd1723ab9f79fe200d47aac3e6d4f5fc46ba20fdd2731a5fe5007",
+          "flagged": false,
+          "max_absolute_raw_score": 21.58506004901899,
+          "ordinary_positions": 1,
+          "saturated_positions": 0,
+          "saturation_fraction": 0.0
+        },
+        "role": "population",
+        "scheduled": 8,
+        "search_cpu_seconds": 11.08028800000002,
+        "search_wall_seconds": 11.477671255066525,
+        "seed_clusters": 1,
+        "selected_depths": {
+          "1": 309
+        },
+        "startup_cpu_seconds": 22.434027999999998,
+        "startup_wall_seconds": 23.83501304296078,
+        "statuses": {
+          "unfinished": 2,
+          "win": 6
+        },
+        "stop_reasons": {
+          "maximum_depth": 301,
+          "selective_result": 8
+        },
+        "stopped_searches": 0,
+        "unfinished": 2,
+        "win_points_lower": 0.625,
+        "win_points_upper": 0.875,
+        "wins": 5,
+        "work": 22976275
+      },
+      "positions": [
+        "5c8de9c4220ed1a640f85e16f9de72d7b38707338757692304ac4115f26881ef",
+        "6b195036ced62fe4e77ad0f2497ee5c15be49a5a578e086afd1c696c2160c211",
+        "761a2ef90b1d9745f7e6d8ccb19cb6e70bf9c2dee4950992462955c9bab77ff3",
+        "7c486d66ef2c5db447f63a67e4130c715b71ee5fab43d1fb4c654f247fd315a1"
+      ],
+      "seconds": 650
+    },
+    "raw-b-depth2": {
+      "depth": 2,
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 33.816120187919154,
+          "attack": 25.714516982666414,
+          "defence": 32.5643023919054,
+          "material": 5.0,
+          "overload": 9.015349552798096,
+          "pressure": 14.474845596372907
+        },
+        "version": "intransitive-variable-module-scales-v3"
+      },
+      "training": {
+        "by_colour": {
+          "0": {
+            "completed_depths": {
+              "1": 90
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 90
+            },
+            "completion_rate": 1.0,
+            "distinct_starts": 1,
+            "distinct_trajectories": 3,
+            "eligible": true,
+            "failures": 0,
+            "latency_p50_seconds": 0.042517771013081074,
+            "latency_p95_seconds": 0.07883419375430094,
+            "losses": 1,
+            "observed_tree_depths": {
+              "0": 90
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 4,
+            "peak_candidate_rss_bytes": 272072704,
+            "pending": 0,
+            "scheduled": 4,
+            "search_cpu_seconds": 3.7725689999999936,
+            "search_wall_seconds": 3.997186997003155,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 90
+            },
+            "startup_cpu_seconds": 12.104531999999999,
+            "startup_wall_seconds": 12.92752349897637,
+            "statuses": {
+              "win": 4
+            },
+            "stop_reasons": {
+              "maximum_depth": 85,
+              "selective_result": 5
+            },
+            "stopped_searches": 0,
+            "unfinished": 0,
+            "win_points_lower": 0.75,
+            "win_points_upper": 0.75,
+            "wins": 3,
+            "work": 7373296
+          },
+          "1": {
+            "completed_depths": {
+              "1": 294
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 294
+            },
+            "completion_rate": 0.5,
+            "distinct_starts": 1,
+            "distinct_trajectories": 4,
+            "eligible": false,
+            "failures": 0,
+            "latency_p50_seconds": 0.023410708497976884,
+            "latency_p95_seconds": 0.06050978740822755,
+            "losses": 0,
+            "observed_tree_depths": {
+              "0": 294
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 4,
+            "peak_candidate_rss_bytes": 272072704,
+            "pending": 0,
+            "scheduled": 4,
+            "search_cpu_seconds": 8.224117999999969,
+            "search_wall_seconds": 8.399510170158464,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 294
+            },
+            "startup_cpu_seconds": 0.0,
+            "startup_wall_seconds": 0.0021442930155899376,
+            "statuses": {
+              "unfinished": 2,
+              "win": 2
+            },
+            "stop_reasons": {
+              "maximum_depth": 290,
+              "selective_result": 4
+            },
+            "stopped_searches": 0,
+            "unfinished": 2,
+            "win_points_lower": 0.5,
+            "win_points_upper": 1.0,
+            "wins": 2,
+            "work": 18417033
+          }
+        },
+        "by_opponent": {
+          "2cbe093e49aa0196c41a8897144739f628d0a7aed94a903a00984528183b8c8b": {
+            "by_colour": {
+              "0": {
+                "completed_depths": {
+                  "1": 28
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 28
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.027633854013402015,
+                "latency_p95_seconds": 0.05929511652939254,
+                "losses": 1,
+                "observed_tree_depths": {
+                  "0": 28
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 272072704,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 0.9564559999999993,
+                "search_wall_seconds": 0.99377374802134,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 28
+                },
+                "startup_cpu_seconds": 12.104531999999999,
+                "startup_wall_seconds": 12.925834291003412,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 27,
+                  "selective_result": 1
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 0.0,
+                "win_points_upper": 0.0,
+                "wins": 0,
+                "work": 1977682
+              },
+              "1": {
+                "completed_depths": {
+                  "1": 32
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 32
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.048581062495941296,
+                "latency_p95_seconds": 0.0745874974032631,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 32
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 272072704,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 1.399963999999997,
+                "search_wall_seconds": 1.4544740451383404,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 32
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.0005408340075518936,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 30,
+                  "selective_result": 2
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 1.0,
+                "win_points_upper": 1.0,
+                "wins": 1,
+                "work": 2729543
+              }
+            },
+            "completed_depths": {
+              "1": 60
+            },
+            "completed_pairs": 1,
+            "completed_simulations": {
+              "0": 60
+            },
+            "completion_rate": 1.0,
+            "distinct_starts": 1,
+            "distinct_trajectories": 2,
+            "eligible": true,
+            "failures": 0,
+            "latency_p50_seconds": 0.040867187999538146,
+            "latency_p95_seconds": 0.07174498060194308,
+            "losses": 1,
+            "observed_tree_depths": {
+              "0": 60
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 1,
+            "peak_candidate_rss_bytes": 272072704,
+            "pending": 0,
+            "scheduled": 2,
+            "search_cpu_seconds": 2.3564199999999964,
+            "search_wall_seconds": 2.4482477931596804,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 60
+            },
+            "startup_cpu_seconds": 12.104531999999999,
+            "startup_wall_seconds": 12.926375125010964,
+            "statuses": {
+              "win": 2
+            },
+            "stop_reasons": {
+              "maximum_depth": 57,
+              "selective_result": 3
+            },
+            "stopped_searches": 0,
+            "unfinished": 0,
+            "win_points_lower": 0.5,
+            "win_points_upper": 0.5,
+            "wins": 1,
+            "work": 4707225
+          },
+          "af822a426ad5bcb047fe443e140e5313b7aad61878200d83e98c3e2a46bc96db": {
+            "by_colour": {
+              "0": {
+                "completed_depths": {
+                  "1": 8
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 8
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.03389777049596887,
+                "latency_p95_seconds": 0.04615428970137145,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 8
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 272072704,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 0.24726499999999874,
+                "search_wall_seconds": 0.250936125026783,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 8
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.0006426660111173987,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 7,
+                  "selective_result": 1
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 1.0,
+                "win_points_upper": 1.0,
+                "wins": 1,
+                "work": 537053
+              },
+              "1": {
+                "completed_depths": {
+                  "1": 96
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 96
+                },
+                "completion_rate": 0.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": false,
+                "failures": 0,
+                "latency_p50_seconds": 0.013762562492047437,
+                "latency_p95_seconds": 0.048603500246827025,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 96
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 272072704,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 1.964897999999998,
+                "search_wall_seconds": 1.9734543770027813,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 96
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.00036070801434107125,
+                "statuses": {
+                  "unfinished": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 96
+                },
+                "stopped_searches": 0,
+                "unfinished": 1,
+                "win_points_lower": 0.0,
+                "win_points_upper": 1.0,
+                "wins": 0,
+                "work": 5005671
+              }
+            },
+            "completed_depths": {
+              "1": 104
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 104
+            },
+            "completion_rate": 0.5,
+            "distinct_starts": 1,
+            "distinct_trajectories": 2,
+            "eligible": false,
+            "failures": 0,
+            "latency_p50_seconds": 0.014819312011240982,
+            "latency_p95_seconds": 0.04958950006548547,
+            "losses": 0,
+            "observed_tree_depths": {
+              "0": 104
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 1,
+            "peak_candidate_rss_bytes": 272072704,
+            "pending": 0,
+            "scheduled": 2,
+            "search_cpu_seconds": 2.2121629999999968,
+            "search_wall_seconds": 2.2243905020295642,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 104
+            },
+            "startup_cpu_seconds": 0.0,
+            "startup_wall_seconds": 0.00100337402545847,
+            "statuses": {
+              "unfinished": 1,
+              "win": 1
+            },
+            "stop_reasons": {
+              "maximum_depth": 103,
+              "selective_result": 1
+            },
+            "stopped_searches": 0,
+            "unfinished": 1,
+            "win_points_lower": 0.5,
+            "win_points_upper": 1.0,
+            "wins": 1,
+            "work": 5542724
+          },
+          "ba49db920f0ebc62b334027d4c64e85c55465d7a20f4d5feec446c8af5c239b2": {
+            "by_colour": {
+              "0": {
+                "completed_depths": {
+                  "1": 46
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 46
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.05033487499167677,
+                "latency_p95_seconds": 0.08211962498899084,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 46
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 272072704,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 2.2723599999999955,
+                "search_wall_seconds": 2.4387771229085047,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 46
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.0006244589749258012,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 44,
+                  "selective_result": 2
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 1.0,
+                "win_points_upper": 1.0,
+                "wins": 1,
+                "work": 4321508
+              },
+              "1": {
+                "completed_depths": {
+                  "1": 70
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 70
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.03444281200063415,
+                "latency_p95_seconds": 0.06191192514379508,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 70
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 272072704,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 2.534365999999988,
+                "search_wall_seconds": 2.6007850790047087,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 70
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.0005452090117614716,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 68,
+                  "selective_result": 2
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 1.0,
+                "win_points_upper": 1.0,
+                "wins": 1,
+                "work": 5925362
+              }
+            },
+            "completed_depths": {
+              "1": 116
+            },
+            "completed_pairs": 1,
+            "completed_simulations": {
+              "0": 116
+            },
+            "completion_rate": 1.0,
+            "distinct_starts": 1,
+            "distinct_trajectories": 2,
+            "eligible": true,
+            "failures": 0,
+            "latency_p50_seconds": 0.039028125000186265,
+            "latency_p95_seconds": 0.07498316651617642,
+            "losses": 0,
+            "observed_tree_depths": {
+              "0": 116
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 1,
+            "peak_candidate_rss_bytes": 272072704,
+            "pending": 0,
+            "scheduled": 2,
+            "search_cpu_seconds": 4.806725999999983,
+            "search_wall_seconds": 5.039562201913213,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 116
+            },
+            "startup_cpu_seconds": 0.0,
+            "startup_wall_seconds": 0.0011696679866872728,
+            "statuses": {
+              "win": 2
+            },
+            "stop_reasons": {
+              "maximum_depth": 112,
+              "selective_result": 4
+            },
+            "stopped_searches": 0,
+            "unfinished": 0,
+            "win_points_lower": 1.0,
+            "win_points_upper": 1.0,
+            "wins": 2,
+            "work": 10246870
+          },
+          "f230866102527ce676f098751da6594c0e1e5e2097f8df77882586f35bece117": {
+            "by_colour": {
+              "0": {
+                "completed_depths": {
+                  "1": 8
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 8
+                },
+                "completion_rate": 1.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": true,
+                "failures": 0,
+                "latency_p50_seconds": 0.043972125014988706,
+                "latency_p95_seconds": 0.057310477299324696,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 8
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 272072704,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 0.2964880000000001,
+                "search_wall_seconds": 0.3137000010465272,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 8
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.00042208298691548407,
+                "statuses": {
+                  "win": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 7,
+                  "selective_result": 1
+                },
+                "stopped_searches": 0,
+                "unfinished": 0,
+                "win_points_lower": 1.0,
+                "win_points_upper": 1.0,
+                "wins": 1,
+                "work": 537053
+              },
+              "1": {
+                "completed_depths": {
+                  "1": 96
+                },
+                "completed_pairs": 0,
+                "completed_simulations": {
+                  "0": 96
+                },
+                "completion_rate": 0.0,
+                "distinct_starts": 1,
+                "distinct_trajectories": 1,
+                "eligible": false,
+                "failures": 0,
+                "latency_p50_seconds": 0.01801510399673134,
+                "latency_p95_seconds": 0.05773332325043157,
+                "losses": 0,
+                "observed_tree_depths": {
+                  "0": 96
+                },
+                "paired_interval_95": [
+                  0.0,
+                  1.0
+                ],
+                "pairs": 1,
+                "peak_candidate_rss_bytes": 272072704,
+                "pending": 0,
+                "scheduled": 1,
+                "search_cpu_seconds": 2.3248899999999857,
+                "search_wall_seconds": 2.370796669012634,
+                "seed_clusters": 1,
+                "selected_depths": {
+                  "1": 96
+                },
+                "startup_cpu_seconds": 0.0,
+                "startup_wall_seconds": 0.0006975419819355011,
+                "statuses": {
+                  "unfinished": 1
+                },
+                "stop_reasons": {
+                  "maximum_depth": 96
+                },
+                "stopped_searches": 0,
+                "unfinished": 1,
+                "win_points_lower": 0.0,
+                "win_points_upper": 1.0,
+                "wins": 0,
+                "work": 4756457
+              }
+            },
+            "completed_depths": {
+              "1": 104
+            },
+            "completed_pairs": 0,
+            "completed_simulations": {
+              "0": 104
+            },
+            "completion_rate": 0.5,
+            "distinct_starts": 1,
+            "distinct_trajectories": 2,
+            "eligible": false,
+            "failures": 0,
+            "latency_p50_seconds": 0.01867358350136783,
+            "latency_p95_seconds": 0.05821969826938584,
+            "losses": 0,
+            "observed_tree_depths": {
+              "0": 104
+            },
+            "paired_interval_95": [
+              0.0,
+              1.0
+            ],
+            "pairs": 1,
+            "peak_candidate_rss_bytes": 272072704,
+            "pending": 0,
+            "scheduled": 2,
+            "search_cpu_seconds": 2.6213779999999858,
+            "search_wall_seconds": 2.6844966700591613,
+            "seed_clusters": 1,
+            "selected_depths": {
+              "1": 104
+            },
+            "startup_cpu_seconds": 0.0,
+            "startup_wall_seconds": 0.0011196249688509852,
+            "statuses": {
+              "unfinished": 1,
+              "win": 1
+            },
+            "stop_reasons": {
+              "maximum_depth": 103,
+              "selective_result": 1
+            },
+            "stopped_searches": 0,
+            "unfinished": 1,
+            "win_points_lower": 0.5,
+            "win_points_upper": 1.0,
+            "wins": 1,
+            "work": 5293510
+          }
+        },
+        "candidate": "0bbf106ccf0a72b69d3e7186416707747b315fe7bd41639b51d830f695ec713f",
+        "completed_depths": {
+          "1": 384
+        },
+        "completed_pairs": 2,
+        "completed_simulations": {
+          "0": 384
+        },
+        "completion_rate": 0.75,
+        "config_hash": "a6f98276421471f905a73d9ca0bf9e65fa3def4fc2c93ae92918f2520bee38d3",
+        "depth_violations": 0,
+        "distinct_starts": 1,
+        "distinct_trajectories": 7,
+        "eligible": false,
+        "failures": 0,
+        "latency_p50_seconds": 0.02771914600452874,
+        "latency_p95_seconds": 0.06765905360080064,
+        "losses": 1,
+        "name": "a6f98276421471f905a73d9ca0bf9e65fa3def4fc2c93ae92918f2520bee38d3",
+        "observed_tree_depths": {
+          "0": 384
+        },
+        "paired_interval_95": [
+          0.0,
+          1.0
+        ],
+        "pairs": 4,
+        "peak_candidate_rss_bytes": 272072704,
+        "pending": 0,
+        "preflight": {
+          "clipped_positions": 0,
+          "config_hash": "a6f98276421471f905a73d9ca0bf9e65fa3def4fc2c93ae92918f2520bee38d3",
+          "flagged": false,
+          "max_absolute_raw_score": 24.47270731518497,
+          "ordinary_positions": 1,
+          "saturated_positions": 0,
+          "saturation_fraction": 0.0
+        },
+        "role": "population",
+        "scheduled": 8,
+        "search_cpu_seconds": 11.996686999999962,
+        "search_wall_seconds": 12.39669716716162,
+        "seed_clusters": 1,
+        "selected_depths": {
+          "1": 384
+        },
+        "startup_cpu_seconds": 12.104531999999999,
+        "startup_wall_seconds": 12.92966779199196,
+        "statuses": {
+          "unfinished": 2,
+          "win": 6
+        },
+        "stop_reasons": {
+          "maximum_depth": 375,
+          "selective_result": 9
+        },
+        "stopped_searches": 0,
+        "unfinished": 2,
+        "win_points_lower": 0.625,
+        "win_points_upper": 0.875,
+        "wins": 5,
+        "work": 25790329
+      },
+      "positions": [
+        "5c8de9c4220ed1a640f85e16f9de72d7b38707338757692304ac4115f26881ef",
+        "6b195036ced62fe4e77ad0f2497ee5c15be49a5a578e086afd1c696c2160c211",
+        "761a2ef90b1d9745f7e6d8ccb19cb6e70bf9c2dee4950992462955c9bab77ff3",
+        "7c486d66ef2c5db447f63a67e4130c715b71ee5fab43d1fb4c654f247fd315a1"
+      ],
+      "seconds": 650
+    },
+    "primary-depth4": {
+      "depth": 4,
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 69.73261445458894,
+          "attack": 42.33762277619854,
+          "defence": 29.31117881909708,
+          "material": -36.697281772317815,
+          "overload": 82.71756110820638,
+          "pressure": 13.140116669179605
+        },
+        "version": "intransitive-variable-module-scales-v3"
+      },
+      "positions": [
+        "507f43df3f44db6c26430f85c2530eb01a53e7317b868b31cafe1af056ee905b",
+        "5b487b83dbd18475b8f8bc771ed33233bd6ef129ad157d8e6e6aa57fd8eaef0a"
+      ],
+      "seconds": 650
+    },
+    "raw-a-depth4": {
+      "depth": 4,
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 23.967050360966205,
+          "attack": 25.714516982666414,
+          "defence": 32.5643023919054,
+          "material": 5.0,
+          "overload": 17.08870008844581,
+          "pressure": 11.962064510184447
+        },
+        "version": "intransitive-variable-module-scales-v3"
+      },
+      "positions": [
+        "507f43df3f44db6c26430f85c2530eb01a53e7317b868b31cafe1af056ee905b",
+        "5b487b83dbd18475b8f8bc771ed33233bd6ef129ad157d8e6e6aa57fd8eaef0a"
+      ],
+      "seconds": 650
+    }
+  },
+  "elapsed_at_launch": 2844.612410545349,
+  "resource_change": "User explicitly requested graceful shutdown of competing training and benchmark processes, then focus compute on this task. Four independent validation jobs at normal priority0, one active search each, at most3 resident bots each; numerical-library threads1. Original one-hour deadline retained.",
+  "selection": "Post-hoc diagnostic: seed171 generation0 more wins than losses, no failures, completion below.8; sort official wins/scheduled, completion, config hash; take first two. Primary selection and original evidence unchanged.",
+  "freshness": "Depth2 uses four further development-validation lines excluded from all prior training/validation/screens. Depth4 repeats the two originally reserved positions; earlier attempt was interrupted by user. No heldout games.",
+  "budget": "Each job capped650seconds or remaining time before3400s original elapsed; audit3460s, supervisor3500s plus bounded cleanup. Different compute allocation is a separate phase, not pooled with earlier time-capped games."
+}

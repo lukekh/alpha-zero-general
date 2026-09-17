@@ -1,0 +1,870 @@
+{
+  "arms": [
+    {
+      "status": "wall_budget",
+      "generations": 0,
+      "unique_candidates": 4,
+      "unique_matches": 10,
+      "eligible_exports": 0,
+      "outcomes": {
+        "cancelled": 1,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "simulation_incomplete": 0,
+        "unfinished": 7,
+        "win": 2
+      },
+      "measured_search_work": 177008541,
+      "known_child_cpu_seconds": 219.594899,
+      "wall_seconds": 240.05822945799446,
+      "name": "mcts-s128-91",
+      "exports": []
+    },
+    {
+      "status": "wall_budget",
+      "generations": 0,
+      "unique_candidates": 4,
+      "unique_matches": 9,
+      "eligible_exports": 0,
+      "outcomes": {
+        "cancelled": 1,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "simulation_incomplete": 0,
+        "unfinished": 7,
+        "win": 1
+      },
+      "measured_search_work": 133459041,
+      "known_child_cpu_seconds": 202.89402599999994,
+      "wall_seconds": 240.0921303750074,
+      "name": "mcts-s128-92",
+      "exports": []
+    },
+    {
+      "status": "wall_budget",
+      "generations": 1,
+      "unique_candidates": 5,
+      "unique_matches": 22,
+      "eligible_exports": 0,
+      "outcomes": {
+        "cancelled": 1,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "simulation_incomplete": 0,
+        "unfinished": 17,
+        "win": 4
+      },
+      "measured_search_work": 214912800,
+      "known_child_cpu_seconds": 192.77172599999994,
+      "wall_seconds": 240.1168809160008,
+      "name": "mcts-s32-91",
+      "exports": [
+        {
+          "generation": 0,
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 32.5643023919054,
+            "material": 92.80997881784772,
+            "overload": -16.280529262964336,
+            "pressure": -23.937818924804596
+          },
+          "eligible": false,
+          "search": {
+            "eligible": false,
+            "wins": 1,
+            "losses": 1,
+            "unfinished": 4,
+            "failures": 0,
+            "scheduled": 6
+          },
+          "validation": {
+            "eligible": false,
+            "wins": 0,
+            "losses": 2,
+            "unfinished": 2,
+            "failures": 0,
+            "scheduled": 4
+          }
+        }
+      ]
+    },
+    {
+      "status": "wall_budget",
+      "generations": 1,
+      "unique_candidates": 5,
+      "unique_matches": 21,
+      "eligible_exports": 0,
+      "outcomes": {
+        "cancelled": 1,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "simulation_incomplete": 0,
+        "unfinished": 13,
+        "win": 7
+      },
+      "measured_search_work": 223108952,
+      "known_child_cpu_seconds": 193.37667300000047,
+      "wall_seconds": 240.1727869999886,
+      "name": "mcts-s32-92",
+      "exports": [
+        {
+          "generation": 0,
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 18.2755872901373,
+            "material": 62.641358680845,
+            "overload": 52.47220348707703,
+            "pressure": -84.63174715561924
+          },
+          "eligible": false,
+          "search": {
+            "eligible": false,
+            "wins": 1,
+            "losses": 1,
+            "unfinished": 4,
+            "failures": 0,
+            "scheduled": 6
+          },
+          "validation": {
+            "eligible": false,
+            "wins": 0,
+            "losses": 2,
+            "unfinished": 2,
+            "failures": 0,
+            "scheduled": 4
+          }
+        }
+      ]
+    },
+    {
+      "status": "complete",
+      "generations": 2,
+      "unique_candidates": 5,
+      "unique_matches": 32,
+      "eligible_exports": 1,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "simulation_incomplete": 0,
+        "unfinished": 7,
+        "win": 25
+      },
+      "measured_search_work": 141420406,
+      "known_child_cpu_seconds": 129.40860199999992,
+      "wall_seconds": 183.50736174997292,
+      "name": "minimax-d1-91",
+      "exports": [
+        {
+          "generation": 0,
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 32.5643023919054,
+            "material": 92.80997881784772,
+            "overload": -16.280529262964336,
+            "pressure": -23.937818924804596
+          },
+          "eligible": true,
+          "search": {
+            "eligible": true,
+            "wins": 1,
+            "losses": 4,
+            "unfinished": 1,
+            "failures": 0,
+            "scheduled": 6
+          },
+          "validation": {
+            "eligible": true,
+            "wins": 0,
+            "losses": 4,
+            "unfinished": 0,
+            "failures": 0,
+            "scheduled": 4
+          }
+        },
+        {
+          "generation": 1,
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 51.02323486501503,
+            "defence": -11.30205224947246,
+            "material": 92.80997881784772,
+            "overload": -16.280529262964336,
+            "pressure": 20.615921679832326
+          },
+          "eligible": false,
+          "search": {
+            "eligible": true,
+            "wins": 2,
+            "losses": 3,
+            "unfinished": 1,
+            "failures": 0,
+            "scheduled": 6
+          },
+          "validation": {
+            "eligible": false,
+            "wins": 2,
+            "losses": 1,
+            "unfinished": 3,
+            "failures": 0,
+            "scheduled": 6
+          }
+        }
+      ]
+    },
+    {
+      "status": "complete",
+      "generations": 2,
+      "unique_candidates": 5,
+      "unique_matches": 32,
+      "eligible_exports": 2,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "simulation_incomplete": 0,
+        "unfinished": 4,
+        "win": 28
+      },
+      "measured_search_work": 102820902,
+      "known_child_cpu_seconds": 118.51656600000005,
+      "wall_seconds": 160.0717418330023,
+      "name": "minimax-d1-92",
+      "exports": [
+        {
+          "generation": 0,
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 18.2755872901373,
+            "material": 62.641358680845,
+            "overload": 52.47220348707703,
+            "pressure": -84.63174715561924
+          },
+          "eligible": true,
+          "search": {
+            "eligible": true,
+            "wins": 1,
+            "losses": 4,
+            "unfinished": 1,
+            "failures": 0,
+            "scheduled": 6
+          },
+          "validation": {
+            "eligible": true,
+            "wins": 0,
+            "losses": 4,
+            "unfinished": 0,
+            "failures": 0,
+            "scheduled": 4
+          }
+        },
+        {
+          "generation": 1,
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 89.68645970075882,
+            "defence": 32.64205041558702,
+            "material": 62.641358680845,
+            "overload": 25.746649069373365,
+            "pressure": -100.0
+          },
+          "eligible": true,
+          "search": {
+            "eligible": true,
+            "wins": 2,
+            "losses": 4,
+            "unfinished": 0,
+            "failures": 0,
+            "scheduled": 6
+          },
+          "validation": {
+            "eligible": true,
+            "wins": 2,
+            "losses": 3,
+            "unfinished": 1,
+            "failures": 0,
+            "scheduled": 6
+          }
+        }
+      ]
+    },
+    {
+      "status": "wall_budget",
+      "generations": 0,
+      "unique_candidates": 4,
+      "unique_matches": 13,
+      "eligible_exports": 0,
+      "outcomes": {
+        "cancelled": 1,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "simulation_incomplete": 0,
+        "unfinished": 5,
+        "win": 7
+      },
+      "measured_search_work": 214140503,
+      "known_child_cpu_seconds": 218.44091299999985,
+      "wall_seconds": 240.06766029199935,
+      "name": "minimax-d2-91",
+      "exports": []
+    },
+    {
+      "status": "wall_budget",
+      "generations": 0,
+      "unique_candidates": 4,
+      "unique_matches": 10,
+      "eligible_exports": 0,
+      "outcomes": {
+        "cancelled": 1,
+        "crash": 0,
+        "depth_incomplete": 0,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "simulation_incomplete": 0,
+        "unfinished": 7,
+        "win": 2
+      },
+      "measured_search_work": 185524228,
+      "known_child_cpu_seconds": 212.4765539999999,
+      "wall_seconds": 240.0867900000012,
+      "name": "minimax-d2-92",
+      "exports": []
+    },
+    {
+      "status": "complete",
+      "generations": 2,
+      "unique_candidates": 5,
+      "unique_matches": 28,
+      "eligible_exports": 0,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 26,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "simulation_incomplete": 0,
+        "unfinished": 2,
+        "win": 0
+      },
+      "measured_search_work": 217414370,
+      "known_child_cpu_seconds": 195.71961900000002,
+      "wall_seconds": 213.45600616699085,
+      "name": "minimax-d3-91",
+      "exports": [
+        {
+          "generation": 0,
+          "genes": {
+            "advantage": 53.27579949723548,
+            "attack": 0.0,
+            "defence": -10.28714821009909,
+            "material": -56.67219849454446,
+            "overload": -39.59776403588522,
+            "pressure": 92.01622728097922
+          },
+          "eligible": false,
+          "search": {
+            "eligible": false,
+            "wins": 0,
+            "losses": 0,
+            "unfinished": 0,
+            "failures": 6,
+            "scheduled": 6
+          },
+          "validation": {
+            "eligible": false,
+            "wins": 0,
+            "losses": 0,
+            "unfinished": 0,
+            "failures": 4,
+            "scheduled": 4
+          }
+        },
+        {
+          "generation": 1,
+          "genes": {
+            "advantage": 53.27579949723548,
+            "attack": 25.30871788234861,
+            "defence": -54.15350285147695,
+            "material": -56.67219849454446,
+            "overload": -39.59776403588522,
+            "pressure": 100.0
+          },
+          "eligible": false,
+          "search": {
+            "eligible": false,
+            "wins": 0,
+            "losses": 0,
+            "unfinished": 0,
+            "failures": 6,
+            "scheduled": 6
+          },
+          "validation": {
+            "eligible": false,
+            "wins": 0,
+            "losses": 0,
+            "unfinished": 1,
+            "failures": 3,
+            "scheduled": 4
+          }
+        }
+      ]
+    },
+    {
+      "status": "complete",
+      "generations": 2,
+      "unique_candidates": 5,
+      "unique_matches": 28,
+      "eligible_exports": 0,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 26,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "simulation_incomplete": 0,
+        "unfinished": 2,
+        "win": 0
+      },
+      "measured_search_work": 210082894,
+      "known_child_cpu_seconds": 193.584937,
+      "wall_seconds": 208.60105837500305,
+      "name": "minimax-d3-92",
+      "exports": [
+        {
+          "generation": 0,
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 18.2755872901373,
+            "material": 62.641358680845,
+            "overload": 52.47220348707703,
+            "pressure": -84.63174715561924
+          },
+          "eligible": false,
+          "search": {
+            "eligible": false,
+            "wins": 0,
+            "losses": 0,
+            "unfinished": 2,
+            "failures": 4,
+            "scheduled": 6
+          },
+          "validation": {
+            "eligible": false,
+            "wins": 0,
+            "losses": 0,
+            "unfinished": 0,
+            "failures": 4,
+            "scheduled": 4
+          }
+        },
+        {
+          "generation": 1,
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 18.2755872901373,
+            "material": 62.641358680845,
+            "overload": 52.47220348707703,
+            "pressure": -84.63174715561924
+          },
+          "eligible": false,
+          "search": {
+            "eligible": false,
+            "wins": 0,
+            "losses": 0,
+            "unfinished": 2,
+            "failures": 4,
+            "scheduled": 6
+          },
+          "validation": {
+            "eligible": false,
+            "wins": 0,
+            "losses": 0,
+            "unfinished": 0,
+            "failures": 4,
+            "scheduled": 4
+          }
+        }
+      ]
+    }
+  ],
+  "screens": [
+    {
+      "name": "mcts-s128",
+      "genes": null,
+      "diagnostic_only": true,
+      "status": "no completed candidate export"
+    },
+    {
+      "name": "mcts-s32",
+      "genes": {
+        "advantage": 23.967050360966205,
+        "attack": 25.714516982666414,
+        "defence": 18.2755872901373,
+        "material": 62.641358680845,
+        "overload": 52.47220348707703,
+        "pressure": -84.63174715561924
+      },
+      "diagnostic_only": true,
+      "wins": 0,
+      "losses": 3,
+      "unfinished": 5,
+      "failures": 0,
+      "pending": 0,
+      "scheduled": 8,
+      "eligible": false,
+      "paired_interval_95": [
+        0.0,
+        1.0
+      ],
+      "completed_depths": {
+        "0": 613
+      },
+      "completed_simulations": {
+        "32": 613
+      },
+      "observed_tree_depths": {
+        "1": 8,
+        "2": 131,
+        "3": 389,
+        "4": 82,
+        "5": 3
+      },
+      "statuses": {
+        "unfinished": 5,
+        "win": 3
+      },
+      "work": 37868071,
+      "search_wall_seconds": 22.15268929794547
+    },
+    {
+      "name": "minimax-d1",
+      "genes": {
+        "advantage": 23.967050360966205,
+        "attack": 25.714516982666414,
+        "defence": 18.2755872901373,
+        "material": 62.641358680845,
+        "overload": 52.47220348707703,
+        "pressure": -84.63174715561924
+      },
+      "diagnostic_only": false,
+      "wins": 0,
+      "losses": 7,
+      "unfinished": 1,
+      "failures": 0,
+      "pending": 0,
+      "scheduled": 8,
+      "eligible": true,
+      "paired_interval_95": [
+        0.0,
+        0.8040507578703098
+      ],
+      "completed_depths": {
+        "1": 203
+      },
+      "completed_simulations": {
+        "0": 203
+      },
+      "observed_tree_depths": {
+        "0": 203
+      },
+      "statuses": {
+        "unfinished": 1,
+        "win": 7
+      },
+      "work": 6073302,
+      "search_wall_seconds": 3.5239619621715974
+    },
+    {
+      "name": "minimax-d2",
+      "genes": null,
+      "diagnostic_only": true,
+      "status": "no completed candidate export"
+    },
+    {
+      "name": "minimax-d3",
+      "genes": {
+        "advantage": 53.27579949723548,
+        "attack": 0.0,
+        "defence": -10.28714821009909,
+        "material": -56.67219849454446,
+        "overload": -39.59776403588522,
+        "pressure": 92.01622728097922
+      },
+      "diagnostic_only": true,
+      "wins": 0,
+      "losses": 0,
+      "unfinished": 0,
+      "failures": 8,
+      "pending": 0,
+      "scheduled": 8,
+      "eligible": false,
+      "paired_interval_95": [
+        0.0,
+        1.0
+      ],
+      "completed_depths": {
+        "2": 7,
+        "3": 1
+      },
+      "completed_simulations": {
+        "0": 8
+      },
+      "observed_tree_depths": {
+        "0": 8
+      },
+      "statuses": {
+        "depth_incomplete": 8
+      },
+      "work": 38141469,
+      "search_wall_seconds": 18.051829750998877
+    }
+  ],
+  "supplement": [
+    {
+      "name": "mcts-s128",
+      "genes": {
+        "advantage": 23.967050360966205,
+        "attack": 25.714516982666414,
+        "defence": 18.2755872901373,
+        "material": 62.641358680845,
+        "overload": 52.47220348707703,
+        "pressure": -84.63174715561924
+      },
+      "diagnostic_only": true,
+      "wins": 0,
+      "losses": 1,
+      "unfinished": 1,
+      "failures": 0,
+      "pending": 0,
+      "scheduled": 2,
+      "eligible": false,
+      "paired_interval_95": [
+        0.0,
+        1.0
+      ],
+      "completed_depths": {
+        "0": 174
+      },
+      "completed_simulations": {
+        "128": 174
+      },
+      "observed_tree_depths": {
+        "2": 6,
+        "3": 50,
+        "4": 99,
+        "5": 18,
+        "6": 1
+      },
+      "statuses": {
+        "unfinished": 1,
+        "win": 1
+      },
+      "work": 26468012,
+      "search_wall_seconds": 16.03663412097376
+    },
+    {
+      "name": "mcts-s32",
+      "genes": {
+        "advantage": 23.967050360966205,
+        "attack": 25.714516982666414,
+        "defence": 18.2755872901373,
+        "material": 62.641358680845,
+        "overload": 52.47220348707703,
+        "pressure": -84.63174715561924
+      },
+      "diagnostic_only": true,
+      "wins": 0,
+      "losses": 1,
+      "unfinished": 1,
+      "failures": 0,
+      "pending": 0,
+      "scheduled": 2,
+      "eligible": false,
+      "paired_interval_95": [
+        0.0,
+        1.0
+      ],
+      "completed_depths": {
+        "0": 129
+      },
+      "completed_simulations": {
+        "32": 129
+      },
+      "observed_tree_depths": {
+        "2": 105,
+        "3": 16,
+        "4": 7,
+        "5": 1
+      },
+      "statuses": {
+        "unfinished": 1,
+        "win": 1
+      },
+      "work": 5820407,
+      "search_wall_seconds": 3.6232157070480753
+    },
+    {
+      "name": "minimax-d1",
+      "genes": {
+        "advantage": 23.967050360966205,
+        "attack": 25.714516982666414,
+        "defence": 18.2755872901373,
+        "material": 62.641358680845,
+        "overload": 52.47220348707703,
+        "pressure": -84.63174715561924
+      },
+      "diagnostic_only": true,
+      "wins": 0,
+      "losses": 1,
+      "unfinished": 1,
+      "failures": 0,
+      "pending": 0,
+      "scheduled": 2,
+      "eligible": false,
+      "paired_interval_95": [
+        0.0,
+        1.0
+      ],
+      "completed_depths": {
+        "1": 104
+      },
+      "completed_simulations": {
+        "0": 104
+      },
+      "observed_tree_depths": {
+        "0": 104
+      },
+      "statuses": {
+        "unfinished": 1,
+        "win": 1
+      },
+      "work": 1067465,
+      "search_wall_seconds": 0.7760951259406283
+    },
+    {
+      "name": "minimax-d2",
+      "genes": {
+        "advantage": 53.27579949723548,
+        "attack": 0.0,
+        "defence": -10.28714821009909,
+        "material": -56.67219849454446,
+        "overload": -39.59776403588522,
+        "pressure": 92.01622728097922
+      },
+      "diagnostic_only": true,
+      "wins": 1,
+      "losses": 1,
+      "unfinished": 0,
+      "failures": 0,
+      "pending": 0,
+      "scheduled": 2,
+      "eligible": true,
+      "paired_interval_95": [
+        0.0,
+        1.0
+      ],
+      "completed_depths": {
+        "1": 3,
+        "2": 84
+      },
+      "completed_simulations": {
+        "0": 87
+      },
+      "observed_tree_depths": {
+        "0": 87
+      },
+      "statuses": {
+        "win": 2
+      },
+      "work": 14529879,
+      "search_wall_seconds": 6.134043916972587
+    },
+    {
+      "name": "minimax-d3",
+      "genes": {
+        "advantage": 53.27579949723548,
+        "attack": 0.0,
+        "defence": -10.28714821009909,
+        "material": -56.67219849454446,
+        "overload": -39.59776403588522,
+        "pressure": 92.01622728097922
+      },
+      "diagnostic_only": true,
+      "wins": 0,
+      "losses": 1,
+      "unfinished": 1,
+      "failures": 0,
+      "pending": 0,
+      "scheduled": 2,
+      "eligible": false,
+      "paired_interval_95": [
+        0.0,
+        1.0
+      ],
+      "completed_depths": {
+        "1": 1,
+        "2": 1,
+        "3": 28
+      },
+      "completed_simulations": {
+        "0": 30
+      },
+      "observed_tree_depths": {
+        "0": 30
+      },
+      "statuses": {
+        "unfinished": 1,
+        "win": 1
+      },
+      "work": 53742327,
+      "search_wall_seconds": 27.160228333057603
+    }
+  ],
+  "registered_gene_ranges": {
+    "advantage": [
+      23.967050360966205,
+      53.27579949723548
+    ],
+    "attack": [
+      -67.010209169031,
+      89.68645970075882
+    ],
+    "defence": [
+      -54.15350285147695,
+      32.64205041558702
+    ],
+    "material": [
+      -56.67219849454446,
+      100.0
+    ],
+    "overload": [
+      -39.59776403588522,
+      52.47220348707703
+    ],
+    "pressure": [
+      -100.0,
+      100.0
+    ]
+  },
+  "registered_configurations_including_references": 9
+}

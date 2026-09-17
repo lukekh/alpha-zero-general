@@ -15,6 +15,9 @@ the report includes the archived baseline and measured retain/reject decision.
 An opt-in [square-ring pressure experiment](../benchmarks/pressure/README.md)
 adds blocker-blind RPS threats discounted by nearby defenders. It is disabled
 by default and is not enabled in the running supervised generators.
+An optional [variable-material mode](VARIABLE_MATERIAL.md) values each piece
+using the opposing prey/predator ratio and its scarcity in the own army. It is
+available in Python and Rust, with BASE 100 and REG 0.25.
 The compact Python search and its compiled proofs use incremental legality
 bitboards. See the [Python/Rust node-throughput measurements](../benchmarks/legal_moves/README.md).
 Compiled legacy move ordering is now the default; enhanced ordering remains opt-in.
@@ -343,3 +346,5 @@ change the active training run, official rules or modelling draw limits.
 Experimental [guarded null move and forward futility pruning](SELECTIVE_SEARCH.md)
 are independently configurable in Python/native search and default off. Their
 completed depths are selective; they are not exhaustive labels or certificates.
+
+See [variable-value MVV-LVA ordering](MVV_LVA.md) and the [module-scale example](MODULE_SCALE.md).

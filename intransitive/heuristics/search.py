@@ -98,7 +98,12 @@ class SearchResult:
     aspiration_researches: int = 0
     aspiration_fail_highs: int = 0
     aspiration_fail_lows: int = 0
+    search_kind: str = 'minimax'
+    completed_simulations: int = 0
+    requested_simulations: int = 0
+    max_tree_depth: int = 0
     selective: dict = field(default_factory=dict)
+    ordering: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -281,7 +286,7 @@ class AlphaBetaPlayer:
         warm_search_kernels()
         warm_material_kernels()
         warm_position_kernels()
-        if self.config.compiled_ordering_enabled or self.config.ordering_enabled:
+        if self.config.compiled_ordering_enabled or self.config.ordering_enabled or self.config.mvv_lva_enabled:
             from .ordering import warm_ordering
             warm_ordering()
         if self.config.pressure_enabled and self.config.pressure_weight:
@@ -301,6 +306,8 @@ class AlphaBetaPlayer:
             self._identity = identity
         self._killers.fill(-1)
         self._history.fill(0)
+        self._mvv_lva_nodes = 0
+        self._mvv_lva_captures = 0
         self.evaluator = Evaluator(self.game, self.config)
         self._material_root = None
         self._material_counts = None
@@ -311,6 +318,20 @@ class AlphaBetaPlayer:
         if proof['status'] == 'proven':
             return from_table(proof['score'], ply), proof['pv']
         return self.evaluator.score(state, side, budget, proof=proof, counts=self._material_counts), []
+
+    def _capture_order_values(self, state, side, actions, budget):
+        if not self.config.mvv_lva_enabled:
+            return None
+        from .ordering import material_order_values
+        compact = isinstance(state, SearchPosition)
+        budget.charge(12 + 2*len(actions) + (0 if compact else 81))
+        counts = state.counts if compact else count_pieces(state)
+        pieces = state.pieces if compact else state[:,:,0]
+        self._mvv_lva_nodes += 1
+        for action in actions:
+            x,y = action_destination(int(action))
+            self._mvv_lva_captures += bool(pieces[y,x])
+        return material_order_values(counts, side, self.config.variable_material_enabled)
 
     def _ordered(self, state, side, preferred, budget, root=False, ply=0, *, terminal_checked=False):
         compact = isinstance(state, SearchPosition)
@@ -327,10 +348,11 @@ class AlphaBetaPlayer:
             if root:
                 for action,row in self._root_previous.items():
                     prior[action] = row['score']
+            capture_values = self._capture_order_values(state, side, actions, budget)
             kernel = ordered_actions if self.config.compiled_ordering_enabled else ordered_actions.py_func
             ordered = kernel(pieces,actions,side,80 if side == a1 else 0,
                 -1 if preferred is None else preferred,prior,self._killers[min(ply,64)],
-                self._history[side],self.config.ordering_enabled)
+                self._history[side],self.config.ordering_enabled,capture_values)
             budget.check()
             for action in ordered:
                 budget.charge()
@@ -339,6 +361,7 @@ class AlphaBetaPlayer:
             return
         actions = list(map(int, legal))
         pieces = state.pieces if compact else state[:, :, 0]
+        capture_values = self._capture_order_values(state, side, actions, budget)
         a1 = state.a1 if compact else int(state[:, :, 82:84].flat[2])
         goal = 80 if side == a1 else 0
         own_goal = 80 - goal
@@ -359,6 +382,8 @@ class AlphaBetaPlayer:
             return (win, action == preferred,
                     prior['score'] if prior else -inf,
                     dest in threats or dest == own_goal, pieces[dy, dx] != 0,
+                    capture_values[1,abs(int(pieces[dy,dx]))-1] if capture_values is not None and pieces[dy,dx] else 0.,
+                    -capture_values[0,abs(int(pieces[action//8//9,action//8%9]))-1] if capture_values is not None and pieces[dy,dx] else 0.,
                     -max(abs(dx - goal % 9), abs(dy - goal // 9)), -action)
         # Construct history states only for children actually visited.
         for action, _ in sorted(zip(actions, wins), key=rank, reverse=True):
@@ -463,7 +488,7 @@ class AlphaBetaPlayer:
             if (safe and cfg.futility_enabled and depth <= cfg.futility_max_depth
                     and index and selective.quiet(state, action)):
                 self._selective_stats['futility_eligible'] += 1
-                if static + selective.margin(cfg, depth) <= alpha and abs(best) < MATE_THRESHOLD:
+                if static + selective.margin(cfg, depth, state) <= alpha and abs(best) < MATE_THRESHOLD:
                     self._selective_stats['futility_pruned'] += 1
                     continue
             counts = self._material_counts
@@ -595,7 +620,11 @@ class AlphaBetaPlayer:
                     self._root_previous = self._root_progress.moves.copy()
                 self._root_progress.finished = True
                 budget.check()
-                if abs(score) > MATE_THRESHOLD:
+                # Selective mate-range values are not certificates: finish the
+                # requested depth instead of treating a shallow result as proof.
+                if abs(score) > MATE_THRESHOLD and (
+                        not (self.config.nmp_enabled or self.config.futility_enabled)
+                        or target == self.config.max_depth):
                     stop_reason = ('selective_result' if self.config.nmp_enabled or self.config.futility_enabled
                                    else 'proven_result')
                     break
@@ -697,6 +726,8 @@ class AlphaBetaPlayer:
             effective=selective_mode and selective.supported(self.config),
             disabled_reason=None if selective.supported(self.config) else 'unsupported evaluator scales',
             depth=selected_depth, identity=self.config.identity())
+        result.ordering = dict(mvv_lva_enabled=self.config.mvv_lva_enabled,
+            mvv_lva_nodes=self._mvv_lva_nodes, mvv_lva_captures=self._mvv_lva_captures)
         self.last_result = result
         return result
 

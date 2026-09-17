@@ -63,6 +63,8 @@ def report(spec, rows):
                     distinct_starts=len({i['position'] for i in items}),
                     distinct_trajectories=len({i['row']['trajectory_sha256'] for i in items if i['row']}),
                     completed_depths=dict(depths),
+                    completed_simulations=dict(Counter(str(m['result'].get('completed_simulations', 0)) for m in moves)),
+                    observed_tree_depths=dict(Counter(str(m['result'].get('max_tree_depth', 0)) for m in moves)),
                     stopped_searches=sum(m['result']['stopped'] for m in moves),
                     stop_reasons=dict(Counter(m['result']['stop_reason'] for m in moves)),
                     selected_depths=dict(Counter(str(m['result']['selected_depth']) for m in moves)),

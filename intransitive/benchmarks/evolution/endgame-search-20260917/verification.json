@@ -1,0 +1,48 @@
+[
+  {
+    "run": "/tmp/issue55-strength-20260917/benchmark/evolution-73",
+    "verified_matches": 28,
+    "verified_moves": 2071,
+    "distinct_trajectories": 28,
+    "status": "complete",
+    "outcomes": {
+      "win": 21,
+      "unfinished": 7
+    }
+  },
+  {
+    "run": "/tmp/issue55-strength-20260917/benchmark/random-73",
+    "verified_matches": 27,
+    "verified_moves": 1710,
+    "distinct_trajectories": 25,
+    "status": "wall_budget",
+    "outcomes": {
+      "win": 22,
+      "unfinished": 4,
+      "cancelled": 1
+    }
+  },
+  {
+    "run": "/tmp/issue55-strength-20260917/benchmark/evolution-74",
+    "verified_matches": 28,
+    "verified_moves": 1292,
+    "distinct_trajectories": 23,
+    "status": "complete",
+    "outcomes": {
+      "win": 25,
+      "unfinished": 3
+    }
+  },
+  {
+    "run": "/tmp/issue55-strength-20260917/benchmark/random-74",
+    "verified_matches": 19,
+    "verified_moves": 682,
+    "distinct_trajectories": 17,
+    "status": "wall_budget",
+    "outcomes": {
+      "win": 17,
+      "unfinished": 1,
+      "cancelled": 1
+    }
+  }
+]

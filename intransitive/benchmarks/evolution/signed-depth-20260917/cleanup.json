@@ -1,0 +1,226 @@
+{
+  "original_elapsed_seconds": 2898.7964704036713,
+  "observed_experiment_pids_still_present": [],
+  "measurements": [
+    {
+      "folder": "/tmp/issue55-signed-depth-20260917",
+      "measurement": {
+        "phases": [
+          {
+            "phase": "study",
+            "command": [
+              "/Users/work/orca/workspaces/alpha-zero-general/issue-55-intransitive-evolve-heuristic/.venv/bin/python",
+              "/tmp/issue55-signed-depth-20260917/study.py"
+            ],
+            "exit_code": 0,
+            "wall_seconds": 2527.223631708999,
+            "peak_sampled_tree_rss_bytes": 565936128,
+            "peak_processes": 6,
+            "samples": 830,
+            "sample_interval_seconds": 3,
+            "observed_priorities": [
+              0,
+              19
+            ],
+            "priority_anomalies": [
+              {
+                "elapsed": 481.61989691702183,
+                "process": {
+                  "pid": 67487,
+                  "ppid": 59125,
+                  "rss": 0,
+                  "nice": 0,
+                  "state": "?E",
+                  "command": "(python3.11)"
+                },
+                "action": "ProcessLookupError(3, 'No such process')"
+              }
+            ],
+            "observed_pids": [
+              1791,
+              2183,
+              2875,
+              4002,
+              6821,
+              8180,
+              8589,
+              9358,
+              10108,
+              11085,
+              11819,
+              12623,
+              13409,
+              14450,
+              14962,
+              15790,
+              16629,
+              17357,
+              17848,
+              18742,
+              19513,
+              20839,
+              21292,
+              21644,
+              22380,
+              22802,
+              23954,
+              24340,
+              59125,
+              59399,
+              59400,
+              59822,
+              60230,
+              60596,
+              60950,
+              61356,
+              61827,
+              62294,
+              62781,
+              63165,
+              63496,
+              63903,
+              65025,
+              67487,
+              67927,
+              68660,
+              69110,
+              70105,
+              71626,
+              71972,
+              72603,
+              73432,
+              74430,
+              75066,
+              75714,
+              76736,
+              77375,
+              77891,
+              78116,
+              78745,
+              79405,
+              80169,
+              80786,
+              81124,
+              81918,
+              82624,
+              83252,
+              83986,
+              84331,
+              84711,
+              85288,
+              85888,
+              86821,
+              87855,
+              89618,
+              90102,
+              90434,
+              91065,
+              91676,
+              92427,
+              93250,
+              93981,
+              95326,
+              95720,
+              96524,
+              97230,
+              99700
+            ],
+            "deadline_signalled": false
+          }
+        ],
+        "elapsed_seconds": 2527.223919833021,
+        "supervisor_nice": 19,
+        "thread_environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1"
+        }
+      }
+    },
+    {
+      "folder": "/tmp/issue55-signed-depth-20260917/supplement",
+      "measurement": {
+        "phases": [
+          {
+            "phase": "study",
+            "command": [
+              "/Users/work/orca/workspaces/alpha-zero-general/issue-55-intransitive-evolve-heuristic/.venv/bin/python",
+              "/tmp/issue55-signed-depth-20260917/supplement.py"
+            ],
+            "exit_code": 0,
+            "wall_seconds": 258.53902495797956,
+            "peak_sampled_tree_rss_bytes": 514768896,
+            "peak_processes": 4,
+            "samples": 85,
+            "sample_interval_seconds": 3,
+            "observed_priorities": [
+              19
+            ],
+            "priority_anomalies": [],
+            "observed_pids": [
+              26324,
+              26497,
+              26498,
+              26934,
+              27574,
+              27890,
+              29326,
+              29703,
+              30257,
+              30757,
+              31631,
+              32035
+            ],
+            "deadline_signalled": false
+          }
+        ],
+        "elapsed_seconds": 258.539142499998,
+        "supervisor_nice": 19,
+        "thread_environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1"
+        }
+      }
+    },
+    {
+      "folder": "/tmp/issue55-signed-depth-20260917/postprocess",
+      "measurement": {
+        "phases": [
+          {
+            "phase": "study",
+            "command": [
+              "/Users/work/orca/workspaces/alpha-zero-general/issue-55-intransitive-evolve-heuristic/.venv/bin/python",
+              "/tmp/issue55-signed-depth-20260917/finalize.py"
+            ],
+            "exit_code": 0,
+            "wall_seconds": 33.41646454198053,
+            "peak_sampled_tree_rss_bytes": 287932416,
+            "peak_processes": 2,
+            "samples": 11,
+            "sample_interval_seconds": 3,
+            "observed_priorities": [
+              19
+            ],
+            "priority_anomalies": [],
+            "observed_pids": [
+              34107,
+              34116,
+              34462,
+              34690
+            ],
+            "deadline_signalled": false
+          }
+        ],
+        "elapsed_seconds": 33.416585250000935,
+        "supervisor_nice": 19,
+        "thread_environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1"
+        }
+      }
+    }
+  ],
+  "note": "Read-only PID check after all three supervisors exited. No signals sent to training jobs. Report preparation and archiving follow this receipt."
+}

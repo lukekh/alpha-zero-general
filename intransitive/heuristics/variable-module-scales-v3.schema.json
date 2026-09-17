@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "intransitive-variable-module-scales-v3",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "backend",
+        "genes"
+      ],
+      "properties": {
+        "version": {
+          "const": "intransitive-variable-module-scales-v3"
+        },
+        "backend": {
+          "const": "python"
+        },
+        "genes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "material",
+            "advantage",
+            "attack",
+            "defence",
+            "overload",
+            "pressure"
+          ],
+          "properties": {
+            "material": {
+              "type": "number",
+              "minimum": -100.0,
+              "maximum": 100.0,
+              "default": 100.0
+            },
+            "advantage": {
+              "type": "number",
+              "minimum": -100.0,
+              "maximum": 100.0,
+              "default": 23.967050360966205
+            },
+            "attack": {
+              "type": "number",
+              "minimum": -100.0,
+              "maximum": 100.0,
+              "default": 25.714516982666414
+            },
+            "defence": {
+              "type": "number",
+              "minimum": -100.0,
+              "maximum": 100.0,
+              "default": 32.5643023919054
+            },
+            "overload": {
+              "type": "number",
+              "minimum": -100.0,
+              "maximum": 100.0,
+              "default": 0.0
+            },
+            "pressure": {
+              "type": "number",
+              "minimum": -100.0,
+              "maximum": 100.0,
+              "default": 0.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "backend",
+        "genes"
+      ],
+      "properties": {
+        "version": {
+          "const": "intransitive-variable-module-scales-v3"
+        },
+        "backend": {
+          "const": "rust"
+        },
+        "genes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "material",
+            "advantage",
+            "attack",
+            "defence",
+            "pressure"
+          ],
+          "properties": {
+            "material": {
+              "type": "number",
+              "minimum": -100.0,
+              "maximum": 100.0,
+              "default": 100.0
+            },
+            "advantage": {
+              "type": "number",
+              "minimum": -100.0,
+              "maximum": 100.0,
+              "default": 23.967050360966205
+            },
+            "attack": {
+              "type": "number",
+              "minimum": -100.0,
+              "maximum": 100.0,
+              "default": 25.714516982666414
+            },
+            "defence": {
+              "type": "number",
+              "minimum": -100.0,
+              "maximum": 100.0,
+              "default": 32.5643023919054
+            },
+            "pressure": {
+              "type": "number",
+              "minimum": -100.0,
+              "maximum": 100.0,
+              "default": 0.0
+            }
+          }
+        }
+      }
+    }
+  ]
+}

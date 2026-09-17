@@ -1,0 +1,49 @@
+{
+  "budget": {
+    "max_games": 32,
+    "max_reserved_work": 30720640000,
+    "max_seconds": 670,
+    "priority": 19,
+    "supervisor_deadline_seconds": 700
+  },
+  "genome": {
+    "backend": "python",
+    "genes": {
+      "advantage": 23.967050360966205,
+      "attack": 25.714516982666414,
+      "defence": 32.5643023919054,
+      "overload": 0.0,
+      "pressure": 0.0
+    },
+    "version": "intransitive-module-scales-v1"
+  },
+  "protocol": {
+    "cache_policy": "fresh search/evaluation caches per move",
+    "completion_required": 0.8,
+    "game_seconds": 20.0,
+    "max_plies": 192,
+    "mode": "depth",
+    "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+    "search": {
+      "aspiration_enabled": false,
+      "aspiration_window": 25.0,
+      "compiled_ordering_enabled": false,
+      "depth_replacement_enabled": false,
+      "max_depth": 2,
+      "node_limit": 5000000,
+      "ordering_enabled": false,
+      "pressure_cache_entries": 0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "pvs_enabled": false,
+      "table_entries": 10000,
+      "time_limit": 4.0
+    },
+    "startup_seconds": 120.0,
+    "timeout_grace": 5.0
+  },
+  "required_completed_depth": 2,
+  "scope": "Separate depth-two transfer screen; never pool with depth-one evidence. Unaccepted candidate for separate held-out acceptance.",
+  "selection": "Same frozen genome after the positive depth-one development screen; all 16 remaining validation lines, sorted by stable position hash. No held-out games.",
+  "source_selection": "/tmp/issue55-hour-20260917/final-screen/selection.json"
+}

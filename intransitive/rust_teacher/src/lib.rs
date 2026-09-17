@@ -4,6 +4,7 @@ use std::collections::{HashMap, VecDeque};
 use std::time::{Duration, Instant};
 mod moves;
 mod pressure_delta;
+mod routes;
 use moves::Moves;
 use pressure_delta::Pressure;
 
@@ -42,6 +43,19 @@ fn distance(a: usize, b: usize) -> usize {
 }
 fn captures(a: i8, b: i8) -> bool {
     a * b < 0 && a.abs() % 3 + 1 == b.abs()
+}
+
+pub const BASE: f64 = 100.0;
+pub const REG: f64 = 0.25;
+
+/// Per-piece values in ROCK, SCISSORS, PAPER order, using the own army total.
+pub fn variable_piece_values(own: [usize; 3], enemy: [usize; 3]) -> [f64; 3] {
+    let target = own.iter().sum::<usize>() as f64 / 3.0;
+    [0, 1, 2].map(|kind| {
+        BASE * (enemy[(kind + 1) % 3] as f64 + REG)
+            / (enemy[(kind + 2) % 3] as f64 + REG)
+            * ((target + REG) / (own[kind] as f64 + REG)).sqrt()
+    })
 }
 
 /// Counts and type contributions change only on captures. The masks also track
@@ -118,11 +132,19 @@ impl Material {
         ((0.0 + ordered[0].1) + ordered[1].1) + ordered[2].1
     }
 
-    fn score(&self, side: usize) -> f64 {
-        let mut total = 100.0
-            * (self.counts[side].iter().sum::<usize>() as f64
-                - self.counts[1 - side].iter().sum::<usize>() as f64);
-        total += 25.0 * (self.advantage(side) - self.advantage(1 - side));
+    fn score(&self, side: usize, weights: &Weights) -> f64 {
+        let material = |player: usize| {
+            let own = self.counts[player];
+            if weights.variable_material_enabled {
+                let values = variable_piece_values(own, self.counts[1 - player]);
+                ((own[0] as f64 * values[0] + own[1] as f64 * values[1])
+                    + own[2] as f64 * values[2]) / BASE
+            } else {
+                own.iter().sum::<usize>() as f64
+            }
+        };
+        let mut total = weights.material * (material(side) - material(1 - side));
+        total += weights.advantage * (self.advantage(side) - self.advantage(1 - side));
         total
     }
 }
@@ -442,8 +464,17 @@ pub fn pressure(board: &[i8; 81], radius: usize) -> [f64; 2] {
 }
 
 pub fn evaluate(p: &Position, radius: usize, weight: f64) -> f64 {
+    evaluate_weighted(p, radius, weight, &Weights::default())
+}
+
+pub fn evaluate_weighted(p: &Position, radius: usize, weight: f64, weights: &Weights) -> f64 {
     let side = p.side as usize;
-    let mut total = p.material.score(side);
+    let mut total = p.material.score(side, weights);
+    if weights.attack != 0.0 || weights.defence != 0.0 {
+        let (attack, defence) = routes::terms(p, weights.attack != 0.0, weights.defence != 0.0);
+        total += weights.attack * attack;
+        total += weights.defence * defence;
+    }
     if weight != 0.0 {
         let ring = match &p.pressure {
             Some(cached) if cached.radius == radius => cached.totals,
@@ -454,8 +485,43 @@ pub fn evaluate(p: &Position, radius: usize, weight: f64) -> f64 {
     total.clamp(-10000.0, 10000.0)
 }
 
+/// Adopted endgame defaults; all supported coefficients may also be signed.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Weights {
+    pub variable_material_enabled: bool,
+    pub material: f64,
+    pub advantage: f64,
+    pub attack: f64,
+    pub defence: f64,
+}
+impl Default for Weights {
+    fn default() -> Self {
+        Self {
+            material: 100.0,
+            variable_material_enabled: false,
+            advantage: 23.967050360966205,
+            attack: 25.714516982666414,
+            defence: 32.5643023919054,
+        }
+    }
+}
+impl Weights {
+    pub fn validate(&self) -> Result<(), String> {
+        if [self.material, self.advantage, self.attack, self.defence]
+            .iter()
+            .any(|x| !x.is_finite())
+        {
+            return Err("Weights must be finite".into());
+        }
+        Ok(())
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Config {
+    pub weights: Weights,
+    pub mvv_lva_enabled: bool,
+    pub selective_evaluator_enabled: bool,
     pub nmp_enabled: bool,
     pub nmp_min_depth: usize,
     pub nmp_reduction: usize,
@@ -474,6 +540,9 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Self {
+            weights: Weights::default(),
+            mvv_lva_enabled: false,
+            selective_evaluator_enabled: false,
             nmp_enabled: false,
             nmp_min_depth: 3,
             nmp_reduction: 1,
@@ -492,7 +561,31 @@ impl Default for Config {
     }
 }
 impl Config {
+    pub fn selective_supported(&self) -> bool {
+        self.selective_evaluator_enabled || (!self.weights.variable_material_enabled && self.weights.material == 100.0
+            && self.weights.advantage == 25.0 && self.weights.attack == 0.0
+            && self.weights.defence == 0.0 && (0.0..=20.0).contains(&self.pressure_weight))
+    }
+    fn selective_margin(&self, p: &Position, depth: usize) -> f64 {
+        if !self.selective_evaluator_enabled {
+            return depth as f64 * self.futility_margin * (75.0 + 8.0*self.pressure_weight);
+        }
+        let w = &self.weights;
+        let mut piece_scale = w.material.abs();
+        if w.variable_material_enabled {
+            for side in 0..2 {
+                let own = p.material.counts[side];
+                let values = variable_piece_values(own, p.material.counts[1-side]);
+                for i in 0..3 {
+                    if own[i] > 0 { piece_scale = piece_scale.max(w.material.abs()*values[i]/100.0); }
+                }
+            }
+        }
+        depth as f64 * self.futility_margin * (piece_scale/2.0 + 1.25*w.advantage.abs()
+            + 3.0*w.attack.abs() + 4.0*w.defence.abs() + 8.0*self.pressure_weight.abs())
+    }
     pub fn validate(&self) -> Result<(), String> {
+        self.weights.validate()?;
         if !(3..=32).contains(&self.nmp_min_depth)
             || !(1..=8).contains(&self.nmp_reduction)
             || self.nmp_reduction + 2 > self.nmp_min_depth
@@ -502,7 +595,6 @@ impl Config {
             || !(1..=32).contains(&self.depth)
             || !(3..=4).contains(&self.radius)
             || !self.pressure_weight.is_finite()
-            || self.pressure_weight < 0.0
             || self.proof_depth > 2
             || self.proof_nodes > 64
             || self.table_entries > 1000000
@@ -544,6 +636,7 @@ pub struct Search {
     root_scores: HashMap<u16, f64>,
     pub tt_hits: u64,
     pub selective_stats: [u64; 10],
+    pub mvv_lva_stats: [u64; 2],
     selective_disabled: bool,
 }
 type Line = (f64, Vec<u16>);
@@ -563,6 +656,7 @@ impl Search {
             root_scores: HashMap::new(),
             tt_hits: 0,
             selective_stats: [0; 10],
+            mvv_lva_stats: [0; 2],
             selective_disabled: false,
         })
     }
@@ -665,12 +759,19 @@ impl Search {
     fn exposed(p: &Position, square: usize, code: i8, removed: Option<usize>) -> bool {
         p.moves.exposed(square, code, removed)
     }
-    fn ordered(&self, p: &mut Position, preferred: Option<u16>, ply: usize) -> Vec<u16> {
+    fn ordered(&mut self, p: &mut Position, preferred: Option<u16>, ply: usize) -> Vec<u16> {
         let side = p.side;
         let goal = if side == p.a1 { 80 } else { 0 };
         let own_goal = 80 - goal;
         let actions = p.raw_legal(side);
         let mut ranked = Vec::with_capacity(actions.len());
+        let values = if self.config.mvv_lva_enabled && self.config.weights.variable_material_enabled {
+            let counts = &p.material.counts;
+            [variable_piece_values(counts[side as usize], counts[1-side as usize]),
+             variable_piece_values(counts[1-side as usize], counts[side as usize])]
+        } else {[[100.0; 3]; 2]};
+        if self.config.mvv_lva_enabled { self.mvv_lva_stats[0] += 1; }
+
         for a in actions {
             let from = a as usize / 8;
             let to = destination(a).unwrap();
@@ -687,6 +788,7 @@ impl Search {
             p.moves.toggle(mover, from, to, occupant);
             p.board[from] = mover;
             p.board[to] = occupant;
+            if self.config.mvv_lva_enabled && occupant != 0 { self.mvv_lva_stats[1] += 1; }
             let rank = [
                 f64::from(win),
                 f64::from(preferred == Some(a)),
@@ -699,6 +801,8 @@ impl Search {
                 f64::from(occupant != 0 && !unsafe_move),
                 f64::from(escape),
                 f64::from(occupant != 0),
+                if self.config.mvv_lva_enabled && occupant != 0 {values[1][occupant.unsigned_abs() as usize - 1]} else {0.0},
+                if self.config.mvv_lva_enabled && occupant != 0 {-values[0][mover.unsigned_abs() as usize - 1]} else {0.0},
                 if self.killers[ply][0] == Some(a) {
                     2.0
                 } else if self.killers[ply][1] == Some(a) {
@@ -713,7 +817,7 @@ impl Search {
             ranked.push((a, rank));
         }
         ranked.sort_by(|a, b| {
-            for i in 0..11 {
+            for i in 0..13 {
                 if a.1[i] != b.1[i] {
                     return b.1[i].partial_cmp(&a.1[i]).unwrap();
                 }
@@ -835,7 +939,12 @@ impl Search {
                 }
             }
             return Ok((
-                evaluate(p, self.config.radius, self.config.pressure_weight),
+                evaluate_weighted(
+                    p,
+                    self.config.radius,
+                    self.config.pressure_weight,
+                    &self.config.weights,
+                ),
                 vec![],
             ));
         }
@@ -879,7 +988,7 @@ impl Search {
         }
         key[0] = depth as u8;
         let active = !self.selective_disabled
-            && self.config.pressure_weight <= 20.0
+            && self.config.selective_supported()
             && ply > 0
             && alpha.is_finite()
             && beta.is_finite()
@@ -892,7 +1001,7 @@ impl Search {
         let static_score = if safe {
             self.visit(false)?; // additional static evaluation is charged
             self.selective_stats[7] += 1;
-            evaluate(p, self.config.radius, self.config.pressure_weight)
+            evaluate_weighted(p, self.config.radius, self.config.pressure_weight, &self.config.weights)
         } else {
             0.0
         };
@@ -951,9 +1060,7 @@ impl Search {
                 && Self::quiet(p, action)
             {
                 self.selective_stats[5] += 1;
-                let margin = depth as f64
-                    * self.config.futility_margin
-                    * (75.0 + 8.0 * self.config.pressure_weight);
+                let margin = self.config.selective_margin(p, depth);
                 if static_score + margin <= alpha && best.0.abs() < 90000.0 {
                     self.selective_stats[6] += 1;
                     continue;
@@ -1031,6 +1138,7 @@ impl Search {
         self.proof_nodes = 0;
         self.tt_hits = 0;
         self.selective_stats = [0; 10];
+        self.mvv_lva_stats = [0; 2];
         if !reuse {
             self.table.clear();
             self.fifo.clear();
@@ -1072,7 +1180,8 @@ impl Search {
                     result.pv = line;
                     result.completed_depth = depth;
                     self.previous = std::mem::take(&mut self.root_scores);
-                    if score.abs() > 90000.0 {
+                    if score.abs() > 90000.0
+                        && (!(self.config.nmp_enabled || self.config.futility_enabled) || depth == self.config.depth) {
                         result.complete = true;
                         result.stop_reason =
                             if self.config.nmp_enabled || self.config.futility_enabled {
@@ -1323,7 +1432,7 @@ mod tests {
         let mut total = 100.0
             * (counts[side].iter().sum::<usize>() as f64
                 - counts[1 - side].iter().sum::<usize>() as f64);
-        total += 25.0 * (advantages[side] - advantages[1 - side]);
+        total += Weights::default().advantage * (advantages[side] - advantages[1 - side]);
         if weight != 0.0 {
             let ring = pressure(&p.board, radius);
             total += weight * (ring[side] - ring[1 - side]);
@@ -1350,6 +1459,7 @@ mod tests {
         assert!(!Search::quiet(&original, 30 * 8 + 1));
         for nmp in [false, true] {
             let config = Config {
+                weights: Weights {advantage: 25.0, attack: 0.0, defence: 0.0, ..Weights::default()},
                 nmp_enabled: nmp,
                 futility_enabled: !nmp,
                 milliseconds: 60000,
@@ -1420,7 +1530,17 @@ mod tests {
             for radius in [3, 4] {
                 for weight in [0.0, 10.0, 1000000.0] {
                     assert_eq!(
-                        evaluate(&view, radius, weight).to_bits(),
+                        evaluate_weighted(
+                            &view,
+                            radius,
+                            weight,
+                            &Weights {
+                                attack: 0.0,
+                                defence: 0.0,
+                                ..Weights::default()
+                            }
+                        )
+                        .to_bits(),
                         reference_evaluate(&view, radius, weight).to_bits(),
                         "side={side}, radius={radius}, weight={weight}, board={:?}",
                         p.board
@@ -1535,6 +1655,7 @@ mod tests {
         let original = fixture(&[(20, 1), (21, 2), (22, 3), (40, -2), (41, -3), (60, -1)]);
         for node_limit in [1, 10, 100, 1000, 1000000] {
             let config = Config {
+                weights: Weights::default(),
                 depth: 3,
                 milliseconds: 60000,
                 node_limit,
@@ -1572,6 +1693,7 @@ mod tests {
         for proof_nodes in [1, 2, 10, 64] {
             let mut p = original.clone();
             let mut search = Search::new(Config {
+                weights: Weights::default(),
                 depth: 3,
                 milliseconds: 60000,
                 node_limit: 1000000,
@@ -1637,6 +1759,7 @@ mod tests {
     fn cancellation_never_labels_partial() {
         let p = fixture(&[(40, 1), (60, -2)]);
         let mut s = Search::new(Config {
+            weights: Weights::default(),
             depth: 6,
             milliseconds: 0,
             node_limit: 100,
@@ -1663,4 +1786,77 @@ mod tests {
         p.material = Material::new(&p.board);
         assert_eq!(p.terminal(true), Some((Some(0), "corner")));
     }
+    #[test]
+    fn experimental_selective_weights_and_restoration() {
+        let original = fixture(&[(9,1),(10,2),(18,3),(19,1),(30,2),
+            (61,-1),(62,-2),(70,-3),(71,-1)]);
+        for variable in [false, true] {
+            for nmp in [false, true] {
+                let cfg = Config {weights: Weights {variable_material_enabled: variable, ..Weights::default()},
+                    selective_evaluator_enabled: true, nmp_enabled: nmp, futility_enabled: !nmp,
+                    milliseconds: 60000, node_limit: 1000000, proof_nodes: 0, ..Config::default()};
+                assert!(cfg.selective_supported());
+                let expected = if variable {
+                    let max_value = (0..2).flat_map(|side| {
+                        let own = original.material.counts[side];
+                        variable_piece_values(own, original.material.counts[1-side])
+                            .into_iter().zip(own).filter_map(|(v,n)| if n > 0 {Some(v)} else {None})
+                    }).fold(100.0_f64, f64::max);
+                    max_value/2.0
+                } else {50.0};
+                assert!((cfg.selective_margin(&original,1) - (expected + 1.25*cfg.weights.advantage
+                    + 3.0*cfg.weights.attack + 4.0*cfg.weights.defence)).abs() < 1e-9);
+                let mut search = Search::new(cfg.clone()).unwrap();
+                let mut p = original.clone();
+                let alpha = if nmp {-9000.0} else {9000.0};
+                search.search(&mut p, if nmp {3} else {1}, alpha, next_up(alpha), 1).unwrap();
+                assert!(search.selective_stats[if nmp {1} else {6}] > 0);
+                assert_eq!(p, original);
+                for cap in [1, 10, 100] {
+                    let mut search = Search::new(Config {node_limit: cap, ..cfg.clone()}).unwrap();
+                    let _ = search.search(&mut p, 3, alpha, next_up(alpha), 1);
+                    assert_eq!(p, original);
+                    assert!(!search.selective_disabled);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn mvv_lva_preserves_legal_moves_state_and_flat_order() {
+        let original=fixture(&[(30,1),(32,2),(47,3),(10,3),(31,-2),(33,-3),(48,-1)]);
+        let mut baseline=Search::new(Config::default()).unwrap();
+        let mut p=original.clone();
+        let old=baseline.ordered(&mut p,None,1);
+        let mut enabled=Search::new(Config {mvv_lva_enabled:true,..Config::default()}).unwrap();
+        assert_eq!(old,enabled.ordered(&mut p,None,1));
+        assert!(enabled.mvv_lva_stats[1]>0);
+        assert_eq!(p,original);
+        let mut cfg=Config {mvv_lva_enabled:true,weights:Weights {variable_material_enabled:true,..Weights::default()},
+            milliseconds:60000,node_limit:1000000,proof_nodes:0,..Config::default()};
+        let mut variable=Search::new(cfg.clone()).unwrap();
+        let order=variable.ordered(&mut p,None,1);
+        let mut sorted=order.clone();sorted.sort();
+        let mut legal=p.raw_legal(p.side);legal.sort();assert_eq!(sorted,legal);
+        let preferred=*order.last().unwrap();
+        assert_eq!(variable.ordered(&mut p,Some(preferred),1)[0],preferred);
+        for cap in [1,10,100] {
+            cfg.node_limit=cap;
+            let mut search=Search::new(cfg.clone()).unwrap();
+            let _=search.search(&mut p,3,-f64::INFINITY,f64::INFINITY,0);
+            assert_eq!(p,original);
+        }
+    }
+
+    #[test]
+    fn variable_material_formula_and_extinction() {
+        assert_eq!(variable_piece_values([2, 2, 2], [3, 3, 3]), [100.0; 3]);
+        let values = variable_piece_values([1, 4, 4], [5, 8, 2]);
+        let rock = 100.0 * 8.25 / 2.25 * (3.25_f64 / 1.25).sqrt();
+        assert_eq!(values[0], rock);
+        let rotated = variable_piece_values([4, 4, 1], [8, 2, 5]);
+        assert_eq!(rotated, [values[1], values[2], values[0]]);
+        assert!(variable_piece_values([0; 3], [0; 3]).iter().all(|v| v.is_finite()));
+    }
+
 }
