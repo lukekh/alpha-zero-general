@@ -1,0 +1,180 @@
+{
+  "smoke-depth4": {
+    "flat": {
+      "moves": 2,
+      "depths": {
+        "4": 2
+      },
+      "stop_reasons": {
+        "maximum_depth": 2
+      },
+      "effective": {
+        "True": 2
+      },
+      "counters": {
+        "futility_eligible": 0,
+        "futility_pruned": 0,
+        "nmp_attempts": 0,
+        "nmp_cutoffs": 0,
+        "nmp_skips": 1602,
+        "null_nodes": 0,
+        "static_evaluations": 0,
+        "verification_failures": 0,
+        "verification_nodes": 0,
+        "verification_searches": 0
+      },
+      "work": 12530150,
+      "nodes": 422886,
+      "elapsed": 1.887575166998431
+    },
+    "variable": {
+      "moves": 2,
+      "depths": {
+        "4": 2
+      },
+      "stop_reasons": {
+        "maximum_depth": 2
+      },
+      "effective": {
+        "True": 2
+      },
+      "counters": {
+        "futility_eligible": 0,
+        "futility_pruned": 0,
+        "nmp_attempts": 0,
+        "nmp_cutoffs": 0,
+        "nmp_skips": 1602,
+        "null_nodes": 0,
+        "static_evaluations": 0,
+        "verification_failures": 0,
+        "verification_nodes": 0,
+        "verification_searches": 0
+      },
+      "work": 12530150,
+      "nodes": 422886,
+      "elapsed": 1.9061654999968596
+    }
+  },
+  "pruning-on": {
+    "variable": {
+      "moves": 282,
+      "depths": {
+        "4": 282
+      },
+      "stop_reasons": {
+        "maximum_depth": 246,
+        "selective_result": 36
+      },
+      "effective": {
+        "True": 282
+      },
+      "counters": {
+        "futility_eligible": 10457,
+        "futility_pruned": 0,
+        "nmp_attempts": 314,
+        "nmp_cutoffs": 293,
+        "nmp_skips": 255074,
+        "null_nodes": 8982,
+        "static_evaluations": 5697,
+        "verification_failures": 0,
+        "verification_nodes": 586791,
+        "verification_searches": 293
+      },
+      "work": 1856800378,
+      "nodes": 61496737,
+      "elapsed": 596.8229157131864
+    },
+    "flat": {
+      "moves": 283,
+      "depths": {
+        "4": 283
+      },
+      "stop_reasons": {
+        "maximum_depth": 248,
+        "selective_result": 35
+      },
+      "effective": {
+        "True": 283
+      },
+      "counters": {
+        "futility_eligible": 10881,
+        "futility_pruned": 0,
+        "nmp_attempts": 194,
+        "nmp_cutoffs": 177,
+        "nmp_skips": 233607,
+        "null_nodes": 5341,
+        "static_evaluations": 5044,
+        "verification_failures": 0,
+        "verification_nodes": 323906,
+        "verification_searches": 177
+      },
+      "work": 1646856730,
+      "nodes": 53660930,
+      "elapsed": 501.7502774480672
+    }
+  },
+  "pruning-off": {
+    "variable": {
+      "moves": 296,
+      "depths": {
+        "4": 268,
+        "3": 5,
+        "1": 15,
+        "2": 8
+      },
+      "stop_reasons": {
+        "maximum_depth": 260,
+        "proven_result": 36
+      },
+      "effective": {
+        "False": 296
+      },
+      "counters": {
+        "futility_eligible": 0,
+        "futility_pruned": 0,
+        "nmp_attempts": 0,
+        "nmp_cutoffs": 0,
+        "nmp_skips": 0,
+        "null_nodes": 0,
+        "static_evaluations": 0,
+        "verification_failures": 0,
+        "verification_nodes": 0,
+        "verification_searches": 0
+      },
+      "work": 1692442385,
+      "nodes": 68746682,
+      "elapsed": 608.3618494542898
+    },
+    "flat": {
+      "moves": 297,
+      "depths": {
+        "4": 267,
+        "2": 5,
+        "3": 8,
+        "1": 17
+      },
+      "stop_reasons": {
+        "maximum_depth": 262,
+        "proven_result": 35
+      },
+      "effective": {
+        "False": 297
+      },
+      "counters": {
+        "futility_eligible": 0,
+        "futility_pruned": 0,
+        "nmp_attempts": 0,
+        "nmp_cutoffs": 0,
+        "nmp_skips": 0,
+        "null_nodes": 0,
+        "static_evaluations": 0,
+        "verification_failures": 0,
+        "verification_nodes": 0,
+        "verification_searches": 0
+      },
+      "work": 1491562573,
+      "nodes": 59796750,
+      "elapsed": 528.9699302509835
+    }
+  }
+}

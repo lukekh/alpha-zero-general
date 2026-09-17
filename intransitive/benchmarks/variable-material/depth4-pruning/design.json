@@ -1,0 +1,190 @@
+{
+  "budget": {
+    "arm_games": 16,
+    "arm_seconds": 1600,
+    "smoke_games": 2,
+    "smoke_seconds": 180,
+    "supervisor_seconds": 3500,
+    "total_seconds": 3600
+  },
+  "candidates": [
+    {
+      "backend": "python",
+      "backend_version": "fd0392ad6678b37862550e5504cc15e5d9f5447d5c0fed62148e94758cd9db0b",
+      "evaluation": {
+        "advantage_weight": 23.967050360966205,
+        "attack_enabled": true,
+        "attack_weight": 25.714516982666414,
+        "count_weight": 100.0,
+        "defence_enabled": true,
+        "defence_weight": 32.5643023919054,
+        "evaluator_version": "intransitive-heuristics-v2",
+        "overload_enabled": false,
+        "overload_weight": 5.0,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": false,
+        "pressure_radius": 4,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "race_weight": 0.0,
+        "variable_material_enabled": true
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 23.967050360966205,
+          "attack": 25.714516982666414,
+          "defence": 32.5643023919054,
+          "material": 100.0,
+          "overload": 0.0,
+          "pressure": 0.0
+        },
+        "version": "intransitive-module-scales-v2"
+      },
+      "name": "variable",
+      "role": "population",
+      "sha256": "c2e331daecf7a29a3f5c695bbe1b366c1c0b05583b58b78f18326e6a8379db88"
+    },
+    {
+      "backend": "python",
+      "backend_version": "fd0392ad6678b37862550e5504cc15e5d9f5447d5c0fed62148e94758cd9db0b",
+      "evaluation": {
+        "advantage_weight": 23.967050360966205,
+        "attack_enabled": true,
+        "attack_weight": 25.714516982666414,
+        "count_weight": 100.0,
+        "defence_enabled": true,
+        "defence_weight": 32.5643023919054,
+        "evaluator_version": "intransitive-heuristics-v2",
+        "overload_enabled": false,
+        "overload_weight": 5.0,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": false,
+        "pressure_radius": 4,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "race_weight": 0.0,
+        "variable_material_enabled": false
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 23.967050360966205,
+          "attack": 25.714516982666414,
+          "defence": 32.5643023919054,
+          "material": 100.0,
+          "overload": 0.0,
+          "pressure": 0.0
+        },
+        "version": "intransitive-module-scales-v2"
+      },
+      "name": "flat",
+      "role": "population",
+      "sha256": "838cebbe7502c1364f3a36a4ceb5d2156b53404b9da8ae74b8201b82650ac0cd"
+    }
+  ],
+  "master_revision": "032c6bb",
+  "order": [
+    [
+      "pruning-on",
+      true
+    ],
+    [
+      "pruning-off",
+      false
+    ]
+  ],
+  "position_hashes": [
+    "215c132ea32d242dc5cffde8c731432072b30e9fb24df12698e57f77c9e17981",
+    "43b0b15dd35872aa6f019bf2140cd5781696bbe26608f5053d446541335636ef",
+    "3be41689f2bb77f22d02de97d340699a5f21e1a89eae95728053ed183f9867e3",
+    "ea277b381533f9be35972c0651abd6a4b244737debe8fb8442e5cbdbe9a4f96a",
+    "f20c769977a094f43840c98559e5740298944aa2bbdca004772b118d99a94b78",
+    "233b1c8fe409a38db87fdcb5681099be9c617295514da9c2e6212d3cc1b69809",
+    "d85a59dc93aee447c4d383412a808116fd4880c56374d375a2b84e8addacf434",
+    "b94cd6573ca7d93a65e715c6f12f8403f519b378e60bb74c2de439e639805608"
+  ],
+  "position_seeds": [
+    1643,
+    1680,
+    1652,
+    1675,
+    2616,
+    2669,
+    2657,
+    2639
+  ],
+  "protocols": {
+    "pruning-off": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 180,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": false,
+        "futility_margin": 1.0,
+        "futility_max_depth": 2,
+        "max_depth": 4,
+        "nmp_enabled": false,
+        "nmp_min_depth": 3,
+        "nmp_reduction": 1,
+        "node_limit": 100000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": true,
+        "search_version": "intransitive-selective-v1",
+        "selective_evaluator_enabled": false,
+        "table_entries": 10000,
+        "time_limit": 30
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    },
+    "pruning-on": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 180,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": true,
+        "futility_margin": 1.0,
+        "futility_max_depth": 2,
+        "max_depth": 4,
+        "nmp_enabled": true,
+        "nmp_min_depth": 3,
+        "nmp_reduction": 1,
+        "node_limit": 100000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": true,
+        "search_version": "intransitive-selective-v1",
+        "selective_evaluator_enabled": true,
+        "table_entries": 10000,
+        "time_limit": 30
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    }
+  },
+  "revision": "51ed8374d0a6bd2cc2a56880eb39a3f8490c4d1b",
+  "scope": "Python variable versus flat, same adopted coefficients. Both pruning methods plus experimental evaluator option on in primary arm; off in contemporaneous control. PVS enabled in both arms. Conservative board guards retained. Official/consensus separate; no default adoption.",
+  "source": "Exact eight legal eight-piece endgames from prior variable-material comparison; reused diagnostic corpus."
+}

@@ -158,3 +158,14 @@ scored 6–7, with two inconclusive games and the failure excluded. A separate
 larger-budget retry of the affected opening in both colours completed without
 failures and split 1–1 after consensus. This provides no clear evidence of an
 improvement; the different caps also prevent attributing changes solely to depth.
+
+
+## Pruning follow-up
+
+After merging master, the [depth-four pruning comparison](depth4-pruning/README.md)
+played the same eight openings with PVS enabled in both arms. With pruning on or
+off, variable material scored 6–7 officially with three unfinished, and 7–7 with
+two inconclusive after consensus. All searches used for moves completed their
+required depth. Experimental pruning produced 470 verified null-move cutoffs but
+no futility skips; it did not improve the match score. Opening diagnostics and
+work counters are retained separately.
