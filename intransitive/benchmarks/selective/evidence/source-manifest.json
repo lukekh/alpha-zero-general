@@ -1,0 +1,21 @@
+{
+  "baseline_revision": "c31ab1625720a1dd0d256d56f83d048f218b3012",
+  "scope": "Changed and added implementation/test/harness sources; unchanged sources are identified by baseline revision.",
+  "sha256": {
+    "intransitive/benchmarks/selective/reproduce.py": "5493abdcc482bfd3c6f5f11ce4a44dc55b4061f2856178ade57b4c69b1369479",
+    "intransitive/expand_minimax_dataset.py": "da283279e1b26ea92a09f320a5e1633029e2e70bec45652baa519cbe3253c735",
+    "intransitive/heuristics/analyze.py": "c3e7fd52acba2acaf958e91e86c4db936231517084dd91222e0aba678c323cd7",
+    "intransitive/heuristics/config.py": "925ddd51d5f0633854ca6c8c6b32d18eb5f9f62aeb7be83c9e4480dc89533784",
+    "intransitive/heuristics/position.py": "54b62822aaf2a59d40d8897b9b98fa4e540a24ad0c238f57ffe01f6b877dc35c",
+    "intransitive/heuristics/search.py": "9ac21aa348116814cb6c170690c3d1b42f690e36d9b709109bfb5422ce8ae438",
+    "intransitive/heuristics/selective.py": "2ef462e0c672115a1c9859ed26ae4bd63c0c74caf26094a7b067daf7f2e0438e",
+    "intransitive/heuristics/tuning.py": "16bdf3fc969898c006e703fdee375282a9fd62fe12ccf529dc82fcc8085a3511",
+    "intransitive/play.py": "7cfb290972a1d8b88bcef96cb115f0a384518c8eef2895b04ac84947da31bca0",
+    "intransitive/rust_teacher/__init__.py": "d4bee3e848fe2b9de10bcef6ab38197a8882ab42fe4ae6788d868ee8bddb033c",
+    "intransitive/rust_teacher/src/lib.rs": "f1309dd58c1ce37923f7f5727ccfd8de4adaf12cb8668432d713f09f4eca8d14",
+    "intransitive/rust_teacher/src/main.rs": "79f142d994c53962eb339e3061bc15a533970d9ec046cdeee9926acf3000a83d",
+    "intransitive/supervised_minimax.py": "24d87dcb675fe060ef2247848ae4f0ceafad38511455cdecee88050863750953",
+    "intransitive/teacher_learning.py": "343b16ad2a1c11ea20fce3622b1b77428e2201df7bc6843ffb20403c6082d888",
+    "intransitive/tests/test_selective_search.py": "4cc9fc5014bfb2e9e1b42d38b750853df133013e12027737af1ccda867a74df5"
+  }
+}

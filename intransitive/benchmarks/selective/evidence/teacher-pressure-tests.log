@@ -1,0 +1,12 @@
+test_pressure_probes_and_evolved_scale_disable (intransitive.tests.test_selective_search.SelectiveTests.test_pressure_probes_and_evolved_scale_disable) ... ok
+test_all_symmetries_and_split_orbits_are_isolated (intransitive.tests.test_teacher_learning.TeacherLearningTests.test_all_symmetries_and_split_orbits_are_isolated) ... ok
+test_annealed_mix_records_effective_sampling_weight (intransitive.tests.test_teacher_learning.TeacherLearningTests.test_annealed_mix_records_effective_sampling_weight) ... ok
+test_hybrid_uses_exact_win_and_loss_filter_without_mutation (intransitive.tests.test_teacher_learning.TeacherLearningTests.test_hybrid_uses_exact_win_and_loss_filter_without_mutation) ... ok
+test_mixed_legacy_and_teacher_records_train_together (intransitive.tests.test_teacher_learning.TeacherLearningTests.test_mixed_legacy_and_teacher_records_train_together) ... ok
+test_persistent_optimizer_round_trip_continues_moments_and_count (intransitive.tests.test_teacher_learning.TeacherLearningTests.test_persistent_optimizer_round_trip_continues_moments_and_count) ... ok
+test_value_and_q_masks_do_not_fabricate_teacher_targets (intransitive.tests.test_teacher_learning.TeacherLearningTests.test_value_and_q_masks_do_not_fabricate_teacher_targets) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 19.088s
+
+OK

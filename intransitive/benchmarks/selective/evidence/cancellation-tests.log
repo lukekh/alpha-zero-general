@@ -1,0 +1,7 @@
+test_verification_failure_and_null_exception_do_not_store_cutoff (intransitive.tests.test_selective_search.SelectiveTests.test_verification_failure_and_null_exception_do_not_store_cutoff) ... ok
+test_verification_cancellation_and_no_pv_pruning (intransitive.tests.test_selective_search.SelectiveTests.test_verification_cancellation_and_no_pv_pruning) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 17.720s
+
+OK

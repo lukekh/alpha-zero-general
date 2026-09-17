@@ -1,0 +1,21 @@
+{
+  "version": "intransitive-selective-validation-v1",
+  "baseline_source": "c31ab1625720a1dd0d256d56f83d048f218b3012",
+  "stockfish_reference": "031dfeb437fa6b06cdbdf4ef89dfb82f6b83c4d3",
+  "tuning": "No tuning; all v1 defaults fixed before measurement",
+  "modes": ["baseline", "nmp", "futility", "both"],
+  "depths": [3, 5, 6],
+  "fixed_depth_seconds_cap": 2.0,
+  "paired_seconds_per_move": 0.02,
+  "paired_plies_cap": 24,
+  "stages": ["opening", "midgame", "endgame"],
+  "held_out_seed": 600917,
+  "held_out_symmetry": 6,
+  "acceptance": {
+    "new_tactical_failures": 0,
+    "minimum_median_completed_depth_speedup": 1.05,
+    "paired_decisive_score_lower_95_percent": 0.45,
+    "unfinished": "Exclude from win-rate denominator; never official draws",
+    "insufficient_evidence": "Keep both options disabled"
+  }
+}

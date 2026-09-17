@@ -71,6 +71,8 @@
           <label><input id="attack" type="checkbox"> Attack</label>
           <label><input id="defence" type="checkbox"> Defence</label>
           <label><input id="overload" type="checkbox"> Overload</label>
+          <label><input id="nmp" type="checkbox"> Null move (experimental)</label>
+          <label><input id="futility" type="checkbox"> Futility (experimental)</label>
           <button id="core" type="button">Core only</button>
           <button id="time-first" type="button">Time first · 5 seconds</button>
           <div class="search-limits">
@@ -135,7 +137,7 @@
       if (!command || command === 'restart') {
         $('colour').value = String(state.human_player);
         $('opponent').value = state.opponent;
-        for (const module of ['attack', 'defence', 'overload']) $(module).checked = !!state.ab_options[module + '_enabled'];
+        for (const module of ['attack', 'defence', 'overload', 'nmp', 'futility']) $(module).checked = !!state.ab_options[module + '_enabled'];
         for (const [name, id] of Object.entries(searchFields)) {
           if (state.ab_options[name] !== undefined) $(id).value = state.ab_options[name];
         }
@@ -272,13 +274,13 @@
     $('ai-options').hidden = $('opponent').value === 'local';
   }
   $('opponent').onchange = updateOptions;
-  $('core').onclick = () => { for (const module of ['attack', 'defence', 'overload']) $(module).checked = false; };
+  $('core').onclick = () => { for (const module of ['attack', 'defence', 'overload', 'nmp', 'futility']) $(module).checked = false; };
   $('time-first').onclick = () => {
     const preset = state.ab_presets.time_first;
     for (const [name, id] of Object.entries(searchFields)) $(id).value = preset[name];
   };
   $('restart').onclick = () => {
-    const options = Object.fromEntries(['attack', 'defence', 'overload'].map(module => [module + '_enabled', $(module).checked]));
+    const options = Object.fromEntries(['attack', 'defence', 'overload', 'nmp', 'futility'].map(module => [module + '_enabled', $(module).checked]));
     if ($('opponent').value === 'alphabeta') {
       for (const [name, id] of Object.entries(searchFields)) {
         if (!$(id).reportValidity()) return;

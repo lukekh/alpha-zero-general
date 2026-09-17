@@ -15,7 +15,8 @@ from .IntransitiveConstants import action_destination, decode_action, format_coo
 from .IntransitiveLogicNumba import Board, search_observation
 
 
-AB_OPTION_FIELDS = ('attack_enabled', 'defence_enabled', 'overload_enabled',
+AB_OPTION_FIELDS = ('nmp_enabled', 'futility_enabled', 'nmp_min_depth', 'nmp_reduction',
+                    'futility_max_depth', 'futility_margin', 'attack_enabled', 'defence_enabled', 'overload_enabled',
                     'max_depth', 'time_limit', 'node_limit')
 
 
@@ -150,7 +151,7 @@ class GameSession:
             for name in ('completed_depth', 'selected_depth', 'partial_depth',
                          'root_moves_completed', 'root_moves_total', 'selection_source',
                          'score_bound', 'stop_reason', 'diagnostics_status',
-                         'effective_limits'):
+                         'effective_limits', 'selective'):
                 analysis[name] = getattr(analysis_result, name)
         noncapture = 0
         for move in reversed(self.moves):

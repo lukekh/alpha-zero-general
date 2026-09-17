@@ -6,6 +6,7 @@ undo retains their previous references. Export reconstructs every public byte,
 including ordered history, zero padding and the base-128 total move number.
 """
 from collections import Counter
+from contextlib import contextmanager
 from dataclasses import dataclass
 from functools import lru_cache
 import numpy as np
@@ -46,6 +47,22 @@ class SearchPosition:
         self.modelling_draws = modelling_draws
         self.stack = []
         self._key = None
+
+    @contextmanager
+    def null_turn(self):
+        """Synthetic side flip: no public move, history or clock increment.
+
+        Modelling draws are disabled throughout this hypothetical subtree.
+        Ordinary descendants still make/unmake normally. Never export it.
+        """
+        side, modelling, key = self.side, self.modelling_draws, self._key
+        self.side = 1 - side
+        self.modelling_draws = False
+        self._key = None
+        try:
+            yield self
+        finally:
+            self.side, self.modelling_draws, self._key = side, modelling, key
 
     @property
     def clock(self):

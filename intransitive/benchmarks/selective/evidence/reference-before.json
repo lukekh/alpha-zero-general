@@ -1,0 +1,345 @@
+{
+  "plan": {
+    "version": "intransitive-selective-validation-v1",
+    "baseline_source": "c31ab1625720a1dd0d256d56f83d048f218b3012",
+    "stockfish_reference": "031dfeb437fa6b06cdbdf4ef89dfb82f6b83c4d3",
+    "tuning": "No tuning; all v1 defaults fixed before measurement",
+    "modes": [
+      "baseline",
+      "nmp",
+      "futility",
+      "both"
+    ],
+    "depths": [
+      3,
+      5,
+      6
+    ],
+    "fixed_depth_seconds_cap": 2.0,
+    "paired_seconds_per_move": 0.02,
+    "paired_plies_cap": 24,
+    "stages": [
+      "opening",
+      "midgame",
+      "endgame"
+    ],
+    "held_out_seed": 600917,
+    "held_out_symmetry": 6,
+    "acceptance": {
+      "new_tactical_failures": 0,
+      "minimum_median_completed_depth_speedup": 1.05,
+      "paired_decisive_score_lower_95_percent": 0.45,
+      "unfinished": "Exclude from win-rate denominator; never official draws",
+      "insufficient_evidence": "Keep both options disabled"
+    }
+  },
+  "backend": "rust",
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "revision": "c31ab1625720a1dd0d256d56f83d048f218b3012",
+  "source_diff_sha256": null,
+  "baseline_config": {
+    "evaluator_version": "intransitive-heuristics-v2",
+    "count_weight": 100.0,
+    "race_weight": 0.0,
+    "advantage_weight": 25.0,
+    "attack_weight": 12.0,
+    "defence_weight": 10.0,
+    "overload_weight": 5.0,
+    "predator_zero_bonus": 1.0,
+    "predator_scarcity_bonus": 0.5,
+    "prey_bonus": 0.25,
+    "attack_enabled": false,
+    "defence_enabled": false,
+    "overload_enabled": false,
+    "pressure_enabled": false,
+    "pressure_weight": 1.0,
+    "pressure_radius": 4,
+    "max_depth": 3,
+    "node_limit": 1000000000,
+    "time_limit": 600,
+    "proof_depth": 2,
+    "proof_nodes": 0,
+    "table_entries": 10000,
+    "pvs_enabled": true,
+    "aspiration_enabled": true,
+    "aspiration_window": 25.0,
+    "ordering_enabled": true,
+    "compiled_ordering_enabled": true,
+    "depth_replacement_enabled": false,
+    "pressure_cache_entries": 0
+  },
+  "fixed": [
+    {
+      "stage": "opening",
+      "depth": 1,
+      "reuse": false,
+      "action": 241,
+      "score": -0.0,
+      "completed_depth": 1,
+      "pv": [
+        241
+      ],
+      "nodes": 37,
+      "work": 3875,
+      "tt_hits": 0
+    },
+    {
+      "stage": "opening",
+      "depth": 1,
+      "reuse": true,
+      "action": 241,
+      "score": -0.0,
+      "completed_depth": 1,
+      "pv": [
+        241
+      ],
+      "nodes": 1,
+      "work": 23,
+      "tt_hits": 1
+    },
+    {
+      "stage": "opening",
+      "depth": 2,
+      "reuse": false,
+      "action": 241,
+      "score": 0.0,
+      "completed_depth": 2,
+      "pv": [
+        241,
+        341
+      ],
+      "nodes": 144,
+      "work": 115935,
+      "tt_hits": 0
+    },
+    {
+      "stage": "opening",
+      "depth": 2,
+      "reuse": true,
+      "action": 241,
+      "score": 0.0,
+      "completed_depth": 2,
+      "pv": [
+        241,
+        341
+      ],
+      "nodes": 2,
+      "work": 24,
+      "tt_hits": 2
+    },
+    {
+      "stage": "opening",
+      "depth": 3,
+      "reuse": false,
+      "action": 241,
+      "score": -0.0,
+      "completed_depth": 3,
+      "pv": [
+        241,
+        341,
+        320
+      ],
+      "nodes": 1715,
+      "work": 506937,
+      "tt_hits": 0
+    },
+    {
+      "stage": "opening",
+      "depth": 3,
+      "reuse": true,
+      "action": 241,
+      "score": -0.0,
+      "completed_depth": 3,
+      "pv": [
+        241,
+        341,
+        320
+      ],
+      "nodes": 3,
+      "work": 25,
+      "tt_hits": 3
+    },
+    {
+      "stage": "midgame",
+      "depth": 1,
+      "reuse": false,
+      "action": 250,
+      "score": -0.0,
+      "completed_depth": 1,
+      "pv": [
+        250
+      ],
+      "nodes": 46,
+      "work": 4838,
+      "tt_hits": 0
+    },
+    {
+      "stage": "midgame",
+      "depth": 1,
+      "reuse": true,
+      "action": 250,
+      "score": -0.0,
+      "completed_depth": 1,
+      "pv": [
+        250
+      ],
+      "nodes": 1,
+      "work": 23,
+      "tt_hits": 1
+    },
+    {
+      "stage": "midgame",
+      "depth": 2,
+      "reuse": false,
+      "action": 250,
+      "score": 0.0,
+      "completed_depth": 2,
+      "pv": [
+        250,
+        316
+      ],
+      "nodes": 182,
+      "work": 182508,
+      "tt_hits": 0
+    },
+    {
+      "stage": "midgame",
+      "depth": 2,
+      "reuse": true,
+      "action": 250,
+      "score": 0.0,
+      "completed_depth": 2,
+      "pv": [
+        250,
+        316
+      ],
+      "nodes": 2,
+      "work": 24,
+      "tt_hits": 2
+    },
+    {
+      "stage": "midgame",
+      "depth": 3,
+      "reuse": false,
+      "action": 250,
+      "score": -0.0,
+      "completed_depth": 3,
+      "pv": [
+        250,
+        316,
+        256
+      ],
+      "nodes": 2295,
+      "work": 746700,
+      "tt_hits": 0
+    },
+    {
+      "stage": "midgame",
+      "depth": 3,
+      "reuse": true,
+      "action": 250,
+      "score": -0.0,
+      "completed_depth": 3,
+      "pv": [
+        250,
+        316,
+        256
+      ],
+      "nodes": 3,
+      "work": 25,
+      "tt_hits": 3
+    },
+    {
+      "stage": "endgame",
+      "depth": 1,
+      "reuse": false,
+      "action": 241,
+      "score": 34.375,
+      "completed_depth": 1,
+      "pv": [
+        241
+      ],
+      "nodes": 9,
+      "work": 717,
+      "tt_hits": 0
+    },
+    {
+      "stage": "endgame",
+      "depth": 1,
+      "reuse": true,
+      "action": 241,
+      "score": 34.375,
+      "completed_depth": 1,
+      "pv": [
+        241
+      ],
+      "nodes": 1,
+      "work": 5,
+      "tt_hits": 1
+    },
+    {
+      "stage": "endgame",
+      "depth": 2,
+      "reuse": false,
+      "action": 241,
+      "score": 34.375,
+      "completed_depth": 2,
+      "pv": [
+        241,
+        400
+      ],
+      "nodes": 32,
+      "work": 6711,
+      "tt_hits": 0
+    },
+    {
+      "stage": "endgame",
+      "depth": 2,
+      "reuse": true,
+      "action": 241,
+      "score": 34.375,
+      "completed_depth": 2,
+      "pv": [
+        241,
+        400
+      ],
+      "nodes": 2,
+      "work": 6,
+      "tt_hits": 2
+    },
+    {
+      "stage": "endgame",
+      "depth": 3,
+      "reuse": false,
+      "action": 241,
+      "score": 34.375,
+      "completed_depth": 3,
+      "pv": [
+        241,
+        400,
+        321
+      ],
+      "nodes": 131,
+      "work": 24361,
+      "tt_hits": 0
+    },
+    {
+      "stage": "endgame",
+      "depth": 3,
+      "reuse": true,
+      "action": 241,
+      "score": 34.375,
+      "completed_depth": 3,
+      "pv": [
+        241,
+        400,
+        321
+      ],
+      "nodes": 3,
+      "work": 7,
+      "tt_hits": 3
+    }
+  ],
+  "paired": [],
+  "python_warmup_seconds": 29.24580216599861
+}

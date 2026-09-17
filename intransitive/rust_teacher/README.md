@@ -81,3 +81,10 @@ The optional [variable-material replacement](../heuristics/VARIABLE_MATERIAL.md)
 uses the same BASE=100, REG=0.25 formula as Python. Pass
 `variable_material_enabled=True` to `RustTeacher.inspect` or `.analyze`.
 Flat material remains the default; switching modes resets reused search state.
+
+## Experimental selective search
+
+Independent `nmp_enabled` and `futility_enabled` options are available but remain
+**off by default**. See [guards, verification, protocol and label semantics](../heuristics/SELECTIVE_SEARCH.md)
+and the [bounded validation report](../benchmarks/selective/README.md).
+A completed selective search is not an exhaustive label or mate certificate.
