@@ -126,3 +126,25 @@ tar -xzf intransitive/benchmarks/evolution/evidence/runs.tar.gz -C /tmp/evolutio
 ```
 
 A [longer search under a one-hour allocation](hour-search-20260917/README.md) found provisional endgame weights that scored 31–3–6 at depth one and 23–8–1 at depth two on separate fresh validation sets. It used 39m35s at low priority; all 696 records passed replay. Held-out acceptance remains separate.
+
+At the user's request, the [signed depth/MCTS follow-up](signed-depth-20260917/README.md)
+also reports **consensus adjudication** of unfinished games. The two competing
+weight configurations evaluate the same final legal board from player zero's
+perspective, without tree search or proof. Matching strictly positive scores
+award player zero an adjudicated win; matching negative scores award player one.
+Ties, disagreement and budget exhaustion remain inconclusive. Nonempty prefixes
+cancelled by an overall time cap may be scored; crashes, illegal moves and
+incomplete-search failures are excluded. Official journals, optimizer fitness
+and acceptance eligibility are preserved. This post-hoc analysis is not an
+independent strength oracle, especially when two similar heuristics agree.
+
+```sh
+nice -n 19 .venv/bin/python -m intransitive.benchmarks.evolution.adjudicate \
+  /path/to/optimizer-run /path/to/fresh-screen \
+  --max-seconds 120 --output /tmp/consensus.json
+```
+
+The report gives official and adjudicated wins separately. Its alternative
+ranking excludes inconclusive games from the decided-game win fraction and also
+shows conservative wins over scheduled games. Full score pairs and final-state
+hashes make each adjudication inspectable.
