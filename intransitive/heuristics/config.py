@@ -17,6 +17,7 @@ TIME_FIRST_LIMITS = {
 class SearchConfig:
     evaluator_version: str = 'intransitive-heuristics-v2'
     count_weight: float = 100.
+    variable_material_enabled: bool = False  # Replace flat piece counts with BASE/REG values.
     race_weight: float = 0.  # Legacy config field; binary clear-run scoring ignores it.
     advantage_weight: float = 23.967050360966205
     attack_weight: float = 25.714516982666414

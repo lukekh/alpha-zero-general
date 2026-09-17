@@ -17,7 +17,7 @@ GENES = {'python': tuple(BOUNDS), 'rust': tuple(g for g in BOUNDS if g != 'overl
 # These are fixed outside the signed genome, including dormant module weights and pressure geometry.
 EVALUATION_FIELDS = tuple(name for name in SearchConfig().to_dict()
                           if name.endswith(('_weight', '_bonus')) or name in (
-                              'evaluator_version', 'attack_enabled', 'defence_enabled',
+                              'evaluator_version', 'variable_material_enabled', 'attack_enabled', 'defence_enabled',
                               'overload_enabled', 'pressure_enabled', 'pressure_radius'))
 
 

@@ -4,7 +4,7 @@ from itertools import combinations
 from time import perf_counter
 import numpy as np
 from .geometry import Geometry, arrival, captures
-from .material import MaterialCache, count_pieces
+from .material import BASE, MaterialCache, count_pieces, variable_material_total, variable_piece_values
 
 MATE = 100000.
 HEURISTIC_LIMIT = 10000.
@@ -31,6 +31,9 @@ def terminal_value(game, state, side, ply=0):
 
 
 def piece_count(geometry, side, config):
+    if config.variable_material_enabled:
+        counts = tuple(sum(p.code == code for p in geometry.pieces) for code in (1, 2, 3, -1, -2, -3))
+        return variable_material_total(counts, side) / BASE
     return float(len(geometry.own(side)))
 
 
@@ -315,7 +318,15 @@ class Evaluator:
         score = self._clip(total, budget)
         if not explain:
             return score
-        return dict(score=score, raw_score=total, clipped=abs(total) > HEURISTIC_LIMIT,
+        result = dict(score=score, raw_score=total, clipped=abs(total) > HEURISTIC_LIMIT,
                     saturated=abs(total) >= HEURISTIC_LIMIT,
                     terminal=False, features={'own': own, 'opponent': opponent}, terms=terms,
                     races=details, proof=proof)
+        if config.variable_material_enabled:
+            counts = count_pieces(state)
+            result['piece_values'] = {
+                label: dict(zip(('rock', 'scissors', 'paper'), map(float, variable_piece_values(
+                    counts[player * 3:player * 3 + 3], counts[(1-player) * 3:(1-player) * 3 + 3]))))
+                for label, player in (('own', side), ('opponent', 1-side))}
+            budget.check()
+        return result

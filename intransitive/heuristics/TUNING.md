@@ -93,3 +93,8 @@ Use [Python v2](configs/tuning-python-v2.json) or
 [Rust v2](configs/tuning-rust-v2.json) with `Genome.from_json`. These genome files
 are not `SearchConfig.from_file` presets. The [optimizer contract](../evolution/README.md)
 describes mutation, fitness, budget reservations and resume behavior.
+
+The [variable-material mode](VARIABLE_MATERIAL.md) is a fixed, per-candidate
+comparison option outside the v2 genome. V2 retains flat material; attempting to
+use a variable-mode base with a genome is rejected. The paired tournament API
+supports comparing the two modes with identical signed coefficients.

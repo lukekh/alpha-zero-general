@@ -15,6 +15,9 @@ the report includes the archived baseline and measured retain/reject decision.
 An opt-in [square-ring pressure experiment](../benchmarks/pressure/README.md)
 adds blocker-blind RPS threats discounted by nearby defenders. It is disabled
 by default and is not enabled in the running supervised generators.
+An optional [variable-material mode](VARIABLE_MATERIAL.md) values each piece
+using the opposing prey/predator ratio and its scarcity in the own army. It is
+available in Python and Rust, with BASE 100 and REG 0.25.
 The original design follows below.
 
 Tracked in [implementation issue #34](https://github.com/lukekh/alpha-zero-general/issues/34),

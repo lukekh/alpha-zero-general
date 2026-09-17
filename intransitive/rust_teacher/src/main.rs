@@ -14,11 +14,14 @@ fn bytes(text: &str) -> Result<Vec<u8>, String> {
 fn number<T: std::str::FromStr>(s: &str) -> Result<T, String> {
     s.parse().map_err(|_| "Invalid numeric argument".into())
 }
+fn flag(s: &str) -> Result<bool, String> {
+    match s { "0" => Ok(false), "1" => Ok(true), _ => Err("Expected boolean 0 or 1".into()) }
+}
 fn handle(line: &str, cache: &mut Option<(Config, Search)>) -> Result<String, String> {
     let v: Vec<_> = line.split_whitespace().collect();
     match v.first().copied() {
-        Some("search" | "search_reuse") if v.len()==10 || v.len()==14 => {
-            let weights=if v.len()==14 { Weights {material:number(v[9])?,advantage:number(v[10])?,attack:number(v[11])?,defence:number(v[12])?} } else {Weights::default()};
+        Some("search" | "search_reuse") if v.len()==10 || v.len()==14 || v.len()==15 => {
+            let weights=if v.len()>=14 { Weights {variable_material_enabled:if v.len()==15 {flag(v[13])?} else {false},material:number(v[9])?,advantage:number(v[10])?,attack:number(v[11])?,defence:number(v[12])?} } else {Weights::default()};
             let config=Config {weights,depth:number(v[1])?,milliseconds:number(v[2])?,node_limit:number(v[3])?,
                 radius:number(v[4])?,pressure_weight:number(v[5])?,proof_depth:number(v[6])?,
                 proof_nodes:number(v[7])?,table_entries:number(v[8])?};
@@ -32,10 +35,10 @@ fn handle(line: &str, cache: &mut Option<(Config, Search)>) -> Result<String, St
                 r.action.map_or("null".into(),|x|x.to_string()),r.score.map_or("null".into(),|x|x.to_string()),
                 r.completed_depth,r.target_depth,r.complete,r.stop_reason,r.nodes,r.proof_nodes,r.seconds,r.pv,search.tt_hits,search.table_entries()))
         },
-        Some("inspect") if v.len()==4 || v.len()==8 => {
+        Some("inspect") if v.len()==4 || v.len()==8 || v.len()==9 => {
             let radius=number(v[1])?;let weight:f64=number(v[2])?;
             if !(3..=4).contains(&radius) || !weight.is_finite() {return Err("Invalid pressure settings".into());}
-            let weights=if v.len()==8 {Weights {material:number(v[3])?,advantage:number(v[4])?,attack:number(v[5])?,defence:number(v[6])?}} else {Weights::default()};
+            let weights=if v.len()>=8 {Weights {variable_material_enabled:if v.len()==9 {flag(v[7])?} else {false},material:number(v[3])?,advantage:number(v[4])?,attack:number(v[5])?,defence:number(v[6])?}} else {Weights::default()};
             weights.validate()?;
             let p=Position::from_bytes(&bytes(v[v.len()-1])?)?;
             let term=p.terminal(true);let official=p.terminal(false);

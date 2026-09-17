@@ -76,3 +76,8 @@ choices from the Python teacher while preserving optimal completed-depth scores.
 
 Importing this module or building its binary does not select it for existing
 browser or dataset processes. Callers explicitly instantiate `RustTeacher`.
+
+The optional [variable-material replacement](../heuristics/VARIABLE_MATERIAL.md)
+uses the same BASE=100, REG=0.25 formula as Python. Pass
+`variable_material_enabled=True` to `RustTeacher.inspect` or `.analyze`.
+Flat material remains the default; switching modes resets reused search state.

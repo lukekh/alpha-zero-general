@@ -1,4 +1,5 @@
 """Frozen inputs, exact position identity, and completion-order-free schedules."""
+from dataclasses import replace
 import base64
 import hashlib
 from itertools import combinations
@@ -43,12 +44,12 @@ def runtime_versions():
                 llvmlite=llvmlite.__version__)
 
 
-def candidate(name, weights=None, *, role='population', backend='python', genome=None):
+def candidate(name, weights=None, *, role='population', backend='python', genome=None, variable_material_enabled=False):
     """Consume #53's serialized module-scale contract, restricted to Python.
 
-    This is a frozen match input, not an optimizer. Material
-    stays at 100; optional zero scales disable their module. Native arbitrary
-    weights are deliberately rejected by capability validation.
+    Material mode is a fixed per-candidate choice; signed scales are tunable.
+    Optional zero scales disable their modules. Only Python match engines are
+    supported by this harness.
     """
     if not isinstance(name, str) or not name.strip():
         raise ValueError('Candidate name must be nonempty')
@@ -67,7 +68,7 @@ def candidate(name, weights=None, *, role='population', backend='python', genome
         validated = Genome.from_genes({('material' if k == 'count_weight' else k.removesuffix('_weight')): v for k, v in weights.items()},
                                       backend=backend)
     genome = validated.to_dict()
-    config = validated.to_config()
+    config = replace(validated.to_config(), variable_material_enabled=variable_material_enabled)
     evaluation = {k: v for k, v in config.to_dict().items() if k in EVALUATION_FIELDS}
     identity = dict(backend=backend, backend_version=backend_version(), evaluation=evaluation)
     return dict(name=name, role=role, genome=genome, **identity, sha256=digest(identity))
@@ -189,7 +190,8 @@ def manifest(candidates, positions, protocols, *, pool='search', position_limit=
         raise ValueError('Candidates, protocols and a valid pool are required')
     names, hashes = set(), set()
     for item in candidates:
-        rebuilt = candidate(item['name'], genome=item['genome'], role=item['role'], backend=item['backend'])
+        rebuilt = candidate(item['name'], genome=item['genome'], role=item['role'], backend=item['backend'],
+                            variable_material_enabled=item['evaluation'].get('variable_material_enabled', False))
         if rebuilt != item or item['name'] in names or item['sha256'] in hashes:
             raise ValueError('Invalid, stale or duplicate deterministic candidate')
         names.add(item['name'])

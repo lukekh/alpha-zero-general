@@ -14,10 +14,18 @@ import time
 
 from ...IntransitiveGame import IntransitiveGame
 from ...heuristics.budget import Budget, BudgetExpired
+from ...heuristics.config import SearchConfig
 from ...heuristics.evaluation import Evaluator
 from ...heuristics.tuning import Genome
 from ...tournament.runner import atomic_json, replay, validate_manifest
 from ...tournament.spec import backend_version, digest
+
+
+def configuration_hash(item):
+    genome_hash = Genome.from_json(json.dumps(item['genome'])).config_hash
+    if not item['evaluation'].get('variable_material_enabled', False):
+        return genome_hash
+    return digest(dict(genome_hash=genome_hash, evaluation=item['evaluation']))
 
 
 def consensus(scores):
@@ -52,18 +60,17 @@ def adjudicate(spec, row, *, seconds=2., nodes=5_000_000):
         item = by_id[identity]
         if item['backend'] != 'python':
             raise ValueError('This analysis currently supports Python genomes only')
-        genome = Genome.from_json(json.dumps(item['genome']))
-        config = replace(genome.to_config(), proof_depth=0, proof_nodes=0)
+        config = replace(SearchConfig(**item['evaluation']), proof_depth=0, proof_nodes=0)
         budget = Budget(nodes, seconds)
         try:
             # Static weighted board evaluation, with no tree/proof adjudicator.
             value = Evaluator(IntransitiveGame(modelling_draws=False), config).score(
                 state, 0, budget, proof={'status': 'unknown'})
             budget.check()
-            score = dict(candidate=identity, config_hash=genome.config_hash,
+            score = dict(candidate=identity, config_hash=configuration_hash(item),
                          score=float(value), status='complete')
         except BudgetExpired as exc:
-            score = dict(candidate=identity, config_hash=genome.config_hash,
+            score = dict(candidate=identity, config_hash=configuration_hash(item),
                          score=None, status=exc.reason)
         score.update(work=budget.work, seconds=budget.clock()-budget.start)
         result['scores'].append(score)
@@ -92,7 +99,7 @@ def analyze(folder, *, seconds=2., nodes=5_000_000, deadline=None):
         result=adjudicate(spec,row,seconds=allowance,nodes=nodes);rows.append(result)
         by_id={c['sha256']:c for c in spec['candidates']}
         for side,identity in enumerate(row['colours']):
-            stats=board[Genome.from_json(json.dumps(by_id[identity]['genome'])).config_hash];stats['scheduled']+=1
+            stats=board[configuration_hash(by_id[identity])];stats['scheduled']+=1
             if result['effective_winner'] is not None:
                 won=result['effective_winner']==side
                 stats['wins' if won else 'losses']+=1

@@ -14,6 +14,36 @@ from numba import njit
 from ..IntransitiveConstants import STATE_SHAPE
 
 
+BASE = 100.
+REG = .25
+
+
+@njit(cache=True)
+def variable_piece_values(own, enemy):
+    """Per-piece values in ROCK, SCISSORS, PAPER order.
+
+    Counts come from one player's remaining army and its opponent. REG keeps
+    extinct predator/prey and absent own types finite; absent types contribute
+    nothing when the army total multiplies these values by actual counts.
+    """
+    target = (own[0] + own[1] + own[2]) / 3.
+    values = np.empty(3, dtype=np.float64)
+    for kind in range(3):
+        prey, predator = enemy[(kind + 1) % 3], enemy[(kind + 2) % 3]
+        values[kind] = BASE * (prey + REG) / (predator + REG) * np.sqrt(
+            (target + REG) / (own[kind] + REG))
+    return values
+
+
+@njit(cache=True)
+def variable_material_total(counts, side):
+    own, enemy = counts[:3], counts[3:]
+    if side:
+        own, enemy = enemy, own
+    values = variable_piece_values(own, enemy)
+    return (own[0] * values[0] + own[1] * values[1]) + own[2] * values[2]
+
+
 @njit(cache=True)
 def count_pieces(state):
     counts = np.zeros(6, dtype=np.int64)
@@ -33,7 +63,7 @@ def after_capture(counts, code):
 
 
 @njit(cache=True)
-def ordered_score(state, side, counts, advantages, count_weight, advantage_weight):
+def ordered_score(state, side, counts, advantages, count_weight, advantage_weight, variable_material=False):
     # Encode first occurrences in base four, exactly matching Geometry/Counter.
     first, second, seen = 0, 0, 0
     for y in range(9):
@@ -51,6 +81,9 @@ def ordered_score(state, side, counts, advantages, count_weight, advantage_weigh
                     second = 4 * second + kind
     own_count = float(counts[0] + counts[1] + counts[2])
     enemy_count = float(counts[3] + counts[4] + counts[5])
+    if variable_material:
+        own_count = variable_material_total(counts, 0) / BASE
+        enemy_count = variable_material_total(counts, 1) / BASE
     own_adv, enemy_adv = advantages[0, first], advantages[1, second]
     if side:
         own_count, enemy_count = enemy_count, own_count
@@ -95,7 +128,8 @@ class MaterialCache:
 
     def score(self, state, side, counts):
         return ordered_score(state, side, counts, self.values(counts),
-                             float(self.config.count_weight), float(self.config.advantage_weight))
+                             float(self.config.count_weight), float(self.config.advantage_weight),
+                             self.config.variable_material_enabled)
 
 
 @lru_cache(maxsize=1)
@@ -103,3 +137,4 @@ def warm_material_kernels():
     state = np.zeros(STATE_SHAPE, dtype=np.int8)
     counts = count_pieces(state)
     ordered_score(state, 0, counts, np.zeros((2, 64)), 100., 25.)
+    ordered_score(state, 0, counts, np.zeros((2, 64)), 100., 25., True)

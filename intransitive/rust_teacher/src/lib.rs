@@ -43,6 +43,19 @@ fn captures(a: i8, b: i8) -> bool {
     a * b < 0 && a.abs() % 3 + 1 == b.abs()
 }
 
+pub const BASE: f64 = 100.0;
+pub const REG: f64 = 0.25;
+
+/// Per-piece values in ROCK, SCISSORS, PAPER order, using the own army total.
+pub fn variable_piece_values(own: [usize; 3], enemy: [usize; 3]) -> [f64; 3] {
+    let target = own.iter().sum::<usize>() as f64 / 3.0;
+    [0, 1, 2].map(|kind| {
+        BASE * (enemy[(kind + 1) % 3] as f64 + REG)
+            / (enemy[(kind + 2) % 3] as f64 + REG)
+            * ((target + REG) / (own[kind] as f64 + REG)).sqrt()
+    })
+}
+
 /// Counts and type contributions change only on captures. The masks also track
 /// quiet moves so evaluation retains Python's first-occurrence summation order.
 #[derive(Clone, Debug, PartialEq)]
@@ -118,9 +131,17 @@ impl Material {
     }
 
     fn score(&self, side: usize, weights: &Weights) -> f64 {
-        let mut total = weights.material
-            * (self.counts[side].iter().sum::<usize>() as f64
-                - self.counts[1 - side].iter().sum::<usize>() as f64);
+        let material = |player: usize| {
+            let own = self.counts[player];
+            if weights.variable_material_enabled {
+                let values = variable_piece_values(own, self.counts[1 - player]);
+                ((own[0] as f64 * values[0] + own[1] as f64 * values[1])
+                    + own[2] as f64 * values[2]) / BASE
+            } else {
+                own.iter().sum::<usize>() as f64
+            }
+        };
+        let mut total = weights.material * (material(side) - material(1 - side));
         total += weights.advantage * (self.advantage(side) - self.advantage(1 - side));
         total
     }
@@ -483,6 +504,7 @@ pub fn evaluate_weighted(p: &Position, radius: usize, weight: f64, weights: &Wei
 /// Adopted endgame defaults; all supported coefficients may also be signed.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Weights {
+    pub variable_material_enabled: bool,
     pub material: f64,
     pub advantage: f64,
     pub attack: f64,
@@ -492,6 +514,7 @@ impl Default for Weights {
     fn default() -> Self {
         Self {
             material: 100.0,
+            variable_material_enabled: false,
             advantage: 23.967050360966205,
             attack: 25.714516982666414,
             defence: 32.5643023919054,
@@ -1324,4 +1347,15 @@ mod tests {
         p.material = Material::new(&p.board);
         assert_eq!(p.terminal(true), Some((Some(0), "corner")));
     }
+    #[test]
+    fn variable_material_formula_and_extinction() {
+        assert_eq!(variable_piece_values([2, 2, 2], [3, 3, 3]), [100.0; 3]);
+        let values = variable_piece_values([1, 4, 4], [5, 8, 2]);
+        let rock = 100.0 * 8.25 / 2.25 * (3.25_f64 / 1.25).sqrt();
+        assert_eq!(values[0], rock);
+        let rotated = variable_piece_values([4, 4, 1], [8, 2, 5]);
+        assert_eq!(rotated, [values[1], values[2], values[0]]);
+        assert!(variable_piece_values([0; 3], [0; 3]).iter().all(|v| v.is_finite()));
+    }
+
 }

@@ -40,9 +40,17 @@ class RustTeacher:
         validate_state(state)
         return state.tobytes().hex()
 
+    @staticmethod
+    def material_mode(enabled):
+        if type(enabled) is not bool:
+            raise ValueError('variable_material_enabled must be a boolean')
+        # Preserve compatibility with existing flat-material native binaries.
+        return ' 1' if enabled else ''
+
     def inspect(self, state, radius=4, weight=0., *, material=100., advantage=23.967050360966205,
-                attack=25.714516982666414, defence=32.5643023919054):
-        return self.request(f'inspect {radius} {weight} {material} {advantage} {attack} {defence} {self.encode(state)}')
+                attack=25.714516982666414, defence=32.5643023919054, variable_material_enabled=False):
+        mode = self.material_mode(variable_material_enabled)
+        return self.request(f'inspect {radius} {weight} {material} {advantage} {attack} {defence}{mode} {self.encode(state)}')
 
     def apply(self, state, action, modelling=True):
         result = self.request(f'apply {action} {int(modelling)} {self.encode(state)}')
@@ -50,12 +58,13 @@ class RustTeacher:
 
     def analyze(self, state, *, depth=6, seconds=60., radius=4, weight=0.,
                 proof_depth=2, proof_nodes=64, table_entries=50000, node_limit=1_000_000_000, reuse=False, material=100., advantage=23.967050360966205,
-                attack=25.714516982666414, defence=32.5643023919054):
+                attack=25.714516982666414, defence=32.5643023919054, variable_material_enabled=False):
         if not np.isfinite(seconds) or seconds < 0:
             raise ValueError('seconds must be finite and nonnegative')
+        mode = self.material_mode(variable_material_enabled)
         command = 'search_reuse' if reuse else 'search'
         return self.request(f'{command} {depth} {int(seconds*1000)} {node_limit} {radius} {weight} '
-            f'{proof_depth} {proof_nodes} {table_entries} {material} {advantage} {attack} {defence} {self.encode(state)}', timeout=seconds+10.)
+            f'{proof_depth} {proof_nodes} {table_entries} {material} {advantage} {attack} {defence}{mode} {self.encode(state)}', timeout=seconds+10.)
 
     def close(self):
         if self.process.poll() is None:
