@@ -9,6 +9,7 @@ from .config import SearchConfig
 from .evaluation import HEURISTIC_LIMIT, MATE_THRESHOLD
 
 VERSION = 'intransitive-module-scales-v2'
+VARIABLE_VERSION = 'intransitive-variable-module-scales-v3'
 BACKEND_VERSIONS = {'python': 'python-heuristics-signed-v3', 'rust': 'rust-teacher-routes-v2'}
 BOUNDS = {name: (-100., 100.) for name in ('material', 'advantage', 'attack', 'defence', 'overload', 'pressure')}
 DEFAULTS = {'material': 100., 'advantage': 23.967050360966205,
@@ -47,8 +48,11 @@ class Genome:
     """
     backend: str
     values: tuple
+    variable_material_enabled: bool = False
 
     def __post_init__(self):
+        if type(self.variable_material_enabled) is not bool:
+            raise ValueError("variable_material_enabled must be boolean")
         if not isinstance(self.backend, str) or self.backend not in GENES:
             raise ValueError(f'Unsupported backend: {self.backend}')
         if not isinstance(self.values, tuple) or len(self.values) != len(GENES[self.backend]):
@@ -63,7 +67,7 @@ class Genome:
         object.__setattr__(self, 'values', tuple(normalized))
 
     @classmethod
-    def from_genes(cls, genes=None, *, backend='python'):
+    def from_genes(cls, genes=None, *, backend='python', variable_material_enabled=False):
         if not isinstance(backend, str) or backend not in GENES:
             raise ValueError(f'Unsupported backend: {backend}')
         if genes is None:
@@ -73,24 +77,25 @@ class Genome:
         unsupported = set(genes) - set(GENES[backend])
         if unsupported:
             raise ValueError(f'Unsupported or ignored genes for {backend}: {sorted(map(str, unsupported))}')
-        return cls(backend, tuple(genes.get(name, DEFAULTS[name]) for name in GENES[backend]))
+        return cls(backend, tuple(genes.get(name, DEFAULTS[name]) for name in GENES[backend]), variable_material_enabled)
 
     @classmethod
     def from_json(cls, text):
         data = json.loads(text, object_pairs_hook=_object)
         if not isinstance(data, dict) or set(data) != {'version', 'backend', 'genes'}:
             raise ValueError('Expected exactly version, backend and genes')
-        if data['version'] != VERSION:
+        if data['version'] not in (VERSION, VARIABLE_VERSION):
             raise ValueError('Unsupported genome version')
         if not isinstance(data['genes'], dict):
             raise ValueError('genes must be an object')
-        genome = cls.from_genes(data['genes'], backend=data['backend'])
+        genome = cls.from_genes(data['genes'], backend=data['backend'],
+                                variable_material_enabled=data['version'] == VARIABLE_VERSION)
         if set(data['genes']) != set(GENES[genome.backend]):
             raise ValueError('Serialized genomes must include every supported gene')
         return genome
 
     def to_dict(self):
-        return dict(version=VERSION, backend=self.backend,
+        return dict(version=VARIABLE_VERSION if self.variable_material_enabled else VERSION, backend=self.backend,
                     genes=dict(zip(GENES[self.backend], self.values)))
 
     def to_json(self):
@@ -110,7 +115,8 @@ class Genome:
         if changed:
             raise ValueError(f'Base must use fixed evaluation defaults: {changed}')
         values = dict(DEFAULTS, **self.to_dict()['genes'])
-        updates = {'count_weight': values['material'], 'advantage_weight': values['advantage']}
+        updates = {'count_weight': values['material'], 'advantage_weight': values['advantage'],
+                   'variable_material_enabled': self.variable_material_enabled}
         for name in ('attack', 'defence', 'overload', 'pressure'):
             updates[name + '_enabled'] = bool(values[name])
             # Keep legacy dormant weights so the default is exactly SearchConfig().
@@ -134,6 +140,7 @@ class Genome:
         if config.node_limit >= 2**64 or config.time_limit >= 2**64 / 1000:
             raise ValueError('Native time/work limits exceed the unsigned 64-bit protocol')
         return dict(depth=config.max_depth, seconds=config.time_limit,
+                    variable_material_enabled=config.variable_material_enabled,
                     node_limit=config.node_limit, radius=config.pressure_radius,
                     weight=config.pressure_weight if config.pressure_enabled else 0.,
                     material=config.count_weight, advantage=config.advantage_weight,
@@ -154,7 +161,9 @@ class Genome:
         config = self.to_config(base)
         # Conservative board-capacity bound, valid even for synthetic fixtures.
         # Each side's feature difference is bounded by the largest side total.
-        upper = (81 * abs(config.count_weight) + 81 * 1.75 * abs(config.advantage_weight)
+        # Ratio <= (81+.25)/.25; scarcity <= sqrt((81/3+.25)/.25).
+        material_bound = 81 * (325 * math.sqrt(109) if self.variable_material_enabled else 1)
+        upper = (material_bound * abs(config.count_weight) + 81 * 1.75 * abs(config.advantage_weight)
                  + 3 * (abs(config.attack_weight) if config.attack_enabled else 0)
                  + 4 * (abs(config.defence_weight) if config.defence_enabled else 0)
                  + 2 * (abs(config.overload_weight) if config.overload_enabled else 0)
@@ -204,18 +213,19 @@ def saturation_report(genome, states, *, base=None):
                 flagged=not rows or saturated > 0)
 
 
-def json_schema():
+def json_schema(*, variable_material_enabled=False):
     """Draft 2020-12 schema; runtime validation also rejects non-JSON NaN/Infinity."""
+    version = VARIABLE_VERSION if variable_material_enabled else VERSION
     alternatives = []
     for backend, names in GENES.items():
         alternatives.append(dict(type='object', additionalProperties=False,
             required=['version', 'backend', 'genes'], properties=dict(
-                version={'const': VERSION}, backend={'const': backend},
+                version={'const': version}, backend={'const': backend},
                 genes=dict(type='object', additionalProperties=False, required=list(names),
                     properties={name: dict(type='number', minimum=BOUNDS[name][0],
                         maximum=BOUNDS[name][1], default=DEFAULTS[name]) for name in names}))))
     return {'$schema': 'https://json-schema.org/draft/2020-12/schema',
-            'title': VERSION, 'oneOf': alternatives}
+            'title': version, 'oneOf': alternatives}
 
 
 if __name__ == '__main__':

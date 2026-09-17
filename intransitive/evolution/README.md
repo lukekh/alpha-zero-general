@@ -219,3 +219,26 @@ protocol. Different selected weights alone do not establish a depth effect.
 
 Historical benchmark archives require their recorded code revisions; the signed
 genome, new defaults and additive mutation deliberately invalidate old manifests.
+
+## Evolving variable-material coefficients
+
+Set `variable_material_enabled: true` and `initial_material: 5` in optimizer
+settings to tune the variable-material evaluator around the one-twentieth-scale
+baseline. The mode is fixed for the entire population, not a mutable gene.
+The six coefficients retain their independent −100..100 bounds. BASE=100,
+REG=0.25, advantage bonuses and feature geometry stay fixed. The distinct
+variable v3 genome records the mode in exports, cache identity and native
+arguments; the flat v2 format remains supported.
+
+For this mode the fixed archive is the variable initial-material baseline
+instead of the pressure-10 flat archive. The incumbent remains the adopted flat
+default. All contemporaries and eligible historical winners still participate.
+Near-baseline initialization uses `initial_material`, while random proposals
+sample the full signed interval. Elitism, crossover, mutation, fresh validation,
+budgets and official-game fitness are unchanged. Consensus adjudication remains
+a separate analysis, not a fitness replacement.
+
+Run a matching smoke with `smoke --variable-material --output /tmp/variable-smoke`.
+A flat smoke receipt cannot authorize a variable run. Mode and initial material
+are frozen into the manifest; changing them requires a new run. No export
+updates application defaults automatically.

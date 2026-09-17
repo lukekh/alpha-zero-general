@@ -16,9 +16,11 @@ def revision():
     return subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
 
 
-def smoke_spec(positions, mode='depth'):
+def smoke_spec(positions, mode='depth', variable_material_enabled=False):
     return prepare(Settings(population=2, generations=1, search_positions=1,
-                            max_games=16, max_nodes=3_000_000, max_seconds=180.), positions,
+                            max_games=16, max_nodes=3_000_000, max_seconds=180.,
+                            variable_material_enabled=variable_material_enabled,
+                            initial_material=5. if variable_material_enabled else 100.), positions,
                    protocol(mode, depth=1, seconds=5. if mode == 'depth' else .05, node_limit=50_000,
                             proof_depth=0, proof_nodes=0, max_plies=2, game_seconds=15.),
                    revision=revision())
@@ -32,6 +34,7 @@ def main(argv=None):
                       help='JSON {settings, protocol, corpus: {seed, lines, max_plies}}')
     prep.add_argument('--output', type=Path, required=True)
     smoke = commands.add_parser('smoke')
+    smoke.add_argument('--variable-material', action='store_true')
     smoke.add_argument('--output', type=Path, required=True)
     smoke.add_argument('--mode', choices=('depth', 'wall', 'mcts'), default='depth')
     for name in ('run', 'benchmark'):
@@ -56,9 +59,10 @@ def main(argv=None):
         return
     if args.command == 'smoke':
         path = args.output / 'manifest.json'
-        spec = json.loads(path.read_text()) if path.exists() else smoke_spec(generate_positions(54, 9), args.mode)
-        if spec['limits']['mode'] != args.mode:
-            raise ValueError('Existing smoke has a different protocol mode')
+        spec = json.loads(path.read_text()) if path.exists() else smoke_spec(generate_positions(54, 9), args.mode, args.variable_material)
+        if (spec['limits']['mode'] != args.mode
+                or spec['settings']['variable_material_enabled'] != args.variable_material):
+            raise ValueError('Existing smoke has a different search or material mode')
         result = run(spec, args.output)
         print(json.dumps({k: result[k] for k in ('status', 'unique_matches', 'failures', 'eligible_exports', 'wall_seconds')}))
         return

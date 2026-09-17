@@ -28,8 +28,13 @@ class Settings:
     max_games: int = 200
     max_nodes: int = 100_000_000
     max_seconds: float = 300.
+    variable_material_enabled: bool = False
+    initial_material: float = 100.
 
     def __post_init__(self):
+        if type(self.variable_material_enabled) is not bool:
+            raise ValueError('variable_material_enabled must be boolean')
+        Genome.from_genes({'material': self.initial_material})
         if type(self.seed) is not int or self.seed < 0:
             raise ValueError('seed must be a nonnegative integer')
         if self.algorithm not in ('evolution', 'random'):
@@ -58,7 +63,8 @@ class Settings:
 
 def random_genome(rng, settings):
     return Genome.from_genes({name: 0. if rng.random() < settings.random_off_rate
-                              else rng.uniform(low, high) for name, (low, high) in BOUNDS.items()})
+                              else rng.uniform(low, high) for name, (low, high) in BOUNDS.items()},
+                             variable_material_enabled=settings.variable_material_enabled)
 
 
 def mutate(parent, rng, settings):
@@ -76,14 +82,16 @@ def mutate(parent, rng, settings):
             step = rng.gauss(0., 1.) * settings.mutation_sigma * (high-low)
             value = max(low, min(high, value + step))
         genes[name] = value
-    return Genome.from_genes(genes)
+    return Genome.from_genes(genes, backend=parent.backend,
+                             variable_material_enabled=parent.variable_material_enabled)
 
 
 def initialize(rng, settings, excluded):
     output, seen = [], set(excluded)
     for attempt in range(10000):
         near = len(output) < math.ceil(settings.population * settings.near_default_fraction)
-        genome = mutate(Genome.from_genes(), rng, settings) if near and attempt < 100 else random_genome(rng, settings)
+        genome = mutate(Genome.from_genes({'material': settings.initial_material},
+                        variable_material_enabled=settings.variable_material_enabled), rng, settings) if near and attempt < 100 else random_genome(rng, settings)
         if genome.config_hash not in seen:
             output.append(genome)
             seen.add(genome.config_hash)
@@ -93,6 +101,8 @@ def initialize(rng, settings, excluded):
 
 
 def next_population(population, ranked_hashes, rng, settings, excluded):
+    if any(g.variable_material_enabled != settings.variable_material_enabled for g in population):
+        raise ValueError('Population material mode differs from frozen settings')
     by_id = {g.config_hash: g for g in population}
     rank = {identity: i for i, identity in enumerate(ranked_hashes)}
     output = [by_id[h] for h in ranked_hashes[:settings.elites]] if settings.algorithm == 'evolution' else []
@@ -109,7 +119,7 @@ def next_population(population, ranked_hashes, rng, settings, excluded):
             if rng.random() < settings.recombination_rate:
                 other = parent()
                 child = Genome('python', tuple(a if rng.random() < .5 else b
-                                               for a, b in zip(child.values, other.values)))
+                                               for a, b in zip(child.values, other.values)), child.variable_material_enabled)
             child = mutate(child, rng, settings)
         if child.config_hash not in seen:
             output.append(child)

@@ -79,8 +79,8 @@ changes. The native wire protocol accepts an optional `0`/`1` mode flag after
 the four material/advantage/attack/defence coefficients and before the state;
 older request formats retain flat material.
 
-The existing v2 signed **genome** evolves coefficients with flat material fixed;
-it does not encode or evolve this mode. Its validation rejects a variable-mode
-base instead of silently dropping the setting. Use the per-candidate comparison
-API above for this new mode. Earlier benchmark archives require their recorded
-implementation because the evaluator source fingerprint has changed.
+The existing v2 signed genome retains flat material. The opt-in variable v3
+genome evolves the same coefficients while preserving variable material through
+mutation, crossover, exports and native configuration. See [tuning](TUNING.md).
+Earlier benchmark archives require their recorded implementation because source
+fingerprints change.

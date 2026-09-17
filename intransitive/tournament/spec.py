@@ -44,7 +44,7 @@ def runtime_versions():
                 llvmlite=llvmlite.__version__)
 
 
-def candidate(name, weights=None, *, role='population', backend='python', genome=None, variable_material_enabled=False):
+def candidate(name, weights=None, *, role='population', backend='python', genome=None, variable_material_enabled=None):
     """Consume #53's serialized module-scale contract, restricted to Python.
 
     Material mode is a fixed per-candidate choice; signed scales are tunable.
@@ -67,6 +67,10 @@ def candidate(name, weights=None, *, role='population', backend='python', genome
             raise ValueError(f'Only effective scales {SCALES} are supported')
         validated = Genome.from_genes({('material' if k == 'count_weight' else k.removesuffix('_weight')): v for k, v in weights.items()},
                                       backend=backend)
+    if variable_material_enabled is None:
+        variable_material_enabled = validated.variable_material_enabled
+    elif validated.variable_material_enabled and not variable_material_enabled:
+        raise ValueError('Variable genome cannot be overridden to flat material')
     genome = validated.to_dict()
     config = replace(validated.to_config(), variable_material_enabled=variable_material_enabled)
     evaluation = {k: v for k, v in config.to_dict().items() if k in EVALUATION_FIELDS}

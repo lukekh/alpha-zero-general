@@ -94,7 +94,21 @@ Use [Python v2](configs/tuning-python-v2.json) or
 are not `SearchConfig.from_file` presets. The [optimizer contract](../evolution/README.md)
 describes mutation, fitness, budget reservations and resume behavior.
 
-The [variable-material mode](VARIABLE_MATERIAL.md) is a fixed, per-candidate
-comparison option outside the v2 genome. V2 retains flat material; attempting to
-use a variable-mode base with a genome is rejected. The paired tournament API
-supports comparing the two modes with identical signed coefficients.
+The flat v2 genome remains unchanged. The opt-in
+`intransitive-variable-module-scales-v3` genome uses the same six signed bounds
+with variable material fixed on. Construct it with
+`Genome.from_genes(genes, variable_material_enabled=True)`; the distinct version
+survives serialization, native arguments and cache identity. BASE=100 and
+REG=0.25 remain fixed; the material coefficient controls the effective scale
+(coefficient 5 is equivalent to BASE/20). Its conservative bound includes the
+opponent-ratio and scarcity multipliers. See
+[the variable schema](variable-module-scales-v3.schema.json).
+
+The optimizer accepts `variable_material_enabled: true` and `initial_material: 5`
+in its settings. All offspring retain this mode. Near-baseline initialization
+mutates that material coefficient and the adopted other weights; uniform
+immigrants still explore the entire −100..100 interval. The fixed opponents
+are the flat adopted default and the variable initial-material baseline.
+The variable baseline is also excluded from the evolving population to avoid
+duplicate identities. Search depth/pruning/MVV-LVA are fixed run settings,
+not evolved genes; REG and feature geometry are not tuned.

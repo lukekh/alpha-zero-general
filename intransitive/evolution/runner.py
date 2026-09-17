@@ -36,7 +36,8 @@ def implementation():
 def prepare(settings, positions, limits, *, revision):
     """Freeze bounds, opponents, corpus split and complete compute protocol."""
     incumbent = Genome.from_genes()
-    archive = Genome.from_genes({'pressure': 10.})
+    archive = (Genome.from_genes({'material': settings.initial_material}, variable_material_enabled=True)
+               if settings.variable_material_enabled else Genome.from_genes({'pressure': 10.}))
     # This also replays the entire corpus and validates backend/search inputs.
     check = manifest([frozen(incumbent), frozen(archive, 'archive')], positions, [limits],
                      position_limit=settings.search_positions)
@@ -70,6 +71,9 @@ def prepare(settings, positions, limits, *, revision):
                               'interval width, clipped to contract bounds; uniform crossover; '
                               '100 unsuccessful proposals trigger random immigrants',
                               evidence='cache reuse is not a new independent observation; heldout is never evaluated'))
+    if settings.variable_material_enabled:
+        result['policy']['opponents'] = ('all variable-material contemporaries, fixed flat default, fixed variable '
+                                         'initial-material baseline, and validation-eligible history; deduplicate identities')
     result['policy']['processes'] = ('bounded LRU of isolated immutable candidates; reset Python/NumPy seed '
                                     'and handshake each game; fresh search/evaluation state each move')
     result['sha256'] = digest(result)
@@ -91,7 +95,8 @@ def smoke_receipt(path, spec):
             or any(receipt['outcomes'][s] for s in ('crash', 'illegal_move', 'infrastructure_timeout'))
             or receipt['unique_matches'] < 2
             or smoke['backend'] != spec['backend'] or smoke['implementation'] != spec['implementation']
-            or smoke['limits']['mode'] != spec['limits']['mode']):
+            or smoke['limits']['mode'] != spec['limits']['mode']
+            or smoke['settings']['variable_material_enabled'] != spec['settings']['variable_material_enabled']):
         raise ValueError('A completed smoke without operational failures on this backend/code/protocol mode is required')
     return dict(manifest=smoke['sha256'], report=digest(receipt))
 
