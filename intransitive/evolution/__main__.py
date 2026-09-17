@@ -33,7 +33,7 @@ def main(argv=None):
     prep.add_argument('--output', type=Path, required=True)
     smoke = commands.add_parser('smoke')
     smoke.add_argument('--output', type=Path, required=True)
-    smoke.add_argument('--mode', choices=('depth', 'wall'), default='depth')
+    smoke.add_argument('--mode', choices=('depth', 'wall', 'mcts'), default='depth')
     for name in ('run', 'benchmark'):
         command = commands.add_parser(name)
         command.add_argument('--manifest', type=Path, required=True)

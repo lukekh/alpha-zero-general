@@ -68,19 +68,21 @@ class EvolutionTests(unittest.TestCase):
         toggles = replace(settings, mutation_rate=1., toggle_rate=1.)
         activated = mutate(Genome.from_genes(), random.Random(1), toggles)
         self.assertEqual(activated.values[0], 0.)
-        self.assertTrue(all(v > 0 for v in activated.values[1:]))
+        original = Genome.from_genes().values
+        for before, after in zip(original, activated.values):
+            self.assertEqual(after == 0., before != 0.)
         for _ in range(100):
-            activated = mutate(activated, a, replace(settings, log_sigma=1e300))
+            activated = mutate(activated, a, replace(settings, mutation_sigma=1e300))
             self.assertEqual(Genome.from_json(activated.to_json()), activated)
-            self.assertEqual(activated.to_config().count_weight, 100.)
+            self.assertTrue(all(-100 <= v <= 100 for v in activated.values))
 
     def test_invalid_settings_and_genomes_fail_before_matches(self):
-        for values in ({'mutation_rate': float('nan')}, {'log_sigma': float('inf')},
+        for values in ({'mutation_rate': float('nan')}, {'mutation_sigma': float('inf')},
                        {'max_seconds': True}, {'max_nodes': -1}, {'population': 1},
                        {'elites': 4}, {'tournament_size': 5}, {'random_off_rate': -1}):
             with self.assertRaises(ValueError):
                 Settings(**values)
-        for genes in ({'pressure': 21}, {'attack': float('nan')}, {'race': 1}):
+        for genes in ({'pressure': 101}, {'attack': float('nan')}, {'race': 1}):
             with self.assertRaises(ValueError):
                 Genome.from_genes(genes)
         spec = self.spec()

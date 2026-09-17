@@ -97,6 +97,10 @@ class SearchResult:
     aspiration_researches: int = 0
     aspiration_fail_highs: int = 0
     aspiration_fail_lows: int = 0
+    search_kind: str = 'minimax'
+    completed_simulations: int = 0
+    requested_simulations: int = 0
+    max_tree_depth: int = 0
 
 
 @dataclass

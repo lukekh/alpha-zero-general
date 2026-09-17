@@ -3,6 +3,7 @@
 use std::collections::{HashMap, VecDeque};
 use std::time::{Duration, Instant};
 mod pressure_delta;
+mod routes;
 use pressure_delta::Pressure;
 
 pub const MATE: f64 = 100_000.0;
@@ -116,11 +117,11 @@ impl Material {
         ((0.0 + ordered[0].1) + ordered[1].1) + ordered[2].1
     }
 
-    fn score(&self, side: usize) -> f64 {
-        let mut total = 100.0
+    fn score(&self, side: usize, weights: &Weights) -> f64 {
+        let mut total = weights.material
             * (self.counts[side].iter().sum::<usize>() as f64
                 - self.counts[1 - side].iter().sum::<usize>() as f64);
-        total += 25.0 * (self.advantage(side) - self.advantage(1 - side));
+        total += weights.advantage * (self.advantage(side) - self.advantage(1 - side));
         total
     }
 }
@@ -458,8 +459,17 @@ pub fn pressure(board: &[i8; 81], radius: usize) -> [f64; 2] {
 }
 
 pub fn evaluate(p: &Position, radius: usize, weight: f64) -> f64 {
+    evaluate_weighted(p, radius, weight, &Weights::default())
+}
+
+pub fn evaluate_weighted(p: &Position, radius: usize, weight: f64, weights: &Weights) -> f64 {
     let side = p.side as usize;
-    let mut total = p.material.score(side);
+    let mut total = p.material.score(side, weights);
+    if weights.attack != 0.0 || weights.defence != 0.0 {
+        let (attack, defence) = routes::terms(p, weights.attack != 0.0, weights.defence != 0.0);
+        total += weights.attack * attack;
+        total += weights.defence * defence;
+    }
     if weight != 0.0 {
         let ring = match &p.pressure {
             Some(cached) if cached.radius == radius => cached.totals,
@@ -470,8 +480,39 @@ pub fn evaluate(p: &Position, radius: usize, weight: f64) -> f64 {
     total.clamp(-10000.0, 10000.0)
 }
 
+/// Adopted endgame defaults; all supported coefficients may also be signed.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Weights {
+    pub material: f64,
+    pub advantage: f64,
+    pub attack: f64,
+    pub defence: f64,
+}
+impl Default for Weights {
+    fn default() -> Self {
+        Self {
+            material: 100.0,
+            advantage: 23.967050360966205,
+            attack: 25.714516982666414,
+            defence: 32.5643023919054,
+        }
+    }
+}
+impl Weights {
+    pub fn validate(&self) -> Result<(), String> {
+        if [self.material, self.advantage, self.attack, self.defence]
+            .iter()
+            .any(|x| !x.is_finite())
+        {
+            return Err("Weights must be finite".into());
+        }
+        Ok(())
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Config {
+    pub weights: Weights,
     pub depth: usize,
     pub milliseconds: u64,
     pub node_limit: u64,
@@ -483,10 +524,10 @@ pub struct Config {
 }
 impl Config {
     pub fn validate(&self) -> Result<(), String> {
+        self.weights.validate()?;
         if !(1..=32).contains(&self.depth)
             || !(3..=4).contains(&self.radius)
             || !self.pressure_weight.is_finite()
-            || self.pressure_weight < 0.0
             || self.proof_depth > 2
             || self.proof_nodes > 64
             || self.table_entries > 1000000
@@ -761,7 +802,12 @@ impl Search {
                 }
             }
             return Ok((
-                evaluate(p, self.config.radius, self.config.pressure_weight),
+                evaluate_weighted(
+                    p,
+                    self.config.radius,
+                    self.config.pressure_weight,
+                    &self.config.weights,
+                ),
                 vec![],
             ));
         }
@@ -993,7 +1039,7 @@ mod tests {
         let mut total = 100.0
             * (counts[side].iter().sum::<usize>() as f64
                 - counts[1 - side].iter().sum::<usize>() as f64);
-        total += 25.0 * (advantages[side] - advantages[1 - side]);
+        total += Weights::default().advantage * (advantages[side] - advantages[1 - side]);
         if weight != 0.0 {
             let ring = pressure(&p.board, radius);
             total += weight * (ring[side] - ring[1 - side]);
@@ -1025,7 +1071,17 @@ mod tests {
             for radius in [3, 4] {
                 for weight in [0.0, 10.0, 1000000.0] {
                     assert_eq!(
-                        evaluate(&view, radius, weight).to_bits(),
+                        evaluate_weighted(
+                            &view,
+                            radius,
+                            weight,
+                            &Weights {
+                                attack: 0.0,
+                                defence: 0.0,
+                                ..Weights::default()
+                            }
+                        )
+                        .to_bits(),
                         reference_evaluate(&view, radius, weight).to_bits(),
                         "side={side}, radius={radius}, weight={weight}, board={:?}",
                         p.board
@@ -1140,6 +1196,7 @@ mod tests {
         let original = fixture(&[(20, 1), (21, 2), (22, 3), (40, -2), (41, -3), (60, -1)]);
         for node_limit in [1, 10, 100, 1000, 1000000] {
             let config = Config {
+                weights: Weights::default(),
                 depth: 3,
                 milliseconds: 60000,
                 node_limit,
@@ -1176,6 +1233,7 @@ mod tests {
         for proof_nodes in [1, 2, 10, 64] {
             let mut p = original.clone();
             let mut search = Search::new(Config {
+                weights: Weights::default(),
                 depth: 3,
                 milliseconds: 60000,
                 node_limit: 1000000,
@@ -1240,6 +1298,7 @@ mod tests {
     fn cancellation_never_labels_partial() {
         let p = fixture(&[(40, 1), (60, -2)]);
         let mut s = Search::new(Config {
+            weights: Weights::default(),
             depth: 6,
             milliseconds: 0,
             node_limit: 100,

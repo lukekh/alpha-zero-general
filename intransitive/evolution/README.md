@@ -1,12 +1,14 @@
 # Evolution of Minimax module scales (#55)
 
-This opt-in optimizer uses the [v1 genome](../heuristics/TUNING.md) and
-[paired official-game harness](../tournament/README.md). Python's five effective
-module coefficients are the only genes. Material stays at 100; module signs,
-zero/enable semantics, clipping, decisive scores, proof settings, search depth,
-time limits, official rules, MCTS and training configuration are fixed. Rust is
-not supported by the match harness. Exported candidates are **unaccepted** and
-must go through separate held-out acceptance in #56. No defaults are updated.
+This optimizer uses the [signed v2 genome](../heuristics/TUNING.md) and
+[paired official-game harness](../tournament/README.md). Python's six effective
+coefficients, including material, range independently from −100 to 100.
+Minimax depth and MCTS simulation settings are fixed per run. Both methods use
+official game outcomes as fitness; scores from different protocols are not pooled.
+Rust is not a tournament backend, but its default evaluator now matches the
+adopted Python material/advantage/attack/defence coefficients. The previous
+measured candidate was adopted at the user's explicit request; new optimizer
+exports remain provisional and do not automatically update defaults.
 
 ## Reproduce a bounded run
 
@@ -31,8 +33,8 @@ startup. Each game has at most two plies. These very short games test machinery;
 unfinished games cannot establish strength. Operational smoke failures require
 diagnosis, not automatically increasing limits. Work/depth failures are expected
 candidate rejection data; they are retained and cannot qualify a candidate.
-`smoke --mode wall` exercises the separate
-equal-time protocol. A run beyond the smoke envelope requires a successful smoke
+`smoke --mode wall` exercises the separate equal-time protocol;
+`smoke --mode mcts` exercises fixed-simulation heuristic MCTS. A run beyond the smoke envelope requires a successful smoke
 receipt for the same code, backend/runtime and protocol mode, including through
 the Python `run()` API.
 
@@ -59,18 +61,18 @@ Preparation is outside the run budget; run-time validation is charged to it.
 | seed | 55 | One local `random.Random` stream for initialization, selection and variation |
 | population / generations | 4 / 3 | Unique population size and generation ceiling |
 | elites / tournament_size | 1 / 2 | Retained top candidates; select the best of a uniform sample without replacement |
-| mutation_rate / log_sigma | .5 / .5 | Independent per-gene mutation probability; normal standard deviation in natural log space |
-| toggle_rate | .15 | Conditional on mutation, turn a positive gene off or reactivate zero uniformly within its bounds |
+| mutation_rate / mutation_sigma | .5 / .15 | Independent per-gene mutation probability; additive normal standard deviation as a fraction of the coefficient interval width |
+| toggle_rate | .15 | Conditional on mutation, turn a nonzero gene off or reactivate zero uniformly within its bounds |
 | recombination_rate | .5 | Uniform per-gene crossover between two selected parents before mutation |
 | random_off_rate | .5 | Atom at zero for random initialization/immigrants; otherwise uniform within bounds |
 | near_default_fraction | .5 | Initial fraction obtained by mutating the unchanged default genome |
 | hall_size | 2 | Maximum additional historical winners; fixed pressure-10 archive remains present |
 | search_positions / validation_positions | 2 / 1 | Common search starts; fresh validation lines per generation |
-| min_completed_depth | 1 | Below this, a non-proven move makes the candidate ineligible, including in wall mode |
+| min_completed_depth | 1 | Minimax minimum; MCTS instead requires its full simulation count |
 | resident_engines | 4 | Bounded LRU cache of isolated candidate processes (2–8); only one game/two bots are active |
 | max_games / max_nodes / max_seconds | 200 / 100000000 / 300 | Explicit per-run attempt/work/wall ceilings |
 
-Positive mutation is multiplicative/log-normal and clipped to legal bounds.
+Mutation adds a zero-mean Gaussian step and clips to the signed bounds, allowing direct sign changes.
 Zero has its own probability mass, so disabled modules can activate. Near-default
 initialization and breeding fall back to random immigrants after 100 proposals;
 10,000 proposals without a full unique population fail. Incumbent and fixed
@@ -202,3 +204,18 @@ Tests:
 .venv/bin/python -m unittest intransitive.tests.test_evolution \
   intransitive.tests.test_tournament intransitive.tests.test_tuning -v
 ```
+
+## Comparing search methods and depths
+
+Use separate frozen manifests for Minimax depths 1/2/3 and MCTS simulation
+budgets. A JSON protocol with `mode: "mcts"` accepts `simulations`, `cpuct` and
+`value_scale`; all enter validation/cache identity. The worker uses the existing
+PUCT implementation with uniform legal priors and bounded heuristic leaf values.
+MCTS reports completed simulations and observed tree depth, never a fabricated
+Minimax depth. Incomplete simulation batches are rejection data. Keep common
+starts, seeds and resource ceilings across comparisons, and give each selected
+genome fresh paired validation against the adopted default under its own search
+protocol. Different selected weights alone do not establish a depth effect.
+
+Historical benchmark archives require their recorded code revisions; the signed
+genome, new defaults and additive mutation deliberately invalidate old manifests.

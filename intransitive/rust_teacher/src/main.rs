@@ -1,5 +1,5 @@
 //! One whitespace-delimited request per line, one JSON response per line.
-use intransitive_rust_teacher::{evaluate, pressure, Config, Position, Search};
+use intransitive_rust_teacher::{evaluate_weighted, pressure, Config, Position, Search, Weights};
 use std::io::{self, BufRead, Write};
 
 fn bytes(text: &str) -> Result<Vec<u8>, String> {
@@ -17,11 +17,12 @@ fn number<T: std::str::FromStr>(s: &str) -> Result<T, String> {
 fn handle(line: &str, cache: &mut Option<(Config, Search)>) -> Result<String, String> {
     let v: Vec<_> = line.split_whitespace().collect();
     match v.first().copied() {
-        Some("search" | "search_reuse") if v.len()==10 => {
-            let config=Config {depth:number(v[1])?,milliseconds:number(v[2])?,node_limit:number(v[3])?,
+        Some("search" | "search_reuse") if v.len()==10 || v.len()==14 => {
+            let weights=if v.len()==14 { Weights {material:number(v[9])?,advantage:number(v[10])?,attack:number(v[11])?,defence:number(v[12])?} } else {Weights::default()};
+            let config=Config {weights,depth:number(v[1])?,milliseconds:number(v[2])?,node_limit:number(v[3])?,
                 radius:number(v[4])?,pressure_weight:number(v[5])?,proof_depth:number(v[6])?,
                 proof_nodes:number(v[7])?,table_entries:number(v[8])?};
-            let p=Position::from_bytes(&bytes(v[9])?)?;
+            let p=Position::from_bytes(&bytes(v[v.len()-1])?)?;
             if cache.as_ref().map(|x| &x.0)!=Some(&config) {
                 *cache=Some((config.clone(),Search::new(config)?));
             }
@@ -31,14 +32,16 @@ fn handle(line: &str, cache: &mut Option<(Config, Search)>) -> Result<String, St
                 r.action.map_or("null".into(),|x|x.to_string()),r.score.map_or("null".into(),|x|x.to_string()),
                 r.completed_depth,r.target_depth,r.complete,r.stop_reason,r.nodes,r.proof_nodes,r.seconds,r.pv,search.tt_hits,search.table_entries()))
         },
-        Some("inspect") if v.len()==4 => {
+        Some("inspect") if v.len()==4 || v.len()==8 => {
             let radius=number(v[1])?;let weight:f64=number(v[2])?;
-            if !(3..=4).contains(&radius) || !weight.is_finite() || weight<0.0 {return Err("Invalid pressure settings".into());}
-            let p=Position::from_bytes(&bytes(v[3])?)?;
+            if !(3..=4).contains(&radius) || !weight.is_finite() {return Err("Invalid pressure settings".into());}
+            let weights=if v.len()==8 {Weights {material:number(v[3])?,advantage:number(v[4])?,attack:number(v[5])?,defence:number(v[6])?}} else {Weights::default()};
+            weights.validate()?;
+            let p=Position::from_bytes(&bytes(v[v.len()-1])?)?;
             let term=p.terminal(true);let official=p.terminal(false);
             let legal=if term.is_some() {vec![]} else {p.raw_legal(p.side)};
             Ok(format!("{{\"legal\":{:?},\"score\":{},\"pressure\":{:?},\"reason\":{:?},\"official_reason\":{:?}}}",
-                legal,evaluate(&p,radius,weight),pressure(p.board(),radius),term.map_or("ongoing",|x|x.1),official.map_or("ongoing",|x|x.1)))
+                legal,evaluate_weighted(&p,radius,weight,&weights),pressure(p.board(),radius),term.map_or("ongoing",|x|x.1),official.map_or("ongoing",|x|x.1)))
         },
         Some("apply") if v.len()==4 => {
             let action=number(v[1])?;let modelling=match v[2] {"0"=>false,"1"=>true,_=>return Err("Invalid rule mode".into())};

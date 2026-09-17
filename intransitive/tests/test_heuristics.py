@@ -262,14 +262,14 @@ class HeuristicTests(unittest.TestCase):
         with patch('intransitive.heuristics.evaluation.attacking_position', side_effect=AssertionError), \
              patch('intransitive.heuristics.evaluation.defensive_position', side_effect=AssertionError), \
              patch('intransitive.heuristics.evaluation.overload', side_effect=AssertionError):
-            self.explain(s)
+            self.explain(s, replace(self.config, attack_enabled=False, defence_enabled=False, overload_enabled=False))
 
     def test_config_validation_clamp_and_roundtrip(self):
         config = replace(self.config, count_weight=10**9)
         s = position({'D4': 1, 'E4': 1, 'H8': -2})
         self.assertEqual(self.explain(s, config)['score'], HEURISTIC_LIMIT)
         self.assertEqual(SearchConfig(**json.loads(config.identity())), config)
-        for kw in ({'attack_enabled': 1}, {'time_limit': float('nan')}, {'overload_weight': -1},
+        for kw in ({'attack_enabled': 1}, {'time_limit': float('nan')}, {'predator_zero_bonus': -1},
                    {'max_depth': 1000}, {'node_limit': True}, {'proof_depth': 9}):
             with self.assertRaises(ValueError):
                 SearchConfig(**kw)

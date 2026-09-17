@@ -104,9 +104,9 @@ class TournamentTests(unittest.TestCase):
         self.assertEqual(candidate('A', genome=item['genome']), item)
         self.assertEqual(effective_config(item, protocol('depth')).to_dict(),
                          SearchConfig(max_depth=2, time_limit=.05, node_limit=10**9).to_dict())
-        for weights in ({'race_weight': 1}, {'count_weight': 20}, {'attack_enabled': True},
+        for weights in ({'race_weight': 1}, {'count_weight': 101}, {'attack_enabled': True},
                         {'pressure_weight': float('nan')}, {'attack_weight': float('inf')},
-                        {'advantage_weight': -1}, {'pressure_weight': 21}, {'attack_weight': True}):
+                        {'advantage_weight': -101}, {'pressure_weight': 101}, {'attack_weight': True}):
             with self.assertRaises(ValueError):
                 candidate('bad', weights)
         with self.assertRaises(ValueError):

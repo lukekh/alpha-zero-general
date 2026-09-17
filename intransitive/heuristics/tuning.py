@@ -8,13 +8,13 @@ from pathlib import Path
 from .config import SearchConfig
 from .evaluation import HEURISTIC_LIMIT, MATE_THRESHOLD
 
-VERSION = 'intransitive-module-scales-v1'
-BACKEND_VERSIONS = {'python': 'python-heuristics-v2', 'rust': 'rust-teacher-0.1.0'}
-BOUNDS = {'advantage': (0., 100.), 'attack': (0., 100.),
-          'defence': (0., 100.), 'overload': (0., 100.), 'pressure': (0., 20.)}
-DEFAULTS = {'advantage': 25., 'attack': 0., 'defence': 0., 'overload': 0., 'pressure': 0.}
-GENES = {'python': tuple(BOUNDS), 'rust': ('pressure',)}
-# These are fixed by v1, including dormant module weights and pressure geometry.
+VERSION = 'intransitive-module-scales-v2'
+BACKEND_VERSIONS = {'python': 'python-heuristics-signed-v3', 'rust': 'rust-teacher-routes-v2'}
+BOUNDS = {name: (-100., 100.) for name in ('material', 'advantage', 'attack', 'defence', 'overload', 'pressure')}
+DEFAULTS = {'material': 100., 'advantage': 23.967050360966205,
+            'attack': 25.714516982666414, 'defence': 32.5643023919054, 'overload': 0., 'pressure': 0.}
+GENES = {'python': tuple(BOUNDS), 'rust': tuple(g for g in BOUNDS if g != 'overload')}
+# These are fixed outside the signed genome, including dormant module weights and pressure geometry.
 EVALUATION_FIELDS = tuple(name for name in SearchConfig().to_dict()
                           if name.endswith(('_weight', '_bonus')) or name in (
                               'evaluator_version', 'attack_enabled', 'defence_enabled',
@@ -40,7 +40,7 @@ def _object(pairs):
 
 @dataclass(frozen=True)
 class Genome:
-    """Immutable effective coefficients, normalized to fixed material = 100.
+    """Immutable effective coefficients, with signed, independently tunable material and module scales.
 
     Use from_genes for partial overrides, from_json for strict complete records.
     Zero disables optional modules; enable switches are not independent genes.
@@ -108,9 +108,9 @@ class Genome:
         defaults = SearchConfig()
         changed = [name for name in EVALUATION_FIELDS if getattr(base, name) != getattr(defaults, name)]
         if changed:
-            raise ValueError(f'Base must use v1 fixed evaluation defaults: {changed}')
+            raise ValueError(f'Base must use fixed evaluation defaults: {changed}')
         values = dict(DEFAULTS, **self.to_dict()['genes'])
-        updates = {'advantage_weight': values['advantage']}
+        updates = {'count_weight': values['material'], 'advantage_weight': values['advantage']}
         for name in ('attack', 'defence', 'overload', 'pressure'):
             updates[name + '_enabled'] = bool(values[name])
             # Keep legacy dormant weights so the default is exactly SearchConfig().
@@ -124,7 +124,7 @@ class Genome:
         optimization switches are not a native contract or a parity claim.
         """
         if self.backend != 'rust':
-            raise ValueError('Native execution requires a rust genome (pressure only)')
+            raise ValueError('Native execution requires a rust genome')
         config = self.to_config(base)
         if not 1 <= config.max_depth <= 32 or config.proof_depth > 2 or config.proof_nodes > 64:
             raise ValueError('Rust requires depth 1..32, proof_depth <= 2 and proof_nodes <= 64')
@@ -136,6 +136,9 @@ class Genome:
         return dict(depth=config.max_depth, seconds=config.time_limit,
                     node_limit=config.node_limit, radius=config.pressure_radius,
                     weight=config.pressure_weight if config.pressure_enabled else 0.,
+                    material=config.count_weight, advantage=config.advantage_weight,
+                    attack=config.attack_weight if config.attack_enabled else 0.,
+                    defence=config.defence_weight if config.defence_enabled else 0.,
                     proof_depth=config.proof_depth, proof_nodes=config.proof_nodes,
                     table_entries=config.table_entries, reuse=False)
 
@@ -146,24 +149,24 @@ class Genome:
         config = self.to_config(base)
         # Conservative board-capacity bound, valid even for synthetic fixtures.
         # Each side's feature difference is bounded by the largest side total.
-        upper = (81 * 100 + 81 * 1.75 * config.advantage_weight
-                 + 3 * (config.attack_weight if config.attack_enabled else 0)
-                 + 4 * (config.defence_weight if config.defence_enabled else 0)
-                 + 2 * (config.overload_weight if config.overload_enabled else 0)
-                 + 3280 * (config.pressure_weight if config.pressure_enabled else 0))
+        upper = (81 * abs(config.count_weight) + 81 * 1.75 * abs(config.advantage_weight)
+                 + 3 * (abs(config.attack_weight) if config.attack_enabled else 0)
+                 + 4 * (abs(config.defence_weight) if config.defence_enabled else 0)
+                 + 2 * (abs(config.overload_weight) if config.overload_enabled else 0)
+                 + 3280 * (abs(config.pressure_weight) if config.pressure_enabled else 0))
         result = dict(genome=self.to_dict(), config_hash=self.config_hash,
                       backend_version=BACKEND_VERSIONS[self.backend],
                       implementation_revision=implementation_revision,
                       tunable_genes=list(GENES[self.backend]),
                       bounds={k: list(BOUNDS[k]) for k in GENES[self.backend]},
-                      normalization={'count_weight': 100., 'zero_disables_optional_module': True},
+                      normalization={'material_is_tunable': True, 'zero_disables_optional_module': True},
                       search_config=config.to_dict(),
                       cache_policy='Python full config identity; Rust fresh search per candidate',
                       heuristic_limit=HEURISTIC_LIMIT, decisive_threshold=MATE_THRESHOLD,
                       conservative_absolute_bound=upper,
                       saturation_possible=upper >= HEURISTIC_LIMIT,
                       saturation_policy='Report observed raw scores and saturation on representative fixtures before fitness',
-                      backend_limitations=('Fixed native material 100/25, advantage bonuses, ordering/PVS and work accounting; pressure only'
+                      backend_limitations=('Native overload unsupported; fixed advantage bonuses, ordering/PVS and work accounting'
                                            if self.backend == 'rust' else 'Route and overload modules can dominate runtime'))
         if self.backend == 'rust':
             result['native_arguments'] = self.native_arguments(base)

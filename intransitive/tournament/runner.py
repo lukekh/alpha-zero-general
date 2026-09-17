@@ -20,7 +20,7 @@ from ..heuristics.search import AlphaBetaPlayer
 from ..record import state_hash
 from .spec import digest, effective_config, manifest, unpack
 
-FINAL = {'win', 'unfinished', 'crash', 'illegal_move', 'infrastructure_timeout', 'depth_incomplete'}
+FINAL = {'win', 'unfinished', 'crash', 'illegal_move', 'infrastructure_timeout', 'depth_incomplete', 'simulation_incomplete'}
 
 
 def atomic_json(path, value):
@@ -56,12 +56,17 @@ def engine_worker(connection, item, limits, seed):
         import numba
         numba.set_num_threads(1)
         config = effective_config(item, limits)
-        engine = AlphaBetaPlayer(config=config)
+        def create_engine(config):
+            if limits['mode'] == 'mcts':
+                from ..heuristics.mcts import HeuristicMCTSPlayer
+                return HeuristicMCTSPlayer(config=config, settings=limits['mcts'])
+            return AlphaBetaPlayer(config=config)
+        engine = create_engine(config)
         engine._prepare()
         # Execute one bounded search as well: jitclass dispatch and geometry
         # compilation must not be charged to the first measured move.
         from dataclasses import replace
-        warm = AlphaBetaPlayer(config=replace(config, max_depth=1, time_limit=30., node_limit=10000))
+        warm = create_engine(replace(config, max_depth=1, time_limit=30., node_limit=10000))
         warm.analyze(IntransitiveGame().getInitBoard())
         connection.send(dict(kind='ready', config=config.to_dict(), candidate=item['sha256'],
                              startup_seconds=time.perf_counter() - begin,
@@ -73,7 +78,7 @@ def engine_worker(connection, item, limits, seed):
             start, cpu = time.perf_counter(), time.process_time()
             # A fresh engine makes interrupted-game resume independent of the
             # searches that preceded it. Compiled code is read-only and shared.
-            engine = AlphaBetaPlayer(config=config)
+            engine = create_engine(config)
             result = engine.analyze(state)
             connection.send(dict(kind='move', result=asdict(result),
                                  latency_seconds=time.perf_counter() - start,
@@ -259,6 +264,10 @@ def play_match(spec, task, path, cancelled, *, engine_factory=EngineProcess):
                     or (result['completed_depth'] < limits['search']['max_depth'] and result['stop_reason'] != 'proven_result')):
                 row['failed_response'] = response
                 raise MatchFailure('depth_incomplete', 'Requested depth did not complete')
+            if limits['mode'] == 'mcts' and (result.get('search_kind') != 'mcts' or result['stopped']
+                    or result.get('completed_simulations', 0) != limits['mcts']['simulations']):
+                row['failed_response'] = response
+                raise MatchFailure('simulation_incomplete', 'Requested simulations did not complete')
             before = state_hash(state)
             state, _ = game.getNextState(state, side, action)
             row['moves'].append(dict(side=side, candidate=task['colours'][side], before=before,

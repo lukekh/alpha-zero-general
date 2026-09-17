@@ -66,8 +66,8 @@ def prepare(settings, positions, limits, *, revision):
                               hall='append only validation-eligible winners; FIFO, unique, bounded',
                               budget='serial; reserve worst-case logical work before each attempt, including '
                               'two 10000-work warmups; never refund attempts, including interrupted work',
-                              mutation='per-gene Bernoulli; zero toggle/uniform activation; Gaussian in log '
-                              'space for positive scales, clipped to contract bounds; uniform crossover; '
+                              mutation='per-gene Bernoulli; zero toggle/uniform activation; Gaussian additive step over the signed '
+                              'interval width, clipped to contract bounds; uniform crossover; '
                               '100 unsuccessful proposals trigger random immigrants',
                               evidence='cache reuse is not a new independent observation; heldout is never evaluated'))
     result['policy']['processes'] = ('bounded LRU of isolated immutable candidates; reset Python/NumPy seed '
@@ -255,7 +255,7 @@ class Search:
             entry['config_hash'] = identity
             entry['preflight'] = self.state['preflights'][identity]
             entry['depth_violations'] = sum(
-                m['result']['completed_depth'] < self.settings.min_completed_depth
+                self.spec['limits']['mode'] != 'mcts' and m['result']['completed_depth'] < self.settings.min_completed_depth
                 and m['result']['stop_reason'] != 'proven_result'
                 for row in rows for m in row['moves'] if m['candidate'] == item['sha256'])
             entry['eligible'] = (entry['eligible'] and not entry['preflight']['flagged']

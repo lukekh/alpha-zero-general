@@ -18,15 +18,15 @@ class SearchConfig:
     evaluator_version: str = 'intransitive-heuristics-v2'
     count_weight: float = 100.
     race_weight: float = 0.  # Legacy config field; binary clear-run scoring ignores it.
-    advantage_weight: float = 25.
-    attack_weight: float = 12.
-    defence_weight: float = 10.
+    advantage_weight: float = 23.967050360966205
+    attack_weight: float = 25.714516982666414
+    defence_weight: float = 32.5643023919054
     overload_weight: float = 5.
     predator_zero_bonus: float = 1.
     predator_scarcity_bonus: float = .5
     prey_bonus: float = .25
-    attack_enabled: bool = False
-    defence_enabled: bool = False
+    attack_enabled: bool = True
+    defence_enabled: bool = True
     overload_enabled: bool = False
     pressure_enabled: bool = False  # Experimental square-ring RPS pressure.
     pressure_weight: float = 1.
@@ -57,8 +57,11 @@ class SearchConfig:
             if name.endswith('_enabled') and type(value) is not bool:
                 raise ValueError(f'{name} must be a boolean')
             if name.endswith(('_weight', '_bonus')) or name == 'time_limit':
-                if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
-                    raise ValueError(f'{name} must be finite and nonnegative')
+                if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                    raise ValueError(f'{name} must be finite')
+                signed = name in ('count_weight', 'advantage_weight', 'attack_weight', 'defence_weight', 'overload_weight', 'pressure_weight')
+                if not signed and value < 0:
+                    raise ValueError(f'{name} must be nonnegative')
         for name in ('max_depth', 'node_limit', 'proof_depth', 'proof_nodes', 'table_entries', 'pressure_cache_entries'):
             value = getattr(self, name)
             if type(value) is not int or value < 0:

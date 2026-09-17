@@ -58,7 +58,7 @@ class NativeTeacherTests(unittest.TestCase):
             with self.subTest(case=case['id']):
                 reference, expected = load_case(case)
                 state = reference.storage()
-                rust = self.rust.analyze(state, depth=3)
+                rust = self.rust.analyze(state, depth=3, radius=3, weight=10.)
                 python = AlphaBetaPlayer(config=self.config).analyze(state)
                 self.assertTrue(rust['complete'])
                 self.assertEqual(rust['action'], expected)
@@ -72,7 +72,7 @@ class NativeTeacherTests(unittest.TestCase):
             state, _ = generate_position(2026091600+index, stage)
             for depth in (1, 2, 3):
                 with self.subTest(index=index, depth=depth):
-                    rust = self.rust.analyze(state, depth=depth)
+                    rust = self.rust.analyze(state, depth=depth, radius=3, weight=10.)
                     player = AlphaBetaPlayer(config=replace(self.config, max_depth=depth))
                     python = player.analyze(state)
                     self.assertTrue(rust['complete'])

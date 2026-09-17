@@ -40,20 +40,22 @@ class RustTeacher:
         validate_state(state)
         return state.tobytes().hex()
 
-    def inspect(self, state, radius=3, weight=10.):
-        return self.request(f'inspect {radius} {weight} {self.encode(state)}')
+    def inspect(self, state, radius=4, weight=0., *, material=100., advantage=23.967050360966205,
+                attack=25.714516982666414, defence=32.5643023919054):
+        return self.request(f'inspect {radius} {weight} {material} {advantage} {attack} {defence} {self.encode(state)}')
 
     def apply(self, state, action, modelling=True):
         result = self.request(f'apply {action} {int(modelling)} {self.encode(state)}')
         return np.frombuffer(bytes.fromhex(result['state_hex']), dtype=np.int8).reshape(9, 9, 84).copy()
 
-    def analyze(self, state, *, depth=6, seconds=60., radius=3, weight=10.,
-                proof_depth=2, proof_nodes=64, table_entries=50000, node_limit=1_000_000_000, reuse=False):
+    def analyze(self, state, *, depth=6, seconds=60., radius=4, weight=0.,
+                proof_depth=2, proof_nodes=64, table_entries=50000, node_limit=1_000_000_000, reuse=False, material=100., advantage=23.967050360966205,
+                attack=25.714516982666414, defence=32.5643023919054):
         if not np.isfinite(seconds) or seconds < 0:
             raise ValueError('seconds must be finite and nonnegative')
         command = 'search_reuse' if reuse else 'search'
         return self.request(f'{command} {depth} {int(seconds*1000)} {node_limit} {radius} {weight} '
-            f'{proof_depth} {proof_nodes} {table_entries} {self.encode(state)}', timeout=seconds+10.)
+            f'{proof_depth} {proof_nodes} {table_entries} {material} {advantage} {attack} {defence} {self.encode(state)}', timeout=seconds+10.)
 
     def close(self):
         if self.process.poll() is None:

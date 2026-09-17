@@ -15,7 +15,7 @@ class Settings:
     elites: int = 1
     tournament_size: int = 2
     mutation_rate: float = .5
-    log_sigma: float = .5
+    mutation_sigma: float = .15
     toggle_rate: float = .15
     recombination_rate: float = .5
     random_off_rate: float = .5
@@ -47,7 +47,7 @@ class Settings:
             value = getattr(self, name)
             if type(value) not in (int, float) or not math.isfinite(value) or not 0 <= value <= 1:
                 raise ValueError(f'{name} must be finite in [0, 1]')
-        for name in ('log_sigma', 'max_seconds'):
+        for name in ('mutation_sigma', 'max_seconds'):
             value = getattr(self, name)
             if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
                 raise ValueError(f'{name} must be finite and positive')
@@ -70,9 +70,11 @@ def mutate(parent, rng, settings):
         if rng.random() < settings.toggle_rate:
             # Zero is an explicit state, with a uniform reactivation distribution.
             value = rng.uniform(low, high) if value == 0 else 0.
-        elif value > 0:
-            # Clip in log space so even a very large valid sigma cannot overflow.
-            value = min(high, math.exp(max(-700., min(math.log(high), math.log(value) + rng.gauss(0, settings.log_sigma)))))
+        else:
+            # Additive mutation can cross zero in either direction. Sigma is
+            # expressed as a fraction of the signed interval width.
+            step = rng.gauss(0., 1.) * settings.mutation_sigma * (high-low)
+            value = max(low, min(high, value + step))
         genes[name] = value
     return Genome.from_genes(genes)
 

@@ -13,26 +13,27 @@ from intransitive.heuristics.budget import Budget
 from intransitive.heuristics.evaluation import Evaluator, HEURISTIC_LIMIT, MATE_THRESHOLD
 from intransitive.heuristics.position import SearchPosition
 from intransitive.heuristics.pressure import pressure_totals
-from intransitive.heuristics.tuning import Genome, GENES, VERSION, json_schema, saturation_report
+from intransitive.heuristics.tuning import Genome, GENES, VERSION, DEFAULTS, json_schema, saturation_report
 from intransitive.rust_teacher import BINARY, RustTeacher
 from intransitive.tests.test_heuristics import position, unlimited
 
 BASE = SearchConfig(max_depth=2, time_limit=60., node_limit=10**9, proof_nodes=0,
                     pressure_cache_entries=8)
 FIXTURES = {
+    'material': {'D4': 1, 'E4': 1, 'H8': -2},
     'advantage': {'D4': 1, 'E4': 1, 'H7': -2, 'H8': -2},
     'attack': {'G7': 3, 'A9': -1},
     'defence': {'B2': 2, 'D4': -3, 'H8': 1},
     'overload': {'A5': 2, 'C5': -3, 'D1': -3, 'E5': -1},
     'pressure': {'D4': 1, 'E5': -2, 'H8': -3},
 }
-TERMS = dict(advantage='piece_advantage', attack='attacking_position',
+TERMS = dict(material='piece_count', advantage='piece_advantage', attack='attacking_position',
              defence='defensive_position', overload='overload', pressure='local_pressure')
 
 
 class GenomeTests(unittest.TestCase):
     def test_roundtrip_normalization_hash_and_checked_in_schema(self):
-        a = Genome.from_genes({'advantage': 25, 'attack': -0.0})
+        a = Genome.from_genes({'pressure': -0.0})
         b = Genome.from_genes()
         self.assertEqual(a, b)
         self.assertEqual(a.config_hash, b.config_hash)
@@ -45,7 +46,7 @@ class GenomeTests(unittest.TestCase):
             replace(BASE, max_depth=3), implementation_revision='fixture-revision')['manifest_hash'])
         self.assertNotEqual(manifest['manifest_hash'], b.manifest(
             BASE, implementation_revision='another-revision')['manifest_hash'])
-        schema = Path(__file__).parents[1] / 'heuristics/module-scales-v1.schema.json'
+        schema = Path(__file__).parents[1] / 'heuristics/module-scales-v2.schema.json'
         self.assertEqual(json.loads(schema.read_text()), json_schema())
         for backend in GENES:
             candidate = Genome.from_genes(backend=backend)
@@ -57,21 +58,21 @@ class GenomeTests(unittest.TestCase):
             with self.subTest(gene=gene), self.assertRaises(ValueError):
                 Genome.from_genes({gene: 1})
         for gene in GENES['python']:
-            for value in (float('nan'), float('inf'), -float('inf'), -1, 101, True, '1', None):
+            for value in (float('nan'), float('inf'), -float('inf'), -101, 101, True, '1', None):
                 with self.subTest(gene=gene, value=value), self.assertRaises(ValueError):
                     Genome.from_genes({gene: value})
             self.assertNotEqual(Genome.from_genes({gene: 2}).config_hash,
                                 Genome.from_genes({gene: 3}).config_hash)
         for text in ('{}', '[]', '{"version": 1}',
                      Genome.from_genes().to_json().replace(VERSION, 'v999'),
-                     Genome.from_genes().to_json().replace('"attack":0.0', '"attack":0.0,"attack":1.0')):
+                     Genome.from_genes().to_json().replace('"pressure":0.0', '"pressure":0.0,"pressure":1.0')):
             with self.subTest(text=text), self.assertRaises(ValueError):
                 Genome.from_json(text)
         for kwargs in ({'race_weight': 1}, {'pressure_radius': 3}, {'predator_zero_bonus': 2},
-                       {'attack_enabled': True}, {'count_weight': 50}):
+                       {'attack_enabled': False}, {'count_weight': 50}):
             with self.assertRaises(ValueError):
                 Genome.from_genes().to_config(replace(BASE, **kwargs))
-        for gene in ('advantage', 'attack', 'defence', 'overload'):
+        for gene in ('overload',):
             with self.assertRaises(ValueError):
                 Genome.from_genes({gene: 0}, backend='rust')
         with self.assertRaises(ValueError):
@@ -100,7 +101,7 @@ class GenomeTests(unittest.TestCase):
                 row = Evaluator(game, config).explain(position(fixture), 0, budget,
                                                      proof={'status': 'unknown'}, diagnostics=False)
                 rows.append(row)
-                if gene != 'advantage':
+                if gene not in ('material', 'advantage'):
                     self.assertEqual(getattr(config, gene + '_enabled'), bool(weight))
                     if weight == 0:
                         self.assertEqual(budget.module_calls[TERMS[gene]], 0)
