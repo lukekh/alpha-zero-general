@@ -14,6 +14,7 @@ from intransitive.heuristics import AlphaBetaPlayer, SearchConfig, exhaustive_mi
 from intransitive.heuristics.budget import Budget, BudgetExpired
 from intransitive.heuristics.evaluation import Evaluator, terminal_value
 from intransitive.heuristics.position import SearchPosition
+from intransitive.heuristics.moves import masks_from_board
 from intransitive.heuristics.proof import compact_proof, native_compact_proof, warm_compact_proof_kernel
 from intransitive.heuristics.search import position_key, prove, prove_reference
 from intransitive.record import load_record
@@ -28,7 +29,7 @@ def unlimited():
 
 def snapshot(node):
     return (node.export().tobytes(), node.counts, node.history.copy(),
-            node.occurrences.copy(), node.key(), len(node.stack))
+            node.occurrences.copy(), node.key(), len(node.stack), node.masks.tobytes())
 
 
 class CompactSearchTests(unittest.TestCase):
@@ -39,6 +40,7 @@ class CompactSearchTests(unittest.TestCase):
         AlphaBetaPlayer(config=cls.config)._prepare()
 
     def assert_position(self, node, reference, state):
+        np.testing.assert_array_equal(node.masks, masks_from_board(node.pieces))
         self.assertEqual(node.export().tobytes(), state.tobytes())
         self.assertEqual(node.export().tobytes(), reference.storage().tobytes())
         validate_state(node.export())

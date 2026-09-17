@@ -1,0 +1,8 @@
+test_default_compiles_existing_order_without_enhanced_heuristics (intransitive.tests.test_search_efficiencies.SearchEfficiencyTests.test_default_compiles_existing_order_without_enhanced_heuristics) ... ok
+test_only_checked_search_skips_public_terminal_query (intransitive.tests.test_search_efficiencies.SearchEfficiencyTests.test_only_checked_search_skips_public_terminal_query) ... ok
+test_reused_proof_buffers_reset_after_budget_and_exception (intransitive.tests.test_search_efficiencies.SearchEfficiencyTests.test_reused_proof_buffers_reset_after_budget_and_exception) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 14.679s
+
+OK

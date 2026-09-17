@@ -17,6 +17,7 @@ from ..IntransitiveConstants import (
 )
 from ..IntransitiveLogicNumba import validate_state, raw_movement_mask, _corner_winner
 from .material import count_pieces, after_capture
+from .moves import masks_from_board, move_board, has_move, legal_actions
 
 
 @dataclass(slots=True)
@@ -35,6 +36,7 @@ class SearchPosition:
     def __init__(self, state, *, modelling_draws=True, counts=None):
         validate_state(state)
         self.pieces = state[:, :, 0].copy()
+        self.masks = masks_from_board(self.pieces)
         # A compact contiguous view accepted by the existing material kernel.
         self.material_state = self.pieces[:, :, None]
         meta = state[:, :, METADATA_PLANE:].ravel()
@@ -47,6 +49,7 @@ class SearchPosition:
         self.modelling_draws = modelling_draws
         self.stack = []
         self._key = None
+        self._proof_scratch = None
 
     @contextmanager
     def null_turn(self):
@@ -79,7 +82,7 @@ class SearchPosition:
         winner = _corner_winner(self.pieces, self.a1)
         if winner >= 0:
             return winner, 'corner'
-        if not raw_movement_mask(self.pieces, self.side).any():
+        if not has_move(self.masks, self.side):
             return 1 - self.side, 'stalemate'
         if self.modelling_draws:
             if self.occurrences[self.history[-1]] >= 3:
@@ -91,7 +94,11 @@ class SearchPosition:
     def legal(self):
         if self.terminal()[1] != 'ongoing':
             return np.empty(0, dtype=np.int64)
-        return np.flatnonzero(raw_movement_mask(self.pieces, self.side))
+        return self.raw_legal()
+
+    def raw_legal(self):
+        """Board-only moves; search callers must check terminal status first."""
+        return legal_actions(self.masks, self.side)
 
     def push(self, action):
         """Apply a generated legal action; pop in a caller-owned finally block."""
@@ -107,8 +114,7 @@ class SearchPosition:
         self.stack.append(Undo(source, target, captured, self.counts,
                                self.history if captured else None,
                                self.occurrences if captured else None, dropped, self._key))
-        self.pieces.flat[target] = self.pieces.flat[source]
-        self.pieces.flat[source] = 0
+        move_board(self.pieces, self.masks, source, target, captured)
         self.side = 1 - self.side
         self.total += 1
         self._key = None
@@ -139,8 +145,7 @@ class SearchPosition:
             if undo.dropped is not None:
                 self.history.insert(0, undo.dropped)
                 self.occurrences[undo.dropped] = self.occurrences.get(undo.dropped, 0) + 1
-        self.pieces.flat[undo.source] = self.pieces.flat[undo.target]
-        self.pieces.flat[undo.target] = undo.captured
+        move_board(self.pieces, self.masks, undo.source, undo.target, undo.captured, True)
         self.side = 1 - self.side
         self.total -= 1
         self.counts, self._key = undo.counts, undo.key
@@ -165,6 +170,14 @@ def warm_position_kernels():
     from .material import ordered_score
     pieces = np.zeros((9, 9), dtype=np.int8)
     raw_movement_mask(pieces, 0)
+    masks = masks_from_board(pieces)
+    has_move(masks, 0)
+    legal_actions(masks, 0)
+    pieces.flat[40] = 1
+    masks = masks_from_board(pieces)
+    move_board(pieces, masks, 40, 41, 0)
+    move_board(pieces, masks, 40, 41, 0, True)
+    pieces.flat[40] = 0
     _corner_winner(pieces, 0)
     winning_actions(pieces, np.empty(0, dtype=np.int64), 0, 80)
     no_terminal_win_in_horizon(pieces, 0, 0, 2)

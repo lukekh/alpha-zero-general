@@ -16,6 +16,14 @@ On the recorded workload, paired CPU savings were about 3% for material-only
 search and 11–12% with pressure enabled. All 108 search comparisons matched
 scores, selected moves, principal variations and node counts exactly.
 
+Legal generation and terminal mobility checks use six incremental bitboards,
+including temporary proof and ordering moves. The board array and action order
+are preserved. See the [Python/Rust legality benchmark](../benchmarks/legal_moves/README.md)
+for correctness checks, node throughput, memory cost and reproduction commands.
+
+Neighbour bitboards also accelerate move-ordering threat checks, and depth hints
+reuse history keys. See the [follow-up benchmark](../benchmarks/search_efficiencies/README.md).
+
 ## Build and validate
 
 Run from the repository root with Rust 1.74+ and the project Python environment:

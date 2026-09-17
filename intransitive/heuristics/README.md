@@ -15,6 +15,11 @@ the report includes the archived baseline and measured retain/reject decision.
 An opt-in [square-ring pressure experiment](../benchmarks/pressure/README.md)
 adds blocker-blind RPS threats discounted by nearby defenders. It is disabled
 by default and is not enabled in the running supervised generators.
+The compact Python search and its compiled proofs use incremental legality
+bitboards. See the [Python/Rust node-throughput measurements](../benchmarks/legal_moves/README.md).
+Compiled legacy move ordering is now the default; enhanced ordering remains opt-in.
+[Further search efficiencies and measurements](../benchmarks/search_efficiencies/README.md)
+cover reusable proof storage and removal of redundant search work.
 The original design follows below.
 
 Tracked in [implementation issue #34](https://github.com/lukekh/alpha-zero-general/issues/34),
