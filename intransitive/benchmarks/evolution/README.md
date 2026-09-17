@@ -124,3 +124,5 @@ tar -xzf intransitive/benchmarks/evolution/evidence/runs.tar.gz -C /tmp/evolutio
   /tmp/evolution-evidence/benchmark/evolution-56 \
   /tmp/evolution-evidence/benchmark/random-56
 ```
+
+A [longer search under a one-hour allocation](hour-search-20260917/README.md) found provisional endgame weights that scored 31–3–6 at depth one and 23–8–1 at depth two on separate fresh validation sets. It used 39m35s at low priority; all 696 records passed replay. Held-out acceptance remains separate.

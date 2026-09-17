@@ -1,0 +1,99 @@
+{
+  "budget": {
+    "comparison_arm_seconds": 650,
+    "comparison_arms": 4,
+    "final_screen_seconds": 750,
+    "supervisor_deadline_seconds": 3500,
+    "total_seconds": 3600
+  },
+  "corpus": {
+    "lines": 120,
+    "max_plies": 240,
+    "pools": {
+      "heldout": 36,
+      "search": 42,
+      "validation": 42
+    },
+    "seed": 257,
+    "stage": "endgame"
+  },
+  "final_screen_positions": [
+    "30cdc8415237088e6175b6919aa8512c2f00f41041a3909202a17b7ac3158948",
+    "383206f15d3af7679622dd2b5356c53cebbc4b7d43e09c329fde290844b2e97d",
+    "3b5d02fbe71dc59e62f6956d1415c784b556c2a668e75d17fcc30d9e213584d5",
+    "41cf93517a0726bfd4b9bc2f61b3bb6710e398abee42aef0270fa5f20680c242",
+    "4c05096a1be8ff44e76c40c5d830ac708a97a6a8798812d10c59eb321c3833b1",
+    "4cb17c4f08ec0b61e47793ff876db0a6e5a385def1bf7b6a4e2126895adfb404",
+    "56c32111cd73ef474d8318dde14ef53575f949a717384662c7ea6489dbe32364",
+    "59875bd0b3773f8a1c56e6ac51f870b417879e489e41b722e147041f88e650c3",
+    "6164f32ffbf422dc1e9dc7e09d97db579d0a146ed63095e9457ddeb3957ec33f",
+    "61dcd5e2997acb8046d751c8cbfe407a77ddc9e2edf20089fe98721c00eac9d5",
+    "64d185e2beeaf774d333d7beee127ada80e7591e2396d411e4e4733000cddac7",
+    "6ec5ac9de224a4c331e9bd3c83d354b61a2b203e21a11a39ce54110cc624139e",
+    "7905f98fe8e53c6a39ced11c29ce4c613f177ef7b385732735bf157d73104760",
+    "8466ce8e6fab853bcaf998aa4cd9a900ff6f9f75a27d706eb0c17282b774ddb4",
+    "8788c55078f2b54eba0b50606d3a2e531dc2a5cb3182f17f9c14e222623671b0",
+    "9472e964de4ee5f9066e3162dbdebd6f79461bd4e789eb256e584b6848199c71",
+    "95f79ef72977549f39b23abe318392a23cc6473dd0bce30d76cc538838df4a4d",
+    "98afd94ef2765f2885a86d013eb2695bb635cb763b31447a9c80eccceca26d5e",
+    "99a13d4bc607b7bb4206576f3a47ccb515263b865409ea4976be32bae666d20a",
+    "9a6dbfa178907e5b05bc761fdfd2c5d0d3a5a8e523f956299448e8541d520d4a"
+  ],
+  "optimizer_seeds": [
+    81,
+    82
+  ],
+  "protocol": {
+    "cache_policy": "fresh search/evaluation caches per move",
+    "completion_required": 0.8,
+    "game_seconds": 15.0,
+    "max_plies": 192,
+    "mode": "depth",
+    "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+    "search": {
+      "aspiration_enabled": false,
+      "aspiration_window": 25.0,
+      "compiled_ordering_enabled": false,
+      "depth_replacement_enabled": false,
+      "max_depth": 1,
+      "node_limit": 2000000,
+      "ordering_enabled": false,
+      "pressure_cache_entries": 0,
+      "proof_depth": 2,
+      "proof_nodes": 64,
+      "pvs_enabled": false,
+      "table_entries": 10000,
+      "time_limit": 2.0
+    },
+    "startup_seconds": 120.0,
+    "timeout_grace": 5.0
+  },
+  "scope": "Exploratory endgames; fixed depth one; fresh development validation, no held-out games or automatic adoption.",
+  "selection_rule": "Require an eligible training export; deduplicate validation records by full match key; rank unique direct-default validation games by conservative win fraction, then completion, fewer active optional modules, stable config hash. Freeze one genome before the final screen. No candidate if none has eligible training.",
+  "settings": {
+    "algorithm": "evolution",
+    "elites": 1,
+    "generations": 3,
+    "hall_size": 2,
+    "log_sigma": 0.5,
+    "max_games": 180,
+    "max_nodes": 75000000000,
+    "max_seconds": 650.0,
+    "min_completed_depth": 1,
+    "mutation_rate": 0.7,
+    "near_default_fraction": 0.5,
+    "population": 3,
+    "random_off_rate": 0.5,
+    "recombination_rate": 0.5,
+    "resident_engines": 4,
+    "search_positions": 2,
+    "seed": 81,
+    "toggle_rate": 0.3,
+    "tournament_size": 2,
+    "validation_positions": 2
+  },
+  "smoke": {
+    "manifest": "3694009ed9ea9848692b23872c14b3e4207a35e87c89cad879708e57a6722a22",
+    "report": "f5119ed751c151e0174657ff8ff9e2334d024b01ba7ed0bc63514cbcddb91201"
+  }
+}

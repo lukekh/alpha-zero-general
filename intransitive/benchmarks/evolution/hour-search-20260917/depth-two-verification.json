@@ -1,0 +1,10 @@
+{
+  "depth_violations": 0,
+  "fresh_positions": 16,
+  "outcomes": {
+    "unfinished": 1,
+    "win": 31
+  },
+  "verified_matches": 32,
+  "verified_moves": 1673
+}
