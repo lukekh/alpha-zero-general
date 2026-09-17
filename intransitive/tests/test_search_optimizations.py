@@ -29,7 +29,7 @@ class SearchOptimizationTests(unittest.TestCase):
     def test_compiled_legacy_order_matches_original_on_reached_positions(self):
         game = IntransitiveGame()
         state = game.getInitBoard()
-        original = AlphaBetaPlayer(config=SearchConfig())
+        original = AlphaBetaPlayer(config=SearchConfig(compiled_ordering_enabled=False))
         compiled = AlphaBetaPlayer(config=SearchConfig(compiled_ordering_enabled=True))
         original._prepare()
         compiled._prepare()

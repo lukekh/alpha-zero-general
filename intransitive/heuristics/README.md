@@ -18,6 +18,11 @@ by default and is not enabled in the running supervised generators.
 An optional [variable-material mode](VARIABLE_MATERIAL.md) values each piece
 using the opposing prey/predator ratio and its scarcity in the own army. It is
 available in Python and Rust, with BASE 100 and REG 0.25.
+The compact Python search and its compiled proofs use incremental legality
+bitboards. See the [Python/Rust node-throughput measurements](../benchmarks/legal_moves/README.md).
+Compiled legacy move ordering is now the default; enhanced ordering remains opt-in.
+[Further search efficiencies and measurements](../benchmarks/search_efficiencies/README.md)
+cover reusable proof storage and removal of redundant search work.
 The original design follows below.
 
 Tracked in [implementation issue #34](https://github.com/lukekh/alpha-zero-general/issues/34),

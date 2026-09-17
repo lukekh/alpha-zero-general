@@ -47,7 +47,8 @@ def main():
     args.output.parent.mkdir(parents=True,exist_ok=True)
     if hasattr(os,'nice'):
         os.nice(10)
-    base = SearchConfig(pressure_enabled=True,pressure_radius=3,pressure_weight=10.,
+    base = SearchConfig(compiled_ordering_enabled=False,
+                        pressure_enabled=True,pressure_radius=3,pressure_weight=10.,
                         max_depth=5,node_limit=1_000_000_000,time_limit=args.seconds)
     configs = variants(base)
     if args.variants:

@@ -14,6 +14,7 @@ from ..IntransitiveLogicNumba import (
 )
 from .evaluation import MATE
 from .kernels import no_terminal_win_in_horizon
+from .moves import masks_from_board, move_board, has_move, legal_actions
 
 NATIVE_NODE_LIMIT = 64
 READY = False
@@ -134,11 +135,26 @@ def warm_proof_kernel():
     READY = True
 
 
+@njit(cache=True)
+def ordered_bitboard_actions(masks, side, a1):
+    actions = legal_actions(masks, side)
+    ordered = np.empty_like(actions)
+    goal = 80 if side == a1 else 0
+    count = 0
+    for winning in (True, False):
+        for action in actions:
+            dx, dy = DIRECTIONS[action % 8]
+            if (action // 8 + dx + 9 * dy == goal) == winning:
+                ordered[count] = action
+                count += 1
+    return ordered
+
+
 # Compact proof traversal owns scratch memory, so even native exceptions cannot
 # alter the main search position. History rows are append-only along a branch;
 # a capture changes the start index, and returning restores the previous range.
 @njit
-def _visit_compact(pieces, history, start, end, side, a1, total, modelling_draws,
+def _visit_compact(pieces, masks, history, start, end, side, a1, total, modelling_draws,
                    depth, ply, alpha, beta, node_limit, work_limit, counts, lines):
     if counts[1] >= node_limit:
         counts[2] = 1
@@ -147,7 +163,7 @@ def _visit_compact(pieces, history, start, end, side, a1, total, modelling_draws
         return 0.
     counts[1] += 1
     winner = _corner_winner(pieces, a1)
-    if winner < 0 and not raw_movement_mask(pieces, side).any():
+    if winner < 0 and not has_move(masks, side):
         winner = 1 - side
     if winner >= 0:
         return MATE - ply if winner == side else -MATE + ply
@@ -166,7 +182,7 @@ def _visit_compact(pieces, history, start, end, side, a1, total, modelling_draws
         if no_terminal_win_in_horizon(pieces, side, a1, depth):
             return 0.
     best = -np.inf
-    for action in ordered_actions(pieces, side, a1):
+    for action in ordered_bitboard_actions(masks, side, a1):
         if not _charge(counts, work_limit):
             return 0.
         if total == MAX_TOTAL_PLY:
@@ -175,21 +191,22 @@ def _visit_compact(pieces, history, start, end, side, a1, total, modelling_draws
         x, y = source % 9, source // 9
         dx, dy = DIRECTIONS[action % 8]
         nx, ny = x + dx, y + dy
-        captured, mover = pieces[ny, nx], pieces[y, x]
+        captured = int(pieces[ny, nx])
+        target = 9 * ny + nx
         lines[ply + 1, :] = -1
-        pieces[ny, nx], pieces[y, x] = mover, 0
+        move_board(pieces, masks, source, target, captured)
         if depth == 1:
             # Same logical visit as the reference, without unused draw history.
             if counts[1] >= node_limit:
                 counts[2] = 1
-                pieces[y, x], pieces[ny, nx] = mover, captured
+                move_board(pieces, masks, source, target, captured, True)
                 return 0.
             if not _charge(counts, work_limit):
-                pieces[y, x], pieces[ny, nx] = mover, captured
+                move_board(pieces, masks, source, target, captured, True)
                 return 0.
             counts[1] += 1
             winner = _corner_winner(pieces, a1)
-            if winner < 0 and not raw_movement_mask(pieces, 1 - side).any():
+            if winner < 0 and not has_move(masks, 1 - side):
                 winner = side
             value = MATE - ply - 1 if winner == side else 0.
         else:
@@ -199,10 +216,10 @@ def _visit_compact(pieces, history, start, end, side, a1, total, modelling_draws
             for square in range(81):
                 history[end + 1, square] = pieces.flat[square]
             history[end + 1, 81] = 1 - side
-            value = -_visit_compact(pieces, history, next_start, end + 1,
+            value = -_visit_compact(pieces, masks, history, next_start, end + 1,
                 1 - side, a1, total + 1, modelling_draws, depth - 1, ply + 1,
                 -beta, -alpha, node_limit, work_limit, counts, lines)
-        pieces[y, x], pieces[ny, nx] = mover, captured
+        move_board(pieces, masks, source, target, captured, True)
         if counts[2]:
             return 0.
         if value > best:
@@ -217,20 +234,51 @@ def _visit_compact(pieces, history, start, end, side, a1, total, modelling_draws
 
 @njit
 def native_compact_proof(pieces, history, length, side, a1, total, modelling_draws,
-                         depth, node_limit, work_limit):
-    counts = np.zeros(3, dtype=np.int64)
-    lines = np.full((10, 9), -1, dtype=np.int64)
-    score = _visit_compact(pieces, history, 0, length - 1, side, a1, total,
+                         depth, node_limit, work_limit, masks=None, counts=None, lines=None):
+    if counts is None:
+        counts = np.empty(3, dtype=np.int64)
+    if lines is None:
+        lines = np.empty((10, 9), dtype=np.int64)
+    counts[:] = 0
+    lines[:] = -1
+    if masks is None:
+        masks = masks_from_board(pieces)
+    score = _visit_compact(pieces, masks, history, 0, length - 1, side, a1, total,
         modelling_draws, depth, 0, -np.inf, np.inf, node_limit, work_limit, counts, lines)
     return score, lines[0], counts
 
 
-def compact_proof(position, depth, node_limit, work_limit):
+class ProofScratch:
+    """Private storage reused by sequential proofs of one search position.
+
+    Every input and result buffer is reset before a call, including after an
+    exception. The live position never aliases native traversal storage.
+    """
+    def __init__(self, capacity):
+        self.history = np.empty((capacity, 82), dtype=np.int8)
+        self.pieces = np.empty((9, 9), dtype=np.int8)
+        self.masks = np.empty((6, 2), dtype=np.uint64)
+        self.counts = np.empty(3, dtype=np.int64)
+        self.lines = np.empty((10, 9), dtype=np.int64)
+
+
+def compact_proof(position, depth, node_limit, work_limit, *, _borrow=False):
+    """Return owned results unless the search consumes them before the next call."""
     length = len(position.history)
-    history = np.empty((length + depth, 82), dtype=np.int8)
-    history[:length] = np.frombuffer(b''.join(position.history), dtype=np.int8).reshape(length, 82)
-    return native_compact_proof(position.pieces.copy(), history, length, position.side,
-        position.a1, position.total, position.modelling_draws, depth, node_limit, work_limit)
+    scratch = position._proof_scratch
+    if scratch is None or len(scratch.history) < length + depth:
+        scratch = ProofScratch(max(HISTORY_CAPACITY, length) + depth)
+        position._proof_scratch = scratch
+    scratch.history[:length] = np.frombuffer(
+        b''.join(position.history), dtype=np.int8).reshape(length, 82)
+    scratch.pieces[:] = position.pieces
+    scratch.masks[:] = position.masks
+    score, line, counts = native_compact_proof(scratch.pieces, scratch.history, length, position.side,
+        position.a1, position.total, position.modelling_draws, depth, node_limit, work_limit,
+        scratch.masks, scratch.counts, scratch.lines)
+    if _borrow:
+        return score, line, counts
+    return score, line.copy(), counts.copy()
 
 
 COMPACT_READY = False

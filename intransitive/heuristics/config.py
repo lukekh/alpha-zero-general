@@ -51,7 +51,7 @@ class SearchConfig:
     aspiration_enabled: bool = False
     aspiration_window: float = 25.
     ordering_enabled: bool = False
-    compiled_ordering_enabled: bool = False
+    compiled_ordering_enabled: bool = True
     depth_replacement_enabled: bool = False
     pressure_cache_entries: int = 0
 
