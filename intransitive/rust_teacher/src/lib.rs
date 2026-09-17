@@ -2,7 +2,9 @@
 //! unsafe code, neural inference, or changes to the live training pipeline.
 use std::collections::{HashMap, VecDeque};
 use std::time::{Duration, Instant};
+mod moves;
 mod pressure_delta;
+use moves::Moves;
 use pressure_delta::Pressure;
 
 pub const MATE: f64 = 100_000.0;
@@ -129,6 +131,7 @@ impl Material {
 pub struct Position {
     board: [i8; 81],
     material: Material,
+    moves: Moves,
     pressure: Option<Box<Pressure>>,
     pub side: u8,
     pub a1: u8,
@@ -200,6 +203,7 @@ impl Position {
         }
         let p = Self {
             material: Material::new(&board),
+            moves: Moves::new(&board),
             pressure: None,
             board,
             side: meta[1],
@@ -250,36 +254,10 @@ impl Position {
         raw
     }
     pub fn raw_legal(&self, side: u8) -> Vec<u16> {
-        let mut actions = Vec::with_capacity(80);
-        for (square, &piece) in self.board.iter().enumerate() {
-            if piece == 0 || owner(piece) != side {
-                continue;
-            }
-            for dir in 0..8 {
-                let action = (8 * square + dir) as u16;
-                if let Some(to) = destination(action) {
-                    if self.board[to] == 0 || captures(piece, self.board[to]) {
-                        actions.push(action);
-                    }
-                }
-            }
-        }
-        actions
+        self.moves.legal(side)
     }
     fn has_move(&self, side: u8) -> bool {
-        for (square, &piece) in self.board.iter().enumerate() {
-            if piece == 0 || owner(piece) != side {
-                continue;
-            }
-            for dir in 0..8 {
-                if let Some(to) = destination((8 * square + dir) as u16) {
-                    if self.board[to] == 0 || captures(piece, self.board[to]) {
-                        return true;
-                    }
-                }
-            }
-        }
-        false
+        self.moves.has_move(side)
     }
     /// Official victories take precedence over modelling draws.
     pub fn terminal(&self, modelling: bool) -> Option<(Option<u8>, &'static str)> {
@@ -347,6 +325,8 @@ impl Position {
             captured: self.board[target],
             start: self.start,
         };
+        self.moves
+            .toggle(self.board[source], source, target, undo.captured);
         self.board[target] = self.board[source];
         self.board[source] = 0;
         self.side = 1 - self.side;
@@ -381,6 +361,8 @@ impl Position {
     }
 
     fn pop_board(&mut self, u: Undo) {
+        self.moves
+            .toggle(self.board[u.target], u.source, u.target, u.captured);
         self.board[u.source] = self.board[u.target];
         self.board[u.target] = u.captured;
         self.side = 1 - self.side;
@@ -681,10 +663,7 @@ impl Search {
         Ok(best)
     }
     fn exposed(p: &Position, square: usize, code: i8, removed: Option<usize>) -> bool {
-        p.board
-            .iter()
-            .enumerate()
-            .any(|(s, &c)| Some(s) != removed && distance(s, square) <= 1 && captures(c, code))
+        p.moves.exposed(square, code, removed)
     }
     fn ordered(&self, p: &mut Position, preferred: Option<u16>, ply: usize) -> Vec<u16> {
         let side = p.side;
@@ -700,10 +679,12 @@ impl Search {
             let threat = occupant != 0 && owner(occupant) != side && distance(to, own_goal) <= 1;
             let unsafe_move = Self::exposed(p, to, mover, Some(to));
             let escape = Self::exposed(p, from, mover, None) && !unsafe_move;
-            // Only board-based legality is queried until these edits are undone.
+            // Keep legality masks current for this history-free temporary move.
+            p.moves.toggle(mover, from, to, occupant);
             p.board[from] = 0;
             p.board[to] = mover;
             let win = to == goal || !p.has_move(1 - side);
+            p.moves.toggle(mover, from, to, occupant);
             p.board[from] = mover;
             p.board[to] = occupant;
             let rank = [
@@ -862,7 +843,7 @@ impl Search {
             return Err("ply overflow");
         }
         let original = (alpha, beta);
-        let key = p.key(depth);
+        let mut key = p.key(depth);
         let mut preferred = None;
         if let Some(entry) = self.table.get(&key).filter(|_| !self.selective_disabled) {
             self.tt_hits += 1;
@@ -888,12 +869,15 @@ impl Search {
         }
         if preferred.is_none() && !self.selective_disabled {
             for d in (1..depth).rev() {
-                if let Some(entry) = self.table.get(&p.key(d)) {
+                // Only the first byte differs between exact-depth keys.
+                key[0] = d as u8;
+                if let Some(entry) = self.table.get(&key) {
                     preferred = entry.pv.first().copied();
                     break;
                 }
             }
         }
+        key[0] = depth as u8;
         let active = !self.selective_disabled
             && self.config.pressure_weight <= 20.0
             && ply > 0
@@ -1140,6 +1124,7 @@ mod tests {
         frame[..81].copy_from_slice(&board);
         Position {
             material: Material::new(&board),
+            moves: Moves::new(&board),
             pressure: None,
             board,
             side: 0,
@@ -1149,6 +1134,162 @@ mod tests {
             start: 0,
             hypothetical: false,
         }
+    }
+    fn reference_legal(p: &Position, side: u8) -> Vec<u16> {
+        let mut actions = Vec::with_capacity(80);
+        for (s, &c) in p.board.iter().enumerate() {
+            if c == 0 || owner(c) != side {
+                continue;
+            }
+            for d in 0..8 {
+                let a = (8 * s + d) as u16;
+                if let Some(t) = destination(a) {
+                    if p.board[t] == 0 || captures(c, p.board[t]) {
+                        actions.push(a);
+                    }
+                }
+            }
+        }
+        actions
+    }
+    fn reference_has_move(p: &Position, side: u8) -> bool {
+        for (s, &c) in p.board.iter().enumerate() {
+            if c == 0 || owner(c) != side {
+                continue;
+            }
+            for d in 0..8 {
+                if let Some(t) = destination((8 * s + d) as u16) {
+                    if p.board[t] == 0 || captures(c, p.board[t]) {
+                        return true;
+                    }
+                }
+            }
+        }
+        false
+    }
+    fn check_moves(p: &Position) {
+        assert_eq!(p.moves, Moves::new(&p.board));
+        for side in 0..2 {
+            assert_eq!(p.raw_legal(side), reference_legal(p, side));
+            assert_eq!(p.has_move(side), reference_has_move(p, side));
+        }
+    }
+    #[test]
+    fn bitboard_exposure_matches_scan_with_removed_pieces() {
+        for attacker in 0..81 {
+            for code in [-3, -2, -1, 1, 2, 3] {
+                let p = fixture(&[(attacker, code)]);
+                for square in 0..81 {
+                    for victim in [-3, -2, -1, 1, 2, 3] {
+                        for removed in [None, Some(attacker), Some((attacker + 1) % 81)] {
+                            let expected = p.board.iter().enumerate().any(|(s, &c)| {
+                                Some(s) != removed
+                                    && distance(s, square) <= 1
+                                    && captures(c, victim)
+                            });
+                            assert_eq!(Search::exposed(&p, square, victim, removed), expected);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #[test]
+    fn bitboards_edges_captures_and_temporary_undo() {
+        for code in -3..=3 {
+            let p = fixture(&(0..81).map(|s| (s, code)).collect::<Vec<_>>());
+            check_moves(&p);
+            assert!(!p.has_move(0) && !p.has_move(1));
+        }
+        for s in 0..81 {
+            for mover in [-3, -2, -1, 1, 2, 3] {
+                for d in 0..8 {
+                    for occupant in -3..=3 {
+                        let mut p = fixture(&[(s, mover)]);
+                        let a = (8 * s + d) as u16;
+                        if let Some(t) = destination(a) {
+                            p.board[t] = occupant;
+                            p.moves = Moves::new(&p.board);
+                        }
+                        check_moves(&p);
+                        if p.raw_legal(owner(mover)).contains(&a) {
+                            let saved = p.clone();
+                            let u = p.push_board(a);
+                            check_moves(&p);
+                            for child in p.raw_legal(p.side) {
+                                let v = p.push_board(child);
+                                check_moves(&p);
+                                p.pop_board(v);
+                            }
+                            p.pop_board(u);
+                            assert_eq!(p, saved);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #[test]
+    #[ignore = "manual release-mode microbenchmark; ISSUE62_POSITIONS is a directory of .bin states"]
+    fn benchmark_legal_moves() {
+        use std::hint::black_box;
+        let dir = std::env::var("ISSUE62_POSITIONS").unwrap();
+        let mut paths: Vec<_> = std::fs::read_dir(dir)
+            .unwrap()
+            .map(|p| p.unwrap().path())
+            .filter(|p| p.extension().is_some_and(|e| e == "bin"))
+            .collect();
+        paths.sort();
+        for path in paths {
+            let mut p = Position::from_bytes(&std::fs::read(&path).unwrap()).unwrap();
+            check_moves(&p);
+            for trial in 0..5 {
+                let n = 100000;
+                let mut values = [0.0; 5];
+                let order = if trial % 2 == 0 {
+                    [0, 1, 2, 3, 4]
+                } else {
+                    [4, 3, 2, 1, 0]
+                };
+                for mode in order {
+                    let start = Instant::now();
+                    for _ in 0..n {
+                        match mode {
+                            0 => {
+                                black_box(reference_legal(black_box(&p), p.side));
+                            }
+                            1 => {
+                                black_box(black_box(&p).raw_legal(p.side));
+                            }
+                            2 => {
+                                black_box(reference_has_move(black_box(&p), p.side));
+                            }
+                            3 => {
+                                black_box(black_box(&p).has_move(p.side));
+                            }
+                            _ => {
+                                p.moves.toggle(black_box(1), 40, 41, -2);
+                                black_box(&p.moves);
+                                p.moves.toggle(black_box(1), 40, 41, -2);
+                                black_box(&p.moves);
+                            }
+                        }
+                    }
+                    values[mode] = start.elapsed().as_secs_f64() * 1e9 / n as f64;
+                }
+                println!(
+                    "MICRO {} {} {:?}",
+                    path.file_name().unwrap().to_string_lossy(),
+                    trial,
+                    values
+                );
+            }
+        }
+        println!(
+            "Position bytes {}; masks bytes {}",
+            std::mem::size_of::<Position>(),
+            std::mem::size_of::<Moves>()
+        );
     }
     fn reference_evaluate(p: &Position, radius: usize, weight: f64) -> f64 {
         let mut counts = [[0usize; 3]; 2];
@@ -1267,6 +1408,7 @@ mod tests {
     }
 
     fn assert_material(p: &Position) {
+        check_moves(p);
         assert_eq!(p.material, Material::new(&p.board));
         if let Some(cached) = &p.pressure {
             assert_eq!(cached.totals, pressure(&p.board, cached.radius));

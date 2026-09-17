@@ -1,0 +1,60 @@
+    Finished release [optimized] target(s) in 0.07s
+     Running unittests src/lib.rs (intransitive/rust_teacher/target/release/deps/intransitive_rust_teacher-70a5ea696ff83bf1)
+
+running 1 test
+MICRO position-0.bin 0 [409.98959, 178.155, 41.62458, 8.71625, 6.70666]
+MICRO position-0.bin 1 [339.21291, 145.645, 60.20208, 6.46833, 8.90083]
+MICRO position-0.bin 2 [288.635, 127.46958, 31.44125, 3.3925, 5.39167]
+MICRO position-0.bin 3 [306.15625, 127.21667, 28.09417, 4.46958, 5.935]
+MICRO position-0.bin 4 [413.99125, 147.84375, 31.32708, 4.28416, 5.99042]
+MICRO position-1.bin 0 [244.87375, 106.735, 3.31, 3.71833, 6.75458]
+MICRO position-1.bin 1 [200.41959, 107.24375, 3.965, 4.605, 6.13667]
+MICRO position-1.bin 2 [211.86875, 95.77333, 2.98666, 3.4125, 5.72666]
+MICRO position-1.bin 3 [224.07625, 114.95375, 2.8675, 3.59584, 5.74458]
+MICRO position-1.bin 4 [226.70459, 129.84541, 3.70333, 3.72916, 7.14125]
+MICRO position-2.bin 0 [179.66792, 98.44, 9.6225, 3.40541, 7.05458]
+MICRO position-2.bin 1 [160.22542, 95.4, 10.014170000000002, 3.9875, 7.25333]
+MICRO position-2.bin 2 [158.25124999999997, 109.09958, 9.97792, 3.86917, 5.84584]
+MICRO position-2.bin 3 [172.12959, 120.1525, 9.800410000000001, 3.56917, 5.61]
+MICRO position-2.bin 4 [152.28792, 84.87166, 9.47833, 3.4275, 5.5025]
+MICRO position-3.bin 0 [314.365, 126.83625, 8.78166, 3.52417, 5.40041]
+MICRO position-3.bin 1 [331.64917, 125.69959, 8.565, 3.49125, 6.29334]
+MICRO position-3.bin 2 [382.02875, 135.38458, 9.63083, 3.53791, 5.43708]
+MICRO position-3.bin 3 [317.04875, 124.49833, 8.22291, 3.55667, 5.87834]
+MICRO position-3.bin 4 [274.50166, 114.20125, 8.05042, 3.53833, 5.43208]
+MICRO position-4.bin 0 [167.18667, 93.98334, 5.07959, 3.96917, 5.87458]
+MICRO position-4.bin 1 [172.43041, 94.67375, 4.98333, 3.68833, 5.47]
+MICRO position-4.bin 2 [176.96125, 98.57333, 5.22834, 3.61459, 6.04667]
+MICRO position-4.bin 3 [226.67375, 135.71416, 9.35791, 6.1775, 5.04833]
+MICRO position-4.bin 4 [192.59458, 126.17667, 4.62584, 4.44292, 5.99292]
+MICRO position-5.bin 0 [126.60875, 85.57, 14.955, 3.70959, 5.58417]
+MICRO position-5.bin 1 [139.495, 88.06458, 12.65833, 3.99917, 4.61209]
+MICRO position-5.bin 2 [122.94334, 87.03834, 12.61958, 3.80083, 5.79041]
+MICRO position-5.bin 3 [130.01125, 93.89417, 12.86708, 3.78416, 5.51167]
+MICRO position-5.bin 4 [135.52542, 92.34541, 12.39583, 3.75041, 5.70375]
+MICRO tactical-0.bin 0 [94.96583, 71.42708, 19.59125, 3.68166, 5.48958]
+MICRO tactical-0.bin 1 [87.71417, 71.57667, 17.87542, 3.4075, 5.43833]
+MICRO tactical-0.bin 2 [93.64292, 76.12583, 18.64583, 3.99375, 5.88]
+MICRO tactical-0.bin 3 [99.53542, 71.66375, 18.77417, 3.43708, 5.34541]
+MICRO tactical-0.bin 4 [91.1625, 77.00084, 20.50292, 4.03834, 6.02209]
+MICRO tactical-1.bin 0 [172.41584, 94.33541, 24.10083, 3.73791, 6.01458]
+MICRO tactical-1.bin 1 [157.85875000000001, 84.84167, 22.01209, 3.43375, 4.93875]
+MICRO tactical-1.bin 2 [157.01875, 97.31917, 23.31875, 3.70917, 5.29875]
+MICRO tactical-1.bin 3 [168.01708, 96.99208, 23.93833, 3.63542, 6.09417]
+MICRO tactical-1.bin 4 [160.98333, 93.11791, 26.29875, 3.50083, 5.43625]
+MICRO tactical-2.bin 0 [85.68458, 73.9525, 22.05875, 3.49916, 5.225]
+MICRO tactical-2.bin 1 [118.72209, 66.8875, 27.20708, 3.90125, 5.30375]
+MICRO tactical-2.bin 2 [93.25083, 73.76625, 25.81333, 3.89042, 6.83]
+MICRO tactical-2.bin 3 [94.79917, 91.11708, 24.02875, 4.42333, 5.8425]
+MICRO tactical-2.bin 4 [97.185, 81.25334, 23.64625, 3.73416, 4.86208]
+Position bytes 432; masks bytes 96
+test tests::benchmark_legal_moves ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 11 filtered out; finished in 1.45s
+
+     Running unittests src/main.rs (intransitive/rust_teacher/target/release/deps/intransitive_rust_teacher-124d51e6310105b4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

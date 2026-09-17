@@ -221,7 +221,7 @@ def prove(game, state, config, budget, *, specialised=True):
         allowance = min(2 * kernels.NATIVE_NODE_LIMIT + 1, max(0, budget.limit - budget.work))
         if compact:
             score, line, counts = kernels.compact_proof(
-                state, config.proof_depth, config.proof_nodes, allowance)
+                state, config.proof_depth, config.proof_nodes, allowance, _borrow=True)
         else:
             score, line, counts = kernels.native_proof(
                 state, config.proof_depth, config.proof_nodes, allowance, specialised)
@@ -312,11 +312,13 @@ class AlphaBetaPlayer:
             return from_table(proof['score'], ply), proof['pv']
         return self.evaluator.score(state, side, budget, proof=proof, counts=self._material_counts), []
 
-    def _ordered(self, state, side, preferred, budget, root=False, ply=0):
+    def _ordered(self, state, side, preferred, budget, root=False, ply=0, *, terminal_checked=False):
         compact = isinstance(state, SearchPosition)
+        legal = ((state.raw_legal() if terminal_checked else state.legal()) if compact
+                 else np.flatnonzero(self.game.getValidMoves(state, side)))
         if self.config.compiled_ordering_enabled or self.config.ordering_enabled:
             from .ordering import ordered_actions
-            actions = (state.legal() if compact else np.flatnonzero(self.game.getValidMoves(state,side)))
+            actions = legal
             pieces = state.pieces if compact else state[:,:,0]
             a1 = state.a1 if compact else int(state[:,:,82:84].flat[2])
             # Same baseline rank-work charge when only compilation is enabled.
@@ -335,8 +337,7 @@ class AlphaBetaPlayer:
                 action = int(action)
                 yield action, None if compact else self.game.getNextState(state,side,action)[0]
             return
-        actions = list(map(int, state.legal() if compact else
-                               np.flatnonzero(self.game.getValidMoves(state, side))))
+        actions = list(map(int, legal))
         pieces = state.pieces if compact else state[:, :, 0]
         a1 = state.a1 if compact else int(state[:, :, 82:84].flat[2])
         goal = 80 if side == a1 else 0
@@ -458,7 +459,7 @@ class AlphaBetaPlayer:
                 self._selective_stats['nmp_skips'] += 1
         best, pv = -inf, []
         for index, (action, child) in enumerate(self._ordered(
-                state, side, preferred, budget, root=progress is not None, ply=ply)):
+                state, side, preferred, budget, root=progress is not None, ply=ply, terminal_checked=True)):
             if (safe and cfg.futility_enabled and depth <= cfg.futility_max_depth
                     and index and selective.quiet(state, action)):
                 self._selective_stats['futility_eligible'] += 1

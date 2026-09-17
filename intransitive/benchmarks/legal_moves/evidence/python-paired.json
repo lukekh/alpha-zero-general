@@ -1,0 +1,2364 @@
+{
+  "repeats": 7,
+  "depth": 4,
+  "rows": [
+    {
+      "trial": 0,
+      "name": "position-0",
+      "before": {
+        "cpu": 0.5892690000000016,
+        "wall": 0.6322741670010146,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.4276520000000019,
+        "wall": 0.4523327089846134,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 0,
+      "name": "position-1",
+      "after": {
+        "cpu": 0.44518500000000216,
+        "wall": 0.5277950419986155,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.3834409999999977,
+        "wall": 0.4091971250018105,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 0,
+      "name": "position-2",
+      "before": {
+        "cpu": 0.004249999999998977,
+        "wall": 0.004658916994230822,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.0036559999999994375,
+        "wall": 0.0040347499889321625,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 0,
+      "name": "position-3",
+      "after": {
+        "cpu": 0.38207200000000086,
+        "wall": 0.41083391598658636,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.44448099999999613,
+        "wall": 0.4653666669910308,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 0,
+      "name": "position-4",
+      "before": {
+        "cpu": 0.17632700000000057,
+        "wall": 0.18158641600166447,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.16525100000000492,
+        "wall": 0.17453008398297243,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 0,
+      "name": "position-5",
+      "after": {
+        "cpu": 0.14636899999999997,
+        "wall": 0.1529054590209853,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.2571399999999997,
+        "wall": 0.2702163750072941,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 0,
+      "name": "tactical-0",
+      "before": {
+        "cpu": 0.044896999999998854,
+        "wall": 0.04654779197880998,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.021472999999993192,
+        "wall": 0.022396833985112607,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 0,
+      "name": "tactical-1",
+      "after": {
+        "cpu": 0.0964919999999978,
+        "wall": 0.10106666697538458,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.1583519999999936,
+        "wall": 0.16206224999041297,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 0,
+      "name": "tactical-2",
+      "before": {
+        "cpu": 0.01633199999999846,
+        "wall": 0.01728991701384075,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.005071999999998411,
+        "wall": 0.005073875014204532,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 1,
+      "name": "position-0",
+      "after": {
+        "cpu": 0.40622099999999506,
+        "wall": 0.43663679200108163,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.48534000000000077,
+        "wall": 0.507325916987611,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 1,
+      "name": "position-1",
+      "before": {
+        "cpu": 0.34341500000000025,
+        "wall": 0.3577009169966914,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.288297,
+        "wall": 0.30029454198665917,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 1,
+      "name": "position-2",
+      "after": {
+        "cpu": 0.0029569999999949914,
+        "wall": 0.003175666992319748,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.0033380000000065024,
+        "wall": 0.0033607910154387355,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 1,
+      "name": "position-3",
+      "before": {
+        "cpu": 0.35368300000000374,
+        "wall": 0.3639809169981163,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.302819999999997,
+        "wall": 0.31309458301984705,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 1,
+      "name": "position-4",
+      "after": {
+        "cpu": 0.11765799999999871,
+        "wall": 0.1200692499987781,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.14409599999999756,
+        "wall": 0.15121374998125248,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 1,
+      "name": "position-5",
+      "before": {
+        "cpu": 0.21868099999999657,
+        "wall": 0.22282791600446217,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.12210799999999722,
+        "wall": 0.12394920899532735,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 1,
+      "name": "tactical-0",
+      "after": {
+        "cpu": 0.0192520000000016,
+        "wall": 0.019661333004478365,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.029317000000006033,
+        "wall": 0.029527333012083545,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 1,
+      "name": "tactical-1",
+      "before": {
+        "cpu": 0.13355800000000073,
+        "wall": 0.135638084000675,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.07698099999999641,
+        "wall": 0.07822016699356027,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 1,
+      "name": "tactical-2",
+      "after": {
+        "cpu": 0.005508999999996433,
+        "wall": 0.005569250002736226,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.007961999999999136,
+        "wall": 0.007962665986269712,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 2,
+      "name": "position-0",
+      "before": {
+        "cpu": 0.4067409999999967,
+        "wall": 0.4162418749765493,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.31209899999999635,
+        "wall": 0.3175519579963293,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 2,
+      "name": "position-1",
+      "after": {
+        "cpu": 0.273890999999999,
+        "wall": 0.2842021670076065,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.3165310000000048,
+        "wall": 0.3314117089903448,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 2,
+      "name": "position-2",
+      "before": {
+        "cpu": 0.0043980000000019,
+        "wall": 0.004573416983475909,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.002564999999997042,
+        "wall": 0.0025680839898996055,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 2,
+      "name": "position-3",
+      "after": {
+        "cpu": 0.2967650000000006,
+        "wall": 0.30164441699162126,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.3775590000000051,
+        "wall": 0.38640670900349505,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 2,
+      "name": "position-4",
+      "before": {
+        "cpu": 0.1457810000000066,
+        "wall": 0.14886200000182725,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.11465399999999448,
+        "wall": 0.11564429101417772,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 2,
+      "name": "position-5",
+      "after": {
+        "cpu": 0.12006699999999881,
+        "wall": 0.12103966600261629,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.2120390000000043,
+        "wall": 0.21404695900855586,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 2,
+      "name": "tactical-0",
+      "before": {
+        "cpu": 0.03137199999999751,
+        "wall": 0.03184733400121331,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.018562000000002854,
+        "wall": 0.018807792017469183,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 2,
+      "name": "tactical-1",
+      "after": {
+        "cpu": 0.07572799999999802,
+        "wall": 0.07636641699355096,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.13051800000000213,
+        "wall": 0.13151770801050588,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 2,
+      "name": "tactical-2",
+      "before": {
+        "cpu": 0.007750999999998953,
+        "wall": 0.007750459015369415,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.005122000000000071,
+        "wall": 0.0051437919901218265,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 3,
+      "name": "position-0",
+      "after": {
+        "cpu": 0.3304779999999994,
+        "wall": 0.34427541599143296,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.3878389999999996,
+        "wall": 0.3937948750099167,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 3,
+      "name": "position-1",
+      "before": {
+        "cpu": 0.28670600000000235,
+        "wall": 0.28904674999648705,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.2463949999999997,
+        "wall": 0.24883050000062212,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 3,
+      "name": "position-2",
+      "after": {
+        "cpu": 0.0022560000000027003,
+        "wall": 0.002256167004816234,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.0035779999999974166,
+        "wall": 0.0036314580065663904,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 3,
+      "name": "position-3",
+      "before": {
+        "cpu": 0.33269099999999696,
+        "wall": 0.335684499994386,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.28171700000000044,
+        "wall": 0.28500029200222343,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 3,
+      "name": "position-4",
+      "after": {
+        "cpu": 0.11561599999999572,
+        "wall": 0.11669999998412095,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.13696000000000197,
+        "wall": 0.1382185000111349,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 3,
+      "name": "position-5",
+      "before": {
+        "cpu": 0.21148900000000026,
+        "wall": 0.21385100000770763,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.12160000000000082,
+        "wall": 0.12317495798924938,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 3,
+      "name": "tactical-0",
+      "after": {
+        "cpu": 0.01860699999999582,
+        "wall": 0.018869541003368795,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.02862999999999971,
+        "wall": 0.028766583011019975,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 3,
+      "name": "tactical-1",
+      "before": {
+        "cpu": 0.13134600000000063,
+        "wall": 0.13229366700397804,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.07581399999999405,
+        "wall": 0.0766059169836808,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 3,
+      "name": "tactical-2",
+      "after": {
+        "cpu": 0.004792000000001906,
+        "wall": 0.004792124993400648,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.008080999999997118,
+        "wall": 0.008188249979866669,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 4,
+      "name": "position-0",
+      "before": {
+        "cpu": 0.3773039999999952,
+        "wall": 0.38060224999208003,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.3074530000000024,
+        "wall": 0.3100181669869926,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 4,
+      "name": "position-1",
+      "after": {
+        "cpu": 0.24521400000000426,
+        "wall": 0.24690583301708102,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.2836720000000028,
+        "wall": 0.2857543750142213,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 4,
+      "name": "position-2",
+      "before": {
+        "cpu": 0.0032709999999980255,
+        "wall": 0.0032748329977039248,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.002853000000001771,
+        "wall": 0.002989000000525266,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 4,
+      "name": "position-3",
+      "after": {
+        "cpu": 0.28547100000000114,
+        "wall": 0.2878678329871036,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.34481299999999493,
+        "wall": 0.34971545802545734,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 4,
+      "name": "position-4",
+      "before": {
+        "cpu": 0.13586100000000556,
+        "wall": 0.13699770902167074,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.11704399999999993,
+        "wall": 0.11806266699568368,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 4,
+      "name": "position-5",
+      "after": {
+        "cpu": 0.12359000000000009,
+        "wall": 0.12476837501162663,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.2998919999999998,
+        "wall": 0.3088055410189554,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 4,
+      "name": "tactical-0",
+      "before": {
+        "cpu": 0.04238200000000347,
+        "wall": 0.04719520901562646,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.019230000000000302,
+        "wall": 0.01947354100411758,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 4,
+      "name": "tactical-1",
+      "after": {
+        "cpu": 0.09001100000000406,
+        "wall": 0.09451924997847527,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.15641899999999964,
+        "wall": 0.16394495801068842,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 4,
+      "name": "tactical-2",
+      "before": {
+        "cpu": 0.013353999999999644,
+        "wall": 0.020285709004383534,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.004975000000001728,
+        "wall": 0.004975582996848971,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 5,
+      "name": "position-0",
+      "after": {
+        "cpu": 0.3816919999999939,
+        "wall": 0.42503558300086297,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.5836469999999991,
+        "wall": 0.6994363339908887,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 5,
+      "name": "position-1",
+      "before": {
+        "cpu": 0.39701799999999565,
+        "wall": 0.4266995000070892,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.3453060000000008,
+        "wall": 0.3747656250197906,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 5,
+      "name": "position-2",
+      "after": {
+        "cpu": 0.0037870000000026494,
+        "wall": 0.0042606249917298555,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.007289000000000101,
+        "wall": 0.009446666022995487,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 5,
+      "name": "position-3",
+      "before": {
+        "cpu": 0.451229000000005,
+        "wall": 0.48265145800542086,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.37326399999999893,
+        "wall": 0.4137203750142362,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 5,
+      "name": "position-4",
+      "after": {
+        "cpu": 0.13634199999999908,
+        "wall": 0.14910700000473298,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.21816099999999494,
+        "wall": 0.24273687502136454,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 5,
+      "name": "position-5",
+      "before": {
+        "cpu": 0.2650039999999976,
+        "wall": 0.2940070419863332,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.1573449999999994,
+        "wall": 0.17171208301442675,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 5,
+      "name": "tactical-0",
+      "after": {
+        "cpu": 0.02483800000000258,
+        "wall": 0.025403957988601178,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.03807199999999966,
+        "wall": 0.04149516599136405,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 5,
+      "name": "tactical-1",
+      "before": {
+        "cpu": 0.1832250000000002,
+        "wall": 0.19434550000005402,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.10843799999999959,
+        "wall": 0.1318874589924235,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 5,
+      "name": "tactical-2",
+      "after": {
+        "cpu": 0.008187999999996975,
+        "wall": 0.008970916998805478,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.01236799999999505,
+        "wall": 0.012593457999173552,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 6,
+      "name": "position-0",
+      "before": {
+        "cpu": 0.4934119999999993,
+        "wall": 0.5195740829803981,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.400381000000003,
+        "wall": 0.42565791701781563,
+        "action": 389,
+        "score": 0.0,
+        "nodes": 17483,
+        "proof_nodes": 7521,
+        "depth": 4,
+        "pv": [
+          389,
+          152,
+          304,
+          241
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 6,
+      "name": "position-1",
+      "after": {
+        "cpu": 0.3023950000000042,
+        "wall": 0.3147549590212293,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.3762740000000022,
+        "wall": 0.3925900000031106,
+        "action": 594,
+        "score": -107.8125,
+        "nodes": 16661,
+        "proof_nodes": 7525,
+        "depth": 4,
+        "pv": [
+          594,
+          568,
+          305,
+          316
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 6,
+      "name": "position-2",
+      "before": {
+        "cpu": 0.0050529999999966435,
+        "wall": 0.005833375005749986,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.003900000000001569,
+        "wall": 0.004267417010851204,
+        "action": 156,
+        "score": 99997.0,
+        "nodes": 1659,
+        "proof_nodes": 1631,
+        "depth": 1,
+        "pv": [
+          156,
+          184,
+          85
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 6,
+      "name": "position-3",
+      "after": {
+        "cpu": 0.4026190000000014,
+        "wall": 0.43375937500968575,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.5514360000000025,
+        "wall": 0.6143572920118459,
+        "action": 241,
+        "score": 0.0,
+        "nodes": 15994,
+        "proof_nodes": 6897,
+        "depth": 4,
+        "pv": [
+          241,
+          393,
+          320,
+          405
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 6,
+      "name": "position-4",
+      "before": {
+        "cpu": 0.19311700000000087,
+        "wall": 0.199774292006623,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.1544580000000053,
+        "wall": 0.16668850000132807,
+        "action": 14,
+        "score": -104.16666666666666,
+        "nodes": 10039,
+        "proof_nodes": 5476,
+        "depth": 4,
+        "pv": [
+          14,
+          183,
+          88,
+          244
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 6,
+      "name": "position-5",
+      "after": {
+        "cpu": 0.1765349999999941,
+        "wall": 0.183937582973158,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.3010189999999966,
+        "wall": 0.31292308299453,
+        "action": 192,
+        "score": -185.41666666666666,
+        "nodes": 131604,
+        "proof_nodes": 128778,
+        "depth": 4,
+        "pv": [
+          192,
+          387,
+          264,
+          325
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 6,
+      "name": "tactical-0",
+      "before": {
+        "cpu": 0.035938999999999055,
+        "wall": 0.036319458013167605,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.03461200000000275,
+        "wall": 0.036912582989316434,
+        "action": 337,
+        "score": -137.5,
+        "nodes": 13547,
+        "proof_nodes": 12952,
+        "depth": 4,
+        "pv": [
+          337,
+          307,
+          416,
+          245
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 6,
+      "name": "tactical-1",
+      "after": {
+        "cpu": 0.0980210000000028,
+        "wall": 0.1057925829954911,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      },
+      "before": {
+        "cpu": 0.19011700000000076,
+        "wall": 0.1959602499846369,
+        "action": 546,
+        "score": 348.4375,
+        "nodes": 61706,
+        "proof_nodes": 59282,
+        "depth": 4,
+        "pv": [
+          546,
+          418,
+          485,
+          424
+        ],
+        "complete": true
+      }
+    },
+    {
+      "trial": 6,
+      "name": "tactical-2",
+      "before": {
+        "cpu": 0.00798499999999791,
+        "wall": 0.007986832992173731,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      },
+      "after": {
+        "cpu": 0.008348000000005129,
+        "wall": 0.008506709011271596,
+        "action": 401,
+        "score": 99995.0,
+        "nodes": 3377,
+        "proof_nodes": 3249,
+        "depth": 3,
+        "pv": [
+          401,
+          539,
+          481,
+          424,
+          561
+        ],
+        "complete": true
+      }
+    }
+  ],
+  "trials": [
+    {
+      "before": {
+        "cpu": 2.0744889999999856,
+        "wall": 2.189199625980109
+      },
+      "after": {
+        "cpu": 1.6932219999999987,
+        "wall": 1.8509693359374069
+      },
+      "cpu_speedup": 1.2251724818127732,
+      "wall_speedup": 1.1827314388606056
+    },
+    {
+      "before": {
+        "cpu": 1.7193900000000113,
+        "wall": 1.7795382909826003
+      },
+      "after": {
+        "cpu": 1.3418029999999774,
+        "wall": 1.400670792994788
+      },
+      "cpu_speedup": 1.2814027096377338,
+      "wall_speedup": 1.270490039403015
+    },
+    {
+      "before": {
+        "cpu": 1.632690000000018,
+        "wall": 1.6726581699913368
+      },
+      "after": {
+        "cpu": 1.2194529999999872,
+        "wall": 1.2429685840033926
+      },
+      "cpu_speedup": 1.3388707887881166,
+      "wall_speedup": 1.3456962561386598
+    },
+    {
+      "before": {
+        "cpu": 1.527319999999996,
+        "wall": 1.5434755830210634
+      },
+      "after": {
+        "cpu": 1.1972749999999905,
+        "wall": 1.2205049159529153
+      },
+      "cpu_speedup": 1.2756634858324178,
+      "wall_speedup": 1.2646205376534572
+    },
+    {
+      "before": {
+        "cpu": 1.656967999999999,
+        "wall": 1.6965760421007872
+      },
+      "after": {
+        "cpu": 1.1958410000000157,
+        "wall": 1.2095802489784546
+      },
+      "cpu_speedup": 1.3856089563746161,
+      "wall_speedup": 1.402615530084608
+    },
+    {
+      "before": {
+        "cpu": 2.1560129999999873,
+        "wall": 2.4034119990246836
+      },
+      "after": {
+        "cpu": 1.539199999999994,
+        "wall": 1.7048636250256095
+      },
+      "cpu_speedup": 1.400736096673594,
+      "wall_speedup": 1.4097385642728937
+    },
+    {
+      "before": {
+        "cpu": 2.154351999999996,
+        "wall": 2.2853186659922358
+      },
+      "after": {
+        "cpu": 1.5812690000000202,
+        "wall": 1.680277626030147
+      },
+      "cpu_speedup": 1.3624196768544556,
+      "wall_speedup": 1.3600839709992265
+    }
+  ],
+  "summary": {
+    "cpu": 1.3388707887881166,
+    "wall": 1.3456962561386598
+  }
+}

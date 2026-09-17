@@ -4,7 +4,7 @@ import numpy as np
 from numba import njit
 
 from ..IntransitiveConstants import DIRECTIONS
-from ..IntransitiveLogicNumba import raw_movement_mask
+from .moves import masks_from_board, move_board, has_move
 
 
 @njit(cache=True)
@@ -56,6 +56,7 @@ def no_terminal_win_in_horizon(pieces, turn, a1_defender, depth):
 def winning_actions(pieces, actions, side, goal):
     """Exact immediate corner/stalemate wins, without allocating history states."""
     board = pieces.copy()
+    masks = masks_from_board(board)
     wins = np.zeros(len(actions), dtype=np.bool_)
     for i in range(len(actions)):
         action = int(actions[i])
@@ -63,10 +64,11 @@ def winning_actions(pieces, actions, side, goal):
         x, y = source % 9, source // 9
         dx, dy = DIRECTIONS[action % 8]
         nx, ny = x + dx, y + dy
-        mover, occupant = board[y, x], board[ny, nx]
-        board[y, x], board[ny, nx] = 0, mover
-        wins[i] = ny * 9 + nx == goal or not raw_movement_mask(board, 1 - side).any()
-        board[y, x], board[ny, nx] = mover, occupant
+        target = ny * 9 + nx
+        occupant = int(board[ny, nx])
+        move_board(board, masks, source, target, occupant)
+        wins[i] = target == goal or not has_move(masks, 1 - side)
+        move_board(board, masks, source, target, occupant, True)
     return wins
 
 

@@ -1,0 +1,33 @@
+   Compiling intransitive-rust-teacher v0.1.0 (/Users/work/orca/workspaces/alpha-zero-general/issue-62-optimize-minimax-legal/intransitive/rust_teacher)
+    Finished release [optimized] target(s) in 8.76s
+     Running unittests src/lib.rs (intransitive/rust_teacher/target/release/deps/intransitive_rust_teacher-70a5ea696ff83bf1)
+
+running 13 tests
+test tests::benchmark_legal_moves ... ignored, manual release-mode microbenchmark; ISSUE62_POSITIONS is a directory of .bin states
+test tests::cancellation_never_labels_partial ... ok
+test tests::material_extinction_and_quiet_type_order ... ok
+test tests::incremental_pressure_updates_stationary_victims_and_dense_fallback ... ok
+test tests::modelling_only_draw_and_win_precedence ... ok
+test tests::rings_and_defenders ... ok
+test tests::roundtrip_and_undo ... ok
+test tests::selective_guards_cutoffs_and_cancellation ... ok
+test tests::proof_only_moves_preserve_material_on_budget_exit ... ok
+test tests::bitboards_edges_captures_and_temporary_undo ... ok
+test tests::material_restored_after_search_cutoffs_and_cancellation ... ok
+test tests::bitboard_exposure_matches_scan_with_removed_pieces ... ok
+test tests::material_trajectories_siblings_and_full_unwind ... ok
+
+test result: ok. 12 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running unittests src/main.rs (intransitive/rust_teacher/target/release/deps/intransitive_rust_teacher-124d51e6310105b4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests intransitive_rust_teacher
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
