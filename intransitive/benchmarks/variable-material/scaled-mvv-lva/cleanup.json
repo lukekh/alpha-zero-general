@@ -1,0 +1,5 @@
+{
+  "observed_experiment_pids_still_present": [],
+  "elapsed_from_original_launch": 3337.8918368816376,
+  "note": "Read-only check after supervisor exit; no unrelated processes changed."
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "moves": 4,
+    "outcomes": {
+      "unfinished": 2
+    },
+    "records": 2,
+    "setting": "smoke-depth4"
+  },
+  {
+    "moves": 269,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 3,
+      "win": 4
+    },
+    "records": 8,
+    "setting": "full-mvv-off"
+  },
+  {
+    "moves": 283,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 3,
+      "win": 3
+    },
+    "records": 7,
+    "setting": "scaled-mvv-on"
+  },
+  {
+    "moves": 258,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 3,
+      "win": 3
+    },
+    "records": 7,
+    "setting": "scaled-mvv-off"
+  },
+  {
+    "moves": 243,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 3,
+      "win": 3
+    },
+    "records": 7,
+    "setting": "full-mvv-on"
+  }
+]

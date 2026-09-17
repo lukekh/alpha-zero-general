@@ -169,3 +169,16 @@ two inconclusive after consensus. All searches used for moves completed their
 required depth. Experimental pruning produced 470 verified null-move cutoffs but
 no futility skips; it did not improve the match score. Opening diagnostics and
 work counters are retained separately.
+
+
+## Material scale and MVV-LVA follow-up
+
+The [depth-four scale/ordering comparison](scaled-mvv-lva/README.md) crossed
+full variable material versus one-twentieth scale with MVV-LVA off/on, against
+flat material on four reused colour-swapped openings. On the seven pairs
+attempted by all settings, consensus results were identical: 3 wins, 2 losses,
+2 inconclusive. The three commonly completed decisive games also had identical
+winners. No clear improvement emerged. All 31 records / 1,057 moves passed
+replay, and the low-priority run and cleanup finished within 56 minutes.
+The optional coefficient-5 preset gives the requested BASE/20 effect; defaults
+remain unchanged.
