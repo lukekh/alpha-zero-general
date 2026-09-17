@@ -7,6 +7,7 @@ import argparse
 from collections import Counter, defaultdict
 from dataclasses import replace
 import json
+import hashlib
 import math
 from pathlib import Path
 import time
@@ -16,7 +17,7 @@ from ...heuristics.budget import Budget, BudgetExpired
 from ...heuristics.evaluation import Evaluator
 from ...heuristics.tuning import Genome
 from ...tournament.runner import atomic_json, replay, validate_manifest
-from ...tournament.spec import digest
+from ...tournament.spec import backend_version, digest
 
 
 def consensus(scores):
@@ -120,7 +121,8 @@ def main():
         if time.monotonic()>=deadline:break
         results.append(analyze(folder,deadline=deadline))
     atomic_json(args.output,dict(schema='intransitive-consensus-analysis-v1',wall_seconds=time.monotonic()-start,
-        requested_folders=[str(p) for p in args.folders],runs=results))
+        requested_folders=[str(p) for p in args.folders],runs=results,
+        analyzer_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),backend_version=backend_version()))
     print(json.dumps(dict(output=str(args.output),runs=len(results),records=sum(r['records'] for r in results),wall_seconds=time.monotonic()-start)))
 
 

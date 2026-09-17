@@ -1,0 +1,28 @@
+[
+  {
+    "moves": 1227,
+    "name": "mcts-s32",
+    "outcomes": {
+      "unfinished": 5,
+      "win": 3
+    },
+    "records": 8
+  },
+  {
+    "moves": 409,
+    "name": "minimax-d1",
+    "outcomes": {
+      "unfinished": 1,
+      "win": 7
+    },
+    "records": 8
+  },
+  {
+    "moves": 5,
+    "name": "minimax-d3",
+    "outcomes": {
+      "depth_incomplete": 8
+    },
+    "records": 8
+  }
+]
