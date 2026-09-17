@@ -1,4 +1,4 @@
-//! Experimental exact-depth label search. No dependencies, selective pruning,
+//! Experimental opt-in selective search. No dependencies,
 //! unsafe code, neural inference, or changes to the live training pipeline.
 use std::collections::{HashMap, VecDeque};
 use std::time::{Duration, Instant};
@@ -135,6 +135,7 @@ pub struct Position {
     pub total: u64,
     history: Vec<Frame>,
     start: usize,
+    hypothetical: bool,
 }
 #[derive(Clone, Copy)]
 struct Undo {
@@ -206,6 +207,7 @@ impl Position {
             total,
             history,
             start: 0,
+            hypothetical: false,
         };
         if p.board[0] != 0
             && owner(p.board[0]) != p.a1
@@ -290,7 +292,7 @@ impl Position {
         if !self.has_move(self.side) {
             return Some((Some(1 - self.side), "stalemate"));
         }
-        if modelling {
+        if modelling && !self.hypothetical {
             let history = &self.history[self.start..];
             if history
                 .iter()
@@ -472,6 +474,12 @@ pub fn evaluate(p: &Position, radius: usize, weight: f64) -> f64 {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Config {
+    pub nmp_enabled: bool,
+    pub nmp_min_depth: usize,
+    pub nmp_reduction: usize,
+    pub futility_enabled: bool,
+    pub futility_max_depth: usize,
+    pub futility_margin: f64,
     pub depth: usize,
     pub milliseconds: u64,
     pub node_limit: u64,
@@ -481,9 +489,35 @@ pub struct Config {
     pub proof_nodes: u64,
     pub table_entries: usize,
 }
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            nmp_enabled: false,
+            nmp_min_depth: 3,
+            nmp_reduction: 1,
+            futility_enabled: false,
+            futility_max_depth: 2,
+            futility_margin: 1.0,
+            depth: 3,
+            milliseconds: 1000,
+            node_limit: 200000,
+            radius: 3,
+            pressure_weight: 0.0,
+            proof_depth: 2,
+            proof_nodes: 64,
+            table_entries: 10000,
+        }
+    }
+}
 impl Config {
     pub fn validate(&self) -> Result<(), String> {
-        if !(1..=32).contains(&self.depth)
+        if !(3..=32).contains(&self.nmp_min_depth)
+            || !(1..=8).contains(&self.nmp_reduction)
+            || self.nmp_reduction + 2 > self.nmp_min_depth
+            || !(1..=2).contains(&self.futility_max_depth)
+            || !self.futility_margin.is_finite()
+            || !(1.0..=16.0).contains(&self.futility_margin)
+            || !(1..=32).contains(&self.depth)
             || !(3..=4).contains(&self.radius)
             || !self.pressure_weight.is_finite()
             || self.pressure_weight < 0.0
@@ -527,6 +561,8 @@ pub struct Search {
     previous: HashMap<u16, f64>,
     root_scores: HashMap<u16, f64>,
     pub tt_hits: u64,
+    pub selective_stats: [u64; 10],
+    selective_disabled: bool,
 }
 type Line = (f64, Vec<u16>);
 impl Search {
@@ -544,6 +580,8 @@ impl Search {
             previous: HashMap::new(),
             root_scores: HashMap::new(),
             tt_hits: 0,
+            selective_stats: [0; 10],
+            selective_disabled: false,
         })
     }
     fn visit(&mut self, proof: bool) -> Result<(), &'static str> {
@@ -704,7 +742,7 @@ impl Search {
         ranked.into_iter().map(|x| x.0).collect()
     }
     fn store(&mut self, key: Vec<u8>, score: f64, pv: Vec<u16>, bound: i8, ply: usize) {
-        if self.config.table_entries == 0 {
+        if self.config.table_entries == 0 || self.selective_disabled {
             return;
         }
         let score = if score > 90000.0 {
@@ -724,6 +762,61 @@ impl Search {
         }
         self.table.insert(key, Entry { score, bound, pv });
     }
+    fn guarded(p: &Position, depth: usize) -> bool {
+        let history = &p.history[p.start..];
+        if history.len() - 1 + depth + 1 >= 80
+            || history
+                .iter()
+                .enumerate()
+                .any(|(i, f)| history[..i].contains(f))
+            || p.material
+                .counts
+                .iter()
+                .any(|c| c.iter().sum::<usize>() < 4)
+        {
+            return false;
+        }
+        for (square, &c) in p.board.iter().enumerate() {
+            if c != 0
+                && distance(square, if owner(c) == p.a1 { 80 } else { 0 }) <= 3.max((depth + 1) / 2)
+            {
+                return false;
+            }
+        }
+        for side in 0..2 {
+            let actions = p.raw_legal(side);
+            if actions.len() < 8
+                || actions
+                    .iter()
+                    .any(|a| p.board[destination(*a).unwrap()] != 0)
+            {
+                return false;
+            }
+        }
+        true
+    }
+    fn quiet(p: &Position, action: u16) -> bool {
+        let source = action as usize / 8;
+        let target = destination(action).unwrap();
+        let goal = if p.side == p.a1 { 80 } else { 0 };
+        if p.board[target] != 0 || distance(target, goal) <= 3 {
+            return false;
+        }
+        let fastest = p
+            .board
+            .iter()
+            .enumerate()
+            .filter(|(_, c)| **c != 0 && owner(**c) == p.side)
+            .map(|(s, _)| distance(s, goal))
+            .min()
+            .unwrap();
+        if distance(source, goal) <= fastest {
+            return false;
+        }
+        !p.board.iter().enumerate().any(|(s, c)| {
+            *c != 0 && owner(*c) != p.side && distance(s, source).min(distance(s, target)) <= 2
+        })
+    }
     fn search(
         &mut self,
         p: &mut Position,
@@ -737,7 +830,7 @@ impl Search {
             return Ok((score, vec![]));
         }
         if depth == 0 {
-            if self.config.proof_depth > 0 && self.config.proof_nodes > 0 {
+            if !p.hypothetical && self.config.proof_depth > 0 && self.config.proof_nodes > 0 {
                 match self.proof(
                     p,
                     self.config.proof_depth,
@@ -771,7 +864,7 @@ impl Search {
         let original = (alpha, beta);
         let key = p.key(depth);
         let mut preferred = None;
-        if let Some(entry) = self.table.get(&key) {
+        if let Some(entry) = self.table.get(&key).filter(|_| !self.selective_disabled) {
             self.tt_hits += 1;
             let score = if entry.score > 90000.0 {
                 entry.score - ply as f64
@@ -793,7 +886,7 @@ impl Search {
                 return Ok((score, entry.pv.clone()));
             }
         }
-        if preferred.is_none() {
+        if preferred.is_none() && !self.selective_disabled {
             for d in (1..depth).rev() {
                 if let Some(entry) = self.table.get(&p.key(d)) {
                     preferred = entry.pv.first().copied();
@@ -801,9 +894,87 @@ impl Search {
                 }
             }
         }
+        let active = !self.selective_disabled
+            && self.config.pressure_weight <= 20.0
+            && ply > 0
+            && alpha.is_finite()
+            && beta.is_finite()
+            && next_up(original.0) >= original.1
+            && alpha.abs().max(beta.abs()) < 10000.0;
+        let candidate = active
+            && ((self.config.nmp_enabled && depth >= self.config.nmp_min_depth)
+                || (self.config.futility_enabled && depth <= self.config.futility_max_depth));
+        let safe = candidate && Self::guarded(p, depth);
+        let static_score = if safe {
+            self.visit(false)?; // additional static evaluation is charged
+            self.selective_stats[7] += 1;
+            evaluate(p, self.config.radius, self.config.pressure_weight)
+        } else {
+            0.0
+        };
+        if self.config.nmp_enabled {
+            if safe && depth >= self.config.nmp_min_depth && static_score >= beta {
+                self.selective_stats[0] += 1;
+                // Clone isolates every board/history/material/pressure component,
+                // including errors. The pass changes neither total nor history.
+                let mut null = p.clone();
+                null.side = 1 - null.side;
+                null.hypothetical = true;
+                self.selective_disabled = true;
+                let probe_nodes = self.nodes;
+                let probe = self.search(
+                    &mut null,
+                    depth - 1 - self.config.nmp_reduction,
+                    -beta,
+                    next_up(-beta),
+                    ply + 1,
+                );
+                self.selective_disabled = false;
+                self.selective_stats[8] += self.nodes - probe_nodes;
+                let (value, _) = probe?;
+                if -value >= beta && value.abs() < 90000.0 {
+                    self.selective_stats[3] += 1;
+                    self.selective_disabled = true;
+                    let verification_nodes = self.nodes;
+                    let verification = self.search(
+                        p,
+                        depth - self.config.nmp_reduction,
+                        -next_up(-beta),
+                        beta,
+                        ply,
+                    );
+                    self.selective_disabled = false;
+                    self.selective_stats[9] += self.nodes - verification_nodes;
+                    let (verified, line) = verification?;
+                    if verified >= beta && verified.abs() < 90000.0 {
+                        self.selective_stats[1] += 1;
+                        self.store(key, beta, line.clone(), 1, ply);
+                        return Ok((beta, line));
+                    }
+                    self.selective_stats[4] += 1;
+                }
+            } else {
+                self.selective_stats[2] += 1;
+            }
+        }
         let mut best = (-f64::INFINITY, vec![]);
         let side = p.side;
         for (index, action) in self.ordered(p, preferred, ply).into_iter().enumerate() {
+            if safe
+                && self.config.futility_enabled
+                && depth <= self.config.futility_max_depth
+                && index > 0
+                && Self::quiet(p, action)
+            {
+                self.selective_stats[5] += 1;
+                let margin = depth as f64
+                    * self.config.futility_margin
+                    * (75.0 + 8.0 * self.config.pressure_weight);
+                if static_score + margin <= alpha && best.0.abs() < 90000.0 {
+                    self.selective_stats[6] += 1;
+                    continue;
+                }
+            }
             let capture = p.board[destination(action).unwrap()] != 0;
             let undo = p.push(action);
             let probe = next_up(alpha);
@@ -828,7 +999,7 @@ impl Search {
             }
             alpha = alpha.max(value);
             if alpha >= beta {
-                if !capture {
+                if !capture && !self.selective_disabled {
                     if self.killers[ply][0] != Some(action) {
                         self.killers[ply][1] = self.killers[ply][0];
                         self.killers[ply][0] = Some(action);
@@ -856,6 +1027,17 @@ impl Search {
     pub fn analyze_reusing(&mut self, position: &Position) -> SearchResult {
         self.analyze_impl(position, true)
     }
+    /// Allocated payload estimate; excludes allocator and hash control overhead.
+    pub fn table_bytes(&self) -> usize {
+        self.table.capacity() * std::mem::size_of::<(Vec<u8>, Entry)>()
+            + self
+                .table
+                .iter()
+                .map(|(k, v)| k.capacity() + v.pv.capacity() * 2)
+                .sum::<usize>()
+            + self.fifo.capacity() * std::mem::size_of::<Vec<u8>>()
+            + self.fifo.iter().map(|k| k.capacity()).sum::<usize>()
+    }
     pub fn table_entries(&self) -> usize {
         self.table.len()
     }
@@ -864,6 +1046,7 @@ impl Search {
         self.nodes = 0;
         self.proof_nodes = 0;
         self.tt_hits = 0;
+        self.selective_stats = [0; 10];
         if !reuse {
             self.table.clear();
             self.fifo.clear();
@@ -907,7 +1090,12 @@ impl Search {
                     self.previous = std::mem::take(&mut self.root_scores);
                     if score.abs() > 90000.0 {
                         result.complete = true;
-                        result.stop_reason = "proven_result";
+                        result.stop_reason =
+                            if self.config.nmp_enabled || self.config.futility_enabled {
+                                "selective_result"
+                            } else {
+                                "proven_result"
+                            };
                         break;
                     }
                     if depth == self.config.depth {
@@ -959,6 +1147,7 @@ mod tests {
             total: 0,
             history: vec![frame],
             start: 0,
+            hypothetical: false,
         }
     }
     fn reference_evaluate(p: &Position, radius: usize, weight: f64) -> f64 {
@@ -1001,6 +1190,70 @@ mod tests {
         total.clamp(-10000.0, 10000.0)
     }
 
+    #[test]
+    fn selective_guards_cutoffs_and_cancellation() {
+        let mut original = fixture(&[
+            (9, 1),
+            (10, 2),
+            (18, 3),
+            (19, 1),
+            (30, 2),
+            (61, -1),
+            (62, -2),
+            (70, -3),
+            (71, -1),
+        ]);
+        original.pressure = Pressure::new(&original.board, 3);
+        assert!(Search::guarded(&original, 3));
+        assert!(Search::quiet(&original, 9 * 8 + 4));
+        assert!(!Search::quiet(&original, 30 * 8 + 1));
+        for nmp in [false, true] {
+            let config = Config {
+                nmp_enabled: nmp,
+                futility_enabled: !nmp,
+                milliseconds: 60000,
+                node_limit: 1000000,
+                proof_nodes: 0,
+                pressure_weight: 10.0,
+                ..Config::default()
+            };
+            let mut search = Search::new(config.clone()).unwrap();
+            let mut p = original.clone();
+            let alpha = if nmp { 0.0 } else { 500.0 };
+            let result = search
+                .search(&mut p, if nmp { 3 } else { 1 }, alpha, next_up(alpha), 1)
+                .unwrap();
+            assert!(result.0.is_finite());
+            assert!(!result.1.is_empty());
+            assert_eq!(p, original);
+            assert!(search.selective_stats[if nmp { 1 } else { 6 }] > 0);
+            if nmp {
+                assert!(search.selective_stats[3] > 0);
+            }
+            for cap in [1, 2, 3, 10, 30, 100] {
+                let mut search = Search::new(Config {
+                    node_limit: cap,
+                    ..config.clone()
+                })
+                .unwrap();
+                let mut p = original.clone();
+                let _ = search.search(&mut p, 3, alpha, next_up(alpha), 1);
+                assert_eq!(p, original);
+                assert!(!search.selective_disabled);
+            }
+        }
+        let mut null = original.clone();
+        null.hypothetical = true;
+        null.side = 1 - null.side;
+        null.history = vec![null.history[0]; 81];
+        assert!(null.terminal(true).is_none());
+        null.hypothetical = false;
+        assert!(null.terminal(true).is_some());
+        assert_eq!(original.total, 0);
+        for p in [fixture(&[(20, 1), (60, -2)]), fixture(&[(70, 1), (20, -2)])] {
+            assert!(!Search::guarded(&p, 3));
+        }
+    }
     #[test]
     fn roundtrip_and_undo() {
         let mut p = fixture(&[(40, 1), (50, -2), (70, -3)]);
@@ -1148,6 +1401,7 @@ mod tests {
                 proof_depth: 2,
                 proof_nodes: 64,
                 table_entries: 100,
+                ..Config::default()
             };
             let mut search = Search::new(config.clone()).unwrap();
             let mut p = original.clone();
@@ -1184,6 +1438,7 @@ mod tests {
                 proof_depth: 2,
                 proof_nodes,
                 table_entries: 100,
+                ..Config::default()
             })
             .unwrap();
             let mut used = 0;
@@ -1248,6 +1503,7 @@ mod tests {
             proof_depth: 2,
             proof_nodes: 64,
             table_entries: 10,
+            ..Config::default()
         })
         .unwrap();
         let r = s.analyze(&p);

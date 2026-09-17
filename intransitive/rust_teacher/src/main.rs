@@ -17,19 +17,30 @@ fn number<T: std::str::FromStr>(s: &str) -> Result<T, String> {
 fn handle(line: &str, cache: &mut Option<(Config, Search)>) -> Result<String, String> {
     let v: Vec<_> = line.split_whitespace().collect();
     match v.first().copied() {
-        Some("search" | "search_reuse") if v.len()==10 => {
+        Some("search" | "search_reuse") if v.len()==10 || v.len()==16 => {
             let config=Config {depth:number(v[1])?,milliseconds:number(v[2])?,node_limit:number(v[3])?,
                 radius:number(v[4])?,pressure_weight:number(v[5])?,proof_depth:number(v[6])?,
-                proof_nodes:number(v[7])?,table_entries:number(v[8])?};
-            let p=Position::from_bytes(&bytes(v[9])?)?;
+                proof_nodes:number(v[7])?,table_entries:number(v[8])?,
+                nmp_enabled:if v.len()==16 {number::<bool>(v[9])?} else {false},
+                nmp_min_depth:if v.len()==16 {number(v[10])?} else {3},
+                nmp_reduction:if v.len()==16 {number(v[11])?} else {1},
+                futility_enabled:if v.len()==16 {number::<bool>(v[12])?} else {false},
+                futility_max_depth:if v.len()==16 {number(v[13])?} else {2},
+                futility_margin:if v.len()==16 {number(v[14])?} else {1.0}};
+            let p=Position::from_bytes(&bytes(v[v.len()-1])?)?;
             if cache.as_ref().map(|x| &x.0)!=Some(&config) {
-                *cache=Some((config.clone(),Search::new(config)?));
+                *cache=Some((config.clone(),Search::new(config.clone())?));
             }
             let search=&mut cache.as_mut().unwrap().1;
             let r=if v[0]=="search_reuse" {search.analyze_reusing(&p)} else {search.analyze(&p)};
-            Ok(format!("{{\"action\":{},\"score\":{},\"completed_depth\":{},\"target_depth\":{},\"complete\":{},\"stop_reason\":{:?},\"nodes\":{},\"proof_nodes\":{},\"seconds\":{},\"pv\":{:?},\"tt_hits\":{},\"table_entries\":{}}}",
-                r.action.map_or("null".into(),|x|x.to_string()),r.score.map_or("null".into(),|x|x.to_string()),
-                r.completed_depth,r.target_depth,r.complete,r.stop_reason,r.nodes,r.proof_nodes,r.seconds,r.pv,search.tt_hits,search.table_entries()))
+            let stats=search.selective_stats;
+            let settings=format!("{{\"version\":\"intransitive-selective-v1\",\"enabled\":{},\"effective\":{},\"nmp_enabled\":{},\"nmp_min_depth\":{},\"nmp_reduction\":{},\"futility_enabled\":{},\"futility_max_depth\":{},\"futility_margin\":{},\"nmp_attempts\":{},\"nmp_cutoffs\":{},\"nmp_skips\":{},\"verification_searches\":{},\"verification_failures\":{},\"futility_eligible\":{},\"futility_pruned\":{},\"static_evaluations\":{},\"null_nodes\":{},\"verification_nodes\":{}}}",
+                config.nmp_enabled||config.futility_enabled,(config.nmp_enabled||config.futility_enabled)&&config.pressure_weight<=20.0,
+                config.nmp_enabled,config.nmp_min_depth,config.nmp_reduction,config.futility_enabled,config.futility_max_depth,config.futility_margin,
+                stats[0],stats[1],stats[2],stats[3],stats[4],stats[5],stats[6],stats[7],stats[8],stats[9]);
+            Ok(format!("{{\"selective\":{},\"action\":{},\"score\":{},\"completed_depth\":{},\"target_depth\":{},\"complete\":{},\"stop_reason\":{:?},\"nodes\":{},\"proof_nodes\":{},\"seconds\":{},\"pv\":{:?},\"tt_hits\":{},\"table_entries\":{},\"table_bytes\":{},\"work\":{}}}",
+                settings,r.action.map_or("null".into(),|x|x.to_string()),r.score.map_or("null".into(),|x|x.to_string()),
+                r.completed_depth,r.target_depth,r.complete,r.stop_reason,r.nodes,r.proof_nodes,r.seconds,r.pv,search.tt_hits,search.table_entries(),search.table_bytes(),r.nodes))
         },
         Some("inspect") if v.len()==4 => {
             let radius=number(v[1])?;let weight:f64=number(v[2])?;

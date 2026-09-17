@@ -98,12 +98,17 @@ def main():
     parser.add_argument('--depth', type=int, help='Override maximum search depth')
     parser.add_argument('--time', type=float, help='Override seconds per search/evaluation')
     parser.add_argument('--work', type=int, help='Override work per search/evaluation')
+    parser.add_argument('--nmp', action=argparse.BooleanOptionalAction, default=None,
+                        help='Enable experimental guarded null move pruning')
+    parser.add_argument('--futility', action=argparse.BooleanOptionalAction, default=None,
+                        help='Enable experimental forward futility pruning')
     args = parser.parse_args()
     try:
         text = sys.stdin.read() if args.record == '-' else Path(args.record).read_text()
         config = SearchConfig.from_file(args.config) if args.config else load_record(text).config
         overrides = {k: v for k, v in dict(max_depth=args.depth, time_limit=args.time,
-                                          node_limit=args.work).items() if v is not None}
+                                          node_limit=args.work, nmp_enabled=args.nmp,
+                                          futility_enabled=args.futility).items() if v is not None}
         report = analyze_record(text, ply=args.ply, last_ai=args.last_ai,
                                 config=replace(config, **overrides), moves=args.move)
     except (ValueError, TypeError, OSError) as exc:

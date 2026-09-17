@@ -158,7 +158,10 @@ def decision_categories(game, canonical, action):
 
 
 def teacher_config(protocol):
-    return SearchConfig(**protocol['teacher']['search'])
+    config = SearchConfig(**protocol['teacher']['search'])
+    if config.nmp_enabled or config.futility_enabled:
+        raise ValueError('Teacher protocol requires selective pruning disabled')
+    return config
 
 
 def split_trajectories(records, split_seed, fractions):

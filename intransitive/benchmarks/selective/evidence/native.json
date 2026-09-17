@@ -1,0 +1,7358 @@
+{
+  "plan": {
+    "version": "intransitive-selective-validation-v1",
+    "baseline_source": "c31ab1625720a1dd0d256d56f83d048f218b3012",
+    "stockfish_reference": "031dfeb437fa6b06cdbdf4ef89dfb82f6b83c4d3",
+    "tuning": "No tuning; all v1 defaults fixed before measurement",
+    "modes": [
+      "baseline",
+      "nmp",
+      "futility",
+      "both"
+    ],
+    "depths": [
+      3,
+      5,
+      6
+    ],
+    "fixed_depth_seconds_cap": 2.0,
+    "paired_seconds_per_move": 0.02,
+    "paired_plies_cap": 24,
+    "stages": [
+      "opening",
+      "midgame",
+      "endgame"
+    ],
+    "held_out_seed": 600917,
+    "held_out_symmetry": 6,
+    "acceptance": {
+      "new_tactical_failures": 0,
+      "minimum_median_completed_depth_speedup": 1.05,
+      "paired_decisive_score_lower_95_percent": 0.45,
+      "unfinished": "Exclude from win-rate denominator; never official draws",
+      "insufficient_evidence": "Keep both options disabled"
+    }
+  },
+  "backend": "rust",
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "revision": "c31ab1625720a1dd0d256d56f83d048f218b3012",
+  "source_diff_sha256": "a13947bcb40eba136b8837eb05e4c8974df36cec5d210c294ba91789184c0a45",
+  "baseline_config": {
+    "search_version": "intransitive-selective-v1",
+    "nmp_enabled": false,
+    "nmp_min_depth": 3,
+    "nmp_reduction": 1,
+    "futility_enabled": false,
+    "futility_max_depth": 2,
+    "futility_margin": 1.0,
+    "evaluator_version": "intransitive-heuristics-v2",
+    "count_weight": 100.0,
+    "race_weight": 0.0,
+    "advantage_weight": 25.0,
+    "attack_weight": 12.0,
+    "defence_weight": 10.0,
+    "overload_weight": 5.0,
+    "predator_zero_bonus": 1.0,
+    "predator_scarcity_bonus": 0.5,
+    "prey_bonus": 0.25,
+    "attack_enabled": false,
+    "defence_enabled": false,
+    "overload_enabled": false,
+    "pressure_enabled": false,
+    "pressure_weight": 1.0,
+    "pressure_radius": 4,
+    "max_depth": 3,
+    "node_limit": 1000000000,
+    "time_limit": 600,
+    "proof_depth": 2,
+    "proof_nodes": 0,
+    "table_entries": 10000,
+    "pvs_enabled": true,
+    "aspiration_enabled": true,
+    "aspiration_window": 25.0,
+    "ordering_enabled": true,
+    "compiled_ordering_enabled": true,
+    "depth_replacement_enabled": false,
+    "pressure_cache_entries": 0
+  },
+  "fixed": [
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "baseline",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1715,
+        "proof_nodes": 0,
+        "seconds": 0.002078917,
+        "pv": [
+          241,
+          341,
+          320
+        ],
+        "tt_hits": 0,
+        "table_entries": 145,
+        "table_bytes": 80556,
+        "work": 1715,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "nmp",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 145,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1715,
+        "proof_nodes": 0,
+        "seconds": 0.002327167,
+        "pv": [
+          241,
+          341,
+          320
+        ],
+        "tt_hits": 0,
+        "table_entries": 145,
+        "table_bytes": 80556,
+        "work": 1715,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "futility",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 568,
+          "futility_pruned": 0,
+          "static_evaluations": 135,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1850,
+        "proof_nodes": 0,
+        "seconds": 0.002216375,
+        "pv": [
+          241,
+          341,
+          320
+        ],
+        "tt_hits": 0,
+        "table_entries": 145,
+        "table_bytes": 80556,
+        "work": 1850,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "both",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 145,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 568,
+          "futility_pruned": 0,
+          "static_evaluations": 135,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1850,
+        "proof_nodes": 0,
+        "seconds": 0.002244542,
+        "pv": [
+          241,
+          341,
+          320
+        ],
+        "tt_hits": 0,
+        "table_entries": 145,
+        "table_bytes": 80556,
+        "work": 1850,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "baseline",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 69475,
+        "proof_nodes": 0,
+        "seconds": 0.093023333,
+        "pv": [
+          241,
+          341,
+          320,
+          473,
+          393
+        ],
+        "tt_hits": 65,
+        "table_entries": 5976,
+        "table_bytes": 4899444,
+        "work": 69475,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "nmp",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 102,
+          "nmp_cutoffs": 102,
+          "nmp_skips": 3589,
+          "verification_searches": 102,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 102,
+          "null_nodes": 5648,
+          "verification_nodes": 5565,
+          "depth": 5
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 16866,
+        "proof_nodes": 0,
+        "seconds": 0.043682459,
+        "pv": [
+          241,
+          341,
+          320,
+          473,
+          393
+        ],
+        "tt_hits": 0,
+        "table_entries": 570,
+        "table_bytes": 374676,
+        "work": 16866,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "futility",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 24016,
+          "futility_pruned": 672,
+          "static_evaluations": 4226,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 73029,
+        "proof_nodes": 0,
+        "seconds": 0.104746667,
+        "pv": [
+          241,
+          341,
+          320,
+          473,
+          393
+        ],
+        "tt_hits": 65,
+        "table_entries": 5976,
+        "table_bytes": 4899444,
+        "work": 73029,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "both",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 102,
+          "nmp_cutoffs": 102,
+          "nmp_skips": 3589,
+          "verification_searches": 102,
+          "verification_failures": 0,
+          "futility_eligible": 1175,
+          "futility_pruned": 36,
+          "static_evaluations": 458,
+          "null_nodes": 5648,
+          "verification_nodes": 5565,
+          "depth": 5
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 17186,
+        "proof_nodes": 0,
+        "seconds": 0.045174125,
+        "pv": [
+          241,
+          341,
+          320,
+          473,
+          393
+        ],
+        "tt_hits": 0,
+        "table_entries": 570,
+        "table_bytes": 374676,
+        "work": 17186,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "baseline",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 249539,
+        "proof_nodes": 0,
+        "seconds": 1.059319083,
+        "pv": [
+          241,
+          341,
+          320,
+          473,
+          301,
+          536
+        ],
+        "tt_hits": 534,
+        "table_entries": 10000,
+        "table_bytes": 11479582,
+        "work": 249539,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "nmp",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 208,
+          "nmp_cutoffs": 208,
+          "nmp_skips": 12461,
+          "verification_searches": 208,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 210,
+          "null_nodes": 75596,
+          "verification_nodes": 71205,
+          "depth": 6
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 158142,
+        "proof_nodes": 0,
+        "seconds": 0.177301167,
+        "pv": [
+          241,
+          341,
+          320,
+          473,
+          395,
+          409
+        ],
+        "tt_hits": 1,
+        "table_entries": 1129,
+        "table_bytes": 769908,
+        "work": 158142,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "futility",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 52228,
+          "futility_pruned": 1976,
+          "static_evaluations": 61460,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 309023,
+        "proof_nodes": 0,
+        "seconds": 1.1469025,
+        "pv": [
+          241,
+          341,
+          320,
+          473,
+          301,
+          536
+        ],
+        "tt_hits": 534,
+        "table_entries": 10000,
+        "table_bytes": 11486238,
+        "work": 309023,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "both",
+      "state_sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 208,
+          "nmp_cutoffs": 208,
+          "nmp_skips": 12461,
+          "verification_searches": 208,
+          "verification_failures": 0,
+          "futility_eligible": 1876,
+          "futility_pruned": 697,
+          "static_evaluations": 832,
+          "null_nodes": 75596,
+          "verification_nodes": 71205,
+          "depth": 6
+        },
+        "action": 241,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 158067,
+        "proof_nodes": 0,
+        "seconds": 0.1827,
+        "pv": [
+          241,
+          341,
+          320,
+          473,
+          395,
+          409
+        ],
+        "tt_hits": 1,
+        "table_entries": 1129,
+        "table_bytes": 769908,
+        "work": 158067,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "baseline",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1762,
+        "proof_nodes": 0,
+        "seconds": 0.001917,
+        "pv": [
+          405,
+          176,
+          326
+        ],
+        "tt_hits": 1,
+        "table_entries": 145,
+        "table_bytes": 80556,
+        "work": 1762,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "nmp",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 146,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1762,
+        "proof_nodes": 0,
+        "seconds": 0.002103625,
+        "pv": [
+          405,
+          176,
+          326
+        ],
+        "tt_hits": 1,
+        "table_entries": 145,
+        "table_bytes": 80556,
+        "work": 1762,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "futility",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 588,
+          "futility_pruned": 20,
+          "static_evaluations": 136,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1878,
+        "proof_nodes": 0,
+        "seconds": 0.002165208,
+        "pv": [
+          405,
+          176,
+          326
+        ],
+        "tt_hits": 1,
+        "table_entries": 145,
+        "table_bytes": 80556,
+        "work": 1878,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "both",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 146,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 588,
+          "futility_pruned": 20,
+          "static_evaluations": 136,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1878,
+        "proof_nodes": 0,
+        "seconds": 0.002161583,
+        "pv": [
+          405,
+          176,
+          326
+        ],
+        "tt_hits": 1,
+        "table_entries": 145,
+        "table_bytes": 80556,
+        "work": 1878,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "baseline",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 69598,
+        "proof_nodes": 0,
+        "seconds": 0.091453833,
+        "pv": [
+          405,
+          176,
+          326,
+          237,
+          317
+        ],
+        "tt_hits": 66,
+        "table_entries": 6016,
+        "table_bytes": 4932810,
+        "work": 69598,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "nmp",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 102,
+          "nmp_cutoffs": 102,
+          "nmp_skips": 3626,
+          "verification_searches": 102,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 102,
+          "null_nodes": 5651,
+          "verification_nodes": 5569,
+          "depth": 5
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 17071,
+        "proof_nodes": 0,
+        "seconds": 0.050846416,
+        "pv": [
+          405,
+          176,
+          326,
+          237,
+          317
+        ],
+        "tt_hits": 1,
+        "table_entries": 606,
+        "table_bytes": 404722,
+        "work": 17071,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "futility",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 23992,
+          "futility_pruned": 671,
+          "static_evaluations": 4226,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 73153,
+        "proof_nodes": 0,
+        "seconds": 0.112759666,
+        "pv": [
+          405,
+          176,
+          326,
+          237,
+          317
+        ],
+        "tt_hits": 66,
+        "table_entries": 6016,
+        "table_bytes": 4932810,
+        "work": 73153,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "both",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 102,
+          "nmp_cutoffs": 102,
+          "nmp_skips": 3626,
+          "verification_searches": 102,
+          "verification_failures": 0,
+          "futility_eligible": 1424,
+          "futility_pruned": 44,
+          "static_evaluations": 464,
+          "null_nodes": 5651,
+          "verification_nodes": 5569,
+          "depth": 5
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 17389,
+        "proof_nodes": 0,
+        "seconds": 0.049382417,
+        "pv": [
+          405,
+          176,
+          326,
+          237,
+          317
+        ],
+        "tt_hits": 1,
+        "table_entries": 606,
+        "table_bytes": 404722,
+        "work": 17389,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "baseline",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 249351,
+        "proof_nodes": 0,
+        "seconds": 1.17361875,
+        "pv": [
+          405,
+          176,
+          326,
+          237,
+          536,
+          301
+        ],
+        "tt_hits": 515,
+        "table_entries": 10000,
+        "table_bytes": 11476548,
+        "work": 249351,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "nmp",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 211,
+          "nmp_cutoffs": 211,
+          "nmp_skips": 12606,
+          "verification_searches": 211,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 213,
+          "null_nodes": 75507,
+          "verification_nodes": 71770,
+          "depth": 6
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 158409,
+        "proof_nodes": 0,
+        "seconds": 0.185397834,
+        "pv": [
+          405,
+          176,
+          326,
+          237,
+          409,
+          241
+        ],
+        "tt_hits": 2,
+        "table_entries": 1069,
+        "table_bytes": 735840,
+        "work": 158409,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "futility",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 53425,
+          "futility_pruned": 2356,
+          "static_evaluations": 61379,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 308374,
+        "proof_nodes": 0,
+        "seconds": 1.3124239580000001,
+        "pv": [
+          405,
+          176,
+          326,
+          237,
+          536,
+          301
+        ],
+        "tt_hits": 515,
+        "table_entries": 10000,
+        "table_bytes": 11467652,
+        "work": 308374,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "opening",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "both",
+      "state_sha256": "ae4178c942bd75436709ae7687a94dcd1247259f76afb49efc41baf54ba162f7",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 211,
+          "nmp_cutoffs": 211,
+          "nmp_skips": 12606,
+          "verification_searches": 211,
+          "verification_failures": 0,
+          "futility_eligible": 2563,
+          "futility_pruned": 1175,
+          "static_evaluations": 788,
+          "null_nodes": 75507,
+          "verification_nodes": 71770,
+          "depth": 6
+        },
+        "action": 405,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 157809,
+        "proof_nodes": 0,
+        "seconds": 0.182579833,
+        "pv": [
+          405,
+          176,
+          326,
+          237,
+          409,
+          241
+        ],
+        "tt_hits": 2,
+        "table_entries": 1069,
+        "table_bytes": 735840,
+        "work": 157809,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "baseline",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2295,
+        "proof_nodes": 0,
+        "seconds": 0.003347625,
+        "pv": [
+          250,
+          316,
+          256
+        ],
+        "tt_hits": 0,
+        "table_entries": 186,
+        "table_bytes": 646948,
+        "work": 2295,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "nmp",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 186,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2295,
+        "proof_nodes": 0,
+        "seconds": 0.003563083,
+        "pv": [
+          250,
+          316,
+          256
+        ],
+        "tt_hits": 0,
+        "table_entries": 186,
+        "table_bytes": 646948,
+        "work": 2295,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "futility",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 516,
+          "futility_pruned": 516,
+          "static_evaluations": 82,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1861,
+        "proof_nodes": 0,
+        "seconds": 0.003737625,
+        "pv": [
+          250,
+          316,
+          256
+        ],
+        "tt_hits": 0,
+        "table_entries": 186,
+        "table_bytes": 646948,
+        "work": 1861,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "both",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 186,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 516,
+          "futility_pruned": 516,
+          "static_evaluations": 82,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1861,
+        "proof_nodes": 0,
+        "seconds": 0.003643042,
+        "pv": [
+          250,
+          316,
+          256
+        ],
+        "tt_hits": 0,
+        "table_entries": 186,
+        "table_bytes": 646948,
+        "work": 1861,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "baseline",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 103145,
+        "proof_nodes": 0,
+        "seconds": 0.14727125,
+        "pv": [
+          250,
+          316,
+          259,
+          241,
+          176
+        ],
+        "tt_hits": 42,
+        "table_entries": 8566,
+        "table_bytes": 17336154,
+        "work": 103145,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "nmp",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 42,
+          "nmp_cutoffs": 42,
+          "nmp_skips": 6640,
+          "verification_searches": 42,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 82,
+          "null_nodes": 2073,
+          "verification_nodes": 2117,
+          "depth": 5
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 101442,
+        "proof_nodes": 0,
+        "seconds": 0.10889125,
+        "pv": [
+          250,
+          316,
+          259,
+          241,
+          176
+        ],
+        "tt_hits": 41,
+        "table_entries": 6465,
+        "table_bytes": 6858070,
+        "work": 101442,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "futility",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 44252,
+          "futility_pruned": 39588,
+          "static_evaluations": 7210,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 70767,
+        "proof_nodes": 0,
+        "seconds": 0.164557084,
+        "pv": [
+          250,
+          316,
+          259,
+          241,
+          176
+        ],
+        "tt_hits": 42,
+        "table_entries": 8566,
+        "table_bytes": 17336154,
+        "work": 70767,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "both",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 42,
+          "nmp_cutoffs": 42,
+          "nmp_skips": 6640,
+          "verification_searches": 42,
+          "verification_failures": 0,
+          "futility_eligible": 42730,
+          "futility_pruned": 39818,
+          "static_evaluations": 5493,
+          "null_nodes": 2073,
+          "verification_nodes": 2117,
+          "depth": 5
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 67035,
+        "proof_nodes": 0,
+        "seconds": 0.120286375,
+        "pv": [
+          250,
+          316,
+          259,
+          241,
+          176
+        ],
+        "tt_hits": 41,
+        "table_entries": 6465,
+        "table_bytes": 6858070,
+        "work": 67035,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "baseline",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 392644,
+        "proof_nodes": 0,
+        "seconds": 1.565604958,
+        "pv": [
+          250,
+          316,
+          259,
+          241,
+          176,
+          320
+        ],
+        "tt_hits": 101,
+        "table_entries": 10000,
+        "table_bytes": 8317170,
+        "work": 392644,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "nmp",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 1698,
+          "nmp_cutoffs": 1698,
+          "nmp_skips": 27316,
+          "verification_searches": 1698,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 1783,
+          "null_nodes": 80585,
+          "verification_nodes": 84923,
+          "depth": 6
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 301866,
+        "proof_nodes": 0,
+        "seconds": 0.455471583,
+        "pv": [
+          250,
+          316,
+          259,
+          241,
+          176,
+          320
+        ],
+        "tt_hits": 84,
+        "table_entries": 10000,
+        "table_bytes": 13599424,
+        "work": 301866,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "futility",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 128845,
+          "futility_pruned": 41843,
+          "static_evaluations": 80287,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 6,
+        "complete": false,
+        "stop_reason": "time",
+        "nodes": 402245,
+        "proof_nodes": 0,
+        "seconds": 2.000042,
+        "pv": [
+          250,
+          316,
+          259,
+          241,
+          176
+        ],
+        "tt_hits": 101,
+        "table_entries": 10000,
+        "table_bytes": 8332354,
+        "work": 402245,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "both",
+      "state_sha256": "0571686a2ff3ed14e276c22e8942ab239e9e4c423995a89e510d751a7d0205c5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 1698,
+          "nmp_cutoffs": 1698,
+          "nmp_skips": 27225,
+          "verification_searches": 1698,
+          "verification_failures": 0,
+          "futility_eligible": 50828,
+          "futility_pruned": 40725,
+          "static_evaluations": 14431,
+          "null_nodes": 80585,
+          "verification_nodes": 84923,
+          "depth": 6
+        },
+        "action": 250,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 273698,
+        "proof_nodes": 0,
+        "seconds": 0.683846333,
+        "pv": [
+          250,
+          316,
+          259,
+          241,
+          176,
+          320
+        ],
+        "tt_hits": 84,
+        "table_entries": 10000,
+        "table_bytes": 14013444,
+        "work": 273698,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "baseline",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2344,
+        "proof_nodes": 0,
+        "seconds": 0.007837625,
+        "pv": [
+          332,
+          394,
+          261
+        ],
+        "tt_hits": 1,
+        "table_entries": 187,
+        "table_bytes": 651386,
+        "work": 2344,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "nmp",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 188,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2344,
+        "proof_nodes": 0,
+        "seconds": 0.006190708,
+        "pv": [
+          332,
+          394,
+          261
+        ],
+        "tt_hits": 1,
+        "table_entries": 187,
+        "table_bytes": 651386,
+        "work": 2344,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "futility",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 516,
+          "futility_pruned": 516,
+          "static_evaluations": 82,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1910,
+        "proof_nodes": 0,
+        "seconds": 0.003993167,
+        "pv": [
+          332,
+          394,
+          261
+        ],
+        "tt_hits": 1,
+        "table_entries": 187,
+        "table_bytes": 651386,
+        "work": 1910,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "both",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 188,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 516,
+          "futility_pruned": 516,
+          "static_evaluations": 82,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1910,
+        "proof_nodes": 0,
+        "seconds": 0.003606709,
+        "pv": [
+          332,
+          394,
+          261
+        ],
+        "tt_hits": 1,
+        "table_entries": 187,
+        "table_bytes": 651386,
+        "work": 1910,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "baseline",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 102721,
+        "proof_nodes": 0,
+        "seconds": 0.186863083,
+        "pv": [
+          332,
+          394,
+          259,
+          405,
+          197
+        ],
+        "tt_hits": 43,
+        "table_entries": 8556,
+        "table_bytes": 17343598,
+        "work": 102721,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "nmp",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 42,
+          "nmp_cutoffs": 42,
+          "nmp_skips": 6631,
+          "verification_searches": 42,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 82,
+          "null_nodes": 2073,
+          "verification_nodes": 2117,
+          "depth": 5
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 101019,
+        "proof_nodes": 0,
+        "seconds": 0.152669042,
+        "pv": [
+          332,
+          394,
+          259,
+          405,
+          197
+        ],
+        "tt_hits": 42,
+        "table_entries": 6455,
+        "table_bytes": 6865514,
+        "work": 101019,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "futility",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 37139,
+          "futility_pruned": 33744,
+          "static_evaluations": 7148,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 76125,
+        "proof_nodes": 0,
+        "seconds": 0.218973166,
+        "pv": [
+          332,
+          394,
+          259,
+          405,
+          197
+        ],
+        "tt_hits": 43,
+        "table_entries": 8556,
+        "table_bytes": 17343598,
+        "work": 76125,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "both",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 42,
+          "nmp_cutoffs": 42,
+          "nmp_skips": 6631,
+          "verification_searches": 42,
+          "verification_failures": 0,
+          "futility_eligible": 36619,
+          "futility_pruned": 34959,
+          "static_evaluations": 5430,
+          "null_nodes": 2073,
+          "verification_nodes": 2117,
+          "depth": 5
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 71408,
+        "proof_nodes": 0,
+        "seconds": 0.193902167,
+        "pv": [
+          332,
+          394,
+          259,
+          405,
+          197
+        ],
+        "tt_hits": 42,
+        "table_entries": 6455,
+        "table_bytes": 6865514,
+        "work": 71408,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "baseline",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 6,
+        "complete": false,
+        "stop_reason": "time",
+        "nodes": 338675,
+        "proof_nodes": 0,
+        "seconds": 2.000029584,
+        "pv": [
+          332,
+          394,
+          259,
+          405,
+          197
+        ],
+        "tt_hits": 101,
+        "table_entries": 10000,
+        "table_bytes": 8416046,
+        "work": 338675,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "nmp",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 1698,
+          "nmp_cutoffs": 1698,
+          "nmp_skips": 27234,
+          "verification_searches": 1698,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 1783,
+          "null_nodes": 80549,
+          "verification_nodes": 84327,
+          "depth": 6
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 300575,
+        "proof_nodes": 0,
+        "seconds": 0.952250375,
+        "pv": [
+          332,
+          394,
+          259,
+          405,
+          197,
+          39
+        ],
+        "tt_hits": 85,
+        "table_entries": 10000,
+        "table_bytes": 13709226,
+        "work": 300575,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "futility",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 106059,
+          "futility_pruned": 35972,
+          "static_evaluations": 54441,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 5,
+        "target_depth": 6,
+        "complete": false,
+        "stop_reason": "time",
+        "nodes": 330390,
+        "proof_nodes": 0,
+        "seconds": 2.000032375,
+        "pv": [
+          332,
+          394,
+          259,
+          405,
+          197
+        ],
+        "tt_hits": 101,
+        "table_entries": 10000,
+        "table_bytes": 8510378,
+        "work": 330390,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "both",
+      "state_sha256": "efe67ba57f16d5988c4f1ee13e0eb01cbe14112f7a1d69eb00464ff585f5f8f5",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 1698,
+          "nmp_cutoffs": 1698,
+          "nmp_skips": 27143,
+          "verification_searches": 1698,
+          "verification_failures": 0,
+          "futility_eligible": 42816,
+          "futility_pruned": 35865,
+          "static_evaluations": 12142,
+          "null_nodes": 80549,
+          "verification_nodes": 84327,
+          "depth": 6
+        },
+        "action": 332,
+        "score": 0,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 274978,
+        "proof_nodes": 0,
+        "seconds": 0.772745875,
+        "pv": [
+          332,
+          394,
+          259,
+          405,
+          197,
+          39
+        ],
+        "tt_hits": 85,
+        "table_entries": 10000,
+        "table_bytes": 14122606,
+        "work": 274978,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "baseline",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 131,
+        "proof_nodes": 0,
+        "seconds": 0.000330584,
+        "pv": [
+          241,
+          400,
+          321
+        ],
+        "tt_hits": 0,
+        "table_entries": 36,
+        "table_bytes": 19606,
+        "work": 131,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "nmp",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 36,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 131,
+        "proof_nodes": 0,
+        "seconds": 0.000129625,
+        "pv": [
+          241,
+          400,
+          321
+        ],
+        "tt_hits": 0,
+        "table_entries": 36,
+        "table_bytes": 19606,
+        "work": 131,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "futility",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 131,
+        "proof_nodes": 0,
+        "seconds": 0.00012875,
+        "pv": [
+          241,
+          400,
+          321
+        ],
+        "tt_hits": 0,
+        "table_entries": 36,
+        "table_bytes": 19606,
+        "work": 131,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 3,
+      "mode": "both",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 36,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 131,
+        "proof_nodes": 0,
+        "seconds": 0.000331833,
+        "pv": [
+          241,
+          400,
+          321
+        ],
+        "tt_hits": 0,
+        "table_entries": 36,
+        "table_bytes": 19606,
+        "work": 131,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "baseline",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1059,
+        "proof_nodes": 0,
+        "seconds": 0.001088125,
+        "pv": [
+          241,
+          400,
+          321,
+          472,
+          401
+        ],
+        "tt_hits": 0,
+        "table_entries": 316,
+        "table_bytes": 247476,
+        "work": 1059,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "nmp",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 316,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1059,
+        "proof_nodes": 0,
+        "seconds": 0.001058042,
+        "pv": [
+          241,
+          400,
+          321,
+          472,
+          401
+        ],
+        "tt_hits": 0,
+        "table_entries": 316,
+        "table_bytes": 247476,
+        "work": 1059,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "futility",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1059,
+        "proof_nodes": 0,
+        "seconds": 0.003089542,
+        "pv": [
+          241,
+          400,
+          321,
+          472,
+          401
+        ],
+        "tt_hits": 0,
+        "table_entries": 316,
+        "table_bytes": 247476,
+        "work": 1059,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 5,
+      "mode": "both",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 316,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1059,
+        "proof_nodes": 0,
+        "seconds": 0.002812916,
+        "pv": [
+          241,
+          400,
+          321,
+          472,
+          401
+        ],
+        "tt_hits": 0,
+        "table_entries": 316,
+        "table_bytes": 247476,
+        "work": 1059,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "baseline",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2464,
+        "proof_nodes": 0,
+        "seconds": 0.004437834,
+        "pv": [
+          241,
+          400,
+          321,
+          472,
+          401,
+          549
+        ],
+        "tt_hits": 0,
+        "table_entries": 1037,
+        "table_bytes": 1036284,
+        "work": 2464,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "nmp",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 1037,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2464,
+        "proof_nodes": 0,
+        "seconds": 0.007220334,
+        "pv": [
+          241,
+          400,
+          321,
+          472,
+          401,
+          549
+        ],
+        "tt_hits": 0,
+        "table_entries": 1037,
+        "table_bytes": 1036284,
+        "work": 2464,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "futility",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2464,
+        "proof_nodes": 0,
+        "seconds": 0.009288708,
+        "pv": [
+          241,
+          400,
+          321,
+          472,
+          401,
+          549
+        ],
+        "tt_hits": 0,
+        "table_entries": 1037,
+        "table_bytes": 1036284,
+        "work": 2464,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "both",
+      "state_sha256": "2555d84a6435c7ed1a2eb71de05b03fb89ea18e2cff565f6b5fa22b2c5e2b7f8",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 1037,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 241,
+        "score": 34.375,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2464,
+        "proof_nodes": 0,
+        "seconds": 0.007478542,
+        "pv": [
+          241,
+          400,
+          321,
+          472,
+          401,
+          549
+        ],
+        "tt_hits": 0,
+        "table_entries": 1037,
+        "table_bytes": 1036284,
+        "work": 2464,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "baseline",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 131,
+        "proof_nodes": 0,
+        "seconds": 0.000127625,
+        "pv": [
+          405,
+          243,
+          325
+        ],
+        "tt_hits": 0,
+        "table_entries": 36,
+        "table_bytes": 19606,
+        "work": 131,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "nmp",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 36,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 131,
+        "proof_nodes": 0,
+        "seconds": 0.000383666,
+        "pv": [
+          405,
+          243,
+          325
+        ],
+        "tt_hits": 0,
+        "table_entries": 36,
+        "table_bytes": 19606,
+        "work": 131,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "futility",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 131,
+        "proof_nodes": 0,
+        "seconds": 0.000128416,
+        "pv": [
+          405,
+          243,
+          325
+        ],
+        "tt_hits": 0,
+        "table_entries": 36,
+        "table_bytes": 19606,
+        "work": 131,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 3,
+      "mode": "both",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 36,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 3
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 3,
+        "target_depth": 3,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 131,
+        "proof_nodes": 0,
+        "seconds": 0.000125375,
+        "pv": [
+          405,
+          243,
+          325
+        ],
+        "tt_hits": 0,
+        "table_entries": 36,
+        "table_bytes": 19606,
+        "work": 131,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 3,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "baseline",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1059,
+        "proof_nodes": 0,
+        "seconds": 0.001201667,
+        "pv": [
+          405,
+          243,
+          325,
+          177,
+          245
+        ],
+        "tt_hits": 0,
+        "table_entries": 316,
+        "table_bytes": 247476,
+        "work": 1059,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "nmp",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 316,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1059,
+        "proof_nodes": 0,
+        "seconds": 0.001073875,
+        "pv": [
+          405,
+          243,
+          325,
+          177,
+          245
+        ],
+        "tt_hits": 0,
+        "table_entries": 316,
+        "table_bytes": 247476,
+        "work": 1059,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "futility",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1059,
+        "proof_nodes": 0,
+        "seconds": 0.001710375,
+        "pv": [
+          405,
+          243,
+          325,
+          177,
+          245
+        ],
+        "tt_hits": 0,
+        "table_entries": 316,
+        "table_bytes": 247476,
+        "work": 1059,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 5,
+      "mode": "both",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 316,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 5
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 5,
+        "target_depth": 5,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 1059,
+        "proof_nodes": 0,
+        "seconds": 0.002791459,
+        "pv": [
+          405,
+          243,
+          325,
+          177,
+          245
+        ],
+        "tt_hits": 0,
+        "table_entries": 316,
+        "table_bytes": 247476,
+        "work": 1059,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 5,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "baseline",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": false,
+          "effective": false,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2464,
+        "proof_nodes": 0,
+        "seconds": 0.005828709,
+        "pv": [
+          405,
+          243,
+          325,
+          177,
+          245,
+          256
+        ],
+        "tt_hits": 0,
+        "table_entries": 1037,
+        "table_bytes": 1036284,
+        "work": 2464,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "nmp",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 1037,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2464,
+        "proof_nodes": 0,
+        "seconds": 0.008225,
+        "pv": [
+          405,
+          243,
+          325,
+          177,
+          245,
+          256
+        ],
+        "tt_hits": 0,
+        "table_entries": 1037,
+        "table_bytes": 1036284,
+        "work": 2464,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": false,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "futility",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 0,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2464,
+        "proof_nodes": 0,
+        "seconds": 0.005125375,
+        "pv": [
+          405,
+          243,
+          325,
+          177,
+          245,
+          256
+        ],
+        "tt_hits": 0,
+        "table_entries": 1037,
+        "table_bytes": 1036284,
+        "work": 2464,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": false,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    },
+    {
+      "stage": "endgame",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "both",
+      "state_sha256": "e8424e4849e914b73c3dbd48a962a9dd8b148bfce281ac3394b5baa5b8607667",
+      "result": {
+        "selective": {
+          "version": "intransitive-selective-v1",
+          "enabled": true,
+          "effective": true,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1,
+          "nmp_attempts": 0,
+          "nmp_cutoffs": 0,
+          "nmp_skips": 1037,
+          "verification_searches": 0,
+          "verification_failures": 0,
+          "futility_eligible": 0,
+          "futility_pruned": 0,
+          "static_evaluations": 0,
+          "null_nodes": 0,
+          "verification_nodes": 0,
+          "depth": 6
+        },
+        "action": 405,
+        "score": 34.375,
+        "completed_depth": 6,
+        "target_depth": 6,
+        "complete": true,
+        "stop_reason": "maximum_depth",
+        "nodes": 2464,
+        "proof_nodes": 0,
+        "seconds": 0.003613208,
+        "pv": [
+          405,
+          243,
+          325,
+          177,
+          245,
+          256
+        ],
+        "tt_hits": 0,
+        "table_entries": 1037,
+        "table_bytes": 1036284,
+        "work": 2464,
+        "search_identity": {
+          "version": "intransitive-selective-v1",
+          "backend": "rust",
+          "depth": 6,
+          "seconds": 2.0,
+          "node_limit": 1000000000,
+          "radius": 3,
+          "weight": 0.0,
+          "proof_depth": 2,
+          "proof_nodes": 0,
+          "table_entries": 10000,
+          "nmp_enabled": true,
+          "nmp_min_depth": 3,
+          "nmp_reduction": 1,
+          "futility_enabled": true,
+          "futility_max_depth": 2,
+          "futility_margin": 1.0
+        },
+        "score_bound": "selective_exact"
+      }
+    }
+  ],
+  "paired": [
+    {
+      "mode": "nmp",
+      "stage": "opening",
+      "candidate_side": 0,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 3,
+          "nodes": 4295
+        },
+        {
+          "action": 176,
+          "side": 0,
+          "depth": 4,
+          "nodes": 9575
+        },
+        {
+          "action": 326,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5741
+        },
+        {
+          "action": 237,
+          "side": 0,
+          "depth": 3,
+          "nodes": 4515
+        },
+        {
+          "action": 314,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5199
+        },
+        {
+          "action": 249,
+          "side": 0,
+          "depth": 4,
+          "nodes": 12042
+        },
+        {
+          "action": 409,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5505
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 4,
+          "nodes": 10937
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6794
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 10174
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6582
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6485
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6427
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6105
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 2880
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 10450
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6466
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6662
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6148
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 10536
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5856
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 10350
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5848
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 10430
+        }
+      ]
+    },
+    {
+      "mode": "nmp",
+      "stage": "opening",
+      "candidate_side": 1,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 4,
+          "nodes": 12046
+        },
+        {
+          "action": 176,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5627
+        },
+        {
+          "action": 326,
+          "side": 1,
+          "depth": 4,
+          "nodes": 10305
+        },
+        {
+          "action": 237,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5543
+        },
+        {
+          "action": 314,
+          "side": 1,
+          "depth": 4,
+          "nodes": 15552
+        },
+        {
+          "action": 249,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5180
+        },
+        {
+          "action": 409,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5603
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6655
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6454
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5590
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5897
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6268
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6271
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6569
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 4278
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6225
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 2,
+          "nodes": 2589
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5868
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5960
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6859
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6762
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5696
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6592
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6621
+        }
+      ]
+    },
+    {
+      "mode": "nmp",
+      "stage": "midgame",
+      "candidate_side": 0,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 332,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5387
+        },
+        {
+          "action": 394,
+          "side": 0,
+          "depth": 3,
+          "nodes": 9411
+        },
+        {
+          "action": 260,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5109
+        },
+        {
+          "action": 404,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5952
+        },
+        {
+          "action": 188,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6062
+        },
+        {
+          "action": 39,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6701
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5100
+        },
+        {
+          "action": 97,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5366
+        },
+        {
+          "action": 33,
+          "side": 1,
+          "depth": 3,
+          "nodes": 9127
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6266
+        },
+        {
+          "action": 422,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5762
+        },
+        {
+          "action": 257,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5913
+        },
+        {
+          "action": 269,
+          "side": 1,
+          "depth": 3,
+          "nodes": 7944
+        },
+        {
+          "action": 331,
+          "side": 0,
+          "depth": 3,
+          "nodes": 8524
+        },
+        {
+          "action": 350,
+          "side": 1,
+          "depth": 3,
+          "nodes": 9811
+        },
+        {
+          "action": 170,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6793
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 8066
+        },
+        {
+          "action": 179,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6631
+        },
+        {
+          "action": 39,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6031
+        },
+        {
+          "action": 161,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6012
+        },
+        {
+          "action": 103,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6234
+        },
+        {
+          "action": 242,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6196
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 3076
+        },
+        {
+          "action": 251,
+          "side": 0,
+          "depth": 2,
+          "nodes": 207
+        }
+      ]
+    },
+    {
+      "mode": "nmp",
+      "stage": "midgame",
+      "candidate_side": 1,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 332,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6215
+        },
+        {
+          "action": 394,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6333
+        },
+        {
+          "action": 260,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5933
+        },
+        {
+          "action": 404,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5876
+        },
+        {
+          "action": 188,
+          "side": 1,
+          "depth": 3,
+          "nodes": 9182
+        },
+        {
+          "action": 39,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5811
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 9021
+        },
+        {
+          "action": 97,
+          "side": 0,
+          "depth": 3,
+          "nodes": 4461
+        },
+        {
+          "action": 33,
+          "side": 1,
+          "depth": 3,
+          "nodes": 8175
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6162
+        },
+        {
+          "action": 422,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6432
+        },
+        {
+          "action": 257,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5760
+        },
+        {
+          "action": 269,
+          "side": 1,
+          "depth": 3,
+          "nodes": 7530
+        },
+        {
+          "action": 331,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6431
+        },
+        {
+          "action": 350,
+          "side": 1,
+          "depth": 3,
+          "nodes": 10028
+        },
+        {
+          "action": 170,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5702
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 9739
+        },
+        {
+          "action": 179,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5994
+        },
+        {
+          "action": 39,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5665
+        },
+        {
+          "action": 161,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6919
+        },
+        {
+          "action": 103,
+          "side": 1,
+          "depth": 3,
+          "nodes": 7694
+        },
+        {
+          "action": 242,
+          "side": 0,
+          "depth": 3,
+          "nodes": 7139
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 3076
+        },
+        {
+          "action": 251,
+          "side": 0,
+          "depth": 2,
+          "nodes": 207
+        }
+      ]
+    },
+    {
+      "mode": "nmp",
+      "stage": "endgame",
+      "candidate_side": 0,
+      "outcome": "loss",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 7,
+          "nodes": 11057
+        },
+        {
+          "action": 243,
+          "side": 0,
+          "depth": 8,
+          "nodes": 11225
+        },
+        {
+          "action": 325,
+          "side": 1,
+          "depth": 7,
+          "nodes": 8432
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 6,
+          "nodes": 2001
+        },
+        {
+          "action": 245,
+          "side": 1,
+          "depth": 5,
+          "nodes": 1147
+        },
+        {
+          "action": 256,
+          "side": 0,
+          "depth": 4,
+          "nodes": 350
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 128
+        },
+        {
+          "action": 328,
+          "side": 0,
+          "depth": 2,
+          "nodes": 33
+        },
+        {
+          "action": 85,
+          "side": 1,
+          "depth": 1,
+          "nodes": 9
+        }
+      ]
+    },
+    {
+      "mode": "nmp",
+      "stage": "endgame",
+      "candidate_side": 1,
+      "outcome": "win",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 7,
+          "nodes": 9451
+        },
+        {
+          "action": 243,
+          "side": 0,
+          "depth": 7,
+          "nodes": 10726
+        },
+        {
+          "action": 325,
+          "side": 1,
+          "depth": 7,
+          "nodes": 8432
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 6,
+          "nodes": 2001
+        },
+        {
+          "action": 245,
+          "side": 1,
+          "depth": 5,
+          "nodes": 1147
+        },
+        {
+          "action": 256,
+          "side": 0,
+          "depth": 4,
+          "nodes": 350
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 128
+        },
+        {
+          "action": 328,
+          "side": 0,
+          "depth": 2,
+          "nodes": 33
+        },
+        {
+          "action": 85,
+          "side": 1,
+          "depth": 1,
+          "nodes": 9
+        }
+      ]
+    },
+    {
+      "mode": "futility",
+      "stage": "opening",
+      "candidate_side": 0,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 3,
+          "nodes": 4739
+        },
+        {
+          "action": 176,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5191
+        },
+        {
+          "action": 326,
+          "side": 1,
+          "depth": 3,
+          "nodes": 4501
+        },
+        {
+          "action": 237,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5727
+        },
+        {
+          "action": 314,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6085
+        },
+        {
+          "action": 249,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6265
+        },
+        {
+          "action": 409,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5709
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5910
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6778
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 7169
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6170
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6570
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6711
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5435
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 3600
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5755
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6720
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6026
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5504
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5946
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6350
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6844
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6848
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6324
+        }
+      ]
+    },
+    {
+      "mode": "futility",
+      "stage": "opening",
+      "candidate_side": 1,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 3,
+          "nodes": 4748
+        },
+        {
+          "action": 176,
+          "side": 0,
+          "depth": 3,
+          "nodes": 4882
+        },
+        {
+          "action": 326,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5557
+        },
+        {
+          "action": 237,
+          "side": 0,
+          "depth": 3,
+          "nodes": 4897
+        },
+        {
+          "action": 314,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6634
+        },
+        {
+          "action": 249,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6314
+        },
+        {
+          "action": 409,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5682
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6345
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 4328
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5572
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5438
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6029
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6028
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5768
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 3428
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6505
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6412
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6280
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6472
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6638
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6480
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6848
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5675
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 3770
+        }
+      ]
+    },
+    {
+      "mode": "futility",
+      "stage": "midgame",
+      "candidate_side": 0,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 332,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5663
+        },
+        {
+          "action": 394,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6033
+        },
+        {
+          "action": 260,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5063
+        },
+        {
+          "action": 404,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5963
+        },
+        {
+          "action": 188,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5420
+        },
+        {
+          "action": 39,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5332
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5688
+        },
+        {
+          "action": 97,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5412
+        },
+        {
+          "action": 33,
+          "side": 1,
+          "depth": 3,
+          "nodes": 8755
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5857
+        },
+        {
+          "action": 422,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6278
+        },
+        {
+          "action": 257,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6393
+        },
+        {
+          "action": 269,
+          "side": 1,
+          "depth": 3,
+          "nodes": 8381
+        },
+        {
+          "action": 331,
+          "side": 0,
+          "depth": 3,
+          "nodes": 8057
+        },
+        {
+          "action": 350,
+          "side": 1,
+          "depth": 3,
+          "nodes": 10444
+        },
+        {
+          "action": 170,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5112
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 9194
+        },
+        {
+          "action": 179,
+          "side": 0,
+          "depth": 3,
+          "nodes": 7167
+        },
+        {
+          "action": 39,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6487
+        },
+        {
+          "action": 161,
+          "side": 0,
+          "depth": 3,
+          "nodes": 7239
+        },
+        {
+          "action": 103,
+          "side": 1,
+          "depth": 3,
+          "nodes": 7860
+        },
+        {
+          "action": 242,
+          "side": 0,
+          "depth": 3,
+          "nodes": 4648
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 3076
+        },
+        {
+          "action": 251,
+          "side": 0,
+          "depth": 2,
+          "nodes": 207
+        }
+      ]
+    },
+    {
+      "mode": "futility",
+      "stage": "midgame",
+      "candidate_side": 1,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 332,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5120
+        },
+        {
+          "action": 394,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5351
+        },
+        {
+          "action": 260,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5392
+        },
+        {
+          "action": 404,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5235
+        },
+        {
+          "action": 188,
+          "side": 1,
+          "depth": 3,
+          "nodes": 4751
+        },
+        {
+          "action": 39,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5503
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 3956
+        },
+        {
+          "action": 97,
+          "side": 0,
+          "depth": 3,
+          "nodes": 4625
+        },
+        {
+          "action": 33,
+          "side": 1,
+          "depth": 3,
+          "nodes": 2868
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5233
+        },
+        {
+          "action": 422,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6107
+        },
+        {
+          "action": 257,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6493
+        },
+        {
+          "action": 269,
+          "side": 1,
+          "depth": 3,
+          "nodes": 7639
+        },
+        {
+          "action": 331,
+          "side": 0,
+          "depth": 3,
+          "nodes": 8530
+        },
+        {
+          "action": 350,
+          "side": 1,
+          "depth": 3,
+          "nodes": 7456
+        },
+        {
+          "action": 170,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6076
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 9308
+        },
+        {
+          "action": 179,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6744
+        },
+        {
+          "action": 39,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6063
+        },
+        {
+          "action": 161,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6689
+        },
+        {
+          "action": 103,
+          "side": 1,
+          "depth": 3,
+          "nodes": 8012
+        },
+        {
+          "action": 242,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6945
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 3076
+        },
+        {
+          "action": 251,
+          "side": 0,
+          "depth": 2,
+          "nodes": 207
+        }
+      ]
+    },
+    {
+      "mode": "futility",
+      "stage": "endgame",
+      "candidate_side": 0,
+      "outcome": "loss",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 7,
+          "nodes": 10594
+        },
+        {
+          "action": 243,
+          "side": 0,
+          "depth": 7,
+          "nodes": 10717
+        },
+        {
+          "action": 325,
+          "side": 1,
+          "depth": 7,
+          "nodes": 8432
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 6,
+          "nodes": 2001
+        },
+        {
+          "action": 245,
+          "side": 1,
+          "depth": 5,
+          "nodes": 1147
+        },
+        {
+          "action": 256,
+          "side": 0,
+          "depth": 4,
+          "nodes": 350
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 128
+        },
+        {
+          "action": 328,
+          "side": 0,
+          "depth": 2,
+          "nodes": 33
+        },
+        {
+          "action": 85,
+          "side": 1,
+          "depth": 1,
+          "nodes": 9
+        }
+      ]
+    },
+    {
+      "mode": "futility",
+      "stage": "endgame",
+      "candidate_side": 1,
+      "outcome": "win",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 7,
+          "nodes": 10648
+        },
+        {
+          "action": 243,
+          "side": 0,
+          "depth": 7,
+          "nodes": 10717
+        },
+        {
+          "action": 325,
+          "side": 1,
+          "depth": 7,
+          "nodes": 8432
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 6,
+          "nodes": 2001
+        },
+        {
+          "action": 245,
+          "side": 1,
+          "depth": 5,
+          "nodes": 1147
+        },
+        {
+          "action": 256,
+          "side": 0,
+          "depth": 4,
+          "nodes": 350
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 128
+        },
+        {
+          "action": 328,
+          "side": 0,
+          "depth": 2,
+          "nodes": 33
+        },
+        {
+          "action": 85,
+          "side": 1,
+          "depth": 1,
+          "nodes": 9
+        }
+      ]
+    },
+    {
+      "mode": "both",
+      "stage": "opening",
+      "candidate_side": 0,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 3,
+          "nodes": 4757
+        },
+        {
+          "action": 176,
+          "side": 0,
+          "depth": 4,
+          "nodes": 13170
+        },
+        {
+          "action": 326,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5277
+        },
+        {
+          "action": 237,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5331
+        },
+        {
+          "action": 314,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6129
+        },
+        {
+          "action": 249,
+          "side": 0,
+          "depth": 4,
+          "nodes": 12562
+        },
+        {
+          "action": 409,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5983
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 10681
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6520
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6700
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5788
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5998
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6011
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6144
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 3738
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 10482
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6454
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6365
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5954
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 10485
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 7160
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 4,
+          "nodes": 13120
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6684
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 4,
+          "nodes": 12382
+        }
+      ]
+    },
+    {
+      "mode": "both",
+      "stage": "opening",
+      "candidate_side": 1,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 4,
+          "nodes": 12002
+        },
+        {
+          "action": 176,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5484
+        },
+        {
+          "action": 326,
+          "side": 1,
+          "depth": 4,
+          "nodes": 11424
+        },
+        {
+          "action": 237,
+          "side": 0,
+          "depth": 3,
+          "nodes": 4998
+        },
+        {
+          "action": 314,
+          "side": 1,
+          "depth": 4,
+          "nodes": 11287
+        },
+        {
+          "action": 249,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5881
+        },
+        {
+          "action": 409,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6061
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6111
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6606
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6360
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5521
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 7013
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5940
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5999
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 4160
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6307
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 4776
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6396
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6314
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6421
+        },
+        {
+          "action": 475,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5938
+        },
+        {
+          "action": 395,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5594
+        },
+        {
+          "action": 415,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5537
+        },
+        {
+          "action": 335,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5765
+        }
+      ]
+    },
+    {
+      "mode": "both",
+      "stage": "midgame",
+      "candidate_side": 0,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 332,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5473
+        },
+        {
+          "action": 394,
+          "side": 0,
+          "depth": 3,
+          "nodes": 4900
+        },
+        {
+          "action": 260,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5537
+        },
+        {
+          "action": 404,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5848
+        },
+        {
+          "action": 188,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5350
+        },
+        {
+          "action": 39,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5891
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5281
+        },
+        {
+          "action": 97,
+          "side": 0,
+          "depth": 3,
+          "nodes": 4670
+        },
+        {
+          "action": 33,
+          "side": 1,
+          "depth": 3,
+          "nodes": 8296
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5103
+        },
+        {
+          "action": 422,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5460
+        },
+        {
+          "action": 257,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5541
+        },
+        {
+          "action": 269,
+          "side": 1,
+          "depth": 3,
+          "nodes": 7622
+        },
+        {
+          "action": 331,
+          "side": 0,
+          "depth": 3,
+          "nodes": 8376
+        },
+        {
+          "action": 350,
+          "side": 1,
+          "depth": 3,
+          "nodes": 10377
+        },
+        {
+          "action": 170,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5817
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 9479
+        },
+        {
+          "action": 179,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6127
+        },
+        {
+          "action": 39,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6001
+        },
+        {
+          "action": 161,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6549
+        },
+        {
+          "action": 103,
+          "side": 1,
+          "depth": 3,
+          "nodes": 7676
+        },
+        {
+          "action": 242,
+          "side": 0,
+          "depth": 3,
+          "nodes": 7771
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 3076
+        },
+        {
+          "action": 251,
+          "side": 0,
+          "depth": 2,
+          "nodes": 207
+        }
+      ]
+    },
+    {
+      "mode": "both",
+      "stage": "midgame",
+      "candidate_side": 1,
+      "outcome": "unfinished",
+      "moves": [
+        {
+          "action": 332,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5060
+        },
+        {
+          "action": 394,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5094
+        },
+        {
+          "action": 260,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5674
+        },
+        {
+          "action": 404,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5624
+        },
+        {
+          "action": 188,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5648
+        },
+        {
+          "action": 39,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6197
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6719
+        },
+        {
+          "action": 97,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6160
+        },
+        {
+          "action": 33,
+          "side": 1,
+          "depth": 3,
+          "nodes": 7559
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5899
+        },
+        {
+          "action": 422,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5797
+        },
+        {
+          "action": 257,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5565
+        },
+        {
+          "action": 269,
+          "side": 1,
+          "depth": 3,
+          "nodes": 7501
+        },
+        {
+          "action": 331,
+          "side": 0,
+          "depth": 3,
+          "nodes": 8618
+        },
+        {
+          "action": 350,
+          "side": 1,
+          "depth": 3,
+          "nodes": 10610
+        },
+        {
+          "action": 170,
+          "side": 0,
+          "depth": 3,
+          "nodes": 5912
+        },
+        {
+          "action": 117,
+          "side": 1,
+          "depth": 3,
+          "nodes": 9063
+        },
+        {
+          "action": 179,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6170
+        },
+        {
+          "action": 39,
+          "side": 1,
+          "depth": 3,
+          "nodes": 5969
+        },
+        {
+          "action": 161,
+          "side": 0,
+          "depth": 3,
+          "nodes": 6863
+        },
+        {
+          "action": 103,
+          "side": 1,
+          "depth": 3,
+          "nodes": 6442
+        },
+        {
+          "action": 242,
+          "side": 0,
+          "depth": 3,
+          "nodes": 8183
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 3076
+        },
+        {
+          "action": 251,
+          "side": 0,
+          "depth": 2,
+          "nodes": 207
+        }
+      ]
+    },
+    {
+      "mode": "both",
+      "stage": "endgame",
+      "candidate_side": 0,
+      "outcome": "loss",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 7,
+          "nodes": 10165
+        },
+        {
+          "action": 243,
+          "side": 0,
+          "depth": 7,
+          "nodes": 9817
+        },
+        {
+          "action": 325,
+          "side": 1,
+          "depth": 7,
+          "nodes": 8432
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 6,
+          "nodes": 2001
+        },
+        {
+          "action": 245,
+          "side": 1,
+          "depth": 5,
+          "nodes": 1147
+        },
+        {
+          "action": 256,
+          "side": 0,
+          "depth": 4,
+          "nodes": 350
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 128
+        },
+        {
+          "action": 328,
+          "side": 0,
+          "depth": 2,
+          "nodes": 33
+        },
+        {
+          "action": 85,
+          "side": 1,
+          "depth": 1,
+          "nodes": 9
+        }
+      ]
+    },
+    {
+      "mode": "both",
+      "stage": "endgame",
+      "candidate_side": 1,
+      "outcome": "win",
+      "moves": [
+        {
+          "action": 405,
+          "side": 1,
+          "depth": 7,
+          "nodes": 12149
+        },
+        {
+          "action": 243,
+          "side": 0,
+          "depth": 8,
+          "nodes": 11225
+        },
+        {
+          "action": 325,
+          "side": 1,
+          "depth": 7,
+          "nodes": 8432
+        },
+        {
+          "action": 177,
+          "side": 0,
+          "depth": 6,
+          "nodes": 2001
+        },
+        {
+          "action": 245,
+          "side": 1,
+          "depth": 5,
+          "nodes": 1147
+        },
+        {
+          "action": 256,
+          "side": 0,
+          "depth": 4,
+          "nodes": 350
+        },
+        {
+          "action": 165,
+          "side": 1,
+          "depth": 3,
+          "nodes": 128
+        },
+        {
+          "action": 328,
+          "side": 0,
+          "depth": 2,
+          "nodes": 33
+        },
+        {
+          "action": 85,
+          "side": 1,
+          "depth": 1,
+          "nodes": 9
+        }
+      ]
+    }
+  ],
+  "python_warmup_seconds": 15.764718249993166,
+  "native_startup_seconds": 0.01062058302341029,
+  "paired_summary": {
+    "nmp": {
+      "win": 1,
+      "loss": 1,
+      "unfinished": 4,
+      "decisive_wilson_95": [
+        0.09452865480086614,
+        0.9054713451991339
+      ]
+    },
+    "futility": {
+      "win": 1,
+      "loss": 1,
+      "unfinished": 4,
+      "decisive_wilson_95": [
+        0.09452865480086614,
+        0.9054713451991339
+      ]
+    },
+    "both": {
+      "win": 1,
+      "loss": 1,
+      "unfinished": 4,
+      "decisive_wilson_95": [
+        0.09452865480086614,
+        0.9054713451991339
+      ]
+    }
+  },
+  "divergences": [
+    {
+      "stage": "midgame",
+      "symmetry": 0,
+      "depth": 6,
+      "mode": "futility",
+      "classification": "different_completed_depth_under_cap",
+      "baseline_score": 0,
+      "selective_score": 0,
+      "baseline_action": 250,
+      "selective_action": 250
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "nmp",
+      "classification": "different_completed_depth_under_cap",
+      "baseline_score": 0,
+      "selective_score": 0,
+      "baseline_action": 332,
+      "selective_action": 332
+    },
+    {
+      "stage": "midgame",
+      "symmetry": 6,
+      "depth": 6,
+      "mode": "both",
+      "classification": "different_completed_depth_under_cap",
+      "baseline_score": 0,
+      "selective_score": 0,
+      "baseline_action": 332,
+      "selective_action": 332
+    }
+  ],
+  "adoption": "Both flags remain off: bounded evidence cannot establish strength non-regression."
+}

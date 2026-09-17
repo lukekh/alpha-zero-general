@@ -36,11 +36,14 @@ _GAME_OFFSETS = None
 
 
 def completed_teacher(result, target_depth):
-    return result.completed_depth >= target_depth or result.stop_reason == 'proven_result'
+    return (not getattr(result, 'selective', {}).get('enabled', False)
+            and (result.completed_depth >= target_depth or result.stop_reason == 'proven_result'))
 
 
 def valid_teacher_record(record):
     # Historical records predate this field and were explicitly generated at 5.
+    if record.get('teacher_reason') == 'selective_result' or record.get('selective', {}).get('enabled', False):
+        return False
     target = record.get('teacher_target_depth', 5)
     return target >= 5 and (record['teacher_depth'] >= target or record['teacher_reason'] == 'proven_result')
 
@@ -554,7 +557,9 @@ def run(output, seed_checkpoint, deadline, target, workers=4, *, resume=False, s
         else:
             raise ValueError('Previous trainer still alive; stop it before resuming')
     teacher_config = dict(TEACHER if teacher_config is None else teacher_config)
-    SearchConfig(**teacher_config)
+    validated_teacher = SearchConfig(**teacher_config)
+    if validated_teacher.nmp_enabled or validated_teacher.futility_enabled:
+        raise ValueError("Exhaustive teacher labels require selective pruning disabled")
     if teacher_config['max_depth'] < 5:
         raise ValueError('Teacher depth must be at least five')
     settings = dict(SETTINGS, dataset_seed=2026091500, output=str(output), teacher=teacher_config,

@@ -66,3 +66,10 @@ choices from the Python teacher while preserving optimal completed-depth scores.
 
 Importing this module or building its binary does not select it for existing
 browser or dataset processes. Callers explicitly instantiate `RustTeacher`.
+
+## Experimental selective search
+
+Independent `nmp_enabled` and `futility_enabled` options are available but remain
+**off by default**. See [guards, verification, protocol and label semantics](../heuristics/SELECTIVE_SEARCH.md)
+and the [bounded validation report](../benchmarks/selective/README.md).
+A completed selective search is not an exhaustive label or mate certificate.

@@ -1,0 +1,596 @@
+[
+  {
+    "stage": "opening",
+    "depth": 1,
+    "reuse": false,
+    "before": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241
+      ],
+      "nodes": 37,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 1
+    },
+    "after": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241
+      ],
+      "nodes": 37,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 1
+    }
+  },
+  {
+    "stage": "opening",
+    "depth": 1,
+    "reuse": true,
+    "before": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241
+      ],
+      "nodes": 1,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 1,
+      "table_entries": 1
+    },
+    "after": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241
+      ],
+      "nodes": 1,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 1,
+      "table_entries": 1
+    }
+  },
+  {
+    "stage": "opening",
+    "depth": 2,
+    "reuse": false,
+    "before": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241,
+        341
+      ],
+      "nodes": 144,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 38
+    },
+    "after": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241,
+        341
+      ],
+      "nodes": 144,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 38
+    }
+  },
+  {
+    "stage": "opening",
+    "depth": 2,
+    "reuse": true,
+    "before": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241,
+        341
+      ],
+      "nodes": 2,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 2,
+      "table_entries": 38
+    },
+    "after": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241,
+        341
+      ],
+      "nodes": 2,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 2,
+      "table_entries": 38
+    }
+  },
+  {
+    "stage": "opening",
+    "depth": 3,
+    "reuse": false,
+    "before": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241,
+        341,
+        320
+      ],
+      "nodes": 1715,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 145
+    },
+    "after": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241,
+        341,
+        320
+      ],
+      "nodes": 1715,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 145
+    }
+  },
+  {
+    "stage": "opening",
+    "depth": 3,
+    "reuse": true,
+    "before": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241,
+        341,
+        320
+      ],
+      "nodes": 3,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 3,
+      "table_entries": 145
+    },
+    "after": {
+      "action": 241,
+      "score": 0,
+      "pv": [
+        241,
+        341,
+        320
+      ],
+      "nodes": 3,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 3,
+      "table_entries": 145
+    }
+  },
+  {
+    "stage": "midgame",
+    "depth": 1,
+    "reuse": false,
+    "before": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250
+      ],
+      "nodes": 46,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 1
+    },
+    "after": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250
+      ],
+      "nodes": 46,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 1
+    }
+  },
+  {
+    "stage": "midgame",
+    "depth": 1,
+    "reuse": true,
+    "before": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250
+      ],
+      "nodes": 1,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 1,
+      "table_entries": 1
+    },
+    "after": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250
+      ],
+      "nodes": 1,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 1,
+      "table_entries": 1
+    }
+  },
+  {
+    "stage": "midgame",
+    "depth": 2,
+    "reuse": false,
+    "before": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250,
+        316
+      ],
+      "nodes": 182,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 47
+    },
+    "after": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250,
+        316
+      ],
+      "nodes": 182,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 47
+    }
+  },
+  {
+    "stage": "midgame",
+    "depth": 2,
+    "reuse": true,
+    "before": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250,
+        316
+      ],
+      "nodes": 2,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 2,
+      "table_entries": 47
+    },
+    "after": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250,
+        316
+      ],
+      "nodes": 2,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 2,
+      "table_entries": 47
+    }
+  },
+  {
+    "stage": "midgame",
+    "depth": 3,
+    "reuse": false,
+    "before": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250,
+        316,
+        256
+      ],
+      "nodes": 2295,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 186
+    },
+    "after": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250,
+        316,
+        256
+      ],
+      "nodes": 2295,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 186
+    }
+  },
+  {
+    "stage": "midgame",
+    "depth": 3,
+    "reuse": true,
+    "before": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250,
+        316,
+        256
+      ],
+      "nodes": 3,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 3,
+      "table_entries": 186
+    },
+    "after": {
+      "action": 250,
+      "score": 0,
+      "pv": [
+        250,
+        316,
+        256
+      ],
+      "nodes": 3,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 3,
+      "table_entries": 186
+    }
+  },
+  {
+    "stage": "endgame",
+    "depth": 1,
+    "reuse": false,
+    "before": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241
+      ],
+      "nodes": 9,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 1
+    },
+    "after": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241
+      ],
+      "nodes": 9,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 1
+    }
+  },
+  {
+    "stage": "endgame",
+    "depth": 1,
+    "reuse": true,
+    "before": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241
+      ],
+      "nodes": 1,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 1,
+      "table_entries": 1
+    },
+    "after": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241
+      ],
+      "nodes": 1,
+      "proof_nodes": 0,
+      "completed_depth": 1,
+      "complete": true,
+      "tt_hits": 1,
+      "table_entries": 1
+    }
+  },
+  {
+    "stage": "endgame",
+    "depth": 2,
+    "reuse": false,
+    "before": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241,
+        400
+      ],
+      "nodes": 32,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 10
+    },
+    "after": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241,
+        400
+      ],
+      "nodes": 32,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 10
+    }
+  },
+  {
+    "stage": "endgame",
+    "depth": 2,
+    "reuse": true,
+    "before": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241,
+        400
+      ],
+      "nodes": 2,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 2,
+      "table_entries": 10
+    },
+    "after": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241,
+        400
+      ],
+      "nodes": 2,
+      "proof_nodes": 0,
+      "completed_depth": 2,
+      "complete": true,
+      "tt_hits": 2,
+      "table_entries": 10
+    }
+  },
+  {
+    "stage": "endgame",
+    "depth": 3,
+    "reuse": false,
+    "before": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241,
+        400,
+        321
+      ],
+      "nodes": 131,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 36
+    },
+    "after": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241,
+        400,
+        321
+      ],
+      "nodes": 131,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 0,
+      "table_entries": 36
+    }
+  },
+  {
+    "stage": "endgame",
+    "depth": 3,
+    "reuse": true,
+    "before": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241,
+        400,
+        321
+      ],
+      "nodes": 3,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 3,
+      "table_entries": 36
+    },
+    "after": {
+      "action": 241,
+      "score": 34.375,
+      "pv": [
+        241,
+        400,
+        321
+      ],
+      "nodes": 3,
+      "proof_nodes": 0,
+      "completed_depth": 3,
+      "complete": true,
+      "tt_hits": 3,
+      "table_entries": 36
+    }
+  }
+]
