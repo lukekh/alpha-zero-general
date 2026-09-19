@@ -3,6 +3,7 @@
 import unittest
 import json
 import socket
+from unittest.mock import patch
 from concurrent.futures import ThreadPoolExecutor
 from threading import Barrier, Thread
 from urllib.error import HTTPError
@@ -184,6 +185,49 @@ class AIPlaySessionTests(unittest.TestCase):
 
 
 class SelectableOpponentTests(unittest.TestCase):
+    @patch('intransitive.play.ModelOpponent.reload', autospec=True)
+    def test_model_simulations_round_trip_and_watch_bots(self, reload):
+        from intransitive.play import OpponentFactory
+        reload.side_effect=lambda bot: setattr(bot, 'label', f'Test model · {bot.simulations} simulations')
+        factory=OpponentFactory(checkpoint='unused.pt',simulations=128)
+        session=GameSession(opponent_factory=factory)
+        self.assertEqual(session.snapshot()['model_simulations'],128)
+        for count in (32,256,512):
+            state=session.update('restart',dict(revision=session.revision,opponent='model',model_simulations=count))
+            self.assertEqual(session.opponent.simulations,count)
+            self.assertEqual(state['model_simulations'],count)
+            self.assertIn(str(count),state['model'])
+        state=session.update('restart',dict(revision=session.revision,mode='watch',
+            blue_opponent='model',red_opponent='model',model_simulations=256))
+        self.assertEqual([bot.simulations for bot in session.bots],[256,256])
+        self.assertIsNot(session.bots[0],session.bots[1])
+        self.assertEqual(state['model_simulations'],256)
+        self.assertEqual(factory.simulations,128)
+        session.update('restart',dict(revision=session.revision,mode='play',opponent='local'))
+        state=session.update('restart',dict(revision=session.revision,opponent='model'))
+        self.assertEqual(state['model_simulations'],256)
+        self.assertEqual(session.opponent.simulations,256)
+
+    @patch('intransitive.play.ModelOpponent.reload', autospec=True)
+    def test_invalid_model_budget_and_reload_failure_are_atomic(self, reload):
+        from intransitive.play import OpponentFactory, ModelOpponent
+        factory=OpponentFactory(checkpoint='unused.pt')
+        session=GameSession(opponent_factory=factory)
+        session.update('move',dict(revision=0,action=session.snapshot()['legal'][0]['action']))
+        before=session.snapshot()
+        for count in (None,True,False,0,1,-1,2.5,'512',float('inf')):
+            with self.subTest(count=count):
+                with self.assertRaises(ValueError):
+                    session.update('restart',dict(revision=session.revision,opponent='model',model_simulations=count))
+                with self.assertRaises(ValueError):
+                    ModelOpponent('unused.pt',count)
+                self.assertEqual(session.snapshot(),before)
+        reload.assert_not_called()
+        reload.side_effect=RuntimeError('Unavailable checkpoint')
+        with self.assertRaises(RuntimeError):
+            session.update('restart',dict(revision=session.revision,opponent='model',model_simulations=512))
+        self.assertEqual(session.snapshot(),before)
+
     def test_switch_all_opponents_and_independent_options(self):
         from itertools import product
         from intransitive.play import OpponentFactory
@@ -322,6 +366,85 @@ class PlayServerTests(unittest.TestCase):
         self.assertEqual(sorted(results), [200, 400])
         self.assertEqual(self.game.revision, 1)
         self.assertEqual(len(self.game.moves), 1)
+
+    def test_history_and_playback_asset_are_available(self):
+        self.game.update('move',dict(revision=0,action=self.initial['legal'][0]['action']))
+        with urlopen(self.url + '/api/history',timeout=3) as response:
+            states=json.load(response)['states']
+        self.assertEqual([s['ply'] for s in states],[0,1])
+        self.assertEqual(states[0]['board'],self.initial['board'])
+        self.assertEqual(states[1],self.game.snapshot())
+        with urlopen(self.url + '/playback.js',timeout=3) as response:
+            self.assertIn(b'class MovePlayback',response.read())
+
+
+class WatchBotTests(unittest.TestCase):
+    def setUp(self):
+        from intransitive.heuristics import SearchConfig
+        class Factory:
+            config=SearchConfig()
+            choices=['local','random','greedy']
+            fail=False
+            def create(self,kind,options=None):
+                if self.fail and kind=='greedy':
+                    raise RuntimeError('Second bot unavailable')
+                if kind=='local':
+                    return None
+                bot=FirstLegalOpponent()
+                bot.kind=kind
+                bot.label=kind.title()
+                return bot
+        self.factory=Factory()
+        self.game=GameSession(opponent_factory=self.factory)
+
+    def start(self,**options):
+        return self.game.update('restart',dict(revision=self.game.revision,mode='watch',
+            blue_opponent='random',red_opponent='greedy',**options))
+
+    def test_both_bots_play_and_history_is_read_only_replayable_and_correctly_named(self):
+        from intransitive.record import load_record
+        states=[self.start()]
+        self.assertEqual(states[0]['mode'],'watch')
+        self.assertEqual(states[0]['watch_opponents'],['random','greedy'])
+        self.assertIsNot(self.game.bots[0],self.game.bots[1])
+        self.assertTrue(states[0]['ai_turn'])
+        for _ in range(8):
+            states.append(self.game.update('ai',dict(revision=self.game.revision)))
+        before=self.game.board.get_state().tobytes()
+        revision=self.game.revision
+        views=self.game.snapshots()
+        self.assertEqual(len(views),9)
+        for original,view in zip(states,views):
+            self.assertEqual(original['board'],view['board'])
+            self.assertEqual(original['moves'],view['moves'])
+            self.assertEqual(original['ply'],view['ply'])
+            record=load_record(view['pgn'])
+            self.assertEqual(record.tags['Blue'],'Random')
+            self.assertEqual(record.tags['Red'],'Greedy')
+            self.assertEqual(record.states[-1][:,:,0].tolist(),view['board'])
+        self.assertEqual(self.game.board.get_state().tobytes(),before)
+        self.assertEqual(self.game.revision,revision)
+        for cmd in ('undo','move'):
+            with self.assertRaises(ValueError):
+                self.game.update(cmd,dict(revision=revision,action=states[-1]['legal'][0]['action']))
+        self.assertFalse(self.game.snapshot()['can_undo'])
+
+    def test_failed_restart_is_atomic_and_mode_can_switch_back_to_play(self):
+        self.start()
+        before=self.game.snapshot()
+        for options in ({'blue_opponent':'local','red_opponent':'greedy'},
+                        {'blue_opponent':'random','red_opponent':'unknown'}):
+            with self.assertRaises(ValueError):
+                self.game.update('restart',dict(revision=self.game.revision,mode='watch',**options))
+            self.assertEqual(self.game.snapshot(),before)
+        self.factory.fail=True
+        with self.assertRaises(RuntimeError):
+            self.start()
+        self.assertEqual(self.game.snapshot(),before)
+        state=self.game.update('restart',dict(revision=self.game.revision,mode='play',opponent='local'))
+        self.assertEqual(state['mode'],'local')
+        self.assertIsNone(state['watch_opponents'])
+        self.assertNotEqual(state['game_id'],before['game_id'])
 
 
 if __name__ == "__main__":

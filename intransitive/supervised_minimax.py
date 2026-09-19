@@ -260,7 +260,7 @@ def perturb_position(state, action, rng):
     return variant, dict(operation=operation,edits=edits,history='fresh one-position counterfactual history')
 
 
-def verified_ablations(parent, parent_result, config, max_searches=2):
+def verified_ablations(parent, parent_result, config, max_searches=2, teacher=None):
     game=IntransitiveGame()
     evaluator=Evaluator(game,config)
     base_score=evaluator.score(parent['state'],0,Budget(1_000_000,30.),proof=dict(status='unknown'))
@@ -284,7 +284,7 @@ def verified_ablations(parent, parent_result, config, max_searches=2):
         static=evaluator.score(state,0,Budget(1_000_000,30.),proof=dict(status='unknown'))
         if not np.isclose(static,base_score,rtol=0,atol=1e-8):
             continue
-        result=AlphaBetaPlayer(game,config).analyze(state)
+        result=(teacher if teacher is not None else AlphaBetaPlayer(game,config)).analyze(state)
         attempted+=1
         complete=completed_teacher(result, config.max_depth)
         if complete and result.action==parent['action'] and np.isclose(result.score,parent_result.score,rtol=0,atol=1e-8):
@@ -339,7 +339,10 @@ def promote_tree_roots(teacher, root, result, parent, limit=2):
 
 
 def label_result_path(settings, seed):
-    identity = hashlib.sha256(json.dumps(settings['teacher'],sort_keys=True).encode()).hexdigest()[:16]
+    profile = settings['teacher']
+    if settings.get('teacher_backend'):
+        profile = dict(teacher=profile,backend=settings['teacher_backend'])
+    identity = hashlib.sha256(json.dumps(profile,sort_keys=True).encode()).hexdigest()[:16]
     return Path(settings['output'])/'worker-results'/identity/f'seed-{int(seed)}.pkl.gz'
 
 
@@ -363,6 +366,7 @@ def label_job(task):
     path = Path(settings['output']) / f'label-worker-{os.getpid()}.json'
     write_json(path, dict(pid=os.getpid(), phase='generating', seed=seed, stage=stage, updated_epoch=time.time()))
     ablation_searches=0
+    teacher = None
     try:
         if settings.get('recorded_games') and (seed-settings['dataset_seed'])%5==0:
             state,provenance=recorded_position(seed,stage,settings)
@@ -375,7 +379,11 @@ def label_job(task):
         write_json(path, dict(pid=os.getpid(), phase=f'depth_{target_depth}_search', seed=seed, stage=stage,
                              teacher=settings['teacher'],
                              pieces=provenance['pieces'], updated_epoch=time.time()))
-        teacher=AlphaBetaPlayer(game, SearchConfig(**settings['teacher']))
+        if settings.get('teacher_backend'):
+            from .rust_teacher.adapter import RustAlphaBetaPlayer
+            teacher=RustAlphaBetaPlayer(game, SearchConfig(**settings['teacher']),settings['teacher_backend'])
+        else:
+            teacher=AlphaBetaPlayer(game, SearchConfig(**settings['teacher']))
         result = teacher.analyze(state)
         if not completed_teacher(result, target_depth):
             records, rejected = [], result.stop_reason
@@ -394,11 +402,20 @@ def label_job(task):
             if settings.get('ablations', True):
                 write_json(path,dict(pid=os.getpid(),phase='verifying_ablations',seed=seed,
                                     stage=stage,updated_epoch=time.time()))
-                variants,ablation_searches=verified_ablations(records[0],result,SearchConfig(**settings['teacher']))
+                variants,ablation_searches=verified_ablations(records[0],result,SearchConfig(**settings['teacher']),
+                    teacher=teacher if settings.get('teacher_backend') else None)
                 records.extend(variants)
+            if settings.get('teacher_backend'):
+                for record in records:
+                    record['teacher_backend']=dict(settings['teacher_backend'])
+                    record['teacher_config']=dict(settings['teacher'])
+                    record['teacher_work_unit']='node_visits'
             rejected = None
     except RuntimeError as error:
         records, rejected = [], str(error)
+    finally:
+        if teacher is not None and hasattr(teacher,'close'):
+            teacher.close()
     row = dict(index=index, pid=os.getpid(), seed=seed, stage=stage, rejected=rejected,
                ablation_searches=ablation_searches,
                worker_seconds=time.perf_counter()-start, cpu_seconds=cpu_seconds()-cpu)

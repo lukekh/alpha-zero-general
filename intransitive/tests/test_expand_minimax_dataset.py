@@ -7,7 +7,8 @@ import tempfile
 import unittest
 import zlib
 
-from intransitive.expand_minimax_dataset import Catalog
+from intransitive.expand_minimax_dataset import Catalog, run
+from intransitive.greedy_process import validate_worker_count
 
 
 def record(orbit, family=None, split='train', stage='opening', depth=5):
@@ -17,6 +18,13 @@ def record(orbit, family=None, split='train', stage='opening', depth=5):
 
 
 class CatalogTests(unittest.TestCase):
+    def test_explicit_worker_counts(self):
+        for count in (1,2,3,4,6,8,64):
+            self.assertEqual(validate_worker_count(count),count)
+        for count in (0,-1,65,True,4.0,'6'):
+            with self.assertRaises(ValueError):
+                run('/unused', '/unused', 100, generation_workers=count)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.directory = Path(self.temp.name)

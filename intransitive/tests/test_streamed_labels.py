@@ -95,10 +95,11 @@ class StreamedLabelTests(unittest.TestCase):
 
     def test_extra_commits_one_worker_and_resumes_only_unfinished_seeds(self):
         calls = []
+        worker_counts = []
         class Pool:
             pids = []
             def __init__(self,*args,**kwargs):
-                pass
+                worker_counts.append(args[0])
             def iter_results(self,snapshot,seeds,training,**kwargs):
                 calls.append(list(seeds))
                 if len(calls)==1:
@@ -110,15 +111,18 @@ class StreamedLabelTests(unittest.TestCase):
             output, primary = Path(temporary)/'extra', Path(temporary)/'primary'
             primary.mkdir()
             with patch.object(extra,'GameProcesses',Pool), patch.object(extra,'primary_active',return_value=True):
-                extra.run(output,primary,300,teacher_config=dict(sm.TEACHER,max_depth=6))
+                extra.run(output,primary,300,teacher_config=dict(sm.TEACHER,max_depth=6),
+                          generation_workers=6)
                 with extra.sqlite3.connect(output/'corpus.sqlite3') as db:
                     self.assertEqual(db.execute('SELECT count(*) FROM positions').fetchone()[0],1)
                     metadata = {k:json.loads(v) for k,v in db.execute('SELECT key,value FROM metadata')}
-                self.assertEqual(len(metadata['pending_seeds']),7)
+                self.assertEqual(len(metadata['pending_seeds']),23)
                 self.assertNotIn(calls[0][1],metadata['pending_seeds'])
                 self.assertEqual(metadata['next_seed'],calls[0][-1]+1)
-                extra.run(output,primary,300,teacher_config=dict(sm.TEACHER,max_depth=6))
+                extra.run(output,primary,300,teacher_config=dict(sm.TEACHER,max_depth=6),
+                          generation_workers=8)
                 self.assertEqual(calls[1],metadata['pending_seeds'])
+                self.assertEqual(worker_counts,[6,8])
 
     def test_trainer_commits_one_worker_and_recovers_remaining_queue(self):
         calls = []

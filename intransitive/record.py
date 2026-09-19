@@ -62,7 +62,7 @@ def result_token(board):
     return '*' if board.get_terminal_reason() == 'ongoing' else '1/2-1/2'
 
 
-def export_record(moves, board, config, *, opponent='local', human_player=0, last_ai=None):
+def export_record(moves, board, config, *, opponent='local', human_player=0, last_ai=None, players=None):
     """Export the full active line, including history-dependent draw state."""
     result = result_token(board)
     tags = dict(Variant='Intransitive', Format=FORMAT,
@@ -72,6 +72,8 @@ def export_record(moves, board, config, *, opponent='local', human_player=0, las
                 Result=result, PlyCount=str(len(moves)),
                 StateSHA256=state_hash(board.get_state()),
                 HeuristicConfig=json.dumps(config.to_dict(), separators=(',', ':')))
+    if players is not None:
+        tags.update(Blue=players[0], Red=players[1])
     if last_ai is not None:
         tags['LastAI'] = json.dumps(last_ai, separators=(',', ':'), allow_nan=False)
     lines = [f'[{key} {json.dumps(value)}]' for key, value in tags.items()]

@@ -58,21 +58,61 @@ def make_opponent(game, seed, settings):
         return ReferenceGreedyPlayer(game, seed=seed + 100)
     if name == 'GreedyPlayer':
         return GreedyPlayer(game)
+    if name == 'FlybrainPlayer':
+        from .flybrain import FlybrainPlayer
+        return FlybrainPlayer(game, bank_path=settings.get('flybrain_bank'), seed=seed + 100)
     if name == 'AlphaBetaPlayer':
         from .heuristics import AlphaBetaPlayer, SearchConfig
+        if settings.get('opponent_backend'):
+            from .rust_teacher.adapter import RustAlphaBetaPlayer
+            return RustAlphaBetaPlayer(game, SearchConfig(**settings['opponent_search']),
+                                       settings['opponent_backend'])
         return AlphaBetaPlayer(game, SearchConfig(**settings['opponent_search']))
     raise ValueError(f'Unknown training opponent: {name}')
 
 
-def game_tasks(snapshot, seeds, training, settings):
+def game_tasks(snapshot, seeds, training, settings, *, evaluation_stage=None):
     opponents = settings.get('worker_opponents') if training else None
+    evaluation = settings.get('evaluation_opponents') if not training else None
+    schedule = []
+    if evaluation:
+        for block in evaluation:
+            count = block.get('games')
+            if type(count) is not int or count <= 0 or count % 2:
+                raise ValueError('Each evaluation opponent needs a positive even game quota')
+            if block.get('opponent') not in ('FlybrainPlayer','AlphaBetaPlayer',
+                                              'GreedyPlayer','ReferenceGreedyPlayer'):
+                raise ValueError('Unknown evaluation opponent')
+            overrides = {k:v for k,v in block.items() if k != 'games'}
+            if set(overrides) - {'opponent','opponent_search','numMCTSSims'}:
+                raise ValueError('Evaluation blocks may only change the opponent/search or MCTS simulations')
+            if 'numMCTSSims' in overrides and (type(overrides['numMCTSSims']) is not int or
+                                               overrides['numMCTSSims'] < 2):
+                raise ValueError('Evaluation MCTS simulations must be an integer of at least two')
+            selected = dict(settings, **overrides)
+            if selected['opponent'] != 'AlphaBetaPlayer':
+                selected.pop('opponent_search', None)
+            schedule.extend([selected] * count)
+        if len(schedule) != settings['evaluation_games']:
+            raise ValueError('Evaluation quota does not match the configured suite')
+        if evaluation_stage is not None:
+            if type(evaluation_stage) is not int or not 0 <= evaluation_stage < len(evaluation):
+                raise ValueError('Invalid evaluation stage')
+            start = sum(b['games'] for b in evaluation[:evaluation_stage])
+            schedule = schedule[start:start + evaluation[evaluation_stage]['games']]
+        if len(schedule) != len(seeds):
+            raise ValueError('Evaluation quota does not match the requested stage')
+    elif evaluation_stage is not None:
+        raise ValueError('Evaluation stages require an evaluation-only opponent schedule')
     if opponents and len(seeds) % (2 * len(opponents)):
         raise ValueError('Mixed games require both colours for every opponent')
     tasks = []
     for index, seed in enumerate(seeds):
         selected = settings
         side = index % 2
-        if opponents:
+        if schedule:
+            selected = schedule[index]
+        elif opponents:
             selected = dict(settings, **opponents[index % len(opponents)])
             side = (index // len(opponents)) % 2
         tasks.append((index, str(Path(snapshot).resolve()), selected, seed, side, training))
@@ -90,11 +130,20 @@ def worker_status(settings, **data):
 
 def episode(net, seed, model_side, training, settings=SETTINGS):
     seed_all(seed)
-    rng = np.random.default_rng(seed)
     game = IntransitiveGame(modelling_draws=True)
+    opponent = make_opponent(game, seed, settings)
+    try:
+        return _episode(net, seed, model_side, training, settings, game, opponent)
+    finally:
+        if hasattr(opponent, 'close'):
+            opponent.close()
+
+
+def _episode(net, seed, model_side, training, settings, game, opponent):
+    seed_all(seed)
+    rng = np.random.default_rng(seed)
     search = MCTS(game, net, argparse.Namespace(**settings))
     search.rng = np.random.default_rng(seed)
-    opponent = make_opponent(game, seed, settings)
     board, player = game.getInitBoard(), 0
     trajectory, actions = [], []
     search_depths = []
@@ -109,6 +158,7 @@ def episode(net, seed, model_side, training, settings=SETTINGS):
         worker_status(settings, phase='model_move' if player == model_side else 'opponent_move',
                       seed=seed, model_side=model_side, ply=len(actions)+1,
                       opponent=settings.get('opponent'), opponent_search=settings.get('opponent_search'),
+                      numMCTSSims=settings['numMCTSSims'], training=training,
                       last_search=search_depths[-1] if search_depths else None)
         if player == model_side:
             pi, q, _ = search.getActionProb(canonical, temp=1 if training else 0,
@@ -149,7 +199,10 @@ def episode(net, seed, model_side, training, settings=SETTINGS):
                trajectory_sha256=trace.hexdigest(),
                replay_sha256=hashlib.sha256(b"".join(examples)).hexdigest())
     row.update(opponent=settings.get('opponent', 'ReferenceGreedyPlayer'),
+               numMCTSSims=settings['numMCTSSims'],
                opponent_search=settings.get('opponent_search'), opponent_searches=search_depths)
+    if settings.get('opponent') == 'AlphaBetaPlayer' and settings.get('opponent_backend'):
+        row['opponent_backend'] = settings['opponent_backend']
     return examples, row
 
 
@@ -213,6 +266,12 @@ def _worker_loop(snapshot, settings, connection, job):
         connection.close()
 
 
+def validate_worker_count(workers):
+    if type(workers) is not int or not 1 <= workers <= 64:
+        raise ValueError('workers must be an integer between 1 and 64')
+    return workers
+
+
 class GameProcesses:
     """Independent workers with private pipes, ordered replay and bounded cleanup.
 
@@ -221,8 +280,7 @@ class GameProcesses:
     batch; no shared multiprocessing queue locks survive a killed worker.
     """
     def __init__(self, workers=1, *, snapshot, settings=SETTINGS, timeout=600, _task=_job):
-        if type(workers) is not int or workers not in (1, 2, 4):
-            raise ValueError('workers must be 1, 2 or 4')
+        validate_worker_count(workers)
         self.settings = dict(settings)
         opponents = self.settings.get('worker_opponents')
         if opponents and len(opponents) != workers:
@@ -274,14 +332,16 @@ class GameProcesses:
         if any(p.exitcode is not None for p in self.initial_workers):
             raise RuntimeError('Game worker exited unexpectedly')
 
-    def collect(self, snapshot, seeds, training, *, deadline=None):
+    def collect(self, snapshot, seeds, training, *, deadline=None, evaluation_stage=None):
         if self.pool is None:
             raise RuntimeError('Pool is closed')
         seeds = list(seeds)
         if not seeds or len(seeds) % 2:
             raise ValueError('Game quota must be positive and even for colour balance')
         start = time.perf_counter()
-        tasks = game_tasks(snapshot, seeds, training, self.settings)
+        if not training and self.settings.get('evaluation_gate') and evaluation_stage is None:
+            raise ValueError('Gated selection must dispatch opponent stages separately')
+        tasks = game_tasks(snapshot, seeds, training, self.settings, evaluation_stage=evaluation_stage)
         ordered = [None] * len(tasks)
         active = {}
         next_task = completed = 0
@@ -389,6 +449,11 @@ class GameProcesses:
 
     def close(self):
         if self.pool is not None:
+            backend = self.settings.get('teacher_backend') or self.settings.get('opponent_backend')
+            native_pids = []
+            if backend:
+                from .rust_teacher.adapter import native_children, reap_native
+                native_pids = native_children([p.pid for p in self.initial_workers], backend)
             for process in self.initial_workers:
                 if process.is_alive():
                     process.terminate()
@@ -401,6 +466,8 @@ class GameProcesses:
                     raise RuntimeError(f'Could not reap game worker {process.pid}')
             for connection in self.connections:
                 connection.close()
+            if backend:
+                reap_native(native_pids, backend)
             self.pool = None
 
     def __enter__(self):
@@ -414,5 +481,10 @@ def selection(rows):
     wins = sum(r['outcome'] == 'win' for r in rows)
     losses = sum(r['outcome'] == 'loss' for r in rows)
     draws = len(rows) - wins - losses
-    return dict(wins=wins, losses=losses, model_draws=draws,
-                score=(wins + .5 * draws) / len(rows), games=len(rows))
+    result = dict(wins=wins, losses=losses, model_draws=draws,
+                  score=(wins + .5 * draws) / len(rows), games=len(rows))
+    names = {r.get('opponent') for r in rows}
+    if len(names) > 1:
+        result['by_opponent'] = {name:selection([r for r in rows if r.get('opponent') == name])
+                                 for name in sorted(names, key=str)}
+    return result

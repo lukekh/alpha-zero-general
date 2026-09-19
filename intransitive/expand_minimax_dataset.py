@@ -202,8 +202,29 @@ def upgrade_config(saved, current, *, allow_depth_change=False, allow_search_opt
                 search_optimization_only=allow_search_optimization and not allow_depth_change)
 
 
+def upgrade_backend(saved, current):
+    """Backend-only migration: no implicit depth, scoring or dataset changes."""
+    before=json.loads(json.dumps(saved))
+    after=json.loads(json.dumps(current))
+    old=before['settings'].pop('teacher_backend', {'implementation':'python'})
+    new=after['settings'].pop('teacher_backend', {'implementation':'python'})
+    if before != after or old == new or new.get('implementation') != 'rust-v1':
+        raise ValueError('Backend migration must preserve teacher and dataset settings')
+    from .heuristics import SearchConfig
+    from .rust_teacher.adapter import validate_backend
+    validate_backend(SearchConfig(**after['settings']['teacher']),new)
+    return dict(previous_backend=old,next_backend=new,changed_epoch=time.time(),
+        existing_records_relabelled=False,backend_only=True,
+        budget_units_changed='Python charged work -> native search/proof node visits; partial labels still rejected')
+
+
 def run(output, primary, target, deadline=None, *, teacher_config=None, allow_teacher_upgrade=False,
-        allow_teacher_change=False, allow_search_optimization=False):
+        allow_teacher_change=False, allow_search_optimization=False, teacher_backend=None,
+        allow_backend_change=False, generation_workers=None):
+    # Execution parallelism is not part of the corpus/teacher identity.
+    if generation_workers is not None:
+        from .greedy_process import validate_worker_count
+        validate_worker_count(generation_workers)
     output, primary = Path(output).resolve(), Path(primary).resolve()
     output.mkdir(parents=True, exist_ok=True)
     # A nonblocking lock prevents two resumed coordinators sharing a catalog.
@@ -220,14 +241,21 @@ def run(output, primary, target, deadline=None, *, teacher_config=None, allow_te
                     output=str(output), promoted_roots=2, ablations=True, persist_label_results=True,
                     recorded_games=str(primary / 'rps2-games.ndjson'),
                     recorded_offsets=str(primary / 'recorded-offsets.json'))
+    if teacher_backend:
+        from .rust_teacher.adapter import validate_backend
+        validate_backend(SearchConfig(**teacher_config),teacher_backend)
+        settings['teacher_backend']=dict(teacher_backend)
     config = dict(primary=str(primary), target_positions=target, settings=settings)
     saved = catalog.get('config')
     migration = None
     if saved is not None and saved != config:
-        if not (allow_teacher_upgrade or allow_teacher_change or allow_search_optimization):
+        if allow_backend_change:
+            migration=upgrade_backend(saved, config)
+        elif not (allow_teacher_upgrade or allow_teacher_change or allow_search_optimization):
             raise ValueError('Resume configuration differs from existing corpus')
-        migration = upgrade_config(saved, config, allow_depth_change=allow_teacher_change,
-                                   allow_search_optimization=allow_search_optimization)
+        else:
+            migration = upgrade_config(saved, config, allow_depth_change=allow_teacher_change,
+                                       allow_search_optimization=allow_search_optimization)
         migration.update(positions=catalog.counts()['total'],next_seed=catalog.get('next_seed'))
     with catalog.db:
         if migration is not None:
@@ -251,6 +279,7 @@ def run(output, primary, target, deadline=None, *, teacher_config=None, allow_te
             augmented_examples=12 * counts['total'], by_stage=counts['stage'],
             by_split=counts['split'], sources=counts['source'],
             generation_teacher=teacher_config,
+            generation_backend=teacher_backend or {'implementation':'python'},
             next_seed=catalog.get('next_seed', settings['dataset_seed']),
             pending_seeds=catalog.get('pending_seeds', []), save_mode='per_worker_completion',
             batch=catalog.get('batch', 0), training_untouched=True,
@@ -280,7 +309,8 @@ def run(output, primary, target, deadline=None, *, teacher_config=None, allow_te
             if shutil.disk_usage(output).free < 2 * 1024**3:
                 reason = 'low_disk_space'
                 break
-            desired_workers = 2 if primary_active(primary) else 4
+            desired_workers = generation_workers if generation_workers is not None else (
+                2 if primary_active(primary) else 4)
             if pool is None or (workers != desired_workers and label_stream is None):
                 if pool is not None:
                     pool.close()
@@ -342,6 +372,8 @@ if __name__ == '__main__':
     parser.add_argument('--primary', type=Path, required=True)
     parser.add_argument('--target', type=int, default=1_000_000)
     parser.add_argument('--deadline', type=float)
+    parser.add_argument('--workers', type=int, dest='generation_workers',
+                        help='Fixed generation workers (1-64); default: automatic 2/4')
     parser.add_argument('--teacher-depth', type=int, default=5)
     parser.add_argument('--teacher-seconds', type=float)
     parser.add_argument('--allow-teacher-upgrade', action='store_true')
@@ -354,4 +386,5 @@ if __name__ == '__main__':
         teacher_config=dict(TEACHER,max_depth=args.teacher_depth,
             time_limit=args.teacher_seconds if args.teacher_seconds is not None else (120. if args.teacher_depth<=5 else 1800.)),
         allow_teacher_upgrade=args.allow_teacher_upgrade, allow_teacher_change=args.allow_teacher_change,
-        allow_search_optimization=args.allow_search_optimization)
+        allow_search_optimization=args.allow_search_optimization,
+        generation_workers=args.generation_workers)

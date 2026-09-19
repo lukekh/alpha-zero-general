@@ -8,6 +8,7 @@ import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Lock
+from uuid import uuid4
 
 import numpy as np
 
@@ -17,6 +18,13 @@ from .IntransitiveLogicNumba import Board, search_observation
 
 AB_OPTION_FIELDS = ('attack_enabled', 'defence_enabled', 'overload_enabled',
                     'max_depth', 'time_limit', 'node_limit')
+MINIMAX_KINDS = ('alphabeta', 'rust-minimax')
+
+
+def validate_simulations(value):
+    if type(value) is not int or value < 2:
+        raise ValueError('MCTS simulations must be a whole number of at least 2.')
+    return value
 
 
 class BaselineOpponent:
@@ -47,25 +55,31 @@ class OpponentFactory:
     def choices(self):
         from .flybrain import DEFAULT_BANK
         flybrain = ['flybrain'] if Path(self.flybrain_bank or DEFAULT_BANK).is_file() else []
-        return ['local', 'alphabeta', 'greedy', 'reference-greedy', 'random'] + flybrain + (['model'] if self.checkpoint else [])
+        return ['local', 'alphabeta', 'rust-minimax', 'greedy', 'reference-greedy', 'random'] + flybrain + (['model'] if self.checkpoint else [])
 
-    def create(self, kind, options=None):
+    def create(self, kind, options=None, *, simulations=None):
         from .heuristics import AlphaBetaPlayer
         if kind not in self.choices:
             raise ValueError('Choose an available opponent')
         if kind == 'local':
             return None
         if kind == 'model':
-            return ModelOpponent(self.checkpoint, self.simulations)
+            return ModelOpponent(self.checkpoint, self.simulations if simulations is None else simulations)
         if kind == 'flybrain':
             from .flybrain import FlybrainPlayer
             from .IntransitiveGame import IntransitiveGame
             return FlybrainPlayer(IntransitiveGame(), self.flybrain_bank)
-        if kind == 'alphabeta':
+        if kind in MINIMAX_KINDS:
             options = {} if options is None else options
             if not isinstance(options, dict) or set(options) - set(AB_OPTION_FIELDS):
                 raise ValueError('Invalid alpha-beta options')
-            return AlphaBetaPlayer(config=replace(self.config, **options))
+            config = replace(self.config, **options)
+            if kind == 'rust-minimax':
+                from .rust_teacher.browser import RustMinimaxOpponent
+                return RustMinimaxOpponent(config)
+            player = AlphaBetaPlayer(config=config)
+            player.label = 'Minimax · Python'
+            return player
         return BaselineOpponent(kind)
 
 
@@ -75,8 +89,7 @@ class ModelOpponent:
     kind = 'model'
 
     def __init__(self, checkpoint, simulations=32):
-        if simulations < 2:
-            raise ValueError("Use at least two search simulations.")
+        validate_simulations(simulations)
         self.checkpoint = Path(checkpoint).resolve()
         self.simulations = simulations
         self.reload()
@@ -101,6 +114,7 @@ class ModelOpponent:
         self.game, self.search = game, MCTS(game, net, args)
         iteration = metadata.get('run_iteration', metadata.get('candidate_iteration'))
         self.label = f"Saved model · iteration {iteration}" if iteration is not None else "Saved model"
+        self.label += f" · {self.simulations} MCTS simulations"
 
     def choose(self, board, player):
         canonical = self.game.getCanonicalForm(board, player)
@@ -120,13 +134,21 @@ class GameSession:
         self.revision = 0
         self.opponent = opponent
         self.human_player = human_player
+        self.bots = None
+        self.model_simulations = getattr(opponent, 'simulations', getattr(opponent_factory, 'simulations', 32))
+        self.game_id = uuid4().hex
+
+    def active_opponent(self):
+        return self.bots[self.board.get_next_player()] if self.bots else self.opponent
 
     def ai_turn(self):
-        return (self.opponent is not None
-                and self.board.get_next_player() != self.human_player
+        return (self.active_opponent() is not None
+                and (self.bots is not None or self.board.get_next_player() != self.human_player)
                 and self.board.get_terminal_reason() == 'ongoing')
 
     def can_undo(self):
+        if self.bots:
+            return False  # Spectator history navigation never alters the game.
         # Red cannot undo the AI's opening before making a move of their own.
         return len(self.history) > (1 if self.opponent and self.human_player == 1 else 0)
 
@@ -138,20 +160,28 @@ class GameSession:
             dx, dy = action_destination(int(action))
             legal.append(dict(action=int(action), source=[x, y], target=[dx, dy]))
         result = self.board.check_end_game(player)
-        config = (self.opponent.config if getattr(self.opponent, 'kind', None) == 'alphabeta'
+        opponent = self.bots[(len(self.moves)-1) % 2] if self.bots and self.moves else self.active_opponent()
+        configured = next((bot for bot in (self.bots or [self.opponent])
+                           if getattr(bot, 'kind', None) in MINIMAX_KINDS), None)
+        config = (configured.config if configured
                   else self.opponent_factory.config if self.opponent_factory else None)
         from .heuristics.config import SearchConfig, TIME_FIRST_LIMITS
         from .record import export_record
         last_ai = self.ai_decisions[max(self.ai_decisions)] if self.ai_decisions else None
-        analysis_result = getattr(self.opponent, 'last_result', None)
+        search_result = last_ai.get('search') if last_ai else None
         analysis = None
-        if analysis_result is not None:
-            analysis = dict(analysis_result.explanation)
+        if search_result is not None:
+            rust = last_ai.get('opponent') == 'rust-minimax'
+            analysis = dict(search_result['explanation'])
+            analysis.update(backend='Rust' if rust else 'Python',
+                            elapsed_seconds=search_result['elapsed'], nodes=search_result['nodes'],
+                            work=search_result['work'], score=search_result['score'],
+                            work_unit='node_visits' if rust else 'charged_work')
             for name in ('completed_depth', 'selected_depth', 'partial_depth',
                          'root_moves_completed', 'root_moves_total', 'selection_source',
                          'score_bound', 'stop_reason', 'diagnostics_status',
                          'effective_limits'):
-                analysis[name] = getattr(analysis_result, name)
+                analysis[name] = search_result[name]
         noncapture = 0
         for move in reversed(self.moves):
             if ' × ' in move:
@@ -167,19 +197,37 @@ class GameSession:
             winner=next((p for p in range(2) if result[p] == 1), None),
             noncapture=noncapture, repetition=repetition,
             ply=self.board.get_total_ply(), moves=self.moves.copy(),
-            revision=self.revision,
-            mode='ai' if self.opponent else 'local', human_player=self.human_player,
+            revision=self.revision, game_id=self.game_id,
+            mode='watch' if self.bots else 'ai' if self.opponent else 'local', human_player=self.human_player,
             ai_turn=self.ai_turn(), can_undo=self.can_undo(),
             model=self.opponent.label if self.opponent else None,
             opponent=getattr(self.opponent, 'kind', 'model') if self.opponent else 'local',
             opponents=self.opponent_factory.choices if self.opponent_factory else [],
+            watch_opponents=[getattr(bot,'kind','model') for bot in self.bots] if self.bots else None,
+            bot_labels=[bot.label for bot in self.bots] if self.bots else None,
+            model_simulations=self.model_simulations,
             ab_options={name: getattr(config, name) for name in AB_OPTION_FIELDS} if config else {},
             ab_presets={'time_first': TIME_FIRST_LIMITS.copy()},
             pgn=export_record(self.moves, self.board, config or SearchConfig(),
                               opponent=getattr(self.opponent, 'kind', 'model') if self.opponent else 'local',
-                              human_player=self.human_player, last_ai=last_ai),
+                              human_player=self.human_player, last_ai=last_ai,
+                              players=[bot.label for bot in self.bots] if self.bots else None),
             analysis=analysis,
         )
+
+    def snapshots(self):
+        """Read-only views of this line, including positions before a page reload."""
+        views = []
+        for ply, state in enumerate(self.history):
+            past = GameSession(self.opponent, self.human_player, self.opponent_factory)
+            past.board.copy_state(state, True)
+            past.bots, past.game_id, past.revision = self.bots, self.game_id, self.revision
+            past.history, past.moves = self.history[:ply], self.moves[:ply]
+            past.ai_decisions = {p:r for p,r in self.ai_decisions.items() if p < ply}
+            view = past.snapshot()
+            # Diagnostics come from this prefix's recorded AI decision.
+            views.append(view)
+        return views + [self.snapshot()]
 
     def make_move(self, action):
         before = self.board.get_state()
@@ -195,6 +243,8 @@ class GameSession:
         if type(data.get("revision")) is not int or data["revision"] != self.revision:
             raise ValueError("The board changed. Refresh and try again.")
         if command == "move":
+            if self.bots:
+                raise ValueError('Bot games are read-only. Use the history controls to review moves.')
             if self.ai_turn():
                 raise ValueError("It is the AI's turn.")
             action = data.get("action")
@@ -207,17 +257,19 @@ class GameSession:
             from .record import state_hash
             before = self.board.get_state()
             ply = len(self.moves)
-            action = int(self.opponent.choose(search_observation(before), self.board.get_next_player()))
+            opponent = self.active_opponent()
+            action = int(opponent.choose(search_observation(before), self.board.get_next_player()))
             self.make_move(action)
-            result = getattr(self.opponent, 'last_result', None)
+            result = getattr(opponent, 'last_result', None)
             search = asdict(result) if result else None
             if search:
                 # Keep the original scores/features and search statistics in the
                 # copied message; verbose route traces can be recomputed later.
-                for name in ('races', 'config', 'pv', 'search_score'):
+                for name in ('races', 'pv', 'search_score'):
                     search['explanation'].pop(name, None)
             self.ai_decisions[ply] = dict(ply=ply, action=action, state_sha256=state_hash(before),
-                                          search=search)
+                                          search=search, opponent=getattr(opponent, 'kind', 'model'),
+                                          label=opponent.label)
         elif command == "undo":
             if not self.can_undo():
                 raise ValueError("There are no moves to undo.")
@@ -232,19 +284,45 @@ class GameSession:
             human = data.get('human_player', self.human_player)
             if type(human) is not int or human not in (0, 1):
                 raise ValueError("Choose Blue or Red.")
-            opponent = self.opponent
-            if 'opponent' in data:
+            mode = data.get('mode', 'watch' if self.bots else 'play')
+            if mode not in ('play','watch'):
+                raise ValueError('Choose Play or Watch bots')
+            simulations = validate_simulations(data.get('model_simulations', self.model_simulations))
+
+            def create(kind):
                 if self.opponent_factory is None:
                     raise ValueError('Opponent selection is unavailable')
-                opponent = self.opponent_factory.create(data['opponent'], data.get('ab_options'))
+                kwargs = {'simulations': simulations} if kind == 'model' else {}
+                return self.opponent_factory.create(kind, data.get('ab_options'), **kwargs)
+
+            opponent, bots = self.opponent, None
+            if mode == 'watch':
+                if self.opponent_factory is None:
+                    raise ValueError('Opponent selection is unavailable')
+                kinds = [data.get('blue_opponent'), data.get('red_opponent')]
+                if any(kind not in self.opponent_factory.choices or kind == 'local' for kind in kinds):
+                    raise ValueError('Choose a bot for both Blue and Red')
+                # Construct both before changing the live board or either player.
+                bots = tuple(create(kind) for kind in kinds)
+                opponent = None
+            elif 'opponent' in data:
+                if self.opponent_factory is None:
+                    raise ValueError('Opponent selection is unavailable')
+                opponent = create(data['opponent'])
             elif opponent:
-                opponent.reload()
+                if getattr(opponent, 'kind', None) == 'model' and simulations != opponent.simulations:
+                    opponent = create('model')
+                else:
+                    opponent.reload()
             self.opponent = opponent
+            self.bots = bots
+            self.model_simulations = simulations
             self.human_player = human
             self.board.init_game()
             self.history.clear()
             self.moves.clear()
             self.ai_decisions.clear()
+            self.game_id = uuid4().hex
         else:
             raise ValueError("Unknown command.")
         self.revision += 1
@@ -279,6 +357,13 @@ class PlayHandler(BaseHTTPRequestHandler):
         if self.path == "/":
             self.respond(200, Path(__file__).with_name("play.html").read_bytes(),
                          "text/html; charset=utf-8")
+        elif self.path == '/playback.js':
+            self.respond(200, Path(__file__).with_name('playback.js').read_bytes(),
+                         'text/javascript; charset=utf-8')
+        elif self.path == '/api/history':
+            with self.server.game_lock:
+                states = self.server.game.snapshots()
+            self.respond(200, {'states': states})
         elif self.path == "/api/state":
             with self.server.game_lock:
                 state = self.server.game.snapshot()
@@ -324,7 +409,7 @@ def main():
     parser.add_argument("--checkpoint", type=Path, help="Model to play against; reloaded for each new game")
     parser.add_argument("--human-colour", choices=('blue', 'red'), default='blue')
     parser.add_argument("--simulations", type=int, default=32)
-    parser.add_argument('--opponent', choices=('local', 'alphabeta', 'greedy', 'reference-greedy', 'random', 'model', 'flybrain'))
+    parser.add_argument('--opponent', choices=('local', 'alphabeta', 'rust-minimax', 'greedy', 'reference-greedy', 'random', 'model', 'flybrain'))
     parser.add_argument('--flybrain-bank', type=Path)
     parser.add_argument('--ab-config', type=Path)
     args = parser.parse_args()

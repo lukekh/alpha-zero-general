@@ -48,7 +48,10 @@ def validate(bundle):
     if replay_digest(bundle['replay']) != bundle['replay_sha256']:
         raise ValueError('Checkpoint/replay digest mismatch')
     settings = bundle['settings']
-    if len(bundle['replay']) != min(bundle['iteration'], settings['replay_iterations']):
+    replay_start = bundle.get('replay_started_at', 0)
+    if type(replay_start) is not int or not 0 <= replay_start <= bundle['iteration']:
+        raise ValueError('Invalid replay start iteration')
+    if len(bundle['replay']) != min(bundle['iteration'] - replay_start, settings['replay_iterations']):
         raise ValueError('Wrong number of replay generations')
     if any(len(b) > settings['replay_max_examples'] for b in bundle['replay']):
         raise ValueError('Replay exceeds configured bound')
@@ -61,6 +64,10 @@ def validate(bundle):
         max(1, bundle['iteration']//settings['evaluation_interval'] * settings['evaluation_interval']))
     if bundle['iteration'] == 0:
         expected = 0
+    rebased = bundle.get('selection_rebased_at', 0)
+    if not 0 <= rebased <= bundle['iteration']:
+        raise ValueError('Invalid selection rebase iteration')
+    expected = max(expected, rebased)
     if bundle['selection_iteration'] != expected:
         raise ValueError('Selection is incomplete for committed iteration')
     for key in ('current', 'best'):
@@ -109,6 +116,122 @@ def initial_bundle(net, settings, baseline, started, deadline, folder):
         started_epoch=started, deadline_epoch=deadline)
 
 
+def migrate_training_opponent(bundle, settings):
+    """Explicit opponent-only switch, retaining weights/AdamW and selection.
+
+    Replay starts fresh so the first update uses only the new opponent's games;
+    global iteration numbering and the absolute deadline do not restart.
+    """
+    validate(bundle)
+    allowed = {'opponent','opponent_search','value_targets'}
+    if ({k:v for k,v in bundle['settings'].items() if k not in allowed} !=
+            {k:v for k,v in settings.items() if k not in allowed}):
+        raise ValueError('Opponent migration must preserve selection and training hyperparameters')
+    if bundle['settings']['opponent'] != 'FlybrainPlayer' or settings['opponent'] != 'AlphaBetaPlayer':
+        raise ValueError('This migration supports fly-brain to Minimax training only')
+    if settings.get('worker_opponents'):
+        raise ValueError('A fixed opponent migration cannot retain mixed-worker overrides')
+    if not settings.get('evaluation_opponents'):
+        raise ValueError('An explicit evaluation schedule is required to preserve checkpoint tests')
+    from .heuristics import SearchConfig
+    from .rust_teacher.adapter import validate_backend
+    validate_backend(SearchConfig(**settings['opponent_search']),settings['opponent_backend'])
+    migration = dict(iteration=bundle['iteration'],changed_epoch=time.time(),
+        previous_opponent=bundle['settings']['opponent'],next_opponent=settings['opponent'],
+        previous_value_targets=bundle['settings']['value_targets'],
+        opponent_search=copy.deepcopy(settings['opponent_search']),
+        previous_replay_sha256=bundle['replay_sha256'],
+        previous_replay_examples=sum(map(len,bundle['replay'])),
+        replay_reset=True,optimizer_reset=False,selection_unchanged=True)
+    result = dict(bundle,settings=copy.deepcopy(settings),replay=[],replay_sha256=replay_digest([]),
+        replay_started_at=bundle['iteration'],
+        training_opponent_migrations=bundle.get('training_opponent_migrations',[]) + [migration])
+    validate(result)
+    return result
+
+
+def evaluate_checkpoint(pool, snapshot, settings, *, deadline):
+    """Finish all fly games before deciding whether Minimax may be dispatched."""
+    gate = settings.get('evaluation_gate')
+    seeds = list(range(800000, 800000 + settings['evaluation_games']))
+    if not gate:
+        rows, timing = pool.collect(snapshot, seeds, False, deadline=deadline)
+        return rows, timing, selection([r for _,r in rows])
+    if gate != 'no_flybrain_losses':
+        raise ValueError('Unknown evaluation gate')
+    blocks = settings.get('evaluation_opponents', [])
+    if (len(blocks) != 2 or settings['evaluation_games'] != 40 or
+            [(b['opponent'],b['games']) for b in blocks] !=
+            [('FlybrainPlayer',30),('AlphaBetaPlayer',10)]):
+        raise ValueError('Loss gate requires 30 fly-brain games followed by 10 Minimax games')
+    start = time.perf_counter()
+    rows, fly_timing = pool.collect(snapshot,seeds[:30],False,deadline=deadline,evaluation_stage=0)
+    fly = selection([r for _,r in rows])
+    if len(rows) != 30:
+        raise ValueError('Incomplete fly-brain evaluation')
+    qualified = fly['losses'] == 0
+    minimax_timing = None
+    if qualified:
+        extra, minimax_timing = pool.collect(snapshot,seeds[30:],False,
+                                             deadline=deadline,evaluation_stage=1)
+        if len(extra) != 10:
+            raise ValueError('Incomplete Minimax evaluation')
+        rows = rows + [(examples,dict(row,index=i+30)) for i,(examples,row) in enumerate(extra)]
+    if time.time() >= deadline:
+        raise TimeoutError('Deadline reached during gated evaluation')
+    summary = selection([r for _,r in rows])
+    # Always rank by points out of 40, not a 30-game versus 40-game win rate.
+    # Skipped games earn no points but are NOT fabricated losses or draws.
+    summary.update(played_score=summary['score'],score=(summary['wins']+.5*summary['model_draws'])/40,
+                   maximum_games=40,minimax_qualified=qualified,minimax_played=10 if qualified else 0,
+                   minimax_skipped=0 if qualified else 10,gate=gate,
+                   by_opponent={'FlybrainPlayer':fly, 'AlphaBetaPlayer':
+                       selection([r for _,r in rows[30:]]) if qualified else None})
+    return rows, dict(seconds=time.perf_counter()-start,games=len(rows),
+                      flybrain=fly_timing,minimax=minimax_timing), summary
+
+
+def rebase_selection(bundle, settings, pool, folder, boundary=lambda stage: None):
+    """Re-score incumbent and current weights on one new suite, without training.
+
+    Caller publishes the returned bundle atomically only after both suites finish.
+    Replay, AdamW moments, weights, numbering and the original deadline survive.
+    """
+    allowed = {'evaluation_games','evaluation_opponents','selection','opponent_backend','evaluation_gate'}
+    old = {k:v for k,v in bundle['settings'].items() if k not in allowed}
+    new = {k:v for k,v in settings.items() if k not in allowed}
+    if old != new or (settings.get('opponent') == 'AlphaBetaPlayer' and
+                     bundle['settings'].get('opponent_backend') != settings.get('opponent_backend')):
+        raise ValueError('Selection migration cannot change training settings')
+    from .greedy_process import game_tasks
+    seeds = range(800000, 800000 + settings['evaluation_games'])
+    game_tasks('unused', seeds, False, settings)  # Validate the complete suite first.
+    scores, games, timings = {}, {}, {}
+    for key in ('best','current'):
+        if time.time() >= bundle['deadline_epoch']:
+            raise TimeoutError('Original deadline reached during selection migration')
+        boundary('rebaseline_' + key)
+        net = make_net(settings)
+        net.load_network(copy.deepcopy(bundle[key]))
+        snapshot = checkpoint(net, folder)
+        rows, timings[key], scores[key] = evaluate_checkpoint(pool,snapshot,settings,
+                                                              deadline=bundle['deadline_epoch'])
+        games[key] = [r for _,r in rows]
+    if time.time() >= bundle['deadline_epoch']:
+        raise TimeoutError('Original deadline reached before selection migration commit')
+    result = dict(bundle, settings=dict(settings), best_score=scores['best']['score'],
+                  selection=scores['current'], selection_iteration=bundle['iteration'],
+                  selection_rebased_at=bundle['iteration'])
+    if scores['current']['score'] > scores['best']['score']:
+        result.update(best=bundle['current'], best_iteration=bundle['iteration'],
+                      best_score=scores['current']['score'])
+    migration = dict(iteration=bundle['iteration'],previous_best_score=bundle['best_score'],
+                     previous_best_iteration=bundle['best_iteration'],scores=scores,
+                     best_iteration=result['best_iteration'],changed_epoch=time.time())
+    result['selection_migrations'] = bundle.get('selection_migrations', []) + [migration]
+    return result, dict(migration, games=games, timing=timings)
+
+
 def iteration(bundle, pool, folder, boundary=lambda stage: None):
     settings = bundle['settings']
     number = bundle['iteration'] + 1
@@ -150,10 +273,8 @@ def iteration(bundle, pool, folder, boundary=lambda stage: None):
         replay=list(replay), replay_sha256=replay_digest(replay), optimizer_updates=net.optimizer_updates)
     evaluation_rows = []
     if number == 1 or number % settings['evaluation_interval'] == 0:
-        evaluated, phases['selection'] = pool.collect(candidate,
-            range(800000, 800000 + settings['evaluation_games']), False, deadline=deadline)
+        evaluated, phases['selection'], score = evaluate_checkpoint(pool,candidate,settings,deadline=deadline)
         evaluation_rows = [row for _, row in evaluated]
-        score = selection(evaluation_rows)
         result.update(selection=score, selection_iteration=number)
         if score['score'] > bundle['best_score']:
             result.update(best=current, best_iteration=number, best_score=score['score'])

@@ -40,6 +40,11 @@
   .search-limits input { width: 110px; min-width: 0; font: inherit; padding: 5px; }
   .controls button { border: 1px solid #c8cec3; background: white; border-radius: 7px; font: inherit; padding: 8px 14px; cursor: pointer; }
   .controls button:disabled { opacity: .45; cursor: default; }
+  .timeline { justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+  #playback-position { text-align: center; font-size: 13px; }
+  #pause-seconds { width: 75px; font: inherit; padding: 5px; }
+  #mcts-simulations { width: 100px; max-width: 100%; font: inherit; padding: 5px; }
+  #bot-options label { display: block; margin: 8px 0; }
   .counts { display: flex; justify-content: space-between; font-weight: 600; margin: 16px 0; }
   #hint { min-height: 48px; }
   #error { color: #a33020; }
@@ -60,14 +65,38 @@
 <main>
   <header><div><p class="eyebrow">The corner is the goal</p><h1>Intransitive</h1></div><span class="muted" id="mode">Local game</span></header>
   <div class="layout">
-    <section><div id="board" class="board" aria-label="Intransitive board"></div><p class="muted">Blue targets I9 ↗ &nbsp; · &nbsp; Red targets A1 ↙</p></section>
+    <section><div id="board" class="board" aria-label="Intransitive board"></div>
+      <nav class="controls timeline" aria-label="Move history">
+        <button id="first-move" title="Opening (Home)" aria-label="Go to opening" disabled>&lt;&lt;</button>
+        <button id="previous-move" title="Previous move (Left arrow)" aria-label="Previous move" disabled>&lt;</button>
+        <button id="playback-toggle" title="Pause display only; bots keep calculating" disabled>Pause playback</button>
+        <button id="next-move" title="Next move (Right arrow)" aria-label="Next move" disabled>&gt;</button>
+        <button id="last-move" title="Latest generated move (End)" aria-label="Go to latest move" disabled>&gt;&gt;</button>
+      </nav>
+      <p id="playback-position" class="muted" aria-live="polite"></p>
+      <p class="muted">Blue targets I9 ↗ &nbsp; · &nbsp; Red targets A1 ↙</p>
+    </section>
     <aside>
       <div class="card">
         <p class="eyebrow" id="turn">Loading game</p>
         <h2 id="status" aria-live="polite">Getting the board ready…</h2>
         <p id="hint">Select a piece, then a highlighted destination.</p>
-        <p><label for="opponent">Opponent <select id="opponent"><option value="local">Local · two players</option><option value="alphabeta">Alpha–beta</option><option value="greedy">Greedy</option><option value="reference-greedy">Reference greedy</option><option value="flybrain">Fly connectome</option><option value="random">Random</option><option value="model">Saved neural model</option></select></label></p>
-        <fieldset id="ab-options" hidden><legend>Alpha–beta settings</legend>
+        <p><label for="game-mode">Mode <select id="game-mode"><option value="play">Play</option><option value="watch">Watch two bots</option></select></label></p>
+        <p><label for="opponent">Opponent <select id="opponent"><option value="local">Local · two players</option><option value="alphabeta">Minimax · Python</option><option value="rust-minimax">Minimax · Rust</option><option value="greedy">Greedy</option><option value="reference-greedy">Reference greedy</option><option value="flybrain">Fly connectome</option><option value="random">Random</option><option value="model">Saved neural model</option></select></label></p>
+        <fieldset id="bot-options" hidden><legend>Watch two bots</legend>
+          <label for="blue-bot">Blue bot <select id="blue-bot"></select></label>
+          <label for="red-bot">Red bot <select id="red-bot"></select></label>
+          <label for="pause-seconds">Pause / move (seconds) <input id="pause-seconds" type="number" min="0" max="3600" step="0.1" value="1" required></label>
+          <p class="rule muted">Minimum time between displayed moves. Bots keep calculating at full speed; this delays only playback. Minimax settings below apply to both bots if selected.</p>
+        </fieldset>
+        <fieldset id="model-options" hidden><legend>Neural model settings</legend>
+          <label for="mcts-simulations">MCTS simulations per move
+            <input id="mcts-simulations" type="number" min="2" step="1" value="32" required aria-describedby="mcts-help" list="mcts-presets">
+          </label>
+          <datalist id="mcts-presets"><option value="32"><option value="64"><option value="128"><option value="256"><option value="512"><option value="1024"></datalist>
+          <p class="rule muted" id="mcts-help">More simulations give the model more thinking time, not a fixed search depth. Click New game to apply. In watch mode this applies to both neural model bots.</p>
+        </fieldset>
+        <fieldset id="ab-options" hidden><legend>Minimax settings</legend>
           <label><input id="attack" type="checkbox"> Attack</label>
           <label><input id="defence" type="checkbox"> Defence</label>
           <label><input id="overload" type="checkbox"> Overload</label>
@@ -79,12 +108,15 @@
             <label for="node-limit">Work limit per move<input id="node-limit" type="number" min="0" max="9007199254740991" step="1" value="200000" required aria-describedby="search-help"></label>
           </div>
           <p class="rule muted" id="search-help">One ply is one player's move. Search stops at the first limit reached; work includes search and heuristic calculations. If time and work are reached together, time is reported. Zero uses a fallback move. Time first applies after New game and retains a high work safety cap.</p>
+          <p class="rule muted" id="rust-help" hidden>Rust: depths 1–32, with Attack, Defence and Overload off. The work cap counts node visits in Rust and charged work in Python. Compare matching completed depths with a generous work cap.</p>
         </fieldset>
         <p class="muted">Opponent, colour and search settings apply with New game.</p>
         <p id="ai-options"><label for="colour">Your colour <select id="colour"><option value="0">Blue · move first</option><option value="1">Red · AI moves first</option></select></label></p>
         <p class="muted" id="model" hidden></p>
+        <p class="muted" id="engine-summary" hidden></p>
         <div class="counts"><span id="blue-count"></span><span id="red-count"></span></div>
         <div class="controls"><button id="undo" disabled>Undo</button><button id="restart" disabled>New game</button><button id="retry" hidden>Retry AI</button></div>
+        <div class="controls"><button id="generation-toggle" hidden>Stop bots</button></div>
         <p id="error" role="alert" hidden></p>
       </div>
       <div class="card">
@@ -105,8 +137,11 @@
     </aside>
   </div>
 </main>
+<script src="/playback.js"></script>
 <script>
-  let state, selected = null, busy = false, pendingCommand = null;
+  let state, live, selected = null, busy = false, pendingCommand = null;
+  let generating = true, queuedRestart = null, pauseMs = 1000;
+  const playback = new MovePlayback();
   const $ = id => document.getElementById(id);
   const names = ['', 'rock', 'scissors', 'paper'];
   const symbols = ['', '✊', '✌️', '✋'];
@@ -114,27 +149,91 @@
   const same = (a, b) => a && b && a[0] === b[0] && a[1] === b[1];
   const searchFields = {'max_depth': 'max-depth', 'time_limit': 'time-limit', 'node_limit': 'node-limit'};
 
+  function showFrame() {
+    state = playback.visible;
+    selected = null;
+    $('copy-status').textContent = '';
+    $('copy-text').hidden = true;
+    render();
+  }
+
+  function receive(data, command) {
+    if (!live || command === 'restart' || command === 'undo' || data.game_id !== live.game_id) {
+      playback.reset([data]);
+    } else if (data.ply === live.ply + 1) {
+      playback.push(data);
+      if (command === 'move') playback.seek(playback.frames.length - 1, true);
+    } else if (data.ply === live.ply) {
+      playback.frames[playback.frames.length - 1] = data;
+    } else {
+      throw new Error('The game changed in another tab. Refresh to reload its history.');
+    }
+    live = data;
+    if (command === 'restart') generating = true;
+    playback.interval = live.mode === 'watch' ? pauseMs : 0;
+    playback.tick();
+    state = playback.visible;
+  }
+
+  async function loadHistory() {
+    const response = await fetch('/api/history');
+    if (!response.ok) throw new Error('Restart the play server to enable bot viewing and history.');
+    const data = await response.json();
+    playback.reset(data.states);
+    live = data.states.at(-1);
+    state = playback.visible;
+    playback.interval = live.mode === 'watch' ? pauseMs : 0;
+  }
+
+  function pump() {
+    if (busy || !live) return;
+    if (queuedRestart) {
+      const options = queuedRestart;
+      queuedRestart = null;
+      request('restart', options);
+    } else if (live.ai_turn && (live.mode !== 'watch' || generating)) {
+      request('ai'); // Never wait for the display clock or history cursor.
+    }
+  }
+
   async function request(command, extra = {}) {
     if (busy) return;
     busy = true;
     pendingCommand = command;
     let succeeded = false;
+    const previousView = state;
     if (state) render();
     $('error').hidden = true;
     try {
-      const response = await fetch(command ? '/api/' + command : '/api/state', command ? {
-        method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({revision: state.revision, ...extra})
-      } : {});
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Unable to update the board.');
-      state = data;
-      $('copy-status').textContent = '';
-      $('copy-text').hidden = true;
+      if (!command) {
+        await loadHistory();
+      } else {
+        const response = await fetch('/api/' + command, {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({revision: live.revision, ...extra})
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Unable to update the board.');
+        if (command === 'undo') await loadHistory();
+        else receive(data, command);
+      }
+      if (state !== previousView) {
+        $('copy-status').textContent = '';
+        $('copy-text').hidden = true;
+      }
       selected = null;
       if (!command || command === 'restart') {
         $('colour').value = String(state.human_player);
         $('opponent').value = state.opponent;
+        $('game-mode').value = live.mode === 'watch' ? 'watch' : 'play';
+        for (const id of ['blue-bot','red-bot']) {
+          $(id).replaceChildren(...Array.from($('opponent').options)
+            .filter(option => option.value !== 'local').map(option => option.cloneNode(true)));
+          for (const option of $(id).options) option.disabled = !live.opponents.includes(option.value);
+        }
+        $('blue-bot').value = live.watch_opponents?.[0] || (live.opponents.includes('model') ? 'model' : 'greedy');
+        $('red-bot').value = live.watch_opponents?.[1] || 'alphabeta';
+        $('mcts-simulations').value = live.model_simulations ?? 32;
         for (const module of ['attack', 'defence', 'overload']) $(module).checked = !!state.ab_options[module + '_enabled'];
         for (const [name, id] of Object.entries(searchFields)) {
           if (state.ab_options[name] !== undefined) $(id).value = state.ab_options[name];
@@ -146,10 +245,10 @@
     } catch (error) {
       // Recover the authoritative board after a stale request or lost response.
       try {
-        const response = await fetch('/api/state');
-        if (response.ok) state = await response.json();
+        await loadHistory();
       } catch (_) { /* Keep the last visible board while disconnected. */ }
       selected = null;
+      generating = false;
       $('error').textContent = error.message;
       $('error').hidden = false;
     } finally {
@@ -157,11 +256,11 @@
       pendingCommand = null;
       if (state) render();
     }
-    if (succeeded && state.ai_turn) await request('ai');
+    if (succeeded || queuedRestart) queueMicrotask(pump);
   }
 
   function choose(x, y) {
-    if (busy || state.ai_turn || state.reason !== 'ongoing') return;
+    if (busy || !playback.atLatest || state.mode === 'watch' || state.ai_turn || state.reason !== 'ongoing') return;
     const move = state.legal.find(m => same(m.source, selected) && same(m.target, [x, y]));
     if (move) { request('move', {action: move.action}); return; }
     const piece = state.board[y][x];
@@ -175,18 +274,22 @@
     const player = state.player === 0 ? 'Blue' : 'Red';
     const ongoing = state.reason === 'ongoing';
     const ai = state.mode === 'ai';
+    const watch = state.mode === 'watch';
+    const reviewing = !playback.atLatest;
+    const controlsBusy = !!queuedRestart || (busy && (live.mode !== 'watch' || pendingCommand === 'restart'));
     const human = state.human_player === 0 ? 'Blue' : 'Red';
-    $('mode').textContent = ai ? 'You: ' + human + ' · AI: ' + (state.human_player === 0 ? 'Red' : 'Blue') : 'Local · Play both sides';
-    $('opponent').disabled = busy;
-    for (const id of ['attack', 'defence', 'overload', 'core', 'time-first']) $(id).disabled = busy;
-    for (const id of Object.values(searchFields)) $(id).disabled = busy;
-    $('colour').disabled = busy;
-    $('model').hidden = !ai;
-    $('model').textContent = ai ? state.model : '';
+    $('mode').textContent = watch ? 'Watching two bots' : ai ? 'You: ' + human + ' · AI: ' + (state.human_player === 0 ? 'Red' : 'Blue') : 'Local · Play both sides';
+    for (const id of ['game-mode','opponent','blue-bot','red-bot','colour','attack','defence','overload','core','time-first',...Object.values(searchFields)]) $(id).disabled = controlsBusy;
+    $('model').hidden = !ai && !watch;
+    $('model').textContent = watch ? 'Blue: ' + state.bot_labels[0] + ' · Red: ' + state.bot_labels[1] : ai ? state.model : '';
+    $('engine-summary').hidden = !state.analysis;
+    $('engine-summary').textContent = state.analysis ? state.analysis.backend + ' · depth ' +
+      state.analysis.completed_depth + ' · ' + state.analysis.elapsed_seconds.toFixed(3) + ' s · ' +
+      state.analysis.nodes.toLocaleString() + ' nodes · score ' + (state.analysis.score ?? 'unavailable') : '';
     $('analysis').hidden = !state.analysis;
     $('analysis-text').textContent = state.analysis ? JSON.stringify(state.analysis, null, 2) : '';
     $('turn').textContent = ongoing ? 'Turn ' + (state.ply + 1) : 'Game complete';
-    $('status').textContent = ongoing ? ai ? state.ai_turn ? (busy ? 'AI is thinking…' : 'AI to move') : 'Your turn · ' + human : player + ' to move' :
+    $('status').textContent = ongoing ? watch ? player + ' bot to move' : ai ? state.ai_turn ? (busy ? 'AI is thinking…' : 'AI to move') : 'Your turn · ' + human : player + ' to move' :
       state.winner !== null ? ai ? state.winner === state.human_player ? 'You win!' : 'AI wins' : (state.winner === 0 ? 'Blue' : 'Red') + ' wins!' : 'Draw';
     const options = state.legal.filter(m => same(m.source, selected));
     $('hint').textContent = ongoing ? selected ?
@@ -195,14 +298,28 @@
       ({corner: 'The opposite corner was reached.', stalemate: player + ' has no legal moves.',
         repetition: 'This position occurred three times.', 'no-capture limit': '30 turns passed without a capture.'})[state.reason];
     if (state.ai_turn) $('hint').textContent = busy ? 'The AI is choosing its move.' : 'Use Retry AI to continue.';
+    if (watch) $('hint').textContent = 'Moves are calculated independently of playback. ' +
+      (generating ? 'Use Stop bots to stop calculation after the current move.' : 'Calculation is stopped; buffered moves can still be watched.');
+    if (reviewing) $('hint').textContent = 'Viewing an earlier position. Use > to step forward or >> to return to the latest generated move.';
     if (pendingCommand === 'restart') $('hint').textContent = 'Preparing your new game…';
-    $('undo').disabled = busy || !state.can_undo;
+    $('undo').disabled = busy || reviewing || !live.can_undo;
     $('undo').textContent = ai ? 'Undo turn' : 'Undo';
-    $('restart').disabled = busy;
+    $('restart').disabled = controlsBusy;
     // Copy the visible snapshot even while a move request is in flight.
     $('copy-position').disabled = false;
     $('copy-position').title = state.pgn ? 'Copy position as PGN' : 'Restart the game server to enable position export';
-    $('retry').hidden = !state.ai_turn || busy;
+    $('retry').hidden = !live.ai_turn || busy || watch;
+    $('generation-toggle').hidden = !watch;
+    $('generation-toggle').disabled = live.reason !== 'ongoing' || !!queuedRestart;
+    $('generation-toggle').textContent = live.reason !== 'ongoing' ? 'Bots finished' : generating ? 'Stop bots' : 'Continue bots';
+    $('first-move').disabled = playback.index === 0;
+    $('previous-move').disabled = playback.index === 0;
+    $('next-move').disabled = playback.atLatest;
+    $('last-move').disabled = playback.atLatest && playback.playing;
+    $('playback-toggle').disabled = false;
+    $('playback-toggle').textContent = playback.playing ? 'Pause playback' : 'Resume playback';
+    $('playback-position').textContent = 'Move ' + state.ply + ' of ' + live.ply + ' generated' +
+      (playback.playing ? reviewing ? ' · buffered playback' : ' · latest' : ' · playback paused');
     $('counters').textContent = state.noncapture + ' turns without capture · Position seen ' + state.repetition + ' time(s)';
     $('blue-count').textContent = 'Blue · ' + state.board.flat().filter(p => p > 0).length + ' pieces';
     $('red-count').textContent = 'Red · ' + state.board.flat().filter(p => p < 0).length + ' pieces';
@@ -220,7 +337,7 @@
       square.setAttribute('aria-label', label + (piece ? ' ' + (piece > 0 ? 'Blue ' : 'Red ') + names[Math.abs(piece)] : ' empty') +
         (goal ? x === 0 ? ', Red target' : ', Blue target' : '') + (legal ? ', legal destination' : ''));
       square.setAttribute('aria-pressed', String(!!same(selected, [x, y])));
-      square.disabled = busy || !ongoing || state.ai_turn;
+      square.disabled = busy || reviewing || watch || !ongoing || state.ai_turn;
       square.innerHTML = '<span class="coordinate">' + label + '</span>' +
         (piece ? '<span aria-hidden="true" class="piece ' + (piece > 0 ? 'blue' : 'red') + '">' + symbols[Math.abs(piece)] + '</span>' : '') +
         (goal ? '<span class="goal">GOAL</span>' : '');
@@ -240,7 +357,7 @@
       $('copy-status').textContent = 'This server is running an older version. Restart it, then refresh this page to enable position export.';
       return;
     }
-    const revision = state.revision;
+    const copiedState = state;
     let timeout;
     $('copy-text').value = pgn;
     $('copy-text').hidden = false;
@@ -252,12 +369,12 @@
         navigator.clipboard.writeText(pgn),
         new Promise((_, reject) => { timeout = setTimeout(() => reject(new Error('Clipboard unavailable')), 1500); })
       ]);
-      if (state.revision === revision) {
+      if (state === copiedState) {
         $('copy-status').textContent = 'Position copied.';
         $('copy-text').hidden = true;
       }
     } catch (_) {
-      if (state.revision !== revision) return;
+      if (state !== copiedState) return;
       $('copy-status').textContent = 'Select and copy the position below.';
       $('copy-text').value = pgn;
       $('copy-text').hidden = false;
@@ -268,10 +385,26 @@
     }
   };
   function updateOptions() {
-    $('ab-options').hidden = $('opponent').value !== 'alphabeta';
-    $('ai-options').hidden = $('opponent').value === 'local';
+    const watch = $('game-mode').value === 'watch';
+    $('opponent').closest('p').hidden = watch;
+    $('bot-options').hidden = !watch;
+    const selectedBots = watch ? [$('blue-bot').value, $('red-bot').value] : [$('opponent').value];
+    $('ab-options').hidden = !selectedBots.some(kind => ['alphabeta', 'rust-minimax'].includes(kind));
+    $('model-options').hidden = !selectedBots.includes('model');
+    const rust = selectedBots.includes('rust-minimax');
+    $('rust-help').hidden = !rust;
+    $('max-depth').max = rust ? '32' : '64';
+    $('max-depth').min = rust ? '1' : '0';
+    $('ai-options').hidden = watch || $('opponent').value === 'local';
   }
   $('opponent').onchange = updateOptions;
+  for (const id of ['game-mode','blue-bot','red-bot']) $(id).onchange = updateOptions;
+  $('pause-seconds').oninput = () => {
+    if ($('pause-seconds').validity.valid) {
+      pauseMs = $('pause-seconds').valueAsNumber * 1000;
+      playback.interval = live?.mode === 'watch' ? pauseMs : 0;
+    }
+  };
   $('core').onclick = () => { for (const module of ['attack', 'defence', 'overload']) $(module).checked = false; };
   $('time-first').onclick = () => {
     const preset = state.ab_presets.time_first;
@@ -279,20 +412,42 @@
   };
   $('restart').onclick = () => {
     const options = Object.fromEntries(['attack', 'defence', 'overload'].map(module => [module + '_enabled', $(module).checked]));
-    if ($('opponent').value === 'alphabeta') {
+    if ($('game-mode').value === 'watch' && !$('pause-seconds').reportValidity()) return;
+    if (!$('model-options').hidden && !$('mcts-simulations').reportValidity()) return;
+    if (!$('ab-options').hidden) {
       for (const [name, id] of Object.entries(searchFields)) {
         if (!$(id).reportValidity()) return;
         options[name] = $(id).valueAsNumber;
       }
     }
-    request('restart', {
-      human_player: Number($('colour').value), opponent: $('opponent').value, ab_options: options
-    });
+    queuedRestart = {mode: $('game-mode').value, human_player: Number($('colour').value),
+      opponent: $('opponent').value, blue_opponent: $('blue-bot').value,
+      red_opponent: $('red-bot').value, ab_options: options};
+    if (!$('model-options').hidden) queuedRestart.model_simulations = $('mcts-simulations').valueAsNumber;
+    generating = false;
+    pump();
+    render();
   };
   $('retry').onclick = () => request('ai');
+  function seek(index, follow = false) {
+    if (!state) return;
+    playback.seek(index, follow);
+    showFrame();
+  }
+  $('first-move').onclick = () => seek(0);
+  $('previous-move').onclick = () => seek(playback.index - 1);
+  $('next-move').onclick = () => seek(playback.index + 1);
+  $('last-move').onclick = () => seek(playback.frames.length - 1, true);
+  $('playback-toggle').onclick = () => { playback.playing = !playback.playing; render(); };
+  $('generation-toggle').onclick = () => { generating = !generating; render(); pump(); };
   document.addEventListener('keydown', event => {
+    if (event.target.closest?.('input,select,textarea,[contenteditable="true"]') || event.altKey || event.ctrlKey || event.metaKey) return;
+    const navigation = {ArrowLeft: () => seek(playback.index - 1), ArrowRight: () => seek(playback.index + 1),
+      Home: () => seek(0), End: () => seek(playback.frames.length - 1, true)};
+    if (state && navigation[event.key]) { event.preventDefault(); navigation[event.key](); }
     if (event.key === 'Escape' && state) { selected = null; render(); }
   });
+  setInterval(() => { if (playback.tick()) showFrame(); }, 16);
   request();
 </script>
 </html>

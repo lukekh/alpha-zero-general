@@ -164,12 +164,36 @@ continuation and model/heuristic/hybrid comparisons. It is retained as a negativ
 pilot result; the core alpha-beta opponent remains the stronger recommendation.
 
 Choose your colour and click **New game**; Blue moves first. The AI replies
-automatically using 32 MCTS simulations per move (`--simulations` changes this).
+automatically using 32 MCTS simulations per move by default (`--simulations`
+sets the initial value). Select **Saved neural model** to reveal **MCTS
+simulations per move**; choose a preset such as 32, 256 or 512, or enter any whole
+number of at least 2, then click **New game**. More simulations give more thinking
+time rather than a fixed search depth. The setting survives page reloads and
+also applies to both saved-model bots in watch mode. It does not change training.
 **Undo turn** takes back your move and the AI's reply. New game reloads the latest
 checkpoint, while an ongoing game keeps its model fixed. The model label identifies
-the saved iteration when available. Training can continue in its separate process.
+the saved iteration when available and the active simulation budget. Training can continue in its separate process.
 Use **Retry AI** if an AI request fails. Model loading requires the training packages
 above; local play without `--checkpoint` still needs only NumPy and Numba.
+
+To watch a match, choose **Mode → Watch two bots**, select the Blue and Red bots,
+then click **New game**. Each side gets its own opponent instance; the saved-model
+choice is available when the server was started with `--checkpoint`. Alpha–beta
+settings apply to either/both alpha-beta bots. **Pause / move (seconds)** is a
+minimum interval between displayed moves, adjustable immediately. Search and move
+requests continue at full speed while the page is open; completed moves queue in
+the browser. Slow searches incur no additional pause once that interval has
+elapsed. **Pause playback** stops only the display; **Stop bots** stops calculation
+after its current move. These controls do not affect the training processes.
+
+The controls under the board work in all modes: **< / >** (Left/Right arrows)
+step through moves, **<<** (Home) goes to the opening, and **>>** (End) jumps to
+the latest generated move and resumes following. Browsing older positions pauses
+playback and makes the board read-only; it never undoes the actual game. Keyboard
+shortcuts leave form inputs alone. Refresh restores the full game history; New
+game clears the old playback queue. Copy position exports the displayed position,
+including when reviewing an earlier move. Restart an already-running play server
+and refresh the page after updating the UI/backend.
 
 The board uses the compiled engine in official-play mode. Its modelling-only
 draw limits apply inside AI searches, without ending the browser game.
@@ -776,6 +800,47 @@ deadline. This is separate from Coach's legacy resume path described above.
 See the benchmark guide for initialization, legacy snapshot capture, interruption
 behaviour and optional worker counts. These are modelling rollouts; official-play
 termination is unchanged.
+
+Selection can use `evaluation_opponents` blocks, each with an even `games` quota
+and an `opponent` (plus `opponent_search` for Minimax). For example, 30
+`FlybrainPlayer` games followed by 10 `AlphaBetaPlayer` games form a 40-game,
+colour-balanced suite. These blocks apply only to evaluation; training opponents
+and replay stay unchanged. An optional pinned `opponent_backend` selects the
+Rust Minimax adapter. Every Minimax move must complete its requested depth or
+prove the result earlier. Combined scores also report a per-opponent breakdown.
+When changing suites, `greedy_training.rebase_selection` evaluates both best and
+current checkpoints on the new suite before the caller atomically publishes the
+replacement scores. Comparing an old 20-game score directly with a new 40-game
+score is deliberately avoided. The original deadline and AdamW/replay state are
+preserved.
+
+Each evaluation block can override `numMCTSSims` (an integer of at least two).
+For example, adding `numMCTSSims: 512` to only the Minimax block gives the model
+512 simulations in those tests while fly-brain tests and training keep the
+top-level budget of 32. Worker status and game results record the effective
+budget. Rebase both current and incumbent scores when changing this budget;
+selection-only rebasing also supports Minimax training, but must preserve its
+opponent search configuration and native backend.
+
+For the 30/10 suite, `evaluation_gate='no_flybrain_losses'` completes all 30
+fly-brain games before dispatching any Minimax games. One or more losses skips
+Minimax entirely; modelling draws do not fail the gate. Selection always uses
+win-plus-half-draw points divided by 40, including when only 30 games were
+played. Skipped games earn no points but are not recorded as losses or draws.
+Logs include the played-game score, qualification flag, skipped count and
+per-opponent results. This prevents a skipped 30-game test from appearing better
+merely because it avoided the harder opponent. Rebase the incumbent and current
+scores when enabling the gate, just as for any other selection-suite change.
+
+`greedy_training.migrate_training_opponent` supports an explicit switch from
+fly-brain to native Minimax reinforcement learning. It preserves current/best
+weights, AdamW state, global iteration numbers, checkpoint selection and the
+absolute deadline, while starting fresh replay for the new opponent. Replay
+validation uses its recorded start iteration, so the buffer grows back to the
+configured two generations normally after a restart. An explicit evaluation
+schedule is required: changing the training opponent must not silently change
+the checkpoint test. Fly-brain evaluation tasks discard Minimax search settings
+inherited from the training configuration.
 
 ### Human play and baseline opponents
 

@@ -78,6 +78,32 @@ class ProcessGames(unittest.TestCase):
                 self.assertIsNone(pool.pool)
                 self.assertTrue(all(not p.is_alive() for p in pool.initial_workers))
 
+    def test_flybrain_spawn_targets_and_value_head_training(self):
+        settings = dict(self.settings, opponent='FlybrainPlayer')
+        expected = [episode(self.net, s, i % 2, True, settings)
+                    for i, s in enumerate((580, 581))]
+        with GameProcesses(2, snapshot=self.snapshot, settings=settings) as pool:
+            actual, _ = pool.collect(self.snapshot, (580, 581), True)
+        for (eb, er), (ab, ar) in zip(expected, actual):
+            self.assertEqual(eb, ab)
+            self.assertEqual(er['actions'], ar['actions'])
+            self.assertEqual(ar['opponent'], 'FlybrainPlayer')
+            self.assertTrue(ar['modelling_only'])
+            reward = {'win': 1., 'loss': -1., 'model_draw': 1e-4}[ar['outcome']]
+            for blob in ab:
+                state, pi, value, legal, q = pickle.loads(zlib.decompress(blob))
+                self.assertFalse(np.any(pi[~legal]))
+                self.assertAlmostEqual(float(value[0]), reward, places=5)
+                np.testing.assert_array_equal(q, [0, 0])
+        net = make_net(settings)
+        net.load_checkpoint(str(self.snapshot.parent), self.snapshot.name)
+        self.assertTrue(all(p.requires_grad for p in net.nnet.value_head.parameters()))
+        before = [p.detach().clone() for p in net.nnet.value_head.parameters()]
+        net.args['batches_per_epoch'] = 1
+        net.train([blob for batch, _ in actual for blob in batch])
+        self.assertEqual(net.optimizer_updates, 1)
+        self.assertTrue(any(not torch.equal(a, b) for a, b in zip(before, net.nnet.value_head.parameters())))
+
     def test_bad_initializer_and_quota(self):
         before={p.pid for p in mp.active_children()}
         with self.assertRaises(TimeoutError):

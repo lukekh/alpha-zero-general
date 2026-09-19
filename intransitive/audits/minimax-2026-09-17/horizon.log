@@ -1,0 +1,5 @@
+Python depth 3 G7-F6 348.4375 exhaustive I6-I7 348.4375
+Rust 3 {'action': 485, 'score': 348.4375, 'completed_depth': 3, 'target_depth': 3, 'complete': True, 'stop_reason': 'maximum_depth', 'nodes': 21119, 'proof_nodes': 20491, 'seconds': 0.004033291, 'pv': [485, 416, 429], 'tt_hits': 0, 'table_entries': 79}
+Rust 4 {'action': 546, 'score': 348.4375, 'completed_depth': 4, 'target_depth': 4, 'complete': True, 'stop_reason': 'maximum_depth', 'nodes': 67877, 'proof_nodes': 65597, 'seconds': 0.013738, 'pv': [546, 418, 493, 424], 'tt_hits': 3, 'table_entries': 675}
+Rust 5 {'action': 546, 'score': 348.4375, 'completed_depth': 5, 'target_depth': 5, 'complete': True, 'stop_reason': 'maximum_depth', 'nodes': 167788, 'proof_nodes': 155095, 'seconds': 0.039128958, 'pv': [546, 418, 493, 430, 413], 'tt_hits': 70, 'table_entries': 1702}
+Rust 6 {'action': 546, 'score': 348.4375, 'completed_depth': 6, 'target_depth': 6, 'complete': True, 'stop_reason': 'maximum_depth', 'nodes': 291004, 'proof_nodes': 258136, 'seconds': 0.104358875, 'pv': [546, 418, 493, 430, 413, 417], 'tt_hits': 136, 'table_entries': 12000}
