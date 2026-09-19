@@ -1,0 +1,28 @@
+[
+  {
+    "moves": 4,
+    "outcomes": {
+      "unfinished": 2
+    },
+    "records": 2,
+    "setting": "smoke-depth4"
+  },
+  {
+    "moves": 565,
+    "outcomes": {
+      "unfinished": 3,
+      "win": 13
+    },
+    "records": 16,
+    "setting": "pruning-on"
+  },
+  {
+    "moves": 593,
+    "outcomes": {
+      "unfinished": 3,
+      "win": 13
+    },
+    "records": 16,
+    "setting": "pruning-off"
+  }
+]

@@ -1,0 +1,499 @@
+{
+  "arms": [
+    [
+      "full-mvv-off",
+      100.0,
+      false
+    ],
+    [
+      "scaled-mvv-on",
+      5.0,
+      true
+    ],
+    [
+      "scaled-mvv-off",
+      5.0,
+      false
+    ],
+    [
+      "full-mvv-on",
+      100.0,
+      true
+    ]
+  ],
+  "budget": {
+    "arm_games": 8,
+    "arm_seconds": 800,
+    "smoke_games": 2,
+    "smoke_seconds": 180,
+    "supervisor_seconds": 3500,
+    "total_seconds": 3600
+  },
+  "candidates": {
+    "full-mvv-off": [
+      {
+        "backend": "python",
+        "backend_version": "0f308665010df5f28cf081511c2d644fc3e132b7e1308ea788681e5f3dd99610",
+        "evaluation": {
+          "advantage_weight": 23.967050360966205,
+          "attack_enabled": true,
+          "attack_weight": 25.714516982666414,
+          "count_weight": 100.0,
+          "defence_enabled": true,
+          "defence_weight": 32.5643023919054,
+          "evaluator_version": "intransitive-heuristics-v2",
+          "overload_enabled": false,
+          "overload_weight": 5.0,
+          "predator_scarcity_bonus": 0.5,
+          "predator_zero_bonus": 1.0,
+          "pressure_enabled": false,
+          "pressure_radius": 4,
+          "pressure_weight": 1.0,
+          "prey_bonus": 0.25,
+          "race_weight": 0.0,
+          "variable_material_enabled": true
+        },
+        "genome": {
+          "backend": "python",
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 32.5643023919054,
+            "material": 100.0,
+            "overload": 0.0,
+            "pressure": 0.0
+          },
+          "version": "intransitive-module-scales-v2"
+        },
+        "name": "variable",
+        "role": "population",
+        "sha256": "0fe42cfe7fca342523ed90ac14269ebee81a29fa79d289617db4f02cbff9e9d6"
+      },
+      {
+        "backend": "python",
+        "backend_version": "0f308665010df5f28cf081511c2d644fc3e132b7e1308ea788681e5f3dd99610",
+        "evaluation": {
+          "advantage_weight": 23.967050360966205,
+          "attack_enabled": true,
+          "attack_weight": 25.714516982666414,
+          "count_weight": 100.0,
+          "defence_enabled": true,
+          "defence_weight": 32.5643023919054,
+          "evaluator_version": "intransitive-heuristics-v2",
+          "overload_enabled": false,
+          "overload_weight": 5.0,
+          "predator_scarcity_bonus": 0.5,
+          "predator_zero_bonus": 1.0,
+          "pressure_enabled": false,
+          "pressure_radius": 4,
+          "pressure_weight": 1.0,
+          "prey_bonus": 0.25,
+          "race_weight": 0.0,
+          "variable_material_enabled": false
+        },
+        "genome": {
+          "backend": "python",
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 32.5643023919054,
+            "material": 100.0,
+            "overload": 0.0,
+            "pressure": 0.0
+          },
+          "version": "intransitive-module-scales-v2"
+        },
+        "name": "flat",
+        "role": "population",
+        "sha256": "b83d94288c01e851b5d2fd20342c20829e7540971a8e06611e1ff58dc978f0b2"
+      }
+    ],
+    "full-mvv-on": [
+      {
+        "backend": "python",
+        "backend_version": "0f308665010df5f28cf081511c2d644fc3e132b7e1308ea788681e5f3dd99610",
+        "evaluation": {
+          "advantage_weight": 23.967050360966205,
+          "attack_enabled": true,
+          "attack_weight": 25.714516982666414,
+          "count_weight": 100.0,
+          "defence_enabled": true,
+          "defence_weight": 32.5643023919054,
+          "evaluator_version": "intransitive-heuristics-v2",
+          "overload_enabled": false,
+          "overload_weight": 5.0,
+          "predator_scarcity_bonus": 0.5,
+          "predator_zero_bonus": 1.0,
+          "pressure_enabled": false,
+          "pressure_radius": 4,
+          "pressure_weight": 1.0,
+          "prey_bonus": 0.25,
+          "race_weight": 0.0,
+          "variable_material_enabled": true
+        },
+        "genome": {
+          "backend": "python",
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 32.5643023919054,
+            "material": 100.0,
+            "overload": 0.0,
+            "pressure": 0.0
+          },
+          "version": "intransitive-module-scales-v2"
+        },
+        "name": "variable",
+        "role": "population",
+        "sha256": "0fe42cfe7fca342523ed90ac14269ebee81a29fa79d289617db4f02cbff9e9d6"
+      },
+      {
+        "backend": "python",
+        "backend_version": "0f308665010df5f28cf081511c2d644fc3e132b7e1308ea788681e5f3dd99610",
+        "evaluation": {
+          "advantage_weight": 23.967050360966205,
+          "attack_enabled": true,
+          "attack_weight": 25.714516982666414,
+          "count_weight": 100.0,
+          "defence_enabled": true,
+          "defence_weight": 32.5643023919054,
+          "evaluator_version": "intransitive-heuristics-v2",
+          "overload_enabled": false,
+          "overload_weight": 5.0,
+          "predator_scarcity_bonus": 0.5,
+          "predator_zero_bonus": 1.0,
+          "pressure_enabled": false,
+          "pressure_radius": 4,
+          "pressure_weight": 1.0,
+          "prey_bonus": 0.25,
+          "race_weight": 0.0,
+          "variable_material_enabled": false
+        },
+        "genome": {
+          "backend": "python",
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 32.5643023919054,
+            "material": 100.0,
+            "overload": 0.0,
+            "pressure": 0.0
+          },
+          "version": "intransitive-module-scales-v2"
+        },
+        "name": "flat",
+        "role": "population",
+        "sha256": "b83d94288c01e851b5d2fd20342c20829e7540971a8e06611e1ff58dc978f0b2"
+      }
+    ],
+    "scaled-mvv-off": [
+      {
+        "backend": "python",
+        "backend_version": "0f308665010df5f28cf081511c2d644fc3e132b7e1308ea788681e5f3dd99610",
+        "evaluation": {
+          "advantage_weight": 23.967050360966205,
+          "attack_enabled": true,
+          "attack_weight": 25.714516982666414,
+          "count_weight": 5.0,
+          "defence_enabled": true,
+          "defence_weight": 32.5643023919054,
+          "evaluator_version": "intransitive-heuristics-v2",
+          "overload_enabled": false,
+          "overload_weight": 5.0,
+          "predator_scarcity_bonus": 0.5,
+          "predator_zero_bonus": 1.0,
+          "pressure_enabled": false,
+          "pressure_radius": 4,
+          "pressure_weight": 1.0,
+          "prey_bonus": 0.25,
+          "race_weight": 0.0,
+          "variable_material_enabled": true
+        },
+        "genome": {
+          "backend": "python",
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 32.5643023919054,
+            "material": 5.0,
+            "overload": 0.0,
+            "pressure": 0.0
+          },
+          "version": "intransitive-module-scales-v2"
+        },
+        "name": "variable",
+        "role": "population",
+        "sha256": "153ba894f0301e72175c16b618319fa4e66f53169aee9c7946c5e8749f3e4ff6"
+      },
+      {
+        "backend": "python",
+        "backend_version": "0f308665010df5f28cf081511c2d644fc3e132b7e1308ea788681e5f3dd99610",
+        "evaluation": {
+          "advantage_weight": 23.967050360966205,
+          "attack_enabled": true,
+          "attack_weight": 25.714516982666414,
+          "count_weight": 100.0,
+          "defence_enabled": true,
+          "defence_weight": 32.5643023919054,
+          "evaluator_version": "intransitive-heuristics-v2",
+          "overload_enabled": false,
+          "overload_weight": 5.0,
+          "predator_scarcity_bonus": 0.5,
+          "predator_zero_bonus": 1.0,
+          "pressure_enabled": false,
+          "pressure_radius": 4,
+          "pressure_weight": 1.0,
+          "prey_bonus": 0.25,
+          "race_weight": 0.0,
+          "variable_material_enabled": false
+        },
+        "genome": {
+          "backend": "python",
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 32.5643023919054,
+            "material": 100.0,
+            "overload": 0.0,
+            "pressure": 0.0
+          },
+          "version": "intransitive-module-scales-v2"
+        },
+        "name": "flat",
+        "role": "population",
+        "sha256": "b83d94288c01e851b5d2fd20342c20829e7540971a8e06611e1ff58dc978f0b2"
+      }
+    ],
+    "scaled-mvv-on": [
+      {
+        "backend": "python",
+        "backend_version": "0f308665010df5f28cf081511c2d644fc3e132b7e1308ea788681e5f3dd99610",
+        "evaluation": {
+          "advantage_weight": 23.967050360966205,
+          "attack_enabled": true,
+          "attack_weight": 25.714516982666414,
+          "count_weight": 5.0,
+          "defence_enabled": true,
+          "defence_weight": 32.5643023919054,
+          "evaluator_version": "intransitive-heuristics-v2",
+          "overload_enabled": false,
+          "overload_weight": 5.0,
+          "predator_scarcity_bonus": 0.5,
+          "predator_zero_bonus": 1.0,
+          "pressure_enabled": false,
+          "pressure_radius": 4,
+          "pressure_weight": 1.0,
+          "prey_bonus": 0.25,
+          "race_weight": 0.0,
+          "variable_material_enabled": true
+        },
+        "genome": {
+          "backend": "python",
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 32.5643023919054,
+            "material": 5.0,
+            "overload": 0.0,
+            "pressure": 0.0
+          },
+          "version": "intransitive-module-scales-v2"
+        },
+        "name": "variable",
+        "role": "population",
+        "sha256": "153ba894f0301e72175c16b618319fa4e66f53169aee9c7946c5e8749f3e4ff6"
+      },
+      {
+        "backend": "python",
+        "backend_version": "0f308665010df5f28cf081511c2d644fc3e132b7e1308ea788681e5f3dd99610",
+        "evaluation": {
+          "advantage_weight": 23.967050360966205,
+          "attack_enabled": true,
+          "attack_weight": 25.714516982666414,
+          "count_weight": 100.0,
+          "defence_enabled": true,
+          "defence_weight": 32.5643023919054,
+          "evaluator_version": "intransitive-heuristics-v2",
+          "overload_enabled": false,
+          "overload_weight": 5.0,
+          "predator_scarcity_bonus": 0.5,
+          "predator_zero_bonus": 1.0,
+          "pressure_enabled": false,
+          "pressure_radius": 4,
+          "pressure_weight": 1.0,
+          "prey_bonus": 0.25,
+          "race_weight": 0.0,
+          "variable_material_enabled": false
+        },
+        "genome": {
+          "backend": "python",
+          "genes": {
+            "advantage": 23.967050360966205,
+            "attack": 25.714516982666414,
+            "defence": 32.5643023919054,
+            "material": 100.0,
+            "overload": 0.0,
+            "pressure": 0.0
+          },
+          "version": "intransitive-module-scales-v2"
+        },
+        "name": "flat",
+        "role": "population",
+        "sha256": "b83d94288c01e851b5d2fd20342c20829e7540971a8e06611e1ff58dc978f0b2"
+      }
+    ]
+  },
+  "position_hashes": [
+    "215c132ea32d242dc5cffde8c731432072b30e9fb24df12698e57f77c9e17981",
+    "3be41689f2bb77f22d02de97d340699a5f21e1a89eae95728053ed183f9867e3",
+    "233b1c8fe409a38db87fdcb5681099be9c617295514da9c2e6212d3cc1b69809",
+    "b94cd6573ca7d93a65e715c6f12f8403f519b378e60bb74c2de439e639805608"
+  ],
+  "position_seeds": [
+    1643,
+    1652,
+    2669,
+    2639
+  ],
+  "protocols": {
+    "full-mvv-off": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 180,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": true,
+        "futility_margin": 1.0,
+        "futility_max_depth": 2,
+        "max_depth": 4,
+        "mvv_lva_enabled": false,
+        "nmp_enabled": true,
+        "nmp_min_depth": 3,
+        "nmp_reduction": 1,
+        "node_limit": 100000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": true,
+        "search_version": "intransitive-selective-v1",
+        "selective_evaluator_enabled": true,
+        "table_entries": 10000,
+        "time_limit": 30
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    },
+    "full-mvv-on": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 180,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": true,
+        "futility_margin": 1.0,
+        "futility_max_depth": 2,
+        "max_depth": 4,
+        "mvv_lva_enabled": true,
+        "nmp_enabled": true,
+        "nmp_min_depth": 3,
+        "nmp_reduction": 1,
+        "node_limit": 100000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": true,
+        "search_version": "intransitive-selective-v1",
+        "selective_evaluator_enabled": true,
+        "table_entries": 10000,
+        "time_limit": 30
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    },
+    "scaled-mvv-off": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 180,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": true,
+        "futility_margin": 1.0,
+        "futility_max_depth": 2,
+        "max_depth": 4,
+        "mvv_lva_enabled": false,
+        "nmp_enabled": true,
+        "nmp_min_depth": 3,
+        "nmp_reduction": 1,
+        "node_limit": 100000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": true,
+        "search_version": "intransitive-selective-v1",
+        "selective_evaluator_enabled": true,
+        "table_entries": 10000,
+        "time_limit": 30
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    },
+    "scaled-mvv-on": {
+      "cache_policy": "fresh search/evaluation caches per move",
+      "completion_required": 0.8,
+      "game_seconds": 180,
+      "max_plies": 192,
+      "mode": "depth",
+      "ranking": "wins / scheduled games; unresolved worth zero; upper bound includes unresolved; eligibility requires completion threshold, all games attempted, no failures",
+      "search": {
+        "aspiration_enabled": false,
+        "aspiration_window": 25.0,
+        "compiled_ordering_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": true,
+        "futility_margin": 1.0,
+        "futility_max_depth": 2,
+        "max_depth": 4,
+        "mvv_lva_enabled": true,
+        "nmp_enabled": true,
+        "nmp_min_depth": 3,
+        "nmp_reduction": 1,
+        "node_limit": 100000000,
+        "ordering_enabled": false,
+        "pressure_cache_entries": 0,
+        "proof_depth": 2,
+        "proof_nodes": 64,
+        "pvs_enabled": true,
+        "search_version": "intransitive-selective-v1",
+        "selective_evaluator_enabled": true,
+        "table_entries": 10000,
+        "time_limit": 30
+      },
+      "startup_seconds": 120.0,
+      "timeout_grace": 5.0
+    }
+  },
+  "revision": "c10a530ffee5e7c61a26ed0bc264a433a70256b7",
+  "scope": "Four settings isolate variable material coefficient100 versus5 (BASE/20 equivalent), crossed with MVV-LVA off/on. Every opponent uses same pruning/PVS settings, flat material coefficient100. Same four colour-swapped openings per arm; no defaults adopted.",
+  "source": "Subset indices 0,2,5,7 of prior eight endgames: two per source corpus, retaining sole4v4 opening. Selected before MVV/scale results; reused diagnostic corpus, not held out."
+}

@@ -1,0 +1,607 @@
+{
+  "policy": "Both competing effective configurations must agree on the sign of static final-board evaluation; official outcomes and original reports retained. Inconclusive outcomes excluded from alternative decided-game fraction.",
+  "runs": [
+    {
+      "completed": true,
+      "folder": "/tmp/issue55-variable-depth4-pruning-20260917/smoke-depth4",
+      "matches": [
+        {
+          "adjudicated_winner": 0,
+          "effective_winner": 0,
+          "final_state_sha256": "0529226821805c018987b7a27c1da7336e3b0f8e11809ab8d3bded61700e589b",
+          "match_key": "986f25316061572421d67703442f553dde8336366d188290e5ec7778111bea3f",
+          "official_winner": null,
+          "original_status": "unfinished",
+          "outcome": "consensus",
+          "scores": [
+            {
+              "candidate": "838cebbe7502c1364f3a36a4ceb5d2156b53404b9da8ae74b8201b82650ac0cd",
+              "config_hash": "4892172ec0cecd10d17f97c105f7a4f311619e3d8a45131332323bc2157a40c6",
+              "score": 423.8677119085339,
+              "seconds": 0.087865666981088,
+              "status": "complete",
+              "work": 1227
+            },
+            {
+              "candidate": "c2e331daecf7a29a3f5c695bbe1b366c1c0b05583b58b78f18326e6a8379db88",
+              "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+              "score": 2285.8140209797016,
+              "seconds": 0.00745475001167506,
+              "status": "complete",
+              "work": 1227
+            }
+          ]
+        },
+        {
+          "adjudicated_winner": 0,
+          "effective_winner": 0,
+          "final_state_sha256": "0529226821805c018987b7a27c1da7336e3b0f8e11809ab8d3bded61700e589b",
+          "match_key": "c5c6b5662a3fef94ef0969ccf01fc143bd514e2c80d3e5b68d94767128370e81",
+          "official_winner": null,
+          "original_status": "unfinished",
+          "outcome": "consensus",
+          "scores": [
+            {
+              "candidate": "c2e331daecf7a29a3f5c695bbe1b366c1c0b05583b58b78f18326e6a8379db88",
+              "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+              "score": 2285.8140209797016,
+              "seconds": 0.0005292500136420131,
+              "status": "complete",
+              "work": 1227
+            },
+            {
+              "candidate": "838cebbe7502c1364f3a36a4ceb5d2156b53404b9da8ae74b8201b82650ac0cd",
+              "config_hash": "4892172ec0cecd10d17f97c105f7a4f311619e3d8a45131332323bc2157a40c6",
+              "score": 423.8677119085339,
+              "seconds": 0.0004338750150054693,
+              "status": "complete",
+              "work": 1227
+            }
+          ]
+        }
+      ],
+      "nodes_per_evaluator": 5000000,
+      "outcomes": {
+        "consensus": 2
+      },
+      "policy": "Both competing static weighted scores from player-zero perspective must have the same strict nonzero sign. Proof/tree search disabled. Official outcomes preserved; unfinished and cancelled nonempty legal prefixes eligible. Other failures excluded. Inconclusive games excluded from decided fraction; also show conservative wins/scheduled.",
+      "ranking": [
+        {
+          "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+          "consensus_losses": 1,
+          "consensus_wins": 1,
+          "decided": 2,
+          "losses": 1,
+          "scheduled": 2,
+          "win_fraction_decided": 0.5,
+          "wins": 1,
+          "wins_over_scheduled": 0.5
+        },
+        {
+          "config_hash": "4892172ec0cecd10d17f97c105f7a4f311619e3d8a45131332323bc2157a40c6",
+          "consensus_losses": 1,
+          "consensus_wins": 1,
+          "decided": 2,
+          "losses": 1,
+          "scheduled": 2,
+          "win_fraction_decided": 0.5,
+          "wins": 1,
+          "wins_over_scheduled": 0.5
+        }
+      ],
+      "records": 2,
+      "scheduled_records": 2,
+      "seconds_per_evaluator": 2.0
+    },
+    {
+      "completed": true,
+      "folder": "/tmp/issue55-variable-depth4-pruning-20260917/pruning-on",
+      "matches": [
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "04ca3e86f757b239a8b04788d162ca261d01e50e8cab27adc804014e6ca5f504",
+          "match_key": "a4e5aa8612111830503124a78f87f8376412fe1f79aa3eb6e216b6fa418bf6d1",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "12538deb9bb56a3fe44c29be2b48bf32b8e86b3510083978647daa1c48952ff4",
+          "match_key": "e0cc69c87c8e86b099b39311e6337d2286fd53c7683aad176ec3d40ac37c786e",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 1,
+          "final_state_sha256": "bdd5c2e1c81681d53dc241b2720568d89a5a4934fdd6edc66c242293f20ddaf7",
+          "match_key": "e8fdef917be178d8d166039c038bcedc1f778ae30ed053c6b5b9f464e6ee833e",
+          "official_winner": 1,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": null,
+          "final_state_sha256": "da4db33005d69cad38085e10f2e1ece74b64546ff07dfa871bf02279f0a10f99",
+          "match_key": "19f53aca89a96e2a6972216bc9dd4520b3677328a5f503963b4d5cadfd64823f",
+          "official_winner": null,
+          "original_status": "unfinished",
+          "outcome": "inconclusive",
+          "scores": [
+            {
+              "candidate": "838cebbe7502c1364f3a36a4ceb5d2156b53404b9da8ae74b8201b82650ac0cd",
+              "config_hash": "4892172ec0cecd10d17f97c105f7a4f311619e3d8a45131332323bc2157a40c6",
+              "score": -187.62305793960908,
+              "seconds": 0.0005472500051837415,
+              "status": "complete",
+              "work": 1130
+            },
+            {
+              "candidate": "c2e331daecf7a29a3f5c695bbe1b366c1c0b05583b58b78f18326e6a8379db88",
+              "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+              "score": 926.6629365123383,
+              "seconds": 0.00048650000826455653,
+              "status": "complete",
+              "work": 1130
+            }
+          ]
+        },
+        {
+          "adjudicated_winner": 0,
+          "effective_winner": 0,
+          "final_state_sha256": "a4aa563e8a75c0f468badce88e3db8b217e82f2c6f637a4f4e6b17068f3f9b04",
+          "match_key": "e0dfab0331b7fac4535b624e5760a83f6ae5280ad9b58c056fae06e5547f24b6",
+          "official_winner": null,
+          "original_status": "unfinished",
+          "outcome": "consensus",
+          "scores": [
+            {
+              "candidate": "c2e331daecf7a29a3f5c695bbe1b366c1c0b05583b58b78f18326e6a8379db88",
+              "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+              "score": 2102.611463003241,
+              "seconds": 0.000711207976564765,
+              "status": "complete",
+              "work": 1542
+            },
+            {
+              "candidate": "838cebbe7502c1364f3a36a4ceb5d2156b53404b9da8ae74b8201b82650ac0cd",
+              "config_hash": "4892172ec0cecd10d17f97c105f7a4f311619e3d8a45131332323bc2157a40c6",
+              "score": 203.59590616738183,
+              "seconds": 0.0015772499900776893,
+              "status": "complete",
+              "work": 1542
+            }
+          ]
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "01a2fde491117502b3b6d1a9ab48b03df47eea0fc26aeb26c9a6b50dfc6c55be",
+          "match_key": "2cb6e043aab13f575c0e70c891ca2d696c8ae891c786dbefadec9124a1e4d0af",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "035785fd78140294b19ba73e14f1795ed4fa3216d755e28dc179fbbe23c879bc",
+          "match_key": "ba257e86b992ef3a1f6be41f1640f3e2dd69c4dbfbcdc2fc01731c0d8f2f6fc9",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 1,
+          "final_state_sha256": "368ec99baf2382f4ba18fb379edf4c3c5279fc9da4d9899e6dd2af39e3007753",
+          "match_key": "5c2a426980930223a388ac2bdb290262f243a2dd53a87c8a581e1bf1bdb8d29d",
+          "official_winner": 1,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "9ee9a3b8093292ef69b865a1dd1fea5450d1ff6ad9a68109281daa64c86fa6e6",
+          "match_key": "9402cb0ef27fb91c321f5ee34334fc05f1c8eccc5f28c5156c598bb8801b688a",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "9ee9a3b8093292ef69b865a1dd1fea5450d1ff6ad9a68109281daa64c86fa6e6",
+          "match_key": "543bb66779f1670db0f68f3cdf313853e1e323a15b4c3b58aeda3c758ea04abb",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "119464ce554dd876434fcae79e48f2fc8dedb6a932d951efa1ee36793e193830",
+          "match_key": "5b011a6a841c90ff442ab51140727bc615ffa3cc3f9b757e6199cd1e5dc4da08",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 1,
+          "final_state_sha256": "9f46b7e67c2631630634aca1400fcfca2e3b67090fe97040df64d072bb263522",
+          "match_key": "cb194913e0cd5adeb436468f6c1b605badc61dc096d020753c50c7797f5fc9fd",
+          "official_winner": 1,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "976e936f83d2aeadb163d52ee252ce61fa1ed0084dd405bc3f485938a57fefbe",
+          "match_key": "12419fa11828e98a4601bef08709e7f6c7e3bc7e484b8d19e71f7c6cf8b27166",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "5bd514bbc02adaa33ee53b7b05152c2c9cb84c2a3c757aa100a3432b84a12ad6",
+          "match_key": "7cb90e9c49d3887ca03301e7cf97ebe8ead4eecc095ada21810d41528d5325ed",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": null,
+          "final_state_sha256": "ae3ec8fb4fdfbf9e45f910bc3476bd042d75d3bde63dd07ec7017f30f8ca7962",
+          "match_key": "37a8ee4382d5c0c8c9563d08a29d2459609f109d3f717fc9d15216697feda7cf",
+          "official_winner": null,
+          "original_status": "unfinished",
+          "outcome": "inconclusive",
+          "scores": [
+            {
+              "candidate": "c2e331daecf7a29a3f5c695bbe1b366c1c0b05583b58b78f18326e6a8379db88",
+              "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+              "score": 981.4662214598338,
+              "seconds": 0.0007547079876530915,
+              "status": "complete",
+              "work": 1569
+            },
+            {
+              "candidate": "838cebbe7502c1364f3a36a4ceb5d2156b53404b9da8ae74b8201b82650ac0cd",
+              "config_hash": "4892172ec0cecd10d17f97c105f7a4f311619e3d8a45131332323bc2157a40c6",
+              "score": -186.5350037799732,
+              "seconds": 0.0006454590184148401,
+              "status": "complete",
+              "work": 1569
+            }
+          ]
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 1,
+          "final_state_sha256": "fd5be7065e630fb041fdf94fb773917a419fe3d8cfde2327f770cac2bf494c0d",
+          "match_key": "9b65ab5f870c90a547e49df08b014b5635e79e960186b78b43634bb3f1da40e6",
+          "official_winner": 1,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        }
+      ],
+      "nodes_per_evaluator": 5000000,
+      "outcomes": {
+        "consensus": 1,
+        "inconclusive": 2,
+        "official": 13
+      },
+      "policy": "Both competing static weighted scores from player-zero perspective must have the same strict nonzero sign. Proof/tree search disabled. Official outcomes preserved; unfinished and cancelled nonempty legal prefixes eligible. Other failures excluded. Inconclusive games excluded from decided fraction; also show conservative wins/scheduled.",
+      "ranking": [
+        {
+          "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+          "consensus_wins": 1,
+          "decided": 14,
+          "inconclusive": 2,
+          "losses": 7,
+          "official_losses": 7,
+          "official_wins": 6,
+          "scheduled": 16,
+          "win_fraction_decided": 0.5,
+          "wins": 7,
+          "wins_over_scheduled": 0.4375
+        },
+        {
+          "config_hash": "4892172ec0cecd10d17f97c105f7a4f311619e3d8a45131332323bc2157a40c6",
+          "consensus_losses": 1,
+          "decided": 14,
+          "inconclusive": 2,
+          "losses": 7,
+          "official_losses": 6,
+          "official_wins": 7,
+          "scheduled": 16,
+          "win_fraction_decided": 0.5,
+          "wins": 7,
+          "wins_over_scheduled": 0.4375
+        }
+      ],
+      "records": 16,
+      "scheduled_records": 16,
+      "seconds_per_evaluator": 2.0
+    },
+    {
+      "completed": true,
+      "folder": "/tmp/issue55-variable-depth4-pruning-20260917/pruning-off",
+      "matches": [
+        {
+          "adjudicated_winner": 0,
+          "effective_winner": 0,
+          "final_state_sha256": "1df2dbdde20b63031357a124f6d84f73fe9ab7bffb2ee8b0c46697cd0d54a683",
+          "match_key": "fd7a7ee708eae67a5bc8413dc7c60ef62e109e7c2f4456cb224a2fc128079a1a",
+          "official_winner": null,
+          "original_status": "unfinished",
+          "outcome": "consensus",
+          "scores": [
+            {
+              "candidate": "c2e331daecf7a29a3f5c695bbe1b366c1c0b05583b58b78f18326e6a8379db88",
+              "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+              "score": 2115.5371477314857,
+              "seconds": 0.0006689589936286211,
+              "status": "complete",
+              "work": 1504
+            },
+            {
+              "candidate": "838cebbe7502c1364f3a36a4ceb5d2156b53404b9da8ae74b8201b82650ac0cd",
+              "config_hash": "4892172ec0cecd10d17f97c105f7a4f311619e3d8a45131332323bc2157a40c6",
+              "score": 216.52159089562656,
+              "seconds": 0.0006785829900763929,
+              "status": "complete",
+              "work": 1504
+            }
+          ]
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "9ee9a3b8093292ef69b865a1dd1fea5450d1ff6ad9a68109281daa64c86fa6e6",
+          "match_key": "97d517de540030f84060e1508c5be96b72641b491acec1a148acc4d0e7373fcc",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": null,
+          "final_state_sha256": "020517063f90200a7041d2fcfd78c2eda15ef02e28953c8a89fb14d9ded98704",
+          "match_key": "e8d9d3838f597ad13e782b025a5ff3431f7986c95ff164d84471f7ae382eb4e8",
+          "official_winner": null,
+          "original_status": "unfinished",
+          "outcome": "inconclusive",
+          "scores": [
+            {
+              "candidate": "838cebbe7502c1364f3a36a4ceb5d2156b53404b9da8ae74b8201b82650ac0cd",
+              "config_hash": "4892172ec0cecd10d17f97c105f7a4f311619e3d8a45131332323bc2157a40c6",
+              "score": -187.62305793960908,
+              "seconds": 0.0009977919980883598,
+              "status": "complete",
+              "work": 1130
+            },
+            {
+              "candidate": "c2e331daecf7a29a3f5c695bbe1b366c1c0b05583b58b78f18326e6a8379db88",
+              "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+              "score": 926.6629365123383,
+              "seconds": 0.0010630000033415854,
+              "status": "complete",
+              "work": 1130
+            }
+          ]
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 1,
+          "final_state_sha256": "bdd5c2e1c81681d53dc241b2720568d89a5a4934fdd6edc66c242293f20ddaf7",
+          "match_key": "9bfcb426a42fb2f5c60060e90de4a0a8f4b9369de647ca746edd6c01dff67d51",
+          "official_winner": 1,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 1,
+          "final_state_sha256": "368ec99baf2382f4ba18fb379edf4c3c5279fc9da4d9899e6dd2af39e3007753",
+          "match_key": "e54da4619ce1a0aba3f2f1407c276604a05a5c8cf9026cb363c5928706508ec8",
+          "official_winner": 1,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "9ee9a3b8093292ef69b865a1dd1fea5450d1ff6ad9a68109281daa64c86fa6e6",
+          "match_key": "0918c7434d2f6f94621947c69bca7d7401d6bb38fa9bbbf228498ed541e826b9",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "119464ce554dd876434fcae79e48f2fc8dedb6a932d951efa1ee36793e193830",
+          "match_key": "f998bb8243513b723a0eddd8b85c15d12c666151916ba4593472888fd3089e5e",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": null,
+          "final_state_sha256": "ae3ec8fb4fdfbf9e45f910bc3476bd042d75d3bde63dd07ec7017f30f8ca7962",
+          "match_key": "23b1c57ea311ea7cf3d6e77106c5beddeab3056815072d44f6048238e2c0989b",
+          "official_winner": null,
+          "original_status": "unfinished",
+          "outcome": "inconclusive",
+          "scores": [
+            {
+              "candidate": "c2e331daecf7a29a3f5c695bbe1b366c1c0b05583b58b78f18326e6a8379db88",
+              "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+              "score": 981.4662214598338,
+              "seconds": 0.0007067499973345548,
+              "status": "complete",
+              "work": 1569
+            },
+            {
+              "candidate": "838cebbe7502c1364f3a36a4ceb5d2156b53404b9da8ae74b8201b82650ac0cd",
+              "config_hash": "4892172ec0cecd10d17f97c105f7a4f311619e3d8a45131332323bc2157a40c6",
+              "score": -186.5350037799732,
+              "seconds": 0.0006127500091679394,
+              "status": "complete",
+              "work": 1569
+            }
+          ]
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 1,
+          "final_state_sha256": "9f46b7e67c2631630634aca1400fcfca2e3b67090fe97040df64d072bb263522",
+          "match_key": "72376d964013901e6d1ebaa9ec8a45b5c8b8add6bbf7a58c2a166d72e4eb48eb",
+          "official_winner": 1,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "01a2fde491117502b3b6d1a9ab48b03df47eea0fc26aeb26c9a6b50dfc6c55be",
+          "match_key": "1497eb88ef8f1bdaa16bd96bd286bf8cd489839bd5d6cf3a0407a4774dba68f6",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "12538deb9bb56a3fe44c29be2b48bf32b8e86b3510083978647daa1c48952ff4",
+          "match_key": "d3affed056b7cc8dfd14a027cd73eee59cc5aab1ec42f813b3cae12ee0aec1ac",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "035785fd78140294b19ba73e14f1795ed4fa3216d755e28dc179fbbe23c879bc",
+          "match_key": "a0d88c3b9e025efa1217e53231ae9e3340eb71ba4019b0f93b2b09781d51e095",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "976e936f83d2aeadb163d52ee252ce61fa1ed0084dd405bc3f485938a57fefbe",
+          "match_key": "1cafd26395f0548877a41fe2c51c70e51dcc501782df814a8fbf1fce53d86e91",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "04ca3e86f757b239a8b04788d162ca261d01e50e8cab27adc804014e6ca5f504",
+          "match_key": "ab522b0ae1959db8568bc48379bbcdfac261cb937552da82eba77966a23c76a6",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 1,
+          "final_state_sha256": "fd5be7065e630fb041fdf94fb773917a419fe3d8cfde2327f770cac2bf494c0d",
+          "match_key": "e9107f96d00a587a1a4fe4cfa27e43921b922401ca479985279b83f078417980",
+          "official_winner": 1,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        },
+        {
+          "adjudicated_winner": null,
+          "effective_winner": 0,
+          "final_state_sha256": "bc356726a56ac27432bd9b126966d8586fa5f318c567a21139ff89f79347af9d",
+          "match_key": "2dbadf3f24d803a4cf19a188f5b5c8506092b048b4e8b5ecb6445530e12549f7",
+          "official_winner": 0,
+          "original_status": "win",
+          "outcome": "official",
+          "scores": []
+        }
+      ],
+      "nodes_per_evaluator": 5000000,
+      "outcomes": {
+        "consensus": 1,
+        "inconclusive": 2,
+        "official": 13
+      },
+      "policy": "Both competing static weighted scores from player-zero perspective must have the same strict nonzero sign. Proof/tree search disabled. Official outcomes preserved; unfinished and cancelled nonempty legal prefixes eligible. Other failures excluded. Inconclusive games excluded from decided fraction; also show conservative wins/scheduled.",
+      "ranking": [
+        {
+          "config_hash": "465f7027c6681839a7f4f6641b1022614b59b016def236eb75a99a88bf9f3461",
+          "consensus_wins": 1,
+          "decided": 14,
+          "inconclusive": 2,
+          "losses": 7,
+          "official_losses": 7,
+          "official_wins": 6,
+          "scheduled": 16,
+          "win_fraction_decided": 0.5,
+          "wins": 7,
+          "wins_over_scheduled": 0.4375
+        },
+        {
+          "config_hash": "4892172ec0cecd10d17f97c105f7a4f311619e3d8a45131332323bc2157a40c6",
+          "consensus_losses": 1,
+          "decided": 14,
+          "inconclusive": 2,
+          "losses": 7,
+          "official_losses": 6,
+          "official_wins": 7,
+          "scheduled": 16,
+          "win_fraction_decided": 0.5,
+          "wins": 7,
+          "wins_over_scheduled": 0.4375
+        }
+      ],
+      "records": 16,
+      "scheduled_records": 16,
+      "seconds_per_evaluator": 2.0
+    }
+  ]
+}

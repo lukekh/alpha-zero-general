@@ -1,0 +1,11 @@
+[
+  {
+    "outcomes": {
+      "unfinished": 6,
+      "win": 34
+    },
+    "run": "/tmp/issue55-hour-20260917/final-screen",
+    "verified_matches": 40,
+    "verified_moves": 2561
+  }
+]

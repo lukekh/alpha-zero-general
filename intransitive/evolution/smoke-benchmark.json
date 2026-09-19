@@ -1,0 +1,22 @@
+{
+  "settings": {
+    "population": 2,
+    "generations": 2,
+    "search_positions": 1,
+    "validation_positions": 1,
+    "max_games": 32,
+    "max_nodes": 6000000,
+    "max_seconds": 180
+  },
+  "protocol": {
+    "mode": "depth",
+    "depth": 1,
+    "seconds": 5,
+    "node_limit": 50000,
+    "proof_depth": 0,
+    "proof_nodes": 0,
+    "max_plies": 2,
+    "game_seconds": 15
+  },
+  "corpus": {"seed": 54, "lines": 9, "max_plies": 240}
+}

@@ -1,0 +1,45 @@
+{
+  "phases": [
+    {
+      "phase": "study",
+      "command": [
+        "/Users/work/orca/workspaces/alpha-zero-general/issue-55-intransitive-evolve-heuristic/.venv/bin/python",
+        "/tmp/issue55-variable-depth4-pruning-20260917/study.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 2450.908554624999,
+      "peak_sampled_tree_rss_bytes": 362266624,
+      "peak_processes": 4,
+      "samples": 804,
+      "sample_interval_seconds": 3,
+      "observed_priorities": [
+        19
+      ],
+      "priority_anomalies": [],
+      "observed_pids": [
+        29357,
+        29480,
+        29481,
+        29788,
+        30102,
+        30399,
+        37151,
+        42663,
+        47875,
+        59954,
+        60393,
+        70676,
+        75683,
+        80776
+      ],
+      "deadline_signalled": false
+    }
+  ],
+  "elapsed_seconds": 2450.908680124994,
+  "supervisor_nice": 19,
+  "thread_environment": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  }
+}

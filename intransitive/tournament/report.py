@@ -8,6 +8,19 @@ from .runner import FINAL
 
 
 def report(spec, rows):
+    def decided(row, status):
+        """The colour credited with the game, or None if it was not decided.
+
+        An adjudicated capped game counts exactly as a played result here. The
+        journal still records status 'unfinished' with the evaluations that
+        decided it, so the two can always be told apart afterwards.
+        """
+        if status == 'win':
+            return row['winner']
+        if status == 'unfinished' and row and row.get('adjudicated_winner') is not None:
+            return row['adjudicated_winner']
+        return None
+
     by_id = {r['task']['id']: r for r in rows}
     if len(by_id) != len(rows) or set(by_id) - {t['id'] for t in spec['tasks']}:
         raise ValueError('Duplicate or unknown match record')
@@ -19,15 +32,17 @@ def report(spec, rows):
             entries.append(dict(candidate=identity, opponent=task['colours'][1-colour], colour=colour,
                                 mode=spec['protocols'][task['protocol']]['mode'],
                                 seed=task['seed'], pair=task['pair_id'], position=task['position'],
-                                status=status, win=int(status == 'win' and row['winner'] == colour),
-                                loss=int(status == 'win' and row['winner'] != colour),
+                                status=status, win=int(decided(row, status) == colour),
+                                loss=int(decided(row, status) not in (None, colour)),
                                 row=row))
 
     def summarize(items, threshold):
         n = len(items)
         wins, losses = sum(i['win'] for i in items), sum(i['loss'] for i in items)
         statuses = Counter(i['status'] for i in items)
-        unfinished = statuses['unfinished']
+        # Adjudicated games are decided, so they leave the unresolved count.
+        unfinished = sum(1 for i in items
+                         if i['status'] == 'unfinished' and not (i['win'] or i['loss']))
         failures = sum(count for status, count in statuses.items() if status in FINAL - {'win', 'unfinished'})
         pending = n - wins - losses - unfinished - failures
         moves, startups = [], []
@@ -63,6 +78,8 @@ def report(spec, rows):
                     distinct_starts=len({i['position'] for i in items}),
                     distinct_trajectories=len({i['row']['trajectory_sha256'] for i in items if i['row']}),
                     completed_depths=dict(depths),
+                    completed_simulations=dict(Counter(str(m['result'].get('completed_simulations', 0)) for m in moves)),
+                    observed_tree_depths=dict(Counter(str(m['result'].get('max_tree_depth', 0)) for m in moves)),
                     stopped_searches=sum(m['result']['stopped'] for m in moves),
                     stop_reasons=dict(Counter(m['result']['stop_reason'] for m in moves)),
                     selected_depths=dict(Counter(str(m['result']['selected_depth']) for m in moves)),

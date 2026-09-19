@@ -1,7 +1,8 @@
 """Bounded candidate processes and fsync'd, replay-verified per-game journals."""
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import json
+import math
 import multiprocessing as mp
 import os
 from pathlib import Path
@@ -20,7 +21,43 @@ from ..heuristics.search import AlphaBetaPlayer
 from ..record import state_hash
 from .spec import digest, effective_config, manifest, unpack
 
-FINAL = {'win', 'unfinished', 'crash', 'illegal_move', 'infrastructure_timeout', 'depth_incomplete'}
+FINAL = {'win', 'unfinished', 'crash', 'illegal_move', 'infrastructure_timeout', 'depth_incomplete', 'simulation_incomplete'}
+
+
+def adjudicate_final(state, task, items, limits):
+    """Decide a capped game only when both competing evaluations agree.
+
+    Each side's own static evaluator scores the final position from player
+    zero's frame, with proof and tree search disabled. Agreement on a strict
+    sign decides the game; disagreement or a tie leaves it unresolved.
+
+    This makes fitness depend on evaluator output rather than on play alone,
+    which is why it is opt-in and named in the manifest. A candidate that
+    overrates the positions it steers toward can be credited by an opponent
+    that shares the bias, so the two fixed opponents — unrelated to the
+    evolving population — carry more of the evidence than population pairs do.
+    """
+    from ..heuristics.budget import Budget, BudgetExpired
+    from ..heuristics.evaluation import Evaluator
+    scores = []
+    for identity in task['colours']:
+        config = replace(effective_config(items[identity], limits), proof_depth=0, proof_nodes=0)
+        budget = Budget(5_000_000, 2.)
+        try:
+            value = float(Evaluator(IntransitiveGame(modelling_draws=False), config).score(
+                state, 0, budget, proof={'status': 'unknown'}))
+            budget.check()
+        except BudgetExpired:
+            value = None
+        scores.append(value)
+    winner = None
+    if all(s is not None and math.isfinite(s) for s in scores):
+        if all(s > 0 for s in scores):
+            winner = 0
+        elif all(s < 0 for s in scores):
+            winner = 1
+    return dict(policy='both static evaluations from player zero must share a strict sign',
+                scores=scores, winner=winner)
 
 
 def atomic_json(path, value):
@@ -56,12 +93,17 @@ def engine_worker(connection, item, limits, seed):
         import numba
         numba.set_num_threads(1)
         config = effective_config(item, limits)
-        engine = AlphaBetaPlayer(config=config)
+        def create_engine(config):
+            if limits['mode'] == 'mcts':
+                from ..heuristics.mcts import HeuristicMCTSPlayer
+                return HeuristicMCTSPlayer(config=config, settings=limits['mcts'])
+            return AlphaBetaPlayer(config=config)
+        engine = create_engine(config)
         engine._prepare()
         # Execute one bounded search as well: jitclass dispatch and geometry
         # compilation must not be charged to the first measured move.
         from dataclasses import replace
-        warm = AlphaBetaPlayer(config=replace(config, max_depth=1, time_limit=30., node_limit=10000))
+        warm = create_engine(replace(config, max_depth=1, time_limit=30., node_limit=10000))
         warm.analyze(IntransitiveGame().getInitBoard())
         connection.send(dict(kind='ready', config=config.to_dict(), candidate=item['sha256'],
                              startup_seconds=time.perf_counter() - begin,
@@ -73,7 +115,7 @@ def engine_worker(connection, item, limits, seed):
             start, cpu = time.perf_counter(), time.process_time()
             # A fresh engine makes interrupted-game resume independent of the
             # searches that preceded it. Compiled code is read-only and shared.
-            engine = AlphaBetaPlayer(config=config)
+            engine = create_engine(config)
             result = engine.analyze(state)
             connection.send(dict(kind='move', result=asdict(result),
                                  latency_seconds=time.perf_counter() - start,
@@ -135,7 +177,19 @@ class EngineProcess:
         if self.process.is_alive():
             self.process.kill()
             self.process.join()
-        self.process.close()
+        try:
+            self.process.close()
+        except ValueError:
+            # Concurrent matches reap children from several threads, and
+            # multiprocessing's own bookkeeping can still consider this child
+            # running here even though it has been signalled and joined. Wait
+            # once more, then let the handle go: releasing it is cleanup, and
+            # failing to release it must not fail an otherwise complete match.
+            self.process.join()
+            try:
+                self.process.close()
+            except ValueError:
+                pass
 
 
 def replay(start, row):
@@ -228,6 +282,12 @@ def play_match(spec, task, path, cancelled, *, engine_factory=EngineProcess):
             row['active_seconds'] = previous_seconds + time.perf_counter() - active_start
             if len(row['moves']) >= limits['max_plies'] or row['active_seconds'] >= limits['game_seconds']:
                 row.update(status='unfinished', reason='safety_ply_limit' if len(row['moves']) >= limits['max_plies'] else 'safety_time_limit')
+                if limits.get('adjudicate_unfinished'):
+                    # The status stays 'unfinished' because that is what the game
+                    # was; the adjudication is recorded beside it so the journal
+                    # never claims a result the rules did not produce.
+                    row['adjudication'] = adjudicate_final(state, task, items, limits)
+                    row['adjudicated_winner'] = row['adjudication']['winner']
                 break
             if cancelled.is_set():
                 raise MatchFailure('cancelled', 'Cancellation requested')
@@ -259,6 +319,10 @@ def play_match(spec, task, path, cancelled, *, engine_factory=EngineProcess):
                     or (result['completed_depth'] < limits['search']['max_depth'] and result['stop_reason'] != 'proven_result')):
                 row['failed_response'] = response
                 raise MatchFailure('depth_incomplete', 'Requested depth did not complete')
+            if limits['mode'] == 'mcts' and (result.get('search_kind') != 'mcts' or result['stopped']
+                    or result.get('completed_simulations', 0) != limits['mcts']['simulations']):
+                row['failed_response'] = response
+                raise MatchFailure('simulation_incomplete', 'Requested simulations did not complete')
             before = state_hash(state)
             state, _ = game.getNextState(state, side, action)
             row['moves'].append(dict(side=side, candidate=task['colours'][side], before=before,

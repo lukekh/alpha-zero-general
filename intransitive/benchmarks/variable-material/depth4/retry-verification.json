@@ -1,0 +1,11 @@
+[
+  {
+    "moves": 64,
+    "outcomes": {
+      "unfinished": 1,
+      "win": 1
+    },
+    "records": 2,
+    "setting": "pair-1"
+  }
+]

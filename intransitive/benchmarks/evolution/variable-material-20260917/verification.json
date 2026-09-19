@@ -1,0 +1,115 @@
+[
+  {
+    "distinct_trajectories": 2,
+    "outcomes": {
+      "depth_incomplete": 16
+    },
+    "run": "/tmp/issue55-variable-evolution-20260917/smoke",
+    "status": "complete",
+    "verified_matches": 16,
+    "verified_moves": 0
+  },
+  {
+    "distinct_trajectories": 38,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 11,
+      "win": 63
+    },
+    "run": "/tmp/issue55-variable-evolution-20260917/runs/evolution-171",
+    "status": "wall_budget",
+    "verified_matches": 75,
+    "verified_moves": 4520
+  },
+  {
+    "distinct_trajectories": 50,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 18,
+      "win": 40
+    },
+    "run": "/tmp/issue55-variable-evolution-20260917/runs/random-171",
+    "status": "wall_budget",
+    "verified_matches": 59,
+    "verified_moves": 5416
+  },
+  {
+    "distinct_trajectories": 53,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 23,
+      "win": 31
+    },
+    "run": "/tmp/issue55-variable-evolution-20260917/runs/evolution-172",
+    "status": "wall_budget",
+    "verified_matches": 55,
+    "verified_moves": 6507
+  },
+  {
+    "distinct_trajectories": 55,
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 17,
+      "win": 39
+    },
+    "run": "/tmp/issue55-variable-evolution-20260917/runs/random-172",
+    "status": "wall_budget",
+    "verified_matches": 57,
+    "verified_moves": 5679
+  },
+  {
+    "outcomes": {
+      "cancelled": 1,
+      "unfinished": 4,
+      "win": 8
+    },
+    "run": "/tmp/issue55-variable-evolution-20260917/screen-depth2",
+    "verified_matches": 13,
+    "verified_moves": 1190
+  },
+  {
+    "outcomes": {
+      "cancelled": 1
+    },
+    "run": "/tmp/issue55-variable-evolution-20260917/screen-depth4",
+    "verified_matches": 1,
+    "verified_moves": 0
+  },
+  {
+    "outcomes": {
+      "depth_incomplete": 4,
+      "unfinished": 4
+    },
+    "run": "/tmp/issue55-variable-evolution-20260917/focused/primary-depth4/screen-depth4",
+    "verified_matches": 8,
+    "verified_moves": 33
+  },
+  {
+    "outcomes": {
+      "unfinished": 6,
+      "win": 10
+    },
+    "run": "/tmp/issue55-variable-evolution-20260917/focused/raw-a-depth2/screen-depth2",
+    "verified_matches": 16,
+    "verified_moves": 1578
+  },
+  {
+    "outcomes": {
+      "cancelled": 1,
+      "depth_incomplete": 3,
+      "unfinished": 3
+    },
+    "run": "/tmp/issue55-variable-evolution-20260917/focused/raw-a-depth4/screen-depth4",
+    "verified_matches": 7,
+    "verified_moves": 29
+  },
+  {
+    "outcomes": {
+      "unfinished": 5,
+      "win": 11
+    },
+    "run": "/tmp/issue55-variable-evolution-20260917/focused/raw-b-depth2/screen-depth2",
+    "verified_matches": 16,
+    "verified_moves": 1602
+  }
+]

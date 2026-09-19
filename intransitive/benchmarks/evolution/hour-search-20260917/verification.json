@@ -1,0 +1,46 @@
+[
+  {
+    "distinct_trajectories": 100,
+    "outcomes": {
+      "unfinished": 14,
+      "win": 138
+    },
+    "run": "/tmp/issue55-hour-20260917/benchmark/evolution-81",
+    "status": "complete",
+    "verified_matches": 152,
+    "verified_moves": 6483
+  },
+  {
+    "distinct_trajectories": 76,
+    "outcomes": {
+      "unfinished": 17,
+      "win": 111
+    },
+    "run": "/tmp/issue55-hour-20260917/benchmark/evolution-82",
+    "status": "complete",
+    "verified_matches": 128,
+    "verified_moves": 6846
+  },
+  {
+    "distinct_trajectories": 48,
+    "outcomes": {
+      "unfinished": 11,
+      "win": 169
+    },
+    "run": "/tmp/issue55-hour-20260917/benchmark/random-81",
+    "status": "game_budget",
+    "verified_matches": 180,
+    "verified_moves": 6040
+  },
+  {
+    "distinct_trajectories": 124,
+    "outcomes": {
+      "unfinished": 11,
+      "win": 153
+    },
+    "run": "/tmp/issue55-hour-20260917/benchmark/random-82",
+    "status": "complete",
+    "verified_matches": 164,
+    "verified_moves": 6539
+  }
+]

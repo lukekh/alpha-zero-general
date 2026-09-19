@@ -1,0 +1,17 @@
+[
+  {
+    "run": "pilot",
+    "verified_matches": 4,
+    "verified_moves": 255
+  },
+  {
+    "run": "pilot-depth1",
+    "verified_matches": 4,
+    "verified_moves": 284
+  },
+  {
+    "run": "final-screen",
+    "verified_matches": 6,
+    "verified_moves": 120
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "run": "pilot",
+    "match": "1b3baec5f48f64e0aebaace82c7137002aa018cb9fd6c0b32a5d067b607e9e56",
+    "plies": 96,
+    "distinct_board_turns": 85,
+    "max_board_turn_repetitions": 2
+  },
+  {
+    "run": "pilot-depth1",
+    "match": "b954b84e576bc63495f87f766f94d2409f0063c994382b967698b83758e31fcb",
+    "plies": 96,
+    "distinct_board_turns": 41,
+    "max_board_turn_repetitions": 15
+  }
+]

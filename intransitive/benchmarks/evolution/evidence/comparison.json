@@ -1,0 +1,882 @@
+{
+  "conclusion": "Equal wall/game/work ceilings, not equal measured consumption. Defaults are re-evaluated on the same validation slate each generation. Report all outcomes and uncertainty; this benchmark does not establish that evolution is superior.",
+  "contract": {
+    "budget_per_run": {
+      "max_games": 32,
+      "max_nodes": 6000000,
+      "max_seconds": 150
+    },
+    "seeds": [
+      55,
+      56
+    ],
+    "smoke": {
+      "manifest": "3694009ed9ea9848692b23872c14b3e4207a35e87c89cad879708e57a6722a22",
+      "report": "f5119ed751c151e0174657ff8ff9e2334d024b01ba7ed0bc63514cbcddb91201"
+    },
+    "template": "74df2159970daaeaa61ba7be700ed00e47e692a52ee19cecf67f4d90423c56c4",
+    "total_run_count": 4
+  },
+  "runs": [
+    {
+      "algorithm": "evolution",
+      "convergence": [
+        {
+          "diversity": {
+            "mean_normalized_distance": 0.39973886012270965,
+            "off_fraction": 0.5,
+            "unique": 2
+          },
+          "generation": 0,
+          "search": [
+            {
+              "config_hash": "1db5e86b5614f29dc8ab2aeb5134017cb9081a7cb6fc17476b9c47de20d3a7ce",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "c16e56dca02659545ead734b93be728eff397b5a26967b58680bbe30ca08293f",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "incumbent",
+              "win_points_lower": 0.0
+            }
+          ],
+          "validation": [
+            {
+              "completion_rate": 0.0,
+              "config_hash": "1db5e86b5614f29dc8ab2aeb5134017cb9081a7cb6fc17476b9c47de20d3a7ce",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 0,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            }
+          ]
+        },
+        {
+          "diversity": {
+            "mean_normalized_distance": 0.17812802775126138,
+            "off_fraction": 0.2,
+            "unique": 2
+          },
+          "generation": 1,
+          "search": [
+            {
+              "config_hash": "1c1d59211f55032cb3119489a3d66223d493c2df8a6822e1a2c3a66045229b41",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "1db5e86b5614f29dc8ab2aeb5134017cb9081a7cb6fc17476b9c47de20d3a7ce",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "incumbent",
+              "win_points_lower": 0.0
+            }
+          ],
+          "validation": [
+            {
+              "completion_rate": 0.0,
+              "config_hash": "1c1d59211f55032cb3119489a3d66223d493c2df8a6822e1a2c3a66045229b41",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 0,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            }
+          ]
+        }
+      ],
+      "eligible_exports": 0,
+      "failures": 20,
+      "games_reserved": 28,
+      "generations": 2,
+      "known_child_cpu_seconds": 79.77357800000001,
+      "measured_search_work": 1340265,
+      "nodes_reserved": 3610000,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 20,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 8,
+        "win": 0
+      },
+      "report": "/tmp/issue55-benchmark-20260917/benchmark/evolution-55/report.json",
+      "seed": 55,
+      "status": "complete",
+      "unique_candidates": 5,
+      "unique_matches": 28,
+      "wall_seconds": 115.97412508298294
+    },
+    {
+      "algorithm": "random",
+      "convergence": [
+        {
+          "diversity": {
+            "mean_normalized_distance": 0.39973886012270965,
+            "off_fraction": 0.5,
+            "unique": 2
+          },
+          "generation": 0,
+          "search": [
+            {
+              "config_hash": "1db5e86b5614f29dc8ab2aeb5134017cb9081a7cb6fc17476b9c47de20d3a7ce",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "c16e56dca02659545ead734b93be728eff397b5a26967b58680bbe30ca08293f",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "incumbent",
+              "win_points_lower": 0.0
+            }
+          ],
+          "validation": [
+            {
+              "completion_rate": 0.0,
+              "config_hash": "1db5e86b5614f29dc8ab2aeb5134017cb9081a7cb6fc17476b9c47de20d3a7ce",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 0,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            }
+          ]
+        },
+        {
+          "diversity": {
+            "mean_normalized_distance": 0.32808682802573624,
+            "off_fraction": 0.4,
+            "unique": 2
+          },
+          "generation": 1,
+          "search": [
+            {
+              "config_hash": "46b6f202ee1f8c692a89c3bf734b83476434462feffa45298ab168c13fdf248e",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "6d5beb24d42c8bba61321ece8616ac9a0ff5ac8944a19a85601d870b0387d3d0",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "incumbent",
+              "win_points_lower": 0.0
+            }
+          ],
+          "validation": [
+            {
+              "completion_rate": 0.0,
+              "config_hash": "46b6f202ee1f8c692a89c3bf734b83476434462feffa45298ab168c13fdf248e",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 0,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            }
+          ]
+        }
+      ],
+      "eligible_exports": 0,
+      "failures": 24,
+      "games_reserved": 32,
+      "generations": 2,
+      "known_child_cpu_seconds": 90.490845,
+      "measured_search_work": 1569390,
+      "nodes_reserved": 4140000,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 24,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 8,
+        "win": 0
+      },
+      "report": "/tmp/issue55-benchmark-20260917/benchmark/random-55/report.json",
+      "seed": 55,
+      "status": "complete",
+      "unique_candidates": 6,
+      "unique_matches": 32,
+      "wall_seconds": 115.52787254098803
+    },
+    {
+      "algorithm": "evolution",
+      "convergence": [
+        {
+          "diversity": {
+            "mean_normalized_distance": 0.2736167972878472,
+            "off_fraction": 0.6,
+            "unique": 2
+          },
+          "generation": 0,
+          "search": [
+            {
+              "config_hash": "333a560d8a11733c392149071c2800facb5a56c49f57c8938664f2f86e2a41b0",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "6afc16bdeccb9b3b7569da4f7e89b35db46df0abf607947553c6de4560c98478",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "incumbent",
+              "win_points_lower": 0.0
+            }
+          ],
+          "validation": [
+            {
+              "completion_rate": 0.0,
+              "config_hash": "333a560d8a11733c392149071c2800facb5a56c49f57c8938664f2f86e2a41b0",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 0,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            }
+          ]
+        },
+        {
+          "diversity": {
+            "mean_normalized_distance": 0.21566617777559718,
+            "off_fraction": 0.5,
+            "unique": 2
+          },
+          "generation": 1,
+          "search": [
+            {
+              "config_hash": "03ed199614472bbb57581d0f9f535013120b2ce893d90d22c33179746fba97e6",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "333a560d8a11733c392149071c2800facb5a56c49f57c8938664f2f86e2a41b0",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "incumbent",
+              "win_points_lower": 0.0
+            }
+          ],
+          "validation": [
+            {
+              "completion_rate": 0.0,
+              "config_hash": "03ed199614472bbb57581d0f9f535013120b2ce893d90d22c33179746fba97e6",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 4,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "unfinished": 4,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 4,
+              "win_points_lower": 0.0,
+              "wins": 0
+            }
+          ]
+        }
+      ],
+      "eligible_exports": 0,
+      "failures": 12,
+      "games_reserved": 28,
+      "generations": 2,
+      "known_child_cpu_seconds": 71.591678,
+      "measured_search_work": 1266492,
+      "nodes_reserved": 3610000,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 12,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 16,
+        "win": 0
+      },
+      "report": "/tmp/issue55-benchmark-20260917/benchmark/evolution-56/report.json",
+      "seed": 56,
+      "status": "complete",
+      "unique_candidates": 5,
+      "unique_matches": 28,
+      "wall_seconds": 81.88904541698867
+    },
+    {
+      "algorithm": "random",
+      "convergence": [
+        {
+          "diversity": {
+            "mean_normalized_distance": 0.2736167972878472,
+            "off_fraction": 0.6,
+            "unique": 2
+          },
+          "generation": 0,
+          "search": [
+            {
+              "config_hash": "333a560d8a11733c392149071c2800facb5a56c49f57c8938664f2f86e2a41b0",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "6afc16bdeccb9b3b7569da4f7e89b35db46df0abf607947553c6de4560c98478",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "incumbent",
+              "win_points_lower": 0.0
+            }
+          ],
+          "validation": [
+            {
+              "completion_rate": 0.0,
+              "config_hash": "333a560d8a11733c392149071c2800facb5a56c49f57c8938664f2f86e2a41b0",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 0,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            }
+          ]
+        },
+        {
+          "diversity": {
+            "mean_normalized_distance": 0.2812872101396093,
+            "off_fraction": 0.5,
+            "unique": 2
+          },
+          "generation": 1,
+          "search": [
+            {
+              "config_hash": "12627d7d4edba93ea906f798647f2f5550f4e20c7587f2a20b1d4e398b23b9bf",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "be88b7971f0fd32b24bf7d5461911d3e020737e20f0e37934484b109f28cadd4",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "win_points_lower": 0.0
+            },
+            {
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "incumbent",
+              "win_points_lower": 0.0
+            }
+          ],
+          "validation": [
+            {
+              "completion_rate": 0.0,
+              "config_hash": "12627d7d4edba93ea906f798647f2f5550f4e20c7587f2a20b1d4e398b23b9bf",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 0,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "ba135d4abfd36d7da572efef20f54171d452f9c1c2841666e3d379a3584c259a",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "archive",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            },
+            {
+              "completion_rate": 0.0,
+              "config_hash": "f6d600a6bfe8723c82f85320e1a8f5f182ae28a1dfa583c3225d480f4dd23750",
+              "eligible": false,
+              "losses": 0,
+              "paired_interval_95": [
+                0.0,
+                1.0
+              ],
+              "role": "population",
+              "unfinished": 2,
+              "win_points_lower": 0.0,
+              "wins": 0
+            }
+          ]
+        }
+      ],
+      "eligible_exports": 0,
+      "failures": 24,
+      "games_reserved": 32,
+      "generations": 2,
+      "known_child_cpu_seconds": 94.92627700000001,
+      "measured_search_work": 1569010,
+      "nodes_reserved": 4140000,
+      "outcomes": {
+        "cancelled": 0,
+        "crash": 0,
+        "depth_incomplete": 24,
+        "illegal_move": 0,
+        "infrastructure_timeout": 0,
+        "unfinished": 8,
+        "win": 0
+      },
+      "report": "/tmp/issue55-benchmark-20260917/benchmark/random-56/report.json",
+      "seed": 56,
+      "status": "complete",
+      "unique_candidates": 6,
+      "unique_matches": 32,
+      "wall_seconds": 132.29478883300908
+    }
+  ]
+}

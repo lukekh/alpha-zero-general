@@ -4,13 +4,13 @@ from itertools import combinations
 from time import perf_counter
 import numpy as np
 from .geometry import Geometry, arrival, captures
-from .material import MaterialCache, count_pieces
+from .material import BASE, MaterialCache, count_pieces, variable_material_total, variable_piece_values
 
 MATE = 100000.
 HEURISTIC_LIMIT = 10000.
 MATE_THRESHOLD = 90000.
 MODULES = ('piece_count', 'clear_run', 'piece_advantage', 'attacking_position',
-           'defensive_position', 'overload', 'local_pressure')
+           'defensive_position', 'overload', 'local_pressure', 'runner_pressure')
 
 
 def terminal_value(game, state, side, ply=0):
@@ -31,10 +31,24 @@ def terminal_value(game, state, side, ply=0):
 
 
 def piece_count(geometry, side, config):
-    return float(len(geometry.own(side)))
+    """Material from the stacked code array; never materializes Piece objects."""
+    if config.variable_material_enabled:
+        counts = tuple(int(np.count_nonzero(geometry.codes == code))
+                       for code in (1, 2, 3, -1, -2, -3))
+        return variable_material_total(counts, side, config.variable_material_linear) / BASE
+    return float(np.count_nonzero(geometry.sides == side))
 
 
 def piece_advantage(geometry, side, config):
+    """Favourable type matchups; see `piece_advantage_reference` for the shape."""
+    from .features import advantage_value
+    return advantage_value(geometry.codes, geometry.sides, side,
+                           float(config.predator_zero_bonus),
+                           float(config.predator_scarcity_bonus),
+                           float(config.prey_bonus))
+
+
+def piece_advantage_reference(geometry, side, config):
     own = Counter(abs(p.code) for p in geometry.own(side))
     enemy = Counter(abs(p.code) for p in geometry.own(1 - side))
     return sum(count * (config.predator_zero_bonus * (enemy[(kind + 1) % 3 + 1] == 0)
@@ -64,7 +78,8 @@ def race_candidates(geometry, side):
     return candidates
 
 
-def attacking_position(geometry, side, config):
+def attacking_position_reference(geometry, side, config):
+    """The readable definition. `attacking_position` is its compiled twin."""
     progress, opportunities = [], {}
     for piece in geometry.own(side):
         safe_steps = []
@@ -82,14 +97,107 @@ def attacking_position(geometry, side, config):
     return min(2., sum(progress)) + min(1., sum(opportunities.values()))
 
 
-def coverage(geometry, side):
+def attacking_position(geometry, side, config):
+    """Safe progress toward the goal, plus one safe capture; see the reference."""
+    from .features import NEIGHBOURS, attack_value
+    if not len(geometry.squares):
+        return 0.
+    value, charge = attack_value(
+        geometry.sides, geometry.codes, geometry.slots, geometry.distances,
+        geometry.goal_distances, geometry.goal_distance, geometry.squares,
+        geometry.threat_block(), geometry.board, NEIGHBOURS, side, geometry.turn)
+    geometry.budget.charge(int(charge)) if charge else geometry.budget.check()
+    return value
+
+
+def runner_pressure(geometry, side, config):
+    """Unproven credit for a runner whose corridor to the goal looks clear.
+
+    A cheap, deliberately approximate reading of the same idea the clear-run
+    certificate proves. For the piece of each type standing closest to the goal,
+    count the enemies that could answer it — its predator type, or its own type
+    blocking the corner — inside the axis-aligned box spanned by the piece and
+    the goal. None is a clear corridor and scores on distance; exactly one
+    scores as though the runner loses a move going around it; more scores
+    nothing.
+
+    This is an estimate and is wrong sometimes: a piece outside the box can step
+    into it, any piece can block rather than only a capturing one, and the
+    opponent may simply win the race. Those are the gaps that stop the same
+    reading being a proof, which is why this is a weighted term and the
+    certificate in `clear_run` is separate and strict.
+    """
+    goal = geometry.goals[side]
+    gx, gy = goal % 9, goal // 9
+    closest = {}
+    for piece in geometry.own(side):
+        kind = abs(piece.code)
+        chebyshev = max(abs(piece.square % 9 - gx), abs(piece.square // 9 - gy))
+        if kind not in closest or chebyshev < closest[kind][0]:
+            closest[kind] = (chebyshev, piece)
+    total = 0.
+    for chebyshev, piece in closest.values():
+        if not chebyshev:
+            continue
+        low_x, high_x = min(piece.square % 9, gx), max(piece.square % 9, gx)
+        low_y, high_y = min(piece.square // 9, gy), max(piece.square // 9, gy)
+        answering = 0
+        for enemy in geometry.own(1 - side):
+            if not (captures(enemy.code, piece.code)
+                    or abs(enemy.code) == abs(piece.code)):
+                continue
+            if (low_x <= enemy.square % 9 <= high_x
+                    and low_y <= enemy.square // 9 <= high_y):
+                answering += 1
+                if answering > 1:
+                    break
+        if answering > 1:
+            continue
+        # One answering piece is assumed to cost the runner a single detour.
+        total += 1. / (1. + chebyshev + answering)
+    return total
+
+
+def coverage_reference(geometry, side):
+    """The readable definition. `coverage` is its compiled twin."""
     return {runner.square: {defender.square: responses
                             for defender in geometry.own(side)
                             if (responses := geometry.intercepts(defender, runner))}
             for runner in geometry.own(1 - side) if runner.distance < 99}
 
 
+def coverage(geometry, side):
+    """Which of `side`'s pieces can answer each enemy runner, and how soon.
+
+    Built from the compiled pair matrix. Replies carry the earliest ply, which
+    is all every scoring caller reads; `Geometry.intercepts` remains the source
+    for the per-square detail the race diagnostics print.
+    """
+    plies = geometry.plies(side)
+    duties = {}
+    for runner in geometry.own(1 - side):
+        if runner.distance >= 99:
+            continue
+        row = plies[geometry.at[runner.square]]
+        defenders = {}
+        for defender in geometry.own(side):
+            ply = int(row[geometry.at[defender.square]])
+            if ply >= 0:
+                defenders[defender.square] = [{'ply': ply}]
+        duties[runner.square] = defenders
+    return duties
+
+
 def defensive_position(geometry, side, config):
+    """Timely, safe answers to enemy runners; see the reference for the shape."""
+    from .features import defence_value
+    import numpy as np
+    return defence_value(geometry.plies(side), geometry.sides, geometry.codes,
+                         geometry.slots, geometry.at, geometry.threat_block(),
+                         np.array(geometry.goals, dtype=np.int64), side)
+
+
+def defensive_position_reference(geometry, side, config):
     duties = coverage(geometry, side)
     value = sum(min(1., sum(1. / (1 + min(r['ply'] for r in replies))
                             for replies in defenders.values()))
@@ -103,16 +211,19 @@ def defensive_position(geometry, side, config):
     return min(4., value)
 
 
-def overload(geometry, side, config, game):
+def overload_conflicts(geometry, side, config, game):
     """Bounded opportunity cost, verified over every legal first defence.
 
     Only analyse the side actually on move (never manufacture a pass). A pair
     needs a unique shared responder and imminent routes. Any legal move that
     wins, draws, removes a threat, or restores coverage disproves that conflict.
     Surviving conflicts are heuristic, not claims of forced loss.
+
+    Returns the surviving (threat, threat, defender) triples; `overload` counts
+    their distinct defenders and attribution spreads the term over those squares.
     """
     if side != geometry.turn:
-        return 0.
+        return set()
     duties = coverage(geometry, side)
     pairs = []
     for first, second in combinations(duties, 2):
@@ -123,7 +234,7 @@ def overload(geometry, side, config, game):
             continue
         pairs.append((first, second, next(iter(defenders))))
     if not pairs:
-        return 0.
+        return set()
     conflicts = set(pairs)
     for action in np.flatnonzero(game.getValidMoves(geometry.state, side)):
         geometry.budget.charge()
@@ -131,7 +242,7 @@ def overload(geometry, side, config, game):
         terminal = terminal_value(game, child, side)
         if terminal is not None:
             if terminal >= 0:
-                return 0.
+                return set()
             continue
         after = Geometry(child, geometry.budget)
         after_duties = coverage(after, side)
@@ -157,8 +268,14 @@ def overload(geometry, side, config, game):
                 if distinct or held:
                     conflicts.discard(pair)
         if not conflicts:
-            return 0.
-    return min(2., float(len({pair[2] for pair in conflicts})))
+            return set()
+    return conflicts
+
+
+def overload(geometry, side, config, game):
+    """Distinct overloaded defenders, capped; see `overload_conflicts`."""
+    return min(2., float(len({pair[2] for pair in
+                              overload_conflicts(geometry, side, config, game)})))
 
 
 class Evaluator:
@@ -244,7 +361,8 @@ class Evaluator:
         if compact and counts is None:
             counts = state.counts
         config = self.config
-        if not explain and not (config.attack_enabled or config.defence_enabled or config.overload_enabled):
+        if not explain and not (config.attack_enabled or config.defence_enabled
+                                or config.overload_enabled or config.runner_enabled):
             start = perf_counter()
             try:
                 if counts is None:
@@ -268,7 +386,8 @@ class Evaluator:
         own, opponent = {}, {}
         details = {}
         config = self.config
-        routes = diagnostics or config.attack_enabled or config.defence_enabled or config.overload_enabled
+        routes = (diagnostics or config.attack_enabled or config.defence_enabled
+                  or config.overload_enabled)
         start = perf_counter()
         try:
             geometry = Geometry(state, budget, routes=routes)
@@ -277,18 +396,20 @@ class Evaluator:
             budget.module_seconds[module] += perf_counter() - start
             budget.module_calls[module] += 1
         functions = (piece_count, None, piece_advantage, attacking_position,
-                     defensive_position, None, None)
+                     defensive_position, None, None, runner_pressure)
         enabled = (True, diagnostics, True, config.attack_enabled, config.defence_enabled, config.overload_enabled,
-                   config.pressure_enabled and bool(config.pressure_weight))
+                   config.pressure_enabled and bool(config.pressure_weight),
+                   config.runner_enabled and bool(config.runner_weight))
         # Clear-run scoring is decisive proof or zero, never a weighted estimate.
         weights = (config.count_weight, 0., config.advantage_weight,
-                   config.attack_weight, config.defence_weight, -config.overload_weight, config.pressure_weight)
+                   config.attack_weight, config.defence_weight, -config.overload_weight,
+                   config.pressure_weight, config.runner_weight)
         terms = {}
         total = 0.
         for name, function, active, weight in zip(MODULES, functions, enabled, weights):
             values = [0., 0.]
             if name == 'local_pressure' and active:
-                totals = self._pressure(geometry.board, budget, len(geometry.pieces))
+                totals = self._pressure(geometry.board, budget, len(geometry.squares))
                 values = [totals[side], totals[1-side]]
             elif active:
                 start = perf_counter()
@@ -315,7 +436,16 @@ class Evaluator:
         score = self._clip(total, budget)
         if not explain:
             return score
-        return dict(score=score, raw_score=total, clipped=abs(total) > HEURISTIC_LIMIT,
+        result = dict(score=score, raw_score=total, clipped=abs(total) > HEURISTIC_LIMIT,
                     saturated=abs(total) >= HEURISTIC_LIMIT,
                     terminal=False, features={'own': own, 'opponent': opponent}, terms=terms,
                     races=details, proof=proof)
+        if config.variable_material_enabled:
+            counts = count_pieces(state)
+            result['piece_values'] = {
+                label: dict(zip(('rock', 'scissors', 'paper'), map(float, variable_piece_values(
+                    counts[player * 3:player * 3 + 3], counts[(1-player) * 3:(1-player) * 3 + 3],
+                    config.variable_material_linear))))
+                for label, player in (('own', side), ('opponent', 1-side))}
+            budget.check()
+        return result

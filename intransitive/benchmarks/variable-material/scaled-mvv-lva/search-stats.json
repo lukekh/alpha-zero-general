@@ -1,0 +1,310 @@
+{
+  "smoke-depth4": {
+    "flat": {
+      "moves": 2,
+      "depths": {
+        "4": 2
+      },
+      "stop_reasons": {
+        "maximum_depth": 2
+      },
+      "effective": {
+        "True": 2
+      },
+      "counters": {
+        "futility_eligible": 0,
+        "futility_pruned": 0,
+        "nmp_attempts": 0,
+        "nmp_cutoffs": 0,
+        "nmp_skips": 1602,
+        "null_nodes": 0,
+        "static_evaluations": 0,
+        "verification_failures": 0,
+        "verification_nodes": 0,
+        "verification_searches": 0,
+        "mvv_lva_captures": 69,
+        "mvv_lva_nodes": 1602
+      },
+      "work": 12609648,
+      "nodes": 422886,
+      "elapsed": 2.7030645839695353
+    },
+    "variable": {
+      "moves": 2,
+      "depths": {
+        "4": 2
+      },
+      "stop_reasons": {
+        "maximum_depth": 2
+      },
+      "effective": {
+        "True": 2
+      },
+      "counters": {
+        "futility_eligible": 0,
+        "futility_pruned": 0,
+        "nmp_attempts": 0,
+        "nmp_cutoffs": 0,
+        "nmp_skips": 1910,
+        "null_nodes": 0,
+        "static_evaluations": 0,
+        "verification_failures": 0,
+        "verification_nodes": 0,
+        "verification_searches": 0,
+        "mvv_lva_captures": 156,
+        "mvv_lva_nodes": 1910
+      },
+      "work": 16918296,
+      "nodes": 581516,
+      "elapsed": 4.2221449999779
+    }
+  },
+  "full-mvv-off": {
+    "variable": {
+      "moves": 134,
+      "depths": {
+        "4": 134
+      },
+      "stop_reasons": {
+        "maximum_depth": 123,
+        "selective_result": 11
+      },
+      "effective": {
+        "True": 134
+      },
+      "counters": {
+        "futility_eligible": 10457,
+        "futility_pruned": 0,
+        "nmp_attempts": 314,
+        "nmp_cutoffs": 293,
+        "nmp_skips": 153157,
+        "null_nodes": 8982,
+        "static_evaluations": 5697,
+        "verification_failures": 0,
+        "verification_nodes": 586791,
+        "verification_searches": 293,
+        "mvv_lva_captures": 0,
+        "mvv_lva_nodes": 0
+      },
+      "work": 1246499240,
+      "nodes": 42286397,
+      "elapsed": 395.3149746757117
+    },
+    "flat": {
+      "moves": 135,
+      "depths": {
+        "4": 135
+      },
+      "stop_reasons": {
+        "maximum_depth": 124,
+        "selective_result": 11
+      },
+      "effective": {
+        "True": 135
+      },
+      "counters": {
+        "futility_eligible": 10881,
+        "futility_pruned": 0,
+        "nmp_attempts": 194,
+        "nmp_cutoffs": 177,
+        "nmp_skips": 123295,
+        "null_nodes": 5341,
+        "static_evaluations": 5044,
+        "verification_failures": 0,
+        "verification_nodes": 323906,
+        "verification_searches": 177,
+        "mvv_lva_captures": 0,
+        "mvv_lva_nodes": 0
+      },
+      "work": 1029483074,
+      "nodes": 34278409,
+      "elapsed": 319.7874917119625
+    }
+  },
+  "scaled-mvv-on": {
+    "variable": {
+      "moves": 141,
+      "depths": {
+        "4": 141
+      },
+      "stop_reasons": {
+        "maximum_depth": 132,
+        "selective_result": 9
+      },
+      "effective": {
+        "True": 141
+      },
+      "counters": {
+        "futility_eligible": 10457,
+        "futility_pruned": 0,
+        "nmp_attempts": 314,
+        "nmp_cutoffs": 293,
+        "nmp_skips": 145713,
+        "null_nodes": 8982,
+        "static_evaluations": 5699,
+        "verification_failures": 0,
+        "verification_nodes": 586791,
+        "verification_searches": 293,
+        "mvv_lva_captures": 19680,
+        "mvv_lva_nodes": 145734
+      },
+      "work": 1208487687,
+      "nodes": 40387812,
+      "elapsed": 393.56976403912995
+    },
+    "flat": {
+      "moves": 142,
+      "depths": {
+        "4": 142
+      },
+      "stop_reasons": {
+        "maximum_depth": 133,
+        "selective_result": 9
+      },
+      "effective": {
+        "True": 142
+      },
+      "counters": {
+        "futility_eligible": 10881,
+        "futility_pruned": 0,
+        "nmp_attempts": 194,
+        "nmp_cutoffs": 177,
+        "nmp_skips": 135980,
+        "null_nodes": 5341,
+        "static_evaluations": 5044,
+        "verification_failures": 0,
+        "verification_nodes": 323906,
+        "verification_searches": 177,
+        "mvv_lva_captures": 18439,
+        "mvv_lva_nodes": 135997
+      },
+      "work": 1052559859,
+      "nodes": 35417046,
+      "elapsed": 325.78840204389417
+    }
+  },
+  "scaled-mvv-off": {
+    "flat": {
+      "moves": 129,
+      "depths": {
+        "4": 129
+      },
+      "stop_reasons": {
+        "maximum_depth": 120,
+        "selective_result": 9
+      },
+      "effective": {
+        "True": 129
+      },
+      "counters": {
+        "futility_eligible": 10881,
+        "futility_pruned": 0,
+        "nmp_attempts": 194,
+        "nmp_cutoffs": 177,
+        "nmp_skips": 119909,
+        "null_nodes": 5341,
+        "static_evaluations": 5044,
+        "verification_failures": 0,
+        "verification_nodes": 323906,
+        "verification_searches": 177,
+        "mvv_lva_captures": 0,
+        "mvv_lva_nodes": 0
+      },
+      "work": 904483527,
+      "nodes": 30431344,
+      "elapsed": 315.5143534988165
+    },
+    "variable": {
+      "moves": 129,
+      "depths": {
+        "4": 129
+      },
+      "stop_reasons": {
+        "maximum_depth": 120,
+        "selective_result": 9
+      },
+      "effective": {
+        "True": 129
+      },
+      "counters": {
+        "futility_eligible": 10457,
+        "futility_pruned": 0,
+        "nmp_attempts": 314,
+        "nmp_cutoffs": 293,
+        "nmp_skips": 129010,
+        "null_nodes": 8982,
+        "static_evaluations": 5699,
+        "verification_failures": 0,
+        "verification_nodes": 586791,
+        "verification_searches": 293,
+        "mvv_lva_captures": 0,
+        "mvv_lva_nodes": 0
+      },
+      "work": 1073101381,
+      "nodes": 35946893,
+      "elapsed": 393.4935286670516
+    }
+  },
+  "full-mvv-on": {
+    "variable": {
+      "moves": 121,
+      "depths": {
+        "4": 121
+      },
+      "stop_reasons": {
+        "maximum_depth": 112,
+        "selective_result": 9
+      },
+      "effective": {
+        "True": 121
+      },
+      "counters": {
+        "futility_eligible": 10457,
+        "futility_pruned": 0,
+        "nmp_attempts": 314,
+        "nmp_cutoffs": 293,
+        "nmp_skips": 133431,
+        "null_nodes": 8982,
+        "static_evaluations": 5697,
+        "verification_failures": 0,
+        "verification_nodes": 586791,
+        "verification_searches": 293,
+        "mvv_lva_captures": 17947,
+        "mvv_lva_nodes": 133452
+      },
+      "work": 1106853192,
+      "nodes": 37418555,
+      "elapsed": 385.3792747889238
+    },
+    "flat": {
+      "moves": 122,
+      "depths": {
+        "4": 122
+      },
+      "stop_reasons": {
+        "maximum_depth": 113,
+        "selective_result": 9
+      },
+      "effective": {
+        "True": 122
+      },
+      "counters": {
+        "futility_eligible": 10881,
+        "futility_pruned": 0,
+        "nmp_attempts": 194,
+        "nmp_cutoffs": 177,
+        "nmp_skips": 112119,
+        "null_nodes": 5341,
+        "static_evaluations": 5044,
+        "verification_failures": 0,
+        "verification_nodes": 323906,
+        "verification_searches": 177,
+        "mvv_lva_captures": 21768,
+        "mvv_lva_nodes": 112136
+      },
+      "work": 931750738,
+      "nodes": 30716689,
+      "elapsed": 314.81557700404665
+    }
+  }
+}

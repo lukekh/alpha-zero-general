@@ -21,7 +21,8 @@ from intransitive.tests.test_draws import load_history, clock_history
 
 MODES = list(product((False, True), repeat=2))
 CONFIG = SearchConfig(max_depth=3, proof_nodes=0, node_limit=10**9, time_limit=60,
-                      pvs_enabled=True, aspiration_enabled=True)
+                      pvs_enabled=True, aspiration_enabled=True,
+                      advantage_weight=25., attack_enabled=False, defence_enabled=False)
 
 
 def quiet_state():
@@ -50,6 +51,9 @@ class SelectiveTests(unittest.TestCase):
                          ('futility_margin', .9), ('search_version', 'unknown')]:
             with self.subTest(key=key), self.assertRaises(ValueError):
                 replace(CONFIG, **{key:bad})
+        self.assertFalse(selective.supported(replace(CONFIG, variable_material_enabled=True)))
+        self.assertFalse(selective.supported(SearchConfig()))
+        self.assertFalse(selective.supported(replace(CONFIG, pressure_enabled=True, pressure_weight=-1)))
         for field in ('count_weight', 'advantage_weight', 'predator_zero_bonus'):
             self.assertFalse(selective.supported(replace(CONFIG, **{field:200})))
         self.assertFalse(selective.supported(replace(CONFIG, pressure_enabled=True, pressure_weight=21)))
@@ -74,6 +78,48 @@ class SelectiveTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 teacher_config({'teacher': {'search': player.config.to_dict()}})
         self.assertFalse(valid_teacher_record(dict(teacher_depth=6, teacher_reason='selective_result')))
+
+    def test_experimental_evaluators_and_margin(self):
+        state = quiet_state()
+        p = SearchPosition(state)
+        for variable in (False, True):
+            cfg = SearchConfig(variable_material_enabled=variable,
+                selective_evaluator_enabled=True, nmp_enabled=True,
+                futility_enabled=True, proof_nodes=0, max_depth=2,
+                node_limit=10**9, time_limit=60, pvs_enabled=True)
+            self.assertTrue(selective.supported(cfg))
+            self.assertGreater(selective.margin(cfg, 2, p), selective.margin(CONFIG, 2, p))
+            signed = replace(cfg, count_weight=-100., advantage_weight=-25., attack_weight=-20., defence_weight=-30.)
+            self.assertGreater(selective.margin(signed, 1, p), 0)
+            player = AlphaBetaPlayer(config=cfg)
+            player._prepare()
+            # Non-PV quiet fixtures exercise actual cutoffs with adopted weights.
+            for nmp in (False, True):
+                player.config = replace(cfg, nmp_enabled=nmp, futility_enabled=not nmp)
+                alpha = -9000. if nmp else 9000.
+                player._search(p, 3 if nmp else 1, alpha, nextafter(alpha, inf), 1, budget())
+                self.assertGreater(player._selective_stats['nmp_cutoffs' if nmp else 'futility_pruned'], 0)
+                np.testing.assert_array_equal(p.export(), state)
+            if BINARY.exists():
+                with RustTeacher() as rust:
+                    for enabled in (False, True, False):
+                        native = rust.analyze(state, depth=2, seconds=60., proof_nodes=0,
+                            variable_material_enabled=variable, selective_evaluator_enabled=enabled,
+                            nmp_enabled=True, futility_enabled=True, reuse=True)
+                        py = AlphaBetaPlayer(config=replace(cfg, selective_evaluator_enabled=enabled)).analyze(state)
+                        self.assertEqual(native['selective']['effective'], enabled)
+                        self.assertAlmostEqual(py.score, native['score'])
+                        self.assertEqual(native['completed_depth'], 2)
+        with self.assertRaises(ValueError):
+            replace(CONFIG, selective_evaluator_enabled=1)
+
+    def test_selective_mate_requires_requested_depth(self):
+        state = position({'H8':1, 'C3':-2})
+        cfg = replace(CONFIG, max_depth=3, nmp_enabled=True, futility_enabled=True, proof_nodes=64)
+        result = AlphaBetaPlayer(config=cfg).analyze(state)
+        self.assertEqual(result.completed_depth, 3)
+        self.assertEqual(result.stop_reason, 'selective_result')
+        self.assertEqual(result.explanation['proof']['status'], 'unknown')
 
     def test_null_roundtrip_clock_repetition_exception_and_ownership(self):
         state = quiet_state()
@@ -240,7 +286,8 @@ class SelectiveTests(unittest.TestCase):
                     cfg=replace(CONFIG,nmp_enabled=nmp,futility_enabled=futility,max_depth=2)
                     py=AlphaBetaPlayer(config=cfg).analyze(state)
                     native=rust.analyze(state,depth=2,weight=0.,proof_nodes=0,
-                                        nmp_enabled=nmp,futility_enabled=futility,reuse=True)
+                                        nmp_enabled=nmp,futility_enabled=futility,reuse=True,
+                                        advantage=25., attack=0., defence=0.)
                     self.assertTrue(native['complete'])
                     self.assertAlmostEqual(py.score,native['score'])
                     self.assertEqual(native['selective']['enabled'],nmp or futility)

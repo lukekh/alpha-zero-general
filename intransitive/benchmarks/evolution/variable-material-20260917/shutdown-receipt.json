@@ -1,0 +1,66 @@
+{
+  "epoch": 1789644329.717261,
+  "status_path": "/Users/work/dev/alpha-zero-general/checkpoints/supervised-extra-900k-20260915-101616/status.json",
+  "status": {
+    "state": "stopped",
+    "phase": "complete",
+    "reason": "signal",
+    "pid": 14325,
+    "worker_pids": [],
+    "workers": 4,
+    "started_epoch": 1789521058.0338979,
+    "updated_epoch": 1789644040.249105,
+    "deadline_epoch": null,
+    "target_positions": 1000000,
+    "unique_positions": 254430,
+    "primary_positions": 44338,
+    "extra_positions": 210092,
+    "augmented_examples": 3053160,
+    "by_stage": {
+      "endgame": 86958,
+      "midgame": 87442,
+      "opening": 80030
+    },
+    "by_split": {
+      "test": 25393,
+      "train": 203701,
+      "validation": 25336
+    },
+    "sources": {
+      "ablation": 52123,
+      "promoted_tree_root": 133957,
+      "recorded_game": 12785,
+      "synthetic_root": 55325,
+      "tactical_defence": 240
+    },
+    "generation_teacher": {
+      "max_depth": 6,
+      "node_limit": 1000000000,
+      "time_limit": 300.0,
+      "pvs_enabled": true,
+      "aspiration_enabled": true,
+      "ordering_enabled": true,
+      "compiled_ordering_enabled": true,
+      "depth_replacement_enabled": true,
+      "table_entries": 50000
+    },
+    "generation_backend": {
+      "implementation": "rust-v1",
+      "binary": "/Users/work/dev/alpha-zero-general/checkpoints/supervised-extra-900k-20260915-101616/source_backups/rust-teacher-v1/intransitive/rust_teacher/target/release/intransitive-rust-teacher",
+      "sha256": "0df501663b2cf861521f699f21fe5817fb844f2bf7d497700b3599cddea546d1",
+      "node_limit_unit": "node_visits",
+      "worker_status_dir": "/Users/work/dev/alpha-zero-general/checkpoints/supervised-extra-900k-20260915-101616"
+    },
+    "next_seed": 3026155472,
+    "pending_seeds": [
+      3026155466,
+      3026155469,
+      3026155470
+    ],
+    "save_mode": "per_worker_completion",
+    "batch": 61702,
+    "training_untouched": true,
+    "restart_training": "manual_after_READY"
+  },
+  "remaining_generator_or_teacher_commands": []
+}

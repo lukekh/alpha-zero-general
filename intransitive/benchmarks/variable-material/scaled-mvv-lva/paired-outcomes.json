@@ -1,0 +1,284 @@
+{
+  "note": "Post-run alignment, with missing and interrupted games explicit. Conditional common completed outcomes are not an independent validation set.",
+  "contrasts": [
+    {
+      "first": "full-mvv-off",
+      "second": "scaled-mvv-off",
+      "common_official_decisions": 3,
+      "same": 3,
+      "loss_to_win": 0,
+      "win_to_loss": 0
+    },
+    {
+      "first": "full-mvv-on",
+      "second": "scaled-mvv-on",
+      "common_official_decisions": 3,
+      "same": 3,
+      "loss_to_win": 0,
+      "win_to_loss": 0
+    },
+    {
+      "first": "full-mvv-off",
+      "second": "full-mvv-on",
+      "common_official_decisions": 3,
+      "same": 3,
+      "loss_to_win": 0,
+      "win_to_loss": 0
+    },
+    {
+      "first": "scaled-mvv-off",
+      "second": "scaled-mvv-on",
+      "common_official_decisions": 3,
+      "same": 3,
+      "loss_to_win": 0,
+      "win_to_loss": 0
+    }
+  ],
+  "positions": [
+    {
+      "seed": 1643,
+      "position": "215c132ea32d242dc5cffde8c731432072b30e9fb24df12698e57f77c9e17981",
+      "variable_colour": 0,
+      "arms": {
+        "full-mvv-off": {
+          "status": "win",
+          "official": "win",
+          "consensus": "win",
+          "moves": 19
+        },
+        "full-mvv-on": {
+          "status": "win",
+          "official": "win",
+          "consensus": "win",
+          "moves": 19
+        },
+        "scaled-mvv-off": {
+          "status": "win",
+          "official": "win",
+          "consensus": "win",
+          "moves": 19
+        },
+        "scaled-mvv-on": {
+          "status": "win",
+          "official": "win",
+          "consensus": "win",
+          "moves": 19
+        }
+      }
+    },
+    {
+      "seed": 1643,
+      "position": "215c132ea32d242dc5cffde8c731432072b30e9fb24df12698e57f77c9e17981",
+      "variable_colour": 1,
+      "arms": {
+        "full-mvv-off": {
+          "status": "win",
+          "official": "loss",
+          "consensus": "loss",
+          "moves": 17
+        },
+        "full-mvv-on": {
+          "status": "win",
+          "official": "loss",
+          "consensus": "loss",
+          "moves": 17
+        },
+        "scaled-mvv-off": {
+          "status": "win",
+          "official": "loss",
+          "consensus": "loss",
+          "moves": 17
+        },
+        "scaled-mvv-on": {
+          "status": "win",
+          "official": "loss",
+          "consensus": "loss",
+          "moves": 17
+        }
+      }
+    },
+    {
+      "seed": 2669,
+      "position": "233b1c8fe409a38db87fdcb5681099be9c617295514da9c2e6212d3cc1b69809",
+      "variable_colour": 0,
+      "arms": {
+        "full-mvv-off": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "win",
+          "moves": 44
+        },
+        "full-mvv-on": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "win",
+          "moves": 38
+        },
+        "scaled-mvv-off": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "win",
+          "moves": 42
+        },
+        "scaled-mvv-on": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "win",
+          "moves": 44
+        }
+      }
+    },
+    {
+      "seed": 2669,
+      "position": "233b1c8fe409a38db87fdcb5681099be9c617295514da9c2e6212d3cc1b69809",
+      "variable_colour": 1,
+      "arms": {
+        "full-mvv-off": {
+          "status": "win",
+          "official": "loss",
+          "consensus": "loss",
+          "moves": 27
+        },
+        "full-mvv-on": {
+          "status": "win",
+          "official": "loss",
+          "consensus": "loss",
+          "moves": 27
+        },
+        "scaled-mvv-off": {
+          "status": "win",
+          "official": "loss",
+          "consensus": "loss",
+          "moves": 59
+        },
+        "scaled-mvv-on": {
+          "status": "win",
+          "official": "loss",
+          "consensus": "loss",
+          "moves": 59
+        }
+      }
+    },
+    {
+      "seed": 1652,
+      "position": "3be41689f2bb77f22d02de97d340699a5f21e1a89eae95728053ed183f9867e3",
+      "variable_colour": 0,
+      "arms": {
+        "full-mvv-off": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "inconclusive",
+          "moves": 41
+        },
+        "full-mvv-on": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "inconclusive",
+          "moves": 39
+        },
+        "scaled-mvv-off": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "inconclusive",
+          "moves": 41
+        },
+        "scaled-mvv-on": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "inconclusive",
+          "moves": 49
+        }
+      }
+    },
+    {
+      "seed": 1652,
+      "position": "3be41689f2bb77f22d02de97d340699a5f21e1a89eae95728053ed183f9867e3",
+      "variable_colour": 1,
+      "arms": {
+        "full-mvv-off": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "inconclusive",
+          "moves": 95
+        },
+        "full-mvv-on": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "inconclusive",
+          "moves": 92
+        },
+        "scaled-mvv-off": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "inconclusive",
+          "moves": 70
+        },
+        "scaled-mvv-on": {
+          "status": "unfinished",
+          "official": "unfinished",
+          "consensus": "inconclusive",
+          "moves": 79
+        }
+      }
+    },
+    {
+      "seed": 2639,
+      "position": "b94cd6573ca7d93a65e715c6f12f8403f519b378e60bb74c2de439e639805608",
+      "variable_colour": 0,
+      "arms": {
+        "full-mvv-off": {
+          "status": "win",
+          "official": "win",
+          "consensus": "win",
+          "moves": 22
+        },
+        "full-mvv-on": {
+          "status": "cancelled",
+          "official": "cancelled",
+          "consensus": "win",
+          "moves": 11
+        },
+        "scaled-mvv-off": {
+          "status": "cancelled",
+          "official": "cancelled",
+          "consensus": "win",
+          "moves": 10
+        },
+        "scaled-mvv-on": {
+          "status": "cancelled",
+          "official": "cancelled",
+          "consensus": "win",
+          "moves": 16
+        }
+      }
+    },
+    {
+      "seed": 2639,
+      "position": "b94cd6573ca7d93a65e715c6f12f8403f519b378e60bb74c2de439e639805608",
+      "variable_colour": 1,
+      "arms": {
+        "full-mvv-off": {
+          "status": "cancelled",
+          "official": "cancelled",
+          "consensus": "loss",
+          "moves": 4
+        },
+        "full-mvv-on": {
+          "status": "not_started",
+          "official": "missing",
+          "consensus": "missing"
+        },
+        "scaled-mvv-off": {
+          "status": "not_started",
+          "official": "missing",
+          "consensus": "missing"
+        },
+        "scaled-mvv-on": {
+          "status": "not_started",
+          "official": "missing",
+          "consensus": "missing"
+        }
+      }
+    }
+  ]
+}

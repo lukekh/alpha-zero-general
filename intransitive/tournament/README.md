@@ -175,3 +175,15 @@ Validation:
 ```sh
 .venv/bin/python -m unittest intransitive.tests.test_tournament -v
 ```
+
+## Signed scales and heuristic MCTS
+
+The current v2 genome includes signed material and module scales in [−100,100].
+Python and Rust defaults adopt the measured endgame candidate by explicit user
+request. Historical archives require their original source revisions.
+
+The `mcts` protocol freezes `simulations`, `cpuct` and `value_scale` and uses the
+repository's PUCT implementation with uniform legal priors and heuristic leaf
+values. It records simulation completion and observed tree depth separately;
+incomplete simulation counts are `simulation_incomplete` failures. Source/cache
+identity includes MCTS.py. See [the tuning contract](../heuristics/TUNING.md).

@@ -1,0 +1,12 @@
+{
+  "completed_depths": {
+    "4": 481,
+    "3": 12,
+    "2": 12,
+    "1": 29
+  },
+  "stop_reasons": {
+    "maximum_depth": 469,
+    "proven_result": 65
+  }
+}

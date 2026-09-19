@@ -8,17 +8,22 @@ from pathlib import Path
 from .config import SearchConfig
 from .evaluation import HEURISTIC_LIMIT, MATE_THRESHOLD
 
-VERSION = 'intransitive-module-scales-v1'
-BACKEND_VERSIONS = {'python': 'python-heuristics-v2', 'rust': 'rust-teacher-0.1.0'}
-BOUNDS = {'advantage': (0., 100.), 'attack': (0., 100.),
-          'defence': (0., 100.), 'overload': (0., 100.), 'pressure': (0., 20.)}
-DEFAULTS = {'advantage': 25., 'attack': 0., 'defence': 0., 'overload': 0., 'pressure': 0.}
-GENES = {'python': tuple(BOUNDS), 'rust': ('pressure',)}
-# These are fixed by v1, including dormant module weights and pressure geometry.
+VERSION = 'intransitive-module-scales-v2'
+VARIABLE_VERSION = 'intransitive-variable-module-scales-v3'
+BACKEND_VERSIONS = {'python': 'python-heuristics-signed-v3', 'rust': 'rust-teacher-routes-v2'}
+BOUNDS = {name: (-100., 100.) for name in ('material', 'advantage', 'attack', 'defence', 'overload', 'pressure')}
+DEFAULTS = {'material': 100., 'advantage': 23.967050360966205,
+            'attack': 25.714516982666414, 'defence': 32.5643023919054, 'overload': 0., 'pressure': 0.}
+GENES = {'python': tuple(BOUNDS), 'rust': tuple(g for g in BOUNDS if g != 'overload')}
+# These are fixed outside the signed genome, including dormant module weights and
+# pressure geometry. Anything here changes what a position is worth, so it joins
+# the evaluator digest and must stay at its default in a protocol's base config;
+# search and proof settings belong in the protocol record instead.
 EVALUATION_FIELDS = tuple(name for name in SearchConfig().to_dict()
                           if name.endswith(('_weight', '_bonus')) or name in (
-                              'evaluator_version', 'attack_enabled', 'defence_enabled',
-                              'overload_enabled', 'pressure_enabled', 'pressure_radius'))
+                              'evaluator_version', 'variable_material_enabled', 'variable_material_linear',
+                              'attack_enabled', 'defence_enabled', 'overload_enabled', 'runner_enabled',
+                              'pressure_enabled', 'pressure_radius'))
 
 
 def canonical_json(value):
@@ -40,15 +45,18 @@ def _object(pairs):
 
 @dataclass(frozen=True)
 class Genome:
-    """Immutable effective coefficients, normalized to fixed material = 100.
+    """Immutable effective coefficients, with signed, independently tunable material and module scales.
 
     Use from_genes for partial overrides, from_json for strict complete records.
     Zero disables optional modules; enable switches are not independent genes.
     """
     backend: str
     values: tuple
+    variable_material_enabled: bool = False
 
     def __post_init__(self):
+        if type(self.variable_material_enabled) is not bool:
+            raise ValueError("variable_material_enabled must be boolean")
         if not isinstance(self.backend, str) or self.backend not in GENES:
             raise ValueError(f'Unsupported backend: {self.backend}')
         if not isinstance(self.values, tuple) or len(self.values) != len(GENES[self.backend]):
@@ -63,7 +71,7 @@ class Genome:
         object.__setattr__(self, 'values', tuple(normalized))
 
     @classmethod
-    def from_genes(cls, genes=None, *, backend='python'):
+    def from_genes(cls, genes=None, *, backend='python', variable_material_enabled=False):
         if not isinstance(backend, str) or backend not in GENES:
             raise ValueError(f'Unsupported backend: {backend}')
         if genes is None:
@@ -73,24 +81,25 @@ class Genome:
         unsupported = set(genes) - set(GENES[backend])
         if unsupported:
             raise ValueError(f'Unsupported or ignored genes for {backend}: {sorted(map(str, unsupported))}')
-        return cls(backend, tuple(genes.get(name, DEFAULTS[name]) for name in GENES[backend]))
+        return cls(backend, tuple(genes.get(name, DEFAULTS[name]) for name in GENES[backend]), variable_material_enabled)
 
     @classmethod
     def from_json(cls, text):
         data = json.loads(text, object_pairs_hook=_object)
         if not isinstance(data, dict) or set(data) != {'version', 'backend', 'genes'}:
             raise ValueError('Expected exactly version, backend and genes')
-        if data['version'] != VERSION:
+        if data['version'] not in (VERSION, VARIABLE_VERSION):
             raise ValueError('Unsupported genome version')
         if not isinstance(data['genes'], dict):
             raise ValueError('genes must be an object')
-        genome = cls.from_genes(data['genes'], backend=data['backend'])
+        genome = cls.from_genes(data['genes'], backend=data['backend'],
+                                variable_material_enabled=data['version'] == VARIABLE_VERSION)
         if set(data['genes']) != set(GENES[genome.backend]):
             raise ValueError('Serialized genomes must include every supported gene')
         return genome
 
     def to_dict(self):
-        return dict(version=VERSION, backend=self.backend,
+        return dict(version=VARIABLE_VERSION if self.variable_material_enabled else VERSION, backend=self.backend,
                     genes=dict(zip(GENES[self.backend], self.values)))
 
     def to_json(self):
@@ -108,9 +117,10 @@ class Genome:
         defaults = SearchConfig()
         changed = [name for name in EVALUATION_FIELDS if getattr(base, name) != getattr(defaults, name)]
         if changed:
-            raise ValueError(f'Base must use v1 fixed evaluation defaults: {changed}')
+            raise ValueError(f'Base must use fixed evaluation defaults: {changed}')
         values = dict(DEFAULTS, **self.to_dict()['genes'])
-        updates = {'advantage_weight': values['advantage']}
+        updates = {'count_weight': values['material'], 'advantage_weight': values['advantage'],
+                   'variable_material_enabled': self.variable_material_enabled}
         for name in ('attack', 'defence', 'overload', 'pressure'):
             updates[name + '_enabled'] = bool(values[name])
             # Keep legacy dormant weights so the default is exactly SearchConfig().
@@ -124,7 +134,7 @@ class Genome:
         optimization switches are not a native contract or a parity claim.
         """
         if self.backend != 'rust':
-            raise ValueError('Native execution requires a rust genome (pressure only)')
+            raise ValueError('Native execution requires a rust genome')
         config = self.to_config(base)
         if not 1 <= config.max_depth <= 32 or config.proof_depth > 2 or config.proof_nodes > 64:
             raise ValueError('Rust requires depth 1..32, proof_depth <= 2 and proof_nodes <= 64')
@@ -134,10 +144,16 @@ class Genome:
         if config.node_limit >= 2**64 or config.time_limit >= 2**64 / 1000:
             raise ValueError('Native time/work limits exceed the unsigned 64-bit protocol')
         return dict(depth=config.max_depth, seconds=config.time_limit,
+                    variable_material_enabled=config.variable_material_enabled,
                     node_limit=config.node_limit, radius=config.pressure_radius,
                     weight=config.pressure_weight if config.pressure_enabled else 0.,
+                    material=config.count_weight, advantage=config.advantage_weight,
+                    attack=config.attack_weight if config.attack_enabled else 0.,
+                    defence=config.defence_weight if config.defence_enabled else 0.,
                     proof_depth=config.proof_depth, proof_nodes=config.proof_nodes,
                     table_entries=config.table_entries, reuse=False,
+                    mvv_lva_enabled=config.mvv_lva_enabled,
+                    selective_evaluator_enabled=config.selective_evaluator_enabled,
                     nmp_enabled=config.nmp_enabled, nmp_min_depth=config.nmp_min_depth,
                     nmp_reduction=config.nmp_reduction, futility_enabled=config.futility_enabled,
                     futility_max_depth=config.futility_max_depth, futility_margin=config.futility_margin)
@@ -149,24 +165,26 @@ class Genome:
         config = self.to_config(base)
         # Conservative board-capacity bound, valid even for synthetic fixtures.
         # Each side's feature difference is bounded by the largest side total.
-        upper = (81 * 100 + 81 * 1.75 * config.advantage_weight
-                 + 3 * (config.attack_weight if config.attack_enabled else 0)
-                 + 4 * (config.defence_weight if config.defence_enabled else 0)
-                 + 2 * (config.overload_weight if config.overload_enabled else 0)
-                 + 3280 * (config.pressure_weight if config.pressure_enabled else 0))
+        # Ratio <= (81+.25)/.25; scarcity <= sqrt((81/3+.25)/.25).
+        material_bound = 81 * (325 * math.sqrt(109) if self.variable_material_enabled else 1)
+        upper = (material_bound * abs(config.count_weight) + 81 * 1.75 * abs(config.advantage_weight)
+                 + 3 * (abs(config.attack_weight) if config.attack_enabled else 0)
+                 + 4 * (abs(config.defence_weight) if config.defence_enabled else 0)
+                 + 2 * (abs(config.overload_weight) if config.overload_enabled else 0)
+                 + 3280 * (abs(config.pressure_weight) if config.pressure_enabled else 0))
         result = dict(genome=self.to_dict(), config_hash=self.config_hash,
                       backend_version=BACKEND_VERSIONS[self.backend],
                       implementation_revision=implementation_revision,
                       tunable_genes=list(GENES[self.backend]),
                       bounds={k: list(BOUNDS[k]) for k in GENES[self.backend]},
-                      normalization={'count_weight': 100., 'zero_disables_optional_module': True},
+                      normalization={'material_is_tunable': True, 'zero_disables_optional_module': True},
                       search_config=config.to_dict(),
                       cache_policy='Python full config identity; Rust fresh search per candidate',
                       heuristic_limit=HEURISTIC_LIMIT, decisive_threshold=MATE_THRESHOLD,
                       conservative_absolute_bound=upper,
                       saturation_possible=upper >= HEURISTIC_LIMIT,
                       saturation_policy='Report observed raw scores and saturation on representative fixtures before fitness',
-                      backend_limitations=('Fixed native material 100/25, advantage bonuses, ordering/PVS and work accounting; pressure only'
+                      backend_limitations=('Native overload unsupported; fixed advantage bonuses, ordering/PVS and work accounting'
                                            if self.backend == 'rust' else 'Route and overload modules can dominate runtime'))
         if self.backend == 'rust':
             result['native_arguments'] = self.native_arguments(base)
@@ -199,18 +217,19 @@ def saturation_report(genome, states, *, base=None):
                 flagged=not rows or saturated > 0)
 
 
-def json_schema():
+def json_schema(*, variable_material_enabled=False):
     """Draft 2020-12 schema; runtime validation also rejects non-JSON NaN/Infinity."""
+    version = VARIABLE_VERSION if variable_material_enabled else VERSION
     alternatives = []
     for backend, names in GENES.items():
         alternatives.append(dict(type='object', additionalProperties=False,
             required=['version', 'backend', 'genes'], properties=dict(
-                version={'const': VERSION}, backend={'const': backend},
+                version={'const': version}, backend={'const': backend},
                 genes=dict(type='object', additionalProperties=False, required=list(names),
                     properties={name: dict(type='number', minimum=BOUNDS[name][0],
                         maximum=BOUNDS[name][1], default=DEFAULTS[name]) for name in names}))))
     return {'$schema': 'https://json-schema.org/draft/2020-12/schema',
-            'title': VERSION, 'oneOf': alternatives}
+            'title': version, 'oneOf': alternatives}
 
 
 if __name__ == '__main__':

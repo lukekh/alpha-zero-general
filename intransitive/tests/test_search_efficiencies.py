@@ -41,13 +41,14 @@ class SearchEfficiencyTests(unittest.TestCase):
         retained_line, retained_counts = line.copy(), counts.copy()
         scratch = node._proof_scratch
         arrays = tuple(id(getattr(scratch, name)) for name in
-                       ('pieces', 'masks', 'history', 'lines', 'counts'))
+                       ('pieces', 'masks', 'history', 'keys', 'lines', 'counts'))
         for work in (0, 1, 2, 17, 129):
             result = compact_proof(node, 2, 64, work)
             length = len(node.history)
             history = np.empty((length + 2, 82), dtype=np.int8)
             history[:length] = np.frombuffer(b''.join(node.history), dtype=np.int8).reshape(length, 82)
-            fresh = native_compact_proof(node.pieces.copy(), history, length, node.side,
+            keys = np.zeros(length + 2, dtype=np.int64)
+            fresh = native_compact_proof(node.pieces.copy(), history, keys, length, node.side,
                     node.a1, node.total, node.modelling_draws, 2, 64, work, node.masks.copy())
             self.assertEqual(result[0], fresh[0])
             np.testing.assert_array_equal(result[1], fresh[1])
@@ -60,7 +61,7 @@ class SearchEfficiencyTests(unittest.TestCase):
         node.total = total
         # Simulate an exception leaving arbitrary scratch content; the next call
         # must fully overwrite every readable input/output region.
-        for name in ('pieces', 'masks', 'history', 'lines', 'counts'):
+        for name in ('pieces', 'masks', 'history', 'keys', 'lines', 'counts'):
             getattr(scratch, name).fill(7)
         result = compact_proof(node, 2, 64, 129)
         self.assertEqual(score, result[0])
@@ -70,7 +71,7 @@ class SearchEfficiencyTests(unittest.TestCase):
         np.testing.assert_array_equal(counts, retained_counts)
         self.assertEqual(node.export().tobytes(), saved)
         self.assertEqual(arrays, tuple(id(getattr(scratch, name)) for name in
-                         ('pieces', 'masks', 'history', 'lines', 'counts')))
+                         ('pieces', 'masks', 'history', 'keys', 'lines', 'counts')))
         other = SearchPosition(node.export())
         compact_proof(other, 2, 64, 129)
         self.assertIsNot(other._proof_scratch, scratch)

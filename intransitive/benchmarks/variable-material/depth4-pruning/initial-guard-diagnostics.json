@@ -1,0 +1,82 @@
+[
+  {
+    "seed": 1643,
+    "pieces": [
+      5,
+      3
+    ],
+    "nearest_runner_to_own_goal": 3,
+    "excluded_by_piece_count": true,
+    "excluded_by_goal_distance": true
+  },
+  {
+    "seed": 1680,
+    "pieces": [
+      3,
+      5
+    ],
+    "nearest_runner_to_own_goal": 4,
+    "excluded_by_piece_count": true,
+    "excluded_by_goal_distance": false
+  },
+  {
+    "seed": 1652,
+    "pieces": [
+      3,
+      5
+    ],
+    "nearest_runner_to_own_goal": 4,
+    "excluded_by_piece_count": true,
+    "excluded_by_goal_distance": false
+  },
+  {
+    "seed": 1675,
+    "pieces": [
+      5,
+      3
+    ],
+    "nearest_runner_to_own_goal": 5,
+    "excluded_by_piece_count": true,
+    "excluded_by_goal_distance": false
+  },
+  {
+    "seed": 2616,
+    "pieces": [
+      7,
+      1
+    ],
+    "nearest_runner_to_own_goal": 3,
+    "excluded_by_piece_count": true,
+    "excluded_by_goal_distance": true
+  },
+  {
+    "seed": 2669,
+    "pieces": [
+      4,
+      4
+    ],
+    "nearest_runner_to_own_goal": 6,
+    "excluded_by_piece_count": false,
+    "excluded_by_goal_distance": false
+  },
+  {
+    "seed": 2657,
+    "pieces": [
+      5,
+      3
+    ],
+    "nearest_runner_to_own_goal": 4,
+    "excluded_by_piece_count": true,
+    "excluded_by_goal_distance": false
+  },
+  {
+    "seed": 2639,
+    "pieces": [
+      6,
+      2
+    ],
+    "nearest_runner_to_own_goal": 5,
+    "excluded_by_piece_count": true,
+    "excluded_by_goal_distance": false
+  }
+]

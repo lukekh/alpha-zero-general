@@ -1,0 +1,46 @@
+[
+  {
+    "moves": 349,
+    "name": "mcts-s128",
+    "outcomes": {
+      "unfinished": 1,
+      "win": 1
+    },
+    "records": 2
+  },
+  {
+    "moves": 259,
+    "name": "mcts-s32",
+    "outcomes": {
+      "unfinished": 1,
+      "win": 1
+    },
+    "records": 2
+  },
+  {
+    "moves": 209,
+    "name": "minimax-d1",
+    "outcomes": {
+      "unfinished": 1,
+      "win": 1
+    },
+    "records": 2
+  },
+  {
+    "moves": 174,
+    "name": "minimax-d2",
+    "outcomes": {
+      "win": 2
+    },
+    "records": 2
+  },
+  {
+    "moves": 61,
+    "name": "minimax-d3",
+    "outcomes": {
+      "unfinished": 1,
+      "win": 1
+    },
+    "records": 2
+  }
+]

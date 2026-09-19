@@ -1,0 +1,12 @@
+{
+  "population": true,
+  "rng": true,
+  "generation": true,
+  "phase": true,
+  "hall": true,
+  "ledger": true,
+  "history": true,
+  "exports": true,
+  "games_reserved": true,
+  "nodes_reserved": true
+}

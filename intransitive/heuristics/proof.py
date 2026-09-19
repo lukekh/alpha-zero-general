@@ -19,6 +19,30 @@ from .moves import masks_from_board, move_board, has_move, legal_actions
 NATIVE_NODE_LIMIT = 64
 READY = False
 
+# Zobrist keys for the repetition scan. A history row is 81 board bytes plus the
+# side to move, and comparing those 82 bytes for every earlier row of the
+# no-capture window, at every proof node, dominated endgame proof cost: sparse
+# boards share long runs of zeros, so the comparison runs deep before it
+# differs. A key per row turns that into integer compares, with the full
+# comparison kept for the rare collision.
+_generator = np.random.default_rng(20260918)
+ZOBRIST = _generator.integers(1, 1 << 63, size=(81, 7), dtype=np.int64)
+ZOBRIST[:, 3] = 0  # an empty square contributes nothing
+SIDE_KEY = np.int64(_generator.integers(1, 1 << 63, dtype=np.int64))
+for _table in (ZOBRIST,):
+    _table.flags.writeable = False
+
+
+@njit(cache=True)
+def history_key(row):
+    """Key for one stored history row: board squares, then side to move."""
+    key = np.int64(0)
+    for square in range(81):
+        key ^= ZOBRIST[square, int(row[square]) + 3]
+    if row[81]:
+        key ^= SIDE_KEY
+    return key
+
 # Stable goal-first order, identical to sorting the ascending legal actions.
 GOAL_ORDER = np.array([
     sorted(range(648), key=lambda a: (
@@ -154,7 +178,7 @@ def ordered_bitboard_actions(masks, side, a1):
 # alter the main search position. History rows are append-only along a branch;
 # a capture changes the start index, and returning restores the previous range.
 @njit
-def _visit_compact(pieces, masks, history, start, end, side, a1, total, modelling_draws,
+def _visit_compact(pieces, masks, history, keys, start, end, side, a1, total, modelling_draws,
                    depth, ply, alpha, beta, node_limit, work_limit, counts, lines):
     if counts[1] >= node_limit:
         counts[2] = 1
@@ -169,8 +193,11 @@ def _visit_compact(pieces, masks, history, start, end, side, a1, total, modellin
         return MATE - ply if winner == side else -MATE + ply
     if modelling_draws:
         repetitions = 0
+        current = keys[end]
         for i in range(start, end + 1):
-            if np.array_equal(history[i], history[end]):
+            # The key screens; the byte comparison still decides, so a collision
+            # costs a little time and never a wrong draw.
+            if keys[i] == current and np.array_equal(history[i], history[end]):
                 repetitions += 1
         if repetitions >= 3 or end - start >= NO_CAPTURE_LIMIT:
             return 0.
@@ -216,7 +243,15 @@ def _visit_compact(pieces, masks, history, start, end, side, a1, total, modellin
             for square in range(81):
                 history[end + 1, square] = pieces.flat[square]
             history[end + 1, 81] = 1 - side
-            value = -_visit_compact(pieces, masks, history, next_start, end + 1,
+            # The key follows the move rather than being rebuilt: the mover
+            # leaves its source, arrives at its target, any victim leaves, and
+            # the side to move flips.
+            mover = int(pieces[ny, nx])
+            keys[end + 1] = (keys[end] ^ SIDE_KEY
+                             ^ ZOBRIST[source, mover + 3]
+                             ^ ZOBRIST[target, mover + 3]
+                             ^ ZOBRIST[target, captured + 3])
+            value = -_visit_compact(pieces, masks, history, keys, next_start, end + 1,
                 1 - side, a1, total + 1, modelling_draws, depth - 1, ply + 1,
                 -beta, -alpha, node_limit, work_limit, counts, lines)
         move_board(pieces, masks, source, target, captured, True)
@@ -233,7 +268,7 @@ def _visit_compact(pieces, masks, history, start, end, side, a1, total, modellin
 
 
 @njit
-def native_compact_proof(pieces, history, length, side, a1, total, modelling_draws,
+def native_compact_proof(pieces, history, keys, length, side, a1, total, modelling_draws,
                          depth, node_limit, work_limit, masks=None, counts=None, lines=None):
     if counts is None:
         counts = np.empty(3, dtype=np.int64)
@@ -243,7 +278,12 @@ def native_compact_proof(pieces, history, length, side, a1, total, modelling_dra
     lines[:] = -1
     if masks is None:
         masks = masks_from_board(pieces)
-    score = _visit_compact(pieces, masks, history, 0, length - 1, side, a1, total,
+    if modelling_draws:
+        # Only the no-capture window is ever scanned, but the window start can
+        # move, so key every incoming row once here rather than per node.
+        for row in range(length):
+            keys[row] = history_key(history[row])
+    score = _visit_compact(pieces, masks, history, keys, 0, length - 1, side, a1, total,
         modelling_draws, depth, 0, -np.inf, np.inf, node_limit, work_limit, counts, lines)
     return score, lines[0], counts
 
@@ -256,6 +296,7 @@ class ProofScratch:
     """
     def __init__(self, capacity):
         self.history = np.empty((capacity, 82), dtype=np.int8)
+        self.keys = np.zeros(capacity, dtype=np.int64)
         self.pieces = np.empty((9, 9), dtype=np.int8)
         self.masks = np.empty((6, 2), dtype=np.uint64)
         self.counts = np.empty(3, dtype=np.int64)
@@ -273,9 +314,9 @@ def compact_proof(position, depth, node_limit, work_limit, *, _borrow=False):
         b''.join(position.history), dtype=np.int8).reshape(length, 82)
     scratch.pieces[:] = position.pieces
     scratch.masks[:] = position.masks
-    score, line, counts = native_compact_proof(scratch.pieces, scratch.history, length, position.side,
-        position.a1, position.total, position.modelling_draws, depth, node_limit, work_limit,
-        scratch.masks, scratch.counts, scratch.lines)
+    score, line, counts = native_compact_proof(scratch.pieces, scratch.history, scratch.keys,
+        length, position.side, position.a1, position.total, position.modelling_draws, depth,
+        node_limit, work_limit, scratch.masks, scratch.counts, scratch.lines)
     if _borrow:
         return score, line, counts
     return score, line.copy(), counts.copy()
