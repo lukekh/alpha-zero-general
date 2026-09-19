@@ -25,6 +25,7 @@ class Settings:
     validation_positions: int = 1
     min_completed_depth: int = 1
     resident_engines: int = 4
+    match_workers: int = 1  # Concurrent games; needs two resident engines each.
     max_games: int = 200
     max_nodes: int = 100_000_000
     max_seconds: float = 300.
@@ -40,13 +41,23 @@ class Settings:
         if self.algorithm not in ('evolution', 'random'):
             raise ValueError('algorithm must be evolution or random')
         for name in ('population', 'generations', 'elites', 'tournament_size', 'hall_size',
-                     'search_positions', 'validation_positions', 'min_completed_depth', 'max_games', 'max_nodes'):
+                     'search_positions', 'validation_positions', 'min_completed_depth', 'max_games',
+                     'max_nodes', 'match_workers'):
             if type(getattr(self, name)) is not int or getattr(self, name) < 1:
                 raise ValueError(f'{name} must be a positive integer')
         if self.population < 2 or self.elites >= self.population or self.tournament_size > self.population:
             raise ValueError('Need population >= 2, elites < population, tournament_size <= population')
-        if type(self.resident_engines) is not int or not 2 <= self.resident_engines <= 8:
-            raise ValueError('resident_engines must be in [2, 8]')
+        if type(self.resident_engines) is not int or not 2 <= self.resident_engines <= 24:
+            raise ValueError('resident_engines must be in [2, 24]')
+        # Each concurrent match holds two engines for its whole game. Covering
+        # that up front is what keeps engine acquisition wait-free, so matches
+        # cannot deadlock holding one engine each.
+        if 2 * self.match_workers > self.resident_engines:
+            raise ValueError('resident_engines must cover two per concurrent match')
+        # Slack above 2*workers is what lets warm engines stay cached between
+        # games; without it every match pays process startup again.
+        if self.match_workers > 1 and self.resident_engines == 2 * self.match_workers:
+            raise ValueError('resident_engines must exceed two per concurrent match')
         for name in ('mutation_rate', 'toggle_rate', 'recombination_rate',
                      'random_off_rate', 'near_default_fraction'):
             value = getattr(self, name)

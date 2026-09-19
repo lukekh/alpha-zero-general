@@ -255,6 +255,53 @@ class EvolutionTests(unittest.TestCase):
             self.assertTrue(all(not e['eligible'] for e in state['exports']))
             self.assertTrue(all(e['validation']['depth_violations'] > 0 for e in state['exports']))
 
+    def test_parallel_matches_reproduce_the_serial_board(self):
+        """Workers change throughput, never the result.
+
+        Each match is self-contained and carries its own seed, so completion
+        order must not reach the board. This runs the same search serially and
+        on four workers and compares what the run actually concluded.
+        """
+        live, peak, guard = [0], [0], threading.Lock()
+
+        def watched(spec, task, path, cancelled):
+            with guard:
+                live[0] += 1
+                peak[0] = max(peak[0], live[0])
+            try:
+                return fake_match(spec, task, path, cancelled)
+            finally:
+                with guard:
+                    live[0] -= 1
+
+        self.run_search(self.spec(match_workers=1), name='serial')
+        serial = self.state('serial')
+        FakeEngine.instances = []
+        self.run_search(self.spec(match_workers=4, resident_engines=12),
+                        name='parallel', match_player=watched)
+        parallel = self.state('parallel')
+
+        self.assertGreater(peak[0], 1, 'matches never actually overlapped')
+        def outcomes(state):
+            return {key: (row['status'], row['trajectory'])
+                    for key, row in state['ledger'].items()}
+        self.assertEqual(outcomes(serial), outcomes(parallel))
+        # Clocks/memory differ by nature; run_manifest differs because
+        # match_workers IS a recorded setting, so the two runs are honestly
+        # different manifests. Nothing the search decides may differ.
+        volatile = ('seconds', 'bytes', 'elapsed', 'latency', 'reserved', 'lease',
+                    'run_manifest')
+
+        def stable(value):
+            if isinstance(value, dict):
+                return {k: stable(v) for k, v in value.items()
+                        if not any(mark in k for mark in volatile)}
+            return [stable(v) for v in value] if isinstance(value, list) else value
+
+        self.assertEqual(stable(serial['history']), stable(parallel['history']))
+        self.assertEqual(serial['population'], parallel['population'])
+        self.assertEqual(stable(serial['exports']), stable(parallel['exports']))
+
     def test_long_real_runs_require_smoke_before_launch(self):
         with self.assertRaisesRegex(ValueError, 'bounded smoke first'):
             run(self.spec(), self.path / 'long')
@@ -271,8 +318,6 @@ class EvolutionTests(unittest.TestCase):
         pool = EnginePool(2, factory)
         a = pool.acquire({'sha256': 'A'}, {'depth': 1}, 55)
         b = pool.acquire({'sha256': 'B'}, {'depth': 1}, 55)
-        with self.assertRaises(ValueError):
-            pool.acquire({'sha256': 'A'}, {'depth': 1}, 55)
         a.close()
         reused = pool.acquire({'sha256': 'A'}, {'depth': 1}, 56)
         self.assertIs(reused.process, a.process)
@@ -335,3 +380,88 @@ class EvolutionTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ConcurrentEngineTests(unittest.TestCase):
+    """The pool must serve concurrent matches without sharing an engine."""
+
+    @staticmethod
+    def factory(store):
+        def build(*args, **kwargs):
+            process = Mock()
+            store.append(process)
+            return process
+        return build
+
+    def test_one_candidate_can_play_two_games_at_once(self):
+        processes = []
+        pool = EnginePool(5, self.factory(processes), workers=2)
+        first = pool.acquire({'sha256': 'A'}, {'depth': 1}, 55)
+        second = pool.acquire({'sha256': 'A'}, {'depth': 1}, 56)
+        # Same candidate, concurrent games: two processes, never one shared.
+        self.assertIsNot(first.process, second.process)
+        self.assertEqual(pool.live, 2)
+        first.close()
+        second.close()
+        # Both return to the same bucket and are reused before anything new.
+        third = pool.acquire({'sha256': 'A'}, {'depth': 1}, 57)
+        self.assertIn(third.process, (first.process, second.process))
+        self.assertEqual(pool.live, 2)
+        third.close()
+
+    def test_capacity_covers_two_engines_for_every_worker(self):
+        with self.assertRaisesRegex(ValueError, 'cover two per concurrent match'):
+            EnginePool(2, self.factory([]), workers=2)
+        with self.assertRaisesRegex(ValueError, 'cover two per concurrent match'):
+            Settings(resident_engines=2, match_workers=2)
+        # Exactly two per worker leaves no slot to cache a warm engine, so every
+        # match would pay process startup again: that is rejected too.
+        with self.assertRaisesRegex(ValueError, 'exceed two per concurrent match'):
+            EnginePool(4, self.factory([]), workers=2)
+        with self.assertRaisesRegex(ValueError, 'exceed two per concurrent match'):
+            Settings(resident_engines=4, match_workers=2)
+        self.assertEqual(Settings(resident_engines=5, match_workers=2).match_workers, 2)
+        self.assertEqual(EnginePool(16, self.factory([]), workers=4).capacity, 16)
+
+    def test_concurrent_matches_never_share_an_engine(self):
+        processes = []
+        pool = EnginePool(9, self.factory(processes), workers=4)
+        seen, clashes = set(), []
+        barrier = threading.Barrier(4)
+
+        def match(index):
+            # Two leases per match, held together, exactly as play_match does.
+            held = [pool.acquire({'sha256': f'C{index % 2}'}, {'depth': 1}, index),
+                    pool.acquire({'sha256': f'C{(index + 1) % 2}'}, {'depth': 1}, index)]
+            barrier.wait(timeout=10)  # force all four matches to overlap
+            for lease in held:
+                if lease.process in seen:
+                    clashes.append(lease.process)
+                seen.add(lease.process)
+            barrier.wait(timeout=10)
+            for lease in held:
+                lease.close()
+
+        threads = [threading.Thread(target=match, args=(i,)) for i in range(4)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join(timeout=30)
+        self.assertFalse(any(t.is_alive() for t in threads), 'acquire deadlocked')
+        self.assertEqual(clashes, [], 'an engine was shared across concurrent games')
+        self.assertEqual(pool.live, 8)
+        self.assertEqual(pool.active, 0)
+        pool.close()
+
+    def test_broken_lease_is_reaped_and_not_reused(self):
+        processes = []
+        pool = EnginePool(5, self.factory(processes), workers=2)
+        lease = pool.acquire({'sha256': 'A'}, {'depth': 1}, 55)
+        lease.process.receive.side_effect = RuntimeError('crashed')
+        with self.assertRaises(RuntimeError):
+            lease.receive(0., threading.Event())
+        lease.close()
+        lease.process.close.assert_called_once()
+        self.assertEqual(pool.live, 0)
+        replacement = pool.acquire({'sha256': 'A'}, {'depth': 1}, 56)
+        self.assertIsNot(replacement.process, lease.process)

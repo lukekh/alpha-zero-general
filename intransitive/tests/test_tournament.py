@@ -8,7 +8,7 @@ import tempfile
 import threading
 import time
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import numpy as np
 
@@ -382,3 +382,31 @@ class TournamentTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ChildReapingTests(unittest.TestCase):
+    """Reaping a child must not fail a match it has already completed."""
+
+    def test_close_survives_a_handle_that_reports_still_running(self):
+        from intransitive.tournament.runner import EngineProcess
+        engine = EngineProcess.__new__(EngineProcess)
+        engine.connection = Mock()
+        engine.process = Mock()
+        engine.process.is_alive.return_value = False
+        # multiprocessing raises this when its bookkeeping still believes the
+        # child runs; under concurrent matches that happens for a dead child.
+        engine.process.close.side_effect = [
+            ValueError('Cannot close a process while it is still running.'), None]
+        engine.close()
+        self.assertEqual(engine.process.close.call_count, 2)
+        engine.process.join.assert_called()
+
+    def test_close_gives_up_quietly_if_the_handle_never_releases(self):
+        from intransitive.tournament.runner import EngineProcess
+        engine = EngineProcess.__new__(EngineProcess)
+        engine.connection = Mock()
+        engine.process = Mock()
+        engine.process.is_alive.return_value = False
+        engine.process.close.side_effect = ValueError('still running')
+        engine.close()  # must not raise: the child is signalled and joined
+        self.assertEqual(engine.process.close.call_count, 2)

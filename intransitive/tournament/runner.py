@@ -1,7 +1,8 @@
 """Bounded candidate processes and fsync'd, replay-verified per-game journals."""
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import json
+import math
 import multiprocessing as mp
 import os
 from pathlib import Path
@@ -21,6 +22,42 @@ from ..record import state_hash
 from .spec import digest, effective_config, manifest, unpack
 
 FINAL = {'win', 'unfinished', 'crash', 'illegal_move', 'infrastructure_timeout', 'depth_incomplete', 'simulation_incomplete'}
+
+
+def adjudicate_final(state, task, items, limits):
+    """Decide a capped game only when both competing evaluations agree.
+
+    Each side's own static evaluator scores the final position from player
+    zero's frame, with proof and tree search disabled. Agreement on a strict
+    sign decides the game; disagreement or a tie leaves it unresolved.
+
+    This makes fitness depend on evaluator output rather than on play alone,
+    which is why it is opt-in and named in the manifest. A candidate that
+    overrates the positions it steers toward can be credited by an opponent
+    that shares the bias, so the two fixed opponents — unrelated to the
+    evolving population — carry more of the evidence than population pairs do.
+    """
+    from ..heuristics.budget import Budget, BudgetExpired
+    from ..heuristics.evaluation import Evaluator
+    scores = []
+    for identity in task['colours']:
+        config = replace(effective_config(items[identity], limits), proof_depth=0, proof_nodes=0)
+        budget = Budget(5_000_000, 2.)
+        try:
+            value = float(Evaluator(IntransitiveGame(modelling_draws=False), config).score(
+                state, 0, budget, proof={'status': 'unknown'}))
+            budget.check()
+        except BudgetExpired:
+            value = None
+        scores.append(value)
+    winner = None
+    if all(s is not None and math.isfinite(s) for s in scores):
+        if all(s > 0 for s in scores):
+            winner = 0
+        elif all(s < 0 for s in scores):
+            winner = 1
+    return dict(policy='both static evaluations from player zero must share a strict sign',
+                scores=scores, winner=winner)
 
 
 def atomic_json(path, value):
@@ -140,7 +177,19 @@ class EngineProcess:
         if self.process.is_alive():
             self.process.kill()
             self.process.join()
-        self.process.close()
+        try:
+            self.process.close()
+        except ValueError:
+            # Concurrent matches reap children from several threads, and
+            # multiprocessing's own bookkeeping can still consider this child
+            # running here even though it has been signalled and joined. Wait
+            # once more, then let the handle go: releasing it is cleanup, and
+            # failing to release it must not fail an otherwise complete match.
+            self.process.join()
+            try:
+                self.process.close()
+            except ValueError:
+                pass
 
 
 def replay(start, row):
@@ -233,6 +282,12 @@ def play_match(spec, task, path, cancelled, *, engine_factory=EngineProcess):
             row['active_seconds'] = previous_seconds + time.perf_counter() - active_start
             if len(row['moves']) >= limits['max_plies'] or row['active_seconds'] >= limits['game_seconds']:
                 row.update(status='unfinished', reason='safety_ply_limit' if len(row['moves']) >= limits['max_plies'] else 'safety_time_limit')
+                if limits.get('adjudicate_unfinished'):
+                    # The status stays 'unfinished' because that is what the game
+                    # was; the adjudication is recorded beside it so the journal
+                    # never claims a result the rules did not produce.
+                    row['adjudication'] = adjudicate_final(state, task, items, limits)
+                    row['adjudicated_winner'] = row['adjudication']['winner']
                 break
             if cancelled.is_set():
                 raise MatchFailure('cancelled', 'Cancellation requested')

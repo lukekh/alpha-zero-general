@@ -16,12 +16,21 @@ def revision():
     return subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
 
 
+# One depth-one search from the opening costs about 959 work with a core-only
+# evaluator but roughly 168,000 once attack and defence are on, which they have
+# been by default since the evolved coefficients were adopted. The old 50,000
+# allowance silently produced completed_depth zero and failed all sixteen smoke
+# matches. The allowance tracks the evaluator the smoke actually exercises.
+SMOKE_NODE_LIMIT = 5_000_000
+
+
 def smoke_spec(positions, mode='depth', variable_material_enabled=False):
     return prepare(Settings(population=2, generations=1, search_positions=1,
-                            max_games=16, max_nodes=3_000_000, max_seconds=180.,
+                            max_games=16, max_nodes=200_000_000, max_seconds=180.,
                             variable_material_enabled=variable_material_enabled,
                             initial_material=5. if variable_material_enabled else 100.), positions,
-                   protocol(mode, depth=1, seconds=5. if mode == 'depth' else .05, node_limit=50_000,
+                   protocol(mode, depth=1, seconds=5. if mode == 'depth' else .05,
+                            node_limit=SMOKE_NODE_LIMIT,
                             proof_depth=0, proof_nodes=0, max_plies=2, game_seconds=15.),
                    revision=revision())
 

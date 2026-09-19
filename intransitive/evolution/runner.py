@@ -1,4 +1,5 @@
 """Serial, journaled search using the paired official-game harness from #54."""
+from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 import fcntl
 import hashlib
@@ -169,6 +170,11 @@ class Search:
                               stop_reason=None, rng=None)
         self.start = time.monotonic()
         self.previous_wall = self.state['wall_seconds']
+        # Matches run concurrently; every mutation of self.state, and the
+        # checkpoint write that follows it, happens under this lock. Reentrant
+        # because reserve() saves while already holding it.
+        self.lock = threading.RLock()
+        self.workers = self.settings.match_workers
 
     def save(self, *, release=False):
         self.state['rng'] = self.rng.getstate()
@@ -221,9 +227,18 @@ class Search:
         if self.engine_pool is not None:
             self.engine_pool.retain(schedule['candidates'], self.spec['limits'])
         self.preflights(schedule['candidates'])
-        rows, keys, hits = [], [], 0
-        for task, key, canonical, local in jobs(schedule):
-            self.check()
+        plan = list(jobs(schedule))
+        # Slots keep manifest order regardless of completion order, so the board
+        # a run produces does not depend on how many workers ran it.
+        slots, hits, stopped = [None] * len(plan), 0, None
+
+        def play(index):
+            nonlocal hits, stopped
+            task, key, canonical, local = plan[index]
+            if stopped is not None:
+                return
+            with self.lock:
+                self.check()
             folder = self.output / 'matches' / key
             path = folder / 'game.json'
             row = json.loads(path.read_text()) if path.exists() else None
@@ -231,28 +246,54 @@ class Search:
                 if row['task'] != local or row['manifest_sha256'] != canonical['sha256'] or row['colours'] != local['colours']:
                     raise ValueError('Cached match identity mismatch')
                 replay(canonical['positions'][0], row)
-                previous = self.state['ledger'].get(key)
+                with self.lock:
+                    previous = self.state['ledger'].get(key)
                 if previous and previous['final'] and previous['record_sha256'] != digest(row):
                     raise ValueError('Cached final match changed')
             if row is None or row['status'] not in FINAL:
                 limits = canonical['protocols'][0]
-                self.reserve(20_000 + limits['max_plies']*limits['search']['node_limit'], 1)
-                atomic_json(folder / 'manifest.json', canonical)
+                with self.lock:
+                    # Reserve and journal before the work, exactly as the serial
+                    # loop did; concurrency must not make the budget optimistic.
+                    self.reserve(20_000 + limits['max_plies']*limits['search']['node_limit'], 1)
+                    atomic_json(folder / 'manifest.json', canonical)
                 row = self.match_player(canonical, local, path, self.cancelled)
                 # The harness fsyncs each move and final status before returning.
             else:
-                hits += 1
-            self.state['ledger'][key] = dict(record=str(path.relative_to(self.output)),
-                                           record_sha256=digest(row), final=row['status'] in FINAL,
-                                           status=row['status'], trajectory=row['trajectory_sha256'])
-            self.save()
+                with self.lock:
+                    hits += 1
+            with self.lock:
+                self.state['ledger'][key] = dict(record=str(path.relative_to(self.output)),
+                                               record_sha256=digest(row), final=row['status'] in FINAL,
+                                               status=row['status'], trajectory=row['trajectory_sha256'])
+                self.save()
             if row['status'] not in FINAL:
-                self.check()
+                with self.lock:
+                    self.check()
                 raise Stopped('cancelled')
             adapted = deepcopy(row)
             adapted.update(task=task, manifest_sha256=schedule['sha256'])
-            rows.append(adapted)
-            keys.append(key)
+            slots[index] = (adapted, key)
+
+        def guarded(index):
+            nonlocal stopped
+            try:
+                play(index)
+            except Stopped as exc:
+                # Stop feeding the pool, then surface this once it has drained.
+                stopped = stopped or exc
+                raise
+
+        if self.workers > 1:
+            with ThreadPoolExecutor(max_workers=self.workers) as executor:
+                list(executor.map(guarded, range(len(plan))))
+        else:
+            for index in range(len(plan)):
+                guarded(index)
+        if stopped is not None:
+            raise stopped
+        rows = [entry[0] for entry in slots]
+        keys = [entry[1] for entry in slots]
         result = report(schedule, rows)
         for entry in result['leaderboards'][self.spec['limits']['mode']]:
             item = next(c for c in schedule['candidates'] if c['sha256'] == entry['candidate'])
@@ -339,6 +380,7 @@ class Search:
                     measured_search_work=sum(m['result']['work'] for m in moves),
                     known_child_cpu_seconds=sum(m['cpu_seconds'] for m in moves)+sum(s['cpu_seconds'] for r in rows for s in r['startups']),
                     resident_engine_limit=self.settings.resident_engines,
+                    match_workers=self.settings.match_workers,
                     reused_process_handshakes=sum(s.get('reused_process', False) for r in rows for s in r['startups']),
                     child_peak_rss_bytes=max((s['peak_rss_bytes'] for r in rows for s in r['startups']+r['moves']), default=0),
                     wall_seconds=self.state['wall_seconds'], convergence=self.state['history'],
@@ -352,8 +394,14 @@ def run(spec, output, *, cancelled=None, smoke=None, match_player=play_match, pr
     begin = time.monotonic()
     validate(spec)
     settings = Settings(**spec['settings'])
+    # The wall clock, game count, generation and population bounds are what keep
+    # an unattended run short. The work bound is a second line of defence, and
+    # its old 3,000,000 was sized for a core-only evaluator; a route evaluation
+    # charges about 175 times more per node, so a single depth-one search no
+    # longer fits. Raising it keeps every time-based bound untouched.
     short = (settings.max_seconds <= 180 and settings.max_games <= 16
-             and settings.max_nodes <= 3_000_000 and settings.generations == 1 and settings.population == 2)
+             and settings.max_nodes <= 200_000_000 and settings.generations == 1
+             and settings.population == 2)
     # Tests can inject an engine-free match implementation. Every real run
     # beyond the explicit smoke envelope needs a successful smoke receipt.
     receipt = None
@@ -372,7 +420,8 @@ def run(spec, output, *, cancelled=None, smoke=None, match_player=play_match, pr
         atomic_json(path, spec)
         if receipt is not None:
             atomic_json(output / 'smoke.json', receipt)
-        pool = EnginePool(settings.resident_engines) if match_player is play_match else None
+        pool = (EnginePool(settings.resident_engines, workers=settings.match_workers)
+                if match_player is play_match else None)
         if pool is not None:
             def pooled_match(manifest, task, path, cancelled):
                 return play_match(manifest, task, path, cancelled, engine_factory=pool.acquire)
