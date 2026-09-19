@@ -41,15 +41,19 @@ class RustTeacher:
         return state.tobytes().hex()
 
     @staticmethod
-    def material_mode(enabled):
-        if type(enabled) is not bool:
-            raise ValueError('variable_material_enabled must be a boolean')
-        # Preserve compatibility with existing flat-material native binaries.
-        return ' 1' if enabled else ''
+    def material_mode(enabled, linear=False):
+        if type(enabled) is not bool or type(linear) is not bool:
+            raise ValueError('variable material settings must be booleans')
+        if linear and not enabled:
+            raise ValueError('variable_material_linear requires variable_material_enabled')
+        # Preserve compatibility with existing flat-material native binaries:
+        # 0 and 1 mean what they always did, 2 is the new linear mode.
+        return (' 2' if linear else ' 1') if enabled else ''
 
     def inspect(self, state, radius=4, weight=0., *, material=100., advantage=23.967050360966205,
-                attack=25.714516982666414, defence=32.5643023919054, variable_material_enabled=False):
-        mode = self.material_mode(variable_material_enabled)
+                attack=25.714516982666414, defence=32.5643023919054, variable_material_enabled=False,
+                variable_material_linear=False):
+        mode = self.material_mode(variable_material_enabled, variable_material_linear)
         return self.request(f'inspect {radius} {weight} {material} {advantage} {attack} {defence}{mode} {self.encode(state)}')
 
     def apply(self, state, action, modelling=True):
@@ -60,8 +64,9 @@ class RustTeacher:
                 proof_depth=2, proof_nodes=64, table_entries=50000, node_limit=1_000_000_000, reuse=False,
                 material=100., advantage=23.967050360966205,
                 attack=25.714516982666414, defence=32.5643023919054, variable_material_enabled=False,
+                variable_material_linear=False,
                 mvv_lva_enabled=False, selective_evaluator_enabled=False, nmp_enabled=False, nmp_min_depth=3, nmp_reduction=1,
-                futility_enabled=False, futility_max_depth=2, futility_margin=1.):
+                futility_enabled=False, futility_max_depth=2, futility_margin=1., certificate_enabled=False):
         if not np.isfinite(seconds) or seconds < 0:
             raise ValueError('seconds must be finite and nonnegative')
         from ..heuristics.config import SearchConfig
@@ -69,16 +74,19 @@ class RustTeacher:
             nmp_reduction=nmp_reduction, futility_enabled=futility_enabled,
             futility_max_depth=futility_max_depth, futility_margin=futility_margin)
         SearchConfig(mvv_lva_enabled=mvv_lva_enabled, selective_evaluator_enabled=selective_evaluator_enabled, **settings)
-        mode = self.material_mode(variable_material_enabled)
+        mode = self.material_mode(variable_material_enabled, variable_material_linear)
         options = f'{str(nmp_enabled).lower()} {nmp_min_depth} {nmp_reduction} ' + \
                   f'{str(futility_enabled).lower()} {futility_max_depth} {futility_margin}'
-        if selective_evaluator_enabled or mvv_lva_enabled:
-            mode = f' {int(variable_material_enabled)}'
+        # Each optional group is positional, so a later one implies the earlier.
+        if selective_evaluator_enabled or mvv_lva_enabled or certificate_enabled:
+            mode = self.material_mode(variable_material_enabled, variable_material_linear) or ' 0'
             options += ' ' + str(selective_evaluator_enabled).lower()
-            if mvv_lva_enabled:
+            if mvv_lva_enabled or certificate_enabled:
+                options += ' ' + str(mvv_lva_enabled).lower()
+            if certificate_enabled:
                 options += ' true'
         # Preserve the existing wire forms when all selective options are defaults.
-        options = (' ' + options) if selective_evaluator_enabled or mvv_lva_enabled or settings != dict(nmp_enabled=False, nmp_min_depth=3,
+        options = (' ' + options) if selective_evaluator_enabled or mvv_lva_enabled or certificate_enabled or settings != dict(nmp_enabled=False, nmp_min_depth=3,
             nmp_reduction=1, futility_enabled=False, futility_max_depth=2, futility_margin=1.) else ''
         command = 'search_reuse' if reuse else 'search'
         result = self.request(f'{command} {depth} {int(seconds*1000)} {node_limit} {radius} {weight} '
@@ -88,7 +96,8 @@ class RustTeacher:
             proof_depth=proof_depth, proof_nodes=proof_nodes, table_entries=table_entries,
             material=material, advantage=advantage, attack=attack, defence=defence,
             variable_material_enabled=variable_material_enabled,
-            mvv_lva_enabled=mvv_lva_enabled, selective_evaluator_enabled=selective_evaluator_enabled, **settings)
+            mvv_lva_enabled=mvv_lva_enabled, selective_evaluator_enabled=selective_evaluator_enabled,
+            certificate_enabled=certificate_enabled, **settings)
         if 'selective' in result:
             result['selective']['depth'] = result['completed_depth']
         result['score_bound'] = ('selective_exact' if nmp_enabled or futility_enabled else 'exact') if result['score'] is not None else None

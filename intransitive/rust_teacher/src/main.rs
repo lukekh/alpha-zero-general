@@ -17,14 +17,25 @@ fn number<T: std::str::FromStr>(s: &str) -> Result<T, String> {
 fn flag(s: &str) -> Result<bool, String> {
     match s { "0" => Ok(false), "1" => Ok(true), _ => Err("Expected boolean 0 or 1".into()) }
 }
+/// Material mode digit: 0 flat, 1 variable, 2 variable without the square root.
+/// Extending the existing digit keeps every older caller's 0 and 1 valid.
+fn material_mode(s: &str) -> Result<(bool, bool), String> {
+    match s {
+        "0" => Ok((false, false)),
+        "1" => Ok((true, false)),
+        "2" => Ok((true, true)),
+        _ => Err("Expected material mode 0, 1 or 2".into()),
+    }
+}
 fn handle(line: &str, cache: &mut Option<(Config, Search)>) -> Result<String, String> {
     let v: Vec<_> = line.split_whitespace().collect();
     match v.first().copied() {
-        Some("search" | "search_reuse") if matches!(v.len(),10|14|15|16|20|21|22|23) => {
+        Some("search" | "search_reuse") if matches!(v.len(),10|14|15|16|20|21|22|23|24) => {
             let has_weights=matches!(v.len(),14|15|20|21|22|23);
             let has_mode=matches!(v.len(),15|21|22|23);
             let has_selective=matches!(v.len(),16|20|21|22|23);
-            let weights=if has_weights { Weights {variable_material_enabled:if has_mode {flag(v[13])?} else {false},material:number(v[9])?,advantage:number(v[10])?,attack:number(v[11])?,defence:number(v[12])?} } else {Weights::default()};
+            let (variable,linear)=if has_mode {material_mode(v[13])?} else {(false,false)};
+            let weights=if has_weights { Weights {variable_material_enabled:variable,variable_material_linear:linear,material:number(v[9])?,advantage:number(v[10])?,attack:number(v[11])?,defence:number(v[12])?} } else {Weights::default()};
             let offset=9+if has_weights {4} else {0}+if has_mode {1} else {0};
             let mut config=Config {weights,depth:number(v[1])?,milliseconds:number(v[2])?,node_limit:number(v[3])?,
                 radius:number(v[4])?,pressure_weight:number(v[5])?,proof_depth:number(v[6])?,
@@ -38,7 +49,8 @@ fn handle(line: &str, cache: &mut Option<(Config, Search)>) -> Result<String, St
                 config.futility_margin=number(v[offset+5])?;
             }
             if v.len()>=22 {config.selective_evaluator_enabled=number(v[20])?;}
-            if v.len()==23 {config.mvv_lva_enabled=number(v[21])?;}
+            if v.len()>=23 {config.mvv_lva_enabled=number(v[21])?;}
+            if v.len()==24 {config.certificate_enabled=number(v[22])?;}
             let p=Position::from_bytes(&bytes(v[v.len()-1])?)?;
             if cache.as_ref().map(|x| &x.0)!=Some(&config) {
                 *cache=Some((config.clone(),Search::new(config.clone())?));
@@ -58,7 +70,8 @@ fn handle(line: &str, cache: &mut Option<(Config, Search)>) -> Result<String, St
         Some("inspect") if v.len()==4 || v.len()==8 || v.len()==9 => {
             let radius=number(v[1])?;let weight:f64=number(v[2])?;
             if !(3..=4).contains(&radius) || !weight.is_finite() {return Err("Invalid pressure settings".into());}
-            let weights=if v.len()>=8 {Weights {variable_material_enabled:if v.len()==9 {flag(v[7])?} else {false},material:number(v[3])?,advantage:number(v[4])?,attack:number(v[5])?,defence:number(v[6])?}} else {Weights::default()};
+            let (variable,linear)=if v.len()==9 {material_mode(v[7])?} else {(false,false)};
+            let weights=if v.len()>=8 {Weights {variable_material_enabled:variable,variable_material_linear:linear,material:number(v[3])?,advantage:number(v[4])?,attack:number(v[5])?,defence:number(v[6])?}} else {Weights::default()};
             weights.validate()?;
             let p=Position::from_bytes(&bytes(v[v.len()-1])?)?;
             let term=p.terminal(true);let official=p.terminal(false);

@@ -2,6 +2,7 @@
 //! unsafe code, neural inference, or changes to the live training pipeline.
 use std::collections::{HashMap, VecDeque};
 use std::time::{Duration, Instant};
+mod clear_run;
 mod moves;
 mod pressure_delta;
 mod routes;
@@ -9,6 +10,8 @@ use moves::Moves;
 use pressure_delta::Pressure;
 
 pub const MATE: f64 = 100_000.0;
+/// Plies without a capture before a modelling draw; matches the Python rules.
+const NO_CAPTURE_LIMIT: i32 = 80;
 const MAX_PLY: u64 = (1_u64 << 35) - 1;
 const DIR: [(i32, i32); 8] = [
     (0, 1),
@@ -50,11 +53,19 @@ pub const REG: f64 = 0.25;
 
 /// Per-piece values in ROCK, SCISSORS, PAPER order, using the own army total.
 pub fn variable_piece_values(own: [usize; 3], enemy: [usize; 3]) -> [f64; 3] {
+    variable_piece_values_mode(own, enemy, false)
+}
+
+/// `linear` drops the square root from the own-scarcity factor, pricing a
+/// concentrated army far more aggressively. A different valuation, not an
+/// approximation of the same one.
+pub fn variable_piece_values_mode(own: [usize; 3], enemy: [usize; 3], linear: bool) -> [f64; 3] {
     let target = own.iter().sum::<usize>() as f64 / 3.0;
     [0, 1, 2].map(|kind| {
+        let scarcity = (target + REG) / (own[kind] as f64 + REG);
         BASE * (enemy[(kind + 1) % 3] as f64 + REG)
             / (enemy[(kind + 2) % 3] as f64 + REG)
-            * ((target + REG) / (own[kind] as f64 + REG)).sqrt()
+            * if linear { scarcity } else { scarcity.sqrt() }
     })
 }
 
@@ -136,7 +147,8 @@ impl Material {
         let material = |player: usize| {
             let own = self.counts[player];
             if weights.variable_material_enabled {
-                let values = variable_piece_values(own, self.counts[1 - player]);
+                let values = variable_piece_values_mode(own, self.counts[1 - player],
+                    weights.variable_material_linear);
                 ((own[0] as f64 * values[0] + own[1] as f64 * values[1])
                     + own[2] as f64 * values[2]) / BASE
             } else {
@@ -489,6 +501,8 @@ pub fn evaluate_weighted(p: &Position, radius: usize, weight: f64, weights: &Wei
 #[derive(Clone, Debug, PartialEq)]
 pub struct Weights {
     pub variable_material_enabled: bool,
+    /// Drop the square root from own-type scarcity; requires the mode above.
+    pub variable_material_linear: bool,
     pub material: f64,
     pub advantage: f64,
     pub attack: f64,
@@ -499,6 +513,7 @@ impl Default for Weights {
         Self {
             material: 100.0,
             variable_material_enabled: false,
+            variable_material_linear: false,
             advantage: 23.967050360966205,
             attack: 25.714516982666414,
             defence: 32.5643023919054,
@@ -535,6 +550,9 @@ pub struct Config {
     pub pressure_weight: f64,
     pub proof_depth: usize,
     pub proof_nodes: u64,
+    /// Experimental forced corner-run certificate; off unless asked for.
+    pub certificate_enabled: bool,
+    pub certificate_plies: i32,
     pub table_entries: usize,
 }
 impl Default for Config {
@@ -556,6 +574,8 @@ impl Default for Config {
             pressure_weight: 0.0,
             proof_depth: 2,
             proof_nodes: 64,
+            certificate_enabled: false,
+            certificate_plies: 20,
             table_entries: 10000,
         }
     }
@@ -575,7 +595,8 @@ impl Config {
         if w.variable_material_enabled {
             for side in 0..2 {
                 let own = p.material.counts[side];
-                let values = variable_piece_values(own, p.material.counts[1-side]);
+                let values = variable_piece_values_mode(own, p.material.counts[1-side],
+                    w.variable_material_linear);
                 for i in 0..3 {
                     if own[i] > 0 { piece_scale = piece_scale.max(w.material.abs()*values[i]/100.0); }
                 }
@@ -673,45 +694,107 @@ impl Search {
         }
         Ok(())
     }
+    /// More than 2*depth disjoint (own piece, empty adjacent square) pairs.
+    ///
+    /// Every move changes at most two squares, so a depth-ply continuation can
+    /// damage at most 2*depth pairs. One survives untouched, and its piece can
+    /// still step into its square.
+    fn crowded_side_has_moves(board: &[i8; 81], side: u8, depth: usize) -> bool {
+        let mut used = [false; 81];
+        let mut pairs = 0;
+        for (s, &c) in board.iter().enumerate() {
+            if c == 0 || owner(c) != side {
+                continue;
+            }
+            for d in 0..8 {
+                if let Some(to) = destination((8 * s + d) as u16) {
+                    if board[to] == 0 && !used[to] {
+                        used[to] = true;
+                        pairs += 1;
+                        break;
+                    }
+                }
+            }
+        }
+        pairs > 2 * depth
+    }
+
+    /// More than `depth` pieces with more than `depth` empty neighbours.
+    ///
+    /// The counting argument the pair rule cannot make on a sparse board, where
+    /// 2*depth+1 pieces a side simply do not exist.
+    ///
+    /// A position gains at most one occupied square per ply: captures only
+    /// remove pieces, so newly occupied squares never outnumber newly vacated
+    /// ones, and each ply vacates only the square it moves from. A piece still
+    /// standing where it started therefore keeps one of its empty neighbours
+    /// once it began with more than `depth` of them, and can step into it.
+    ///
+    /// A piece leaves its square only by moving or by being captured. Across
+    /// `depth` plies this side moves at most ceil(depth/2) times and loses at
+    /// most floor(depth/2) pieces, so at most `depth` of these pieces are
+    /// disturbed and more than `depth` of them leaves one untouched.
+    fn open_side_has_moves(board: &[i8; 81], side: u8, depth: usize) -> bool {
+        let mut spacious = 0;
+        for (s, &c) in board.iter().enumerate() {
+            if c == 0 || owner(c) != side {
+                continue;
+            }
+            let mut empty = 0;
+            for d in 0..8 {
+                if let Some(to) = destination((8 * s + d) as u16) {
+                    if board[to] == 0 {
+                        empty += 1;
+                    }
+                }
+            }
+            if empty > depth {
+                spacious += 1;
+            }
+        }
+        spacious > depth
+    }
+
+    /// Sufficient condition only: neither corner nor stalemate can be won.
+    ///
+    /// Chebyshev distance rules out reaching either winning corner. Stalemate
+    /// is ruled out by whichever of two independent counting arguments applies:
+    /// the pair rule suits crowded boards, the spacious-piece rule sparse ones,
+    /// and a side is safe if either holds.
+    /// A forced corner run for either side, from the mover's perspective.
+    ///
+    /// At most one side can certify: each run requires the other to be unable
+    /// to reach its own corner first.
+    fn certificate(&self, p: &Position) -> Option<f64> {
+        // The run makes no captures, so the no-capture counter runs its whole
+        // length. A shorter allowance can only withhold a certificate.
+        let run = p.history.len() as i32 - p.start as i32 - 1;
+        let clock_left = (NO_CAPTURE_LIMIT - run).max(0);
+        for side in [p.side, 1 - p.side] {
+            let plies = clear_run::certify(p, side, clock_left, self.config.certificate_plies);
+            if plies != clear_run::NO_RUN {
+                let score = MATE - f64::from(plies);
+                return Some(if side == p.side { score } else { -score });
+            }
+        }
+        None
+    }
+
     fn proof_safe(p: &Position, depth: usize) -> bool {
-        let mut counts = [0; 2];
         for (s, &c) in p.board.iter().enumerate() {
             if c == 0 {
                 continue;
             }
             let side = owner(c);
-            counts[side as usize] += 1;
             let corner = if side == p.a1 { 80 } else { 0 };
             if distance(s, corner) <= (depth + usize::from(side == p.side)) / 2 {
                 return false;
             }
         }
-        let required = 2 * depth + 1;
-        if counts.iter().any(|c| *c < required) {
-            return false;
-        }
-        for side in 0..2 {
-            let mut used = [false; 81];
-            let mut pairs = 0;
-            for (s, &c) in p.board.iter().enumerate() {
-                if c == 0 || owner(c) != side {
-                    continue;
-                }
-                for d in 0..8 {
-                    if let Some(to) = destination((8 * s + d) as u16) {
-                        if p.board[to] == 0 && !used[to] {
-                            used[to] = true;
-                            pairs += 1;
-                            break;
-                        }
-                    }
-                }
-            }
-            if pairs < required {
-                return false;
-            }
-        }
-        true
+        (0..2).all(|side| {
+            Self::crowded_side_has_moves(&p.board, side, depth)
+                || Self::open_side_has_moves(&p.board, side, depth)
+        })
     }
     fn proof(
         &mut self,
@@ -767,8 +850,10 @@ impl Search {
         let mut ranked = Vec::with_capacity(actions.len());
         let values = if self.config.mvv_lva_enabled && self.config.weights.variable_material_enabled {
             let counts = &p.material.counts;
-            [variable_piece_values(counts[side as usize], counts[1-side as usize]),
-             variable_piece_values(counts[1-side as usize], counts[side as usize])]
+            [variable_piece_values_mode(counts[side as usize], counts[1-side as usize],
+                 self.config.weights.variable_material_linear),
+             variable_piece_values_mode(counts[1-side as usize], counts[side as usize],
+                 self.config.weights.variable_material_linear)]
         } else {[[100.0; 3]; 2]};
         if self.config.mvv_lva_enabled { self.mvv_lva_stats[0] += 1; }
 
@@ -936,6 +1021,14 @@ impl Search {
                     }
                     Err(e) if e != "proof budget" => return Err(e),
                     _ => (),
+                }
+            }
+            if self.config.certificate_enabled && !p.hypothetical {
+                if let Some(score) = self.certificate(p) {
+                    return Ok((
+                        if score > 0.0 { score - ply as f64 } else { score + ply as f64 },
+                        vec![],
+                    ));
                 }
             }
             return Ok((
@@ -1224,6 +1317,23 @@ fn next_up(x: f64) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    pub(super) fn fixture_board(board: [i8; 81]) -> Position {
+        let mut frame = [0; 82];
+        frame[..81].copy_from_slice(&board);
+        Position {
+            material: Material::new(&board),
+            moves: Moves::new(&board),
+            pressure: None,
+            board,
+            side: 0,
+            a1: 0,
+            total: 0,
+            history: vec![frame],
+            start: 0,
+            hypothetical: false,
+        }
+    }
+
     fn fixture(pieces: &[(usize, i8)]) -> Position {
         let mut board = [0; 81];
         for &(s, c) in pieces {
@@ -1244,6 +1354,108 @@ mod tests {
             hypothetical: false,
         }
     }
+    /// Small LCG, so the corpus needs no dependency and is reproducible.
+    struct GateRng(u64);
+    impl GateRng {
+        fn next(&mut self) -> u64 {
+            self.0 = self
+                .0
+                .wrapping_mul(6364136223846793005)
+                .wrapping_add(1442695040888963407);
+            self.0 >> 33
+        }
+        fn pieces(&mut self, count: usize) -> Vec<(usize, i8)> {
+            let mut out = Vec::new();
+            for _ in 0..count {
+                let square = (self.next() % 81) as usize;
+                let kind = 1 + (self.next() % 3) as i8;
+                out.push((square, if self.next() % 2 == 0 { kind } else { -kind }));
+            }
+            out
+        }
+    }
+
+    /// Exhaustive two-ply check: is there any terminal result in the horizon?
+    fn terminal_within(p: &mut Position, depth: usize) -> bool {
+        if p.terminal(true).is_some() {
+            return true;
+        }
+        if depth == 0 {
+            return false;
+        }
+        for action in p.raw_legal(p.side) {
+            let undo = p.push(action);
+            let found = terminal_within(p, depth - 1);
+            p.pop(undo);
+            if found {
+                return true;
+            }
+        }
+        false
+    }
+
+    #[test]
+    fn proof_gate_never_skips_a_decidable_position() {
+        let mut rng = GateRng(29);
+        let mut skipped = 0;
+        for _ in 0..400 {
+            let count = 2 + (rng.next() % 16) as usize;
+            let mut p = fixture(&rng.pieces(count));
+            if !Search::proof_safe(&p, 2) {
+                continue;
+            }
+            skipped += 1;
+            assert!(
+                !terminal_within(&mut p, 2),
+                "gate skipped a position with a terminal result inside two plies"
+            );
+        }
+        assert!(skipped > 0, "the corpus never exercised the gate");
+    }
+
+    #[test]
+    fn open_rule_fires_where_the_pair_rule_cannot() {
+        // Three pieces a side, well spaced: too few for 2*depth+1 = 5 pairs,
+        // but each has far more than two empty neighbours.
+        let p = fixture(&[
+            (2 + 9 * 2, 1),
+            (4 + 9 * 2, 2),
+            (2 + 9 * 4, 3),
+            (6 + 9 * 6, -1),
+            (4 + 9 * 6, -2),
+            (6 + 9 * 4, -3),
+        ]);
+        for side in 0..2 {
+            assert!(!Search::crowded_side_has_moves(&p.board, side, 2));
+            assert!(Search::open_side_has_moves(&p.board, side, 2));
+        }
+        assert!(Search::proof_safe(&p, 2));
+    }
+
+    #[test]
+    fn a_side_that_could_run_out_of_pieces_is_not_cleared() {
+        let p = fixture(&[(2 + 9 * 2, 1), (4 + 9 * 2, 2), (6 + 9 * 6, -1), (4 + 9 * 6, -2)]);
+        for side in 0..2 {
+            assert!(!Search::crowded_side_has_moves(&p.board, side, 2));
+            assert!(!Search::open_side_has_moves(&p.board, side, 2));
+        }
+        assert!(!Search::proof_safe(&p, 2));
+    }
+
+    #[test]
+    fn a_piece_within_reach_of_its_corner_still_blocks_the_gate() {
+        // Blue paper on H8 is one step from I9.
+        let p = fixture(&[
+            (7 + 9 * 7, 3),
+            (2 + 9 * 2, 1),
+            (4 + 9 * 2, 2),
+            (6 + 9 * 6, -1),
+            (4 + 9 * 6, -2),
+            (6 + 9 * 4, -3),
+        ]);
+        assert!(!Search::proof_safe(&p, 2));
+    }
+
     fn reference_legal(p: &Position, side: u8) -> Vec<u16> {
         let mut actions = Vec::with_capacity(80);
         for (s, &c) in p.board.iter().enumerate() {
