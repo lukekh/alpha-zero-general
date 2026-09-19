@@ -15,11 +15,15 @@ BOUNDS = {name: (-100., 100.) for name in ('material', 'advantage', 'attack', 'd
 DEFAULTS = {'material': 100., 'advantage': 23.967050360966205,
             'attack': 25.714516982666414, 'defence': 32.5643023919054, 'overload': 0., 'pressure': 0.}
 GENES = {'python': tuple(BOUNDS), 'rust': tuple(g for g in BOUNDS if g != 'overload')}
-# These are fixed outside the signed genome, including dormant module weights and pressure geometry.
+# These are fixed outside the signed genome, including dormant module weights and
+# pressure geometry. Anything here changes what a position is worth, so it joins
+# the evaluator digest and must stay at its default in a protocol's base config;
+# search and proof settings belong in the protocol record instead.
 EVALUATION_FIELDS = tuple(name for name in SearchConfig().to_dict()
                           if name.endswith(('_weight', '_bonus')) or name in (
-                              'evaluator_version', 'variable_material_enabled', 'attack_enabled', 'defence_enabled',
-                              'overload_enabled', 'pressure_enabled', 'pressure_radius'))
+                              'evaluator_version', 'variable_material_enabled', 'variable_material_linear',
+                              'attack_enabled', 'defence_enabled', 'overload_enabled', 'runner_enabled',
+                              'pressure_enabled', 'pressure_radius'))
 
 
 def canonical_json(value):

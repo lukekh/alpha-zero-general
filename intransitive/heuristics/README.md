@@ -247,6 +247,62 @@ race proof/unknown status and selected principal variation. Disabling a module
 must skip its computation as well as its contribution. Record configuration in
 results and invalidate evaluation-dependent caches when it changes.
 
+The scalar terms above say how much each module contributed, not where it came
+from or whether it still responds to the board. [Attribution and
+audit](ATTRIBUTION.md) adds both: `attribution.py` decomposes every module into
+signed per-square contributions that must sum back to its own term (the browser
+and the tests both check that residual), and `audit.py` measures each module's
+magnitude, dead fraction, binding caps and one-ply decision influence by game
+phase. See also the observed [module scales](MODULE_SCALE.md).
+
+### Shared route maps
+
+Route work is indexed by piece **code**, not by piece. The BFS traversal rule —
+enter a square if it is empty or holds a capturable enemy — depends only on the
+moving code, so every piece of one code shares a frontier.
+
+`Geometry.threat_map(code)` runs one multi-source search per predator type and
+returns the earliest ply any predator of that code reaches each square. Because
+`arrival` is monotone in distance, the minimum over predators of their arrival
+is the arrival of the nearest one, so `safe` is an array comparison rather than
+a scan of every enemy for every piece, square and deadline.
+`Geometry.profile(runner)` hoists a runner's interception squares, deadlines and
+arrival plies out of the per-defender loop, since all three depend only on the
+runner. Both are built on demand: a sparse endgame never pays for maps or
+profiles nothing asks about, which an eager version made measurably slower.
+
+Neither charges the budget. Together they cost at most `81 * min(6, pieces)`
+against the `162 * pieces` the piece index already charges, and they replace
+per-enemy scans that were never charged, so a fixed work budget still buys the
+same search. Equivalence with the per-piece scans is asserted in
+[`test_geometry.py`](../tests/test_geometry.py), which keeps the replaced code
+as the reference implementation.
+
+Route maps themselves are a bitboard flood fill ([`flood.py`](flood.py)) over
+the same 81-square, two-lane `uint64` layout [`moves.py`](moves.py) already
+maintains. A search ring is one dilation — eight masked shifts of the frontier —
+intersected with the squares that code may enter, so passability is decided once
+per position instead of re-derived for every neighbour visited. The same fill
+serves the single-source per-piece maps and the multi-source threat maps.
+
+The two positional features are compiled ([`features.py`](features.py)) and read
+`Geometry`'s stacked `(pieces, 81)` route blocks with no repacking. Beyond
+compilation, each drops work the reference could not:
+
+- **Attack** only ever matches at distance one, so it walks the eight
+  neighbours rather than the shortest-path DAG and the enemy list. Its capture
+  half is a boolean, not a count: `opportunities` holds one per distinct square
+  under `min(1., sum)`, so it is one exactly when some piece has a safe adjacent
+  capture.
+- **Defence** builds each runner's interception squares and deadlines once and
+  shares them across every defender, as one matrix pass instead of a call per
+  pair. `coverage` reads that matrix; `Geometry.intercepts` remains the source
+  for the per-square detail the race diagnostics print.
+
+`evaluation` keeps both readable definitions as `attacking_position_reference`
+and `coverage_reference`, and [`test_features.py`](../tests/test_features.py)
+asserts the compiled versions match them in value *and* in charged work.
+
 ## Minimax with alpha–beta pruning
 
 Implement a depth-limited exhaustive minimax reference, followed by an equivalent
@@ -280,10 +336,128 @@ as a primary implementation reference for search organization, not as a source o
 game-specific pruning assumptions. The proposed Intransitive feature definitions
 above are hypotheses to validate in this game.
 
+### The clear-run certificate
+
+`prove` searches two plies. A runner that cannot be stopped often wins further
+out than that, so [`clear_run.py`](clear_run.py) certifies those directly:
+a layered search in which a square is usable only when every enemy's earliest
+possible arrival is later than the runner's stay there. Opt in with
+`certificate_enabled`; it is off by default.
+
+Every bound in it errs toward silence:
+
+- Enemy arrival uses **free-board Chebyshev distance**. Occupancy can only slow
+  an enemy, so a square this calls contested may really be safe, never the
+  reverse.
+- **Blocking and capturing count alike.** Any enemy able to stand on a square in
+  time disqualifies it, not only one that could capture there.
+- The runner **walks only empty squares**, so its route never depends on an
+  exchange going as hoped.
+- It must **arrive strictly first**, ahead of any enemy reaching their own
+  corner on the same lower bound.
+- The **draw clock must not expire**: the run makes no captures, so the
+  no-capture counter runs its whole length. Repetition cannot occur, because the
+  runner's distance to the goal strictly decreases every move.
+- The runner's **own starting square** is checked too. When the opponent moves
+  first they get a ply to capture it where it stands — the hole that produced
+  every false positive in the first version.
+
+A negative answer means only that this argument did not apply, never that the
+position is not winnable.
+
+Measured on a corpus of random reachable positions: it proves a win on about
+17% of endgames and 1% of middlegames, a median of four plies out — distances
+the two-ply terminal search structurally cannot reach. Of 1,244 claims
+re-searched full width to the claimed depth, **0 were refuted and 0 were slower
+than claimed**. Python and Rust certify the same 492 of 492 positions.
+
+The counterexample harness is the point, not the passing run: the first version
+claimed a win on 6 of 1,283 positions (0.47%), all of them "mate in two", which
+is only reachable when the opponent moves first — the missing starting-square
+check.
+
+### Unproven runner pressure
+
+`runner_pressure` is the same idea priced as an ordinary weighted module rather
+than a proof: for the piece of each type nearest the goal, count the enemies
+that could answer it inside the box it spans with the goal, and score on
+distance when none can, on distance plus one when exactly one can, and zero
+otherwise. It is off by default (`runner_enabled`).
+
+It is deliberately approximate, and wrong in the ways the certificate is careful
+about — a piece outside the box can step in, any piece can block rather than
+only a capturing one, and the opponent may simply win the race. That is exactly
+why it is a weighted term and not a proof: a mis-scored heuristic is corrected
+by deeper search, whereas a false proof emits a mate score and prunes the line
+that would refute it. It is not part of the evolved genome; run the audit's
+`flips` and `agree+` columns first to see whether it earns a coefficient.
+
+### Gating the proof
+
+`prove` is a bounded terminal-only search, so most positions cannot contain a
+result for it to find. `no_terminal_win_in_horizon` decides that up front, and
+returning true there costs one node instead of the configured allowance.
+
+It is a *sufficient* condition for "no terminal result within the horizon" —
+never a claim that one exists — built from a corner clause and a stalemate
+clause. Chebyshev distance rules out reaching either winning corner. Stalemate
+is ruled out by whichever of two independent counting arguments applies:
+
+- **The pair rule** (`crowded_side_has_moves`): more than `2*depth` disjoint
+  (own piece, empty adjacent square) pairs. A move changes at most two squares,
+  so `depth` plies damage at most `2*depth` pairs and one survives.
+- **The spacious rule** (`open_side_has_moves`): more than `depth` pieces with
+  more than `depth` empty neighbours. A ply adds at most one occupied square,
+  because captures only remove pieces and each ply vacates only the square it
+  moves from; and a piece leaves its square only by moving or being captured,
+  which happens to at most `depth` of them across the horizon.
+
+The pair rule needs `2*depth+1` pieces a side, which a sparse endgame simply
+does not have — it was measured failing on 100% of endgame positions for that
+reason alone, never the corner clause. The spacious rule covers exactly that
+case. A side is cleared if either holds, so the gate only ever widens.
+
+Neither argument can clear a side down to two pieces at depth two, and that is
+correct rather than weak: both could genuinely be captured inside the horizon.
+
+Measured effect, with every module enabled and the proof kernels warm:
+
+| Phase | gate fires before | after | proof cost before | after |
+| --- | ---: | ---: | ---: | ---: |
+| opening | 100% | 100% | 5.3 us | 5.3 us |
+| middlegame | 66% | **100%** | 22.2 us | **5.1 us** |
+| endgame | 0% | **39%** | 162.6 us | **64.4 us** |
+
+Endgame evaluation falls from 265 to 165 microseconds. Scores are unchanged
+everywhere; what changes is the proof diagnostic, where 211 of 800 corpus
+positions move from `reason: proof budget` (the search gave up at its node
+cap) to `reason: horizon` (nothing can happen). Work counts drop, which is the
+point of a gate — unlike the route and feature work, this one does let a
+work-limited search go further.
+
+In Rust the same gate halves proof nodes but barely moves wall time, because a
+native proof node already costs around 0.15 microseconds; the win there is node
+budget rather than seconds.
+
+[`test_proof_gate.py`](../tests/test_proof_gate.py) runs an ungated,
+full-strength proof on every position the gate skips and asserts it finds
+nothing; `cargo test --release` does the same against an exhaustive two-ply
+expansion.
+
 ## Validation and comparisons
 
 [Search under a deadline](ANYTIME_SEARCH.md) explains retained partial-iteration
 work, move prioritisation, and transposition reuse that preserves repetition rules.
+
+Per-module attribution is checked by summation, not by inspection: every
+module's per-square contributions must add up to the evaluator's own term
+across a corpus of random reachable positions, for the core, all-modules,
+variable-material and signed-coefficient configurations, from both
+perspectives. Run it with:
+
+```sh
+uv run --locked python -m unittest intransitive.tests.test_attribution -v
+```
 
 The implemented [100-position tactical regression suite](TACTICS.md) checks
 exact bot moves for immediate wins, clear runs, mandatory goal defences, forced

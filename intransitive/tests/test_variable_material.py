@@ -167,3 +167,71 @@ class VariableMaterialTests(unittest.TestCase):
 
 
 if __name__=='__main__':unittest.main()
+
+
+class LinearScarcityTests(unittest.TestCase):
+    """The variant that drops the square root from the own-scarcity factor.
+
+    It is a different valuation, not a cheaper approximation of the same one,
+    so these tests pin the formula and the guard rather than any closeness.
+    """
+
+    ARMIES = (((3, 3, 4), (2, 4, 4)), ((1, 0, 5), (0, 3, 3)),
+              ((2, 2, 2), (2, 2, 2)), ((0, 0, 1), (1, 0, 0)), ((4, 1, 1), (2, 2, 2)))
+
+    def test_both_forms_match_the_written_formula(self):
+        from intransitive.heuristics.material import BASE, REG, variable_piece_values
+        for own, enemy in self.ARMIES:
+            target = sum(own) / 3.
+            for linear in (False, True):
+                values = variable_piece_values(own, enemy, linear)
+                for kind in range(3):
+                    prey, predator = enemy[(kind + 1) % 3], enemy[(kind + 2) % 3]
+                    scarcity = (target + REG) / (own[kind] + REG)
+                    expected = (BASE * (prey + REG) / (predator + REG)
+                                * (scarcity if linear else math.sqrt(scarcity)))
+                    with self.subTest(own=own, enemy=enemy, linear=linear, kind=kind):
+                        self.assertAlmostEqual(values[kind], expected, places=12)
+
+    def test_an_even_army_is_unchanged_by_the_variant(self):
+        from intransitive.heuristics.material import variable_piece_values
+        # Scarcity is exactly one there, and one is its own square root.
+        np.testing.assert_allclose(variable_piece_values((2, 2, 2), (2, 2, 2), False),
+                                   variable_piece_values((2, 2, 2), (2, 2, 2), True))
+
+    def test_the_variant_prices_concentration_more_aggressively(self):
+        from intransitive.heuristics.material import variable_piece_values
+        own, enemy = (1, 0, 5), (0, 3, 3)
+        sqrt = variable_piece_values(own, enemy, False)
+        linear = variable_piece_values(own, enemy, True)
+        # Scarce types gain, abundant ones lose, relative to the square root.
+        self.assertGreater(linear[0], sqrt[0])
+        self.assertLess(linear[2], sqrt[2])
+
+    def test_the_flag_requires_variable_material(self):
+        from intransitive.heuristics.config import SearchConfig
+        with self.assertRaises(ValueError):
+            SearchConfig(variable_material_linear=True)
+        self.assertTrue(SearchConfig(variable_material_enabled=True,
+                                     variable_material_linear=True).variable_material_linear)
+
+    def test_the_variant_is_off_by_default(self):
+        from intransitive.heuristics.config import SearchConfig
+        self.assertFalse(SearchConfig().variable_material_linear)
+        self.assertFalse(SearchConfig(variable_material_enabled=True).variable_material_linear)
+
+    def test_the_two_modes_score_positions_differently(self):
+        from intransitive.heuristics.budget import Budget
+        from intransitive.heuristics.config import SearchConfig
+        from intransitive.heuristics.evaluation import Evaluator
+        from intransitive.IntransitiveGame import IntransitiveGame
+        from intransitive.tests.test_attribution import random_positions
+        game = IntransitiveGame()
+        common = dict(variable_material_enabled=True, count_weight=5., advantage_weight=0.,
+                      attack_enabled=False, defence_enabled=False, proof_depth=0)
+        sqrt = Evaluator(game, SearchConfig(**common))
+        linear = Evaluator(game, SearchConfig(variable_material_linear=True, **common))
+        states = random_positions(games=4, plies=40, seed=83)
+        differing = sum(sqrt.score(s, 0, Budget(10**12, 3600.))
+                        != linear.score(s, 0, Budget(10**12, 3600.)) for s in states)
+        self.assertGreater(differing, 0, 'the variant never changed a score')

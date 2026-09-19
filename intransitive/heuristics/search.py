@@ -17,16 +17,22 @@ from .config import SearchConfig
 from .evaluation import Evaluator, MATE, MATE_THRESHOLD, terminal_value
 from .kernels import no_terminal_win_in_horizon, winning_actions, warm_search_kernels
 from .material import after_capture, count_pieces, warm_material_kernels
-from ..IntransitiveConstants import action_destination
+from ..IntransitiveConstants import NO_CAPTURE_LIMIT, action_destination
+from ..IntransitiveDisplay import move_to_str
 from .position import SearchPosition, warm_position_kernels
 
 
 @lru_cache(maxsize=1)
 def warm_route_kernels():
-    from .geometry import distance_map
+    from .geometry import distance_map, nearest_distance
     board = np.zeros((9, 9, 84), dtype=np.int8)[:, :, 0]
     distance_map(board, 0, 1)
     distance_map(board, 0, 1, 1)
+    nearest_distance(board, np.zeros(1, dtype=np.int16), 1, 1)
+    from .features import warm_feature_kernels
+    from .flood import warm_flood_kernels
+    warm_feature_kernels()
+    warm_flood_kernels()
 
 
 def position_key(state):
@@ -57,6 +63,12 @@ def to_table(score, ply):
 
 def from_table(score, ply):
     return score - ply if score > MATE_THRESHOLD else score + ply if score < -MATE_THRESHOLD else score
+
+
+def selective_mode_early(config):
+    """Whether any opt-in selective feature is on for this config."""
+    return (config.nmp_enabled or config.futility_enabled
+            or config.quiescence_enabled or config.lmr_enabled)
 
 
 @dataclass
@@ -104,6 +116,8 @@ class SearchResult:
     max_tree_depth: int = 0
     selective: dict = field(default_factory=dict)
     ordering: dict = field(default_factory=dict)
+    root_moves: list = field(default_factory=list)
+    exact_root: bool = False
 
 
 @dataclass
@@ -204,7 +218,52 @@ def prove_reference(game, state, config, budget, *, compiled_order=False):
         budget.module_calls['proof'] += 1
 
 
+def certificate(state, config, budget):
+    """A forced corner run for either side, or None.
+
+    Returns the score from the side to move's perspective, so a run by the
+    opponent reports as a loss. At most one side can certify: each run requires
+    the other to be unable to reach its own corner first.
+    """
+    from .clear_run import NO_RUN, certify
+    compact = isinstance(state, SearchPosition)
+    if compact:
+        pieces, turn, a1 = state.pieces, state.side, state.a1
+        clock = state.clock if state.modelling_draws else 0
+    else:
+        meta = state[:, :, 82:84].ravel()
+        pieces, turn, a1 = state[:, :, 0], int(meta[1]), int(meta[2])
+        # Take whichever counter is further along; a shorter allowance can only
+        # withhold a certificate, never grant one.
+        clock = max(int(meta[3]), max(0, int(meta[4]) - 1))
+    clock_left = max(0, NO_CAPTURE_LIMIT - clock)
+    start = perf_counter()
+    try:
+        budget.charge(2 * 81)
+        for side in (turn, 1 - turn):
+            plies = certify(pieces, side, turn, a1, clock_left, config.certificate_plies)
+            if plies != NO_RUN:
+                score = MATE - plies
+                return score if side == turn else -score
+        return None
+    finally:
+        budget.module_seconds['certificate'] += perf_counter() - start
+        budget.module_calls['certificate'] += 1
+
+
 def prove(game, state, config, budget, *, specialised=True):
+    """Bounded terminal search, then the run certificate if it is enabled."""
+    result = prove_terminal(game, state, config, budget, specialised=specialised)
+    if result['status'] == 'proven' or not config.certificate_enabled:
+        return result
+    score = certificate(state, config, budget)
+    if score is None:
+        return result
+    return dict(status='proven', score=score, plies=int(MATE - abs(score)),
+                source='clear-run certificate', nodes=result.get('nodes', 0))
+
+
+def prove_terminal(game, state, config, budget, *, specialised=True):
     """Use a warmed, bounded native call; preserve reference for larger proofs.
 
     Each logical visit and traversed edge costs one work, plus the root bound
@@ -266,6 +325,10 @@ class AlphaBetaPlayer:
         self.last_result = None
         self._root_progress = None
         self._root_previous = {}
+        # Diagnostic only: suppress root alpha raising so every reply returns an
+        # exact score instead of an upper bound. Not part of the config identity
+        # because it changes cost and reported bounds, never the chosen move.
+        self._exact_root = False
         self._killers = np.full((65,2),-1,dtype=np.int64)
         self._history = np.zeros((2,648),dtype=np.int64)
         self._selective_disabled = False
@@ -278,11 +341,13 @@ class AlphaBetaPlayer:
         self.last_result = None
 
     def _prepare(self, *, warm_proof=True):
-        if (self.config.nmp_enabled or self.config.futility_enabled) and not self.use_compact:
+        if ((self.config.nmp_enabled or self.config.futility_enabled
+             or self.config.quiescence_enabled) and not self.use_compact):
             raise ValueError("Selective search requires the compact Python backend")
         self._selective_stats = dict.fromkeys(("nmp_attempts", "nmp_cutoffs", "nmp_skips",
             "verification_searches", "verification_failures", "futility_eligible",
-            "futility_pruned", "static_evaluations", "null_nodes", "verification_nodes"), 0)
+            "futility_pruned", "static_evaluations", "null_nodes", "verification_nodes",
+            "quiescence_captures", "lmr_reduced", "lmr_researches"), 0)
         warm_search_kernels()
         warm_material_kernels()
         warm_position_kernels()
@@ -297,6 +362,9 @@ class AlphaBetaPlayer:
             warm_proof_kernel()
             from .proof import warm_compact_proof_kernel
             warm_compact_proof_kernel()
+        if self.config.certificate_enabled:
+            from .clear_run import warm_certificate_kernel
+            warm_certificate_kernel()
         if self.config.attack_enabled or self.config.defence_enabled or self.config.overload_enabled:
             warm_route_kernels()
         identity = self.config.identity()
@@ -318,6 +386,65 @@ class AlphaBetaPlayer:
         if proof['status'] == 'proven':
             return from_table(proof['score'], ply), proof['pv']
         return self.evaluator.score(state, side, budget, proof=proof, counts=self._material_counts), []
+
+    def _quiesce(self, state, side, alpha, beta, ply, budget, remaining):
+        """Resolve captures past the horizon, standing pat on quiet positions.
+
+        Only captures are searched, so the chain is bounded by the pieces on the
+        board as well as by `remaining`: every move removes one. Repetition
+        cannot arise inside it for the same reason, and each capture resets the
+        no-capture clock, so no draw rule can trigger part-way through.
+
+        The stand-pat score is the ordinary leaf, including its proof, so a
+        position with no captures costs exactly what it did before.
+        """
+        budget.visit()
+        terminal = terminal_value(self.game, state, side, ply)
+        if terminal is not None:
+            return terminal, []
+        stand_pat, line = self._leaf(state, side, ply, budget)
+        if remaining <= 0 or abs(stand_pat) > MATE_THRESHOLD:
+            return stand_pat, line
+        if stand_pat >= beta:
+            return stand_pat, line
+        best, best_line = stand_pat, line
+        if stand_pat > alpha:
+            alpha = stand_pat
+        pieces = state.pieces
+        for action in state.legal():
+            action = int(action)
+            x, y = action_destination(action)
+            if not pieces[y, x]:
+                continue  # quiet moves are the caller's business, not ours
+            self._selective_stats['quiescence_captures'] += 1
+            state.push(action)
+            counts = self._material_counts
+            self._material_counts = state.counts
+            try:
+                value, reply = self._quiesce(state, 1 - side, -beta, -alpha,
+                                             ply + 1, budget, remaining - 1)
+                value = -value
+            finally:
+                state.pop()
+                self._material_counts = counts
+            if value > best:
+                best, best_line = value, [action] + reply
+            if value > alpha:
+                alpha = value
+            if alpha >= beta:
+                break
+        return best, best_line
+
+    def _quiescence_active(self):
+        return (self.config.quiescence_enabled and self.use_compact
+                and not self._selective_disabled)
+
+    def _horizon(self, state, side, alpha, beta, ply, budget):
+        """The value at depth zero: a static leaf, or a capture search."""
+        if self._quiescence_active() and isinstance(state, SearchPosition):
+            return self._quiesce(state, side, alpha, beta, ply, budget,
+                                 self.config.quiescence_max_plies)
+        return self._leaf(state, side, ply, budget)
 
     def _capture_order_values(self, state, side, actions, budget):
         if not self.config.mvv_lva_enabled:
@@ -409,11 +536,11 @@ class AlphaBetaPlayer:
         # different repetition histories; avoid building a costly cache key
         # where reuse is rare. Internal nodes still use the full draw-safe key.
         if depth == 0 and (not self.use_table or (len(state.history) if compact else int(state[:, :, 82:84].flat[4])) != 1):
-            return self._leaf(state, side, ply, budget)
+            return self._horizon(state, side, alpha, beta, ply, budget)
         # Fold positions only when all future-play/draw information agrees.
         # Different-depth heuristic scores remain ordering hints, not values.
         key = position_key(state) if self.use_table else b''
-        if self.use_table and (self.config.nmp_enabled or self.config.futility_enabled):
+        if self.use_table and selective_mode_early(self.config):
             key = b'selective-v1\0' + key
         progress = self._root_progress if ply == 0 else None
         entry = self.table.get((key, depth)) if self.use_table else None
@@ -431,8 +558,11 @@ class AlphaBetaPlayer:
                 if alpha >= beta:
                     return value, list(entry.pv)
         if depth == 0:
-            value, line = self._leaf(state, side, ply, budget)
-            self._store(key, depth, value, 'exact', line, ply)
+            value, line = self._horizon(state, side, alpha, beta, ply, budget)
+            # A quiescence value is bounded by the window it was searched in,
+            # so it is not a reusable exact score for this key.
+            if not self._quiescence_active():
+                self._store(key, depth, value, 'exact', line, ply)
             return value, line
         hint = entry or (self.table.get((key, self._hints.get(key, -1)))
                          if self.use_table else None)
@@ -516,6 +646,17 @@ class AlphaBetaPlayer:
                     if alpha < -value < beta:
                         budget.pvs_researches += 1
                         value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
+                elif self._reducible(depth, index, capture, ply, best):
+                    # Late, quiet moves get a shallower look first; anything that
+                    # beats alpha is re-searched at full depth before it counts.
+                    self._selective_stats['lmr_reduced'] += 1
+                    reduction = min(self.config.lmr_reduction, depth - 2)
+                    value, line = self._search(child, depth - 1 - reduction,
+                                               -beta, -alpha, ply + 1, budget)
+                    if -value > alpha:
+                        self._selective_stats['lmr_researches'] += 1
+                        value, line = self._search(child, depth - 1, -beta, -alpha,
+                                                   ply + 1, budget)
                 else:
                     value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
             finally:
@@ -529,7 +670,10 @@ class AlphaBetaPlayer:
                 progress.record(action, value, line, alpha, beta)
             if value > best:
                 best, pv = value, [action] + line
-            alpha = max(alpha, best)
+            # Raising alpha at the root turns every later sibling into an upper
+            # bound. Analysis can pay for full windows to score them all.
+            if progress is None or not self._exact_root:
+                alpha = max(alpha, best)
             if alpha >= beta or best == MATE - ply - 1:
                 if self.config.ordering_enabled and not self._selective_disabled and alpha >= beta and not capture:
                     killers = self._killers[min(ply,64)]
@@ -543,6 +687,20 @@ class AlphaBetaPlayer:
         bound = 'upper' if best <= alpha_original else 'lower' if best >= beta_original else 'exact'
         self._store(key, depth, best, bound, pv, ply)
         return best, pv
+
+    def _reducible(self, depth, index, capture, ply, best):
+        """Whether this child may be searched shallower first.
+
+        Reductions need a move order worth trusting, so they are refused unless
+        ordering is on. Captures, the first `lmr_min_index` moves, the root, and
+        any node still without a value are always searched in full.
+        """
+        cfg = self.config
+        return (cfg.lmr_enabled and not self._selective_disabled
+                and (cfg.ordering_enabled or cfg.compiled_ordering_enabled)
+                and depth >= cfg.lmr_min_depth and index >= cfg.lmr_min_index
+                and ply > 0 and not capture and isfinite(best)
+                and abs(best) < MATE_THRESHOLD)
 
     def _store(self, key, depth, value, bound, pv, ply):
         if self.use_table and self.config.table_entries:
@@ -563,12 +721,14 @@ class AlphaBetaPlayer:
             if pv and depth >= self._hints.get(key, -1):
                 self._hints[key] = depth
 
-    def analyze(self, state, budget=None):
+    def analyze(self, state, budget=None, *, exact_root=False):
         self._prepare(warm_proof=budget is None)
+        self._exact_root = bool(exact_root)
         budget = budget or Budget(self.config.node_limit, self.config.time_limit)
         from ..IntransitiveGame import IntransitiveGame
         compact = self.use_compact and type(self.game) is IntransitiveGame
-        if (self.config.nmp_enabled or self.config.futility_enabled) and not compact:
+        if ((self.config.nmp_enabled or self.config.futility_enabled
+             or self.config.quiescence_enabled) and not compact):
             raise ValueError("Selective search requires the Intransitive compact backend")
         # Validate/copy once on entry, including for a zero-budget fallback.
         search_state = (SearchPosition(state, modelling_draws=self.game.board.modelling_draws)
@@ -593,7 +753,7 @@ class AlphaBetaPlayer:
                 self._root_progress = RootProgress(target, len(actions), action if depth else None)
                 low, high = -inf, inf
                 width = self.config.aspiration_window
-                if self.config.aspiration_enabled and depth and isfinite(score):
+                if self.config.aspiration_enabled and depth and isfinite(score) and not exact_root:
                     low = min(score - width, nextafter(score, -inf))
                     high = max(score + width, nextafter(score, inf))
                 retries = 0
@@ -623,9 +783,9 @@ class AlphaBetaPlayer:
                 # Selective mate-range values are not certificates: finish the
                 # requested depth instead of treating a shallow result as proof.
                 if abs(score) > MATE_THRESHOLD and (
-                        not (self.config.nmp_enabled or self.config.futility_enabled)
+                        not selective_mode_early(self.config)
                         or target == self.config.max_depth):
-                    stop_reason = ('selective_result' if self.config.nmp_enabled or self.config.futility_enabled
+                    stop_reason = ('selective_result' if selective_mode_early(self.config)
                                    else 'proven_result')
                     break
         except BudgetExpired as exc:
@@ -677,6 +837,7 @@ class AlphaBetaPlayer:
                     selected_depth, score_bound = choice['depth'], choice['bound']
         finally:
             self._material_root = None
+            self._exact_root = False
         # Explanations must not consume the move budget before a single useful
         # branch is searched. Emit them only if budget remains after search.
         diagnostics_status = 'skipped_budget'
@@ -688,6 +849,20 @@ class AlphaBetaPlayer:
         progress = self._root_progress
         partial_depth = progress.depth if progress is not None and not progress.finished else 0
         completed_moves = len(progress.moves) if progress is not None else 0
+        # Per-move root scores, for showing which replies the search likes. Rows
+        # from different iterations are not comparable, so each keeps the depth
+        # and bound it was actually established at; a partial pass never
+        # overwrites a sibling already completed deeper.
+        rows = dict(self._root_previous)
+        for candidate, row in (progress.moves if progress is not None else {}).items():
+            if candidate not in rows or row['depth'] > rows[candidate]['depth']:
+                rows[candidate] = row
+        root_moves = sorted(
+            (dict(row, move=move_to_str(row['action']),
+                  line=[move_to_str(step) for step in row['pv']],
+                  selected=row['action'] == action)
+             for row in rows.values()),
+            key=lambda row: (-row['score'], row['action']))
         self._root_progress = None
         explanation['config'] = self.config.to_dict()
         explanation['pv'] = pv
@@ -699,7 +874,8 @@ class AlphaBetaPlayer:
         explanation['stop_reason'] = stop_reason
         explanation['diagnostics_status'] = diagnostics_status
         explanation['effective_limits'] = effective_limits
-        selective_mode = self.config.nmp_enabled or self.config.futility_enabled
+        selective_mode = (self.config.nmp_enabled or self.config.futility_enabled
+                          or self.config.quiescence_enabled or self.config.lmr_enabled)
         if selective_mode:
             if score_bound is not None:
                 score_bound = 'selective_' + score_bound
@@ -728,6 +904,8 @@ class AlphaBetaPlayer:
             depth=selected_depth, identity=self.config.identity())
         result.ordering = dict(mvv_lva_enabled=self.config.mvv_lva_enabled,
             mvv_lva_nodes=self._mvv_lva_nodes, mvv_lva_captures=self._mvv_lva_captures)
+        result.root_moves = root_moves
+        result.exact_root = bool(exact_root)
         self.last_result = result
         return result
 

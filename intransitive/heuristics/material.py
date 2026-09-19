@@ -19,28 +19,36 @@ REG = .25
 
 
 @njit(cache=True)
-def variable_piece_values(own, enemy):
+def variable_piece_values(own, enemy, linear=False):
     """Per-piece values in ROCK, SCISSORS, PAPER order.
 
     Counts come from one player's remaining army and its opponent. REG keeps
     extinct predator/prey and absent own types finite; absent types contribute
     nothing when the army total multiplies these values by actual counts.
+
+    `linear` drops the square root from the own-scarcity factor, so a type held
+    at half the average army size is worth twice the base rather than about 1.41
+    times it. That is a different valuation, not an approximation of the same
+    one: it prices concentration far more aggressively, and the two must be
+    compared by playing strength rather than assumed interchangeable.
     """
     target = (own[0] + own[1] + own[2]) / 3.
     values = np.empty(3, dtype=np.float64)
     for kind in range(3):
         prey, predator = enemy[(kind + 1) % 3], enemy[(kind + 2) % 3]
-        values[kind] = BASE * (prey + REG) / (predator + REG) * np.sqrt(
-            (target + REG) / (own[kind] + REG))
+        scarcity = (target + REG) / (own[kind] + REG)
+        if not linear:
+            scarcity = np.sqrt(scarcity)
+        values[kind] = BASE * (prey + REG) / (predator + REG) * scarcity
     return values
 
 
 @njit(cache=True)
-def variable_material_total(counts, side):
+def variable_material_total(counts, side, linear=False):
     own, enemy = counts[:3], counts[3:]
     if side:
         own, enemy = enemy, own
-    values = variable_piece_values(own, enemy)
+    values = variable_piece_values(own, enemy, linear)
     return (own[0] * values[0] + own[1] * values[1]) + own[2] * values[2]
 
 
@@ -63,7 +71,8 @@ def after_capture(counts, code):
 
 
 @njit(cache=True)
-def ordered_score(state, side, counts, advantages, count_weight, advantage_weight, variable_material=False):
+def ordered_score(state, side, counts, advantages, count_weight, advantage_weight,
+                  variable_material=False, linear_material=False):
     # Encode first occurrences in base four, exactly matching Geometry/Counter.
     first, second, seen = 0, 0, 0
     for y in range(9):
@@ -82,8 +91,8 @@ def ordered_score(state, side, counts, advantages, count_weight, advantage_weigh
     own_count = float(counts[0] + counts[1] + counts[2])
     enemy_count = float(counts[3] + counts[4] + counts[5])
     if variable_material:
-        own_count = variable_material_total(counts, 0) / BASE
-        enemy_count = variable_material_total(counts, 1) / BASE
+        own_count = variable_material_total(counts, 0, linear_material) / BASE
+        enemy_count = variable_material_total(counts, 1, linear_material) / BASE
     own_adv, enemy_adv = advantages[0, first], advantages[1, second]
     if side:
         own_count, enemy_count = enemy_count, own_count
@@ -129,7 +138,8 @@ class MaterialCache:
     def score(self, state, side, counts):
         return ordered_score(state, side, counts, self.values(counts),
                              float(self.config.count_weight), float(self.config.advantage_weight),
-                             self.config.variable_material_enabled)
+                             self.config.variable_material_enabled,
+                             self.config.variable_material_linear)
 
 
 @lru_cache(maxsize=1)
@@ -138,3 +148,4 @@ def warm_material_kernels():
     counts = count_pieces(state)
     ordered_score(state, 0, counts, np.zeros((2, 64)), 100., 25.)
     ordered_score(state, 0, counts, np.zeros((2, 64)), 100., 25., True)
+    ordered_score(state, 0, counts, np.zeros((2, 64)), 100., 25., True, True)

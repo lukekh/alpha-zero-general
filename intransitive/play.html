@@ -55,7 +55,44 @@
   .copy-button:disabled { opacity: .45; cursor: default; }
   #copy-status { margin: 4px 0 0; }
   #copy-text { width: 100%; min-height: 130px; margin-top: 8px; font: 12px/1.4 monospace; }
-  @media (max-width: 760px) { main { margin: 20px auto; padding: 0 12px; } .layout { grid-template-columns: 1fr; gap: 16px; } header { align-items: start; } h1 { font-size: 30px; } .piece { font-size: clamp(16px, 4vw, 26px); } .coordinate { font-size: 9px; } }
+  /* Heatmap: gold (favours the perspective player) to violet, neutral midpoint.
+     Validated for colour-vision separation against each other and against the
+     Blue/Red piece colours, so a tint never impersonates an owner. Every tinted
+     square also carries its number, which is the relief for gold's low contrast. */
+  .square.heat { background: var(--heat); }
+  .heat-value { position: absolute; bottom: 1px; right: 3px; font-size: clamp(8px, 1vw, 11px); font-variant-numeric: tabular-nums; color: var(--heat-ink, #242b2b); z-index: 1; }
+  .square.line-from { box-shadow: inset 0 0 0 3px #34454066; }
+  .square.line-to { box-shadow: inset 0 0 0 3px #344540; }
+  .step { position: absolute; top: 1px; right: 2px; min-width: 15px; height: 15px; padding: 0 3px; border-radius: 8px; background: #344540; color: #fff; font-size: 10px; line-height: 15px; text-align: center; z-index: 2; }
+  .analysis-controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 10px; font-size: 14px; }
+  .analysis-controls label { display: flex; align-items: center; gap: 5px; }
+  .analysis-controls input[type=number] { width: 62px; font: inherit; padding: 3px; }
+  .analysis-controls input#analyse-work { width: 106px; }
+  .analysis-controls button { border: 1px solid #c8cec3; background: white; border-radius: 7px; font: inherit; padding: 6px 12px; cursor: pointer; }
+  .analysis-controls button:disabled { opacity: .45; cursor: default; }
+  .modules { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .modules th, .modules td { padding: 4px 5px; border-bottom: 1px solid #ecebe2; text-align: right; white-space: nowrap; }
+  .modules th:first-child, .modules td:first-child { text-align: left; white-space: normal; }
+  .modules th { font-weight: 600; color: #626966; }
+  .modules td.num { font-variant-numeric: tabular-nums; }
+  .modules tr.off td:first-child { color: #8b918c; }
+  .modules tfoot td { font-weight: 700; border-bottom: 0; }
+  .tag { display: inline-block; font-size: 10px; letter-spacing: .5px; padding: 1px 5px; border-radius: 4px; background: #e8ede2; color: #3f5047; margin-left: 4px; vertical-align: 1px; }
+  .tag.cap { background: #f6ecd0; color: #6b4a02; }
+  .tag.preview { background: #e9e4f7; color: #4c1d95; }
+  .tag.bad { background: #f4d7d1; color: #8a2a18; }
+  .legend { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #626966; margin: 12px 0 4px; flex-wrap: wrap; }
+  .legend .swatch { width: 20px; height: 11px; border-radius: 2px; border: 1px solid #0001; }
+  .lines { max-height: 300px; overflow: auto; margin: 6px 0 0; padding: 0; list-style: none; font-size: 13px; }
+  .lines li { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 3px 6px; border-radius: 5px; cursor: pointer; }
+  .lines li:hover { background: #f1f0e7; }
+  .lines li[aria-selected=true] { background: #e9e4f7; }
+  .lines li.best .move { font-weight: 800; }
+  .lines .score { margin-left: auto; font-variant-numeric: tabular-nums; }
+  .lines .pv { flex-basis: 100%; color: #626966; font-size: 12px; font-variant-numeric: tabular-nums; }
+  .analysis-grid { display: grid; grid-template-columns: minmax(340px, 3fr) minmax(280px, 2fr); gap: 4px 36px; align-items: start; }
+  #analysis-card { margin-top: 16px; }
+  @media (max-width: 760px) { main { margin: 20px auto; padding: 0 12px; } .layout, .analysis-grid { grid-template-columns: 1fr; gap: 16px; } header { align-items: start; } h1 { font-size: 30px; } .piece { font-size: clamp(16px, 4vw, 26px); } .coordinate { font-size: 9px; } }
 </style>
 <main>
   <header><div><p class="eyebrow">The corner is the goal</p><h1>Intransitive</h1></div><span class="muted" id="mode">Local game</span></header>
@@ -106,9 +143,49 @@
       </div>
     </aside>
   </div>
+  <section class="card" id="analysis-card">
+    <h3>Heuristic analysis</h3>
+    <p class="rule muted">Every module's contribution to the score, square by square, from the perspective player's point of view. Tick modules to add them to the board heatmap.</p>
+    <div class="analysis-controls">
+      <button id="analyse" type="button">Analyse position</button>
+      <label for="perspective">Perspective <select id="perspective"><option value="">Side to move</option><option value="0">Blue</option><option value="1">Red</option></select></label>
+      <label><input id="auto-analyse" type="checkbox"> Auto after each move</label>
+      <label><input id="analyse-search" type="checkbox"> Search replies</label>
+      <label><input id="analyse-exact" type="checkbox"> Exact score per reply</label>
+      <label for="analyse-depth">Depth <input id="analyse-depth" type="number" min="1" max="8" step="1" value="3"></label>
+      <label for="analyse-time">Seconds <input id="analyse-time" type="number" min="0" max="30" step="any" value="5"></label>
+      <label for="analyse-work">Work <input id="analyse-work" type="number" min="0" max="50000000" step="1" value="20000000"></label>
+    </div>
+    <p class="rule muted">Analysis runs on its own budget, separate from the opponent's move search, and is capped at depth 8, 30 seconds and 50,000,000 work. Alpha–beta proves an exact score only for the reply it selects; “Exact score per reply” searches every reply on a full window, which costs several times more.</p>
+    <p id="analysis-status" class="rule muted" role="status">Not analysed yet.</p>
+    <div id="analysis-body" hidden>
+      <div class="analysis-grid">
+        <div>
+          <table class="modules">
+            <thead><tr><th>Module</th><th>Weight</th><th>Own</th><th>Opp.</th><th>Term</th></tr></thead>
+            <tbody id="module-rows"></tbody>
+            <tfoot id="module-total"></tfoot>
+          </table>
+          <div class="analysis-controls" style="margin:10px 0 0">
+            <button id="heat-all" type="button">Select all</button>
+            <button id="heat-none" type="button">Select none</button>
+            <button id="heat-active" type="button">Scoring modules</button>
+          </div>
+          <div class="legend" id="heat-legend"></div>
+          <p class="rule muted" id="heat-note"></p>
+        </div>
+        <div id="lines-panel" hidden>
+          <h3>Replies the search evaluated</h3>
+          <p class="rule muted" id="lines-note"></p>
+          <ul class="lines" id="lines" role="listbox" aria-label="Root moves by search score"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 <script>
   let state, selected = null, busy = false, pendingCommand = null;
+  let analysis = null, heatModules = new Set(), activeLine = null;
   const $ = id => document.getElementById(id);
   const names = ['', 'rock', 'scissors', 'paper'];
   const symbols = ['', '✊', '✌️', '✋'];
@@ -159,7 +236,8 @@
       pendingCommand = null;
       if (state) render();
     }
-    if (succeeded && state.ai_turn) await request('ai');
+    if (succeeded && state.ai_turn) { await request('ai'); return; }
+    if (succeeded && $('auto-analyse').checked) await analyse();
   }
 
   function choose(x, y) {
@@ -209,23 +287,38 @@
     $('blue-count').textContent = 'Blue · ' + state.board.flat().filter(p => p > 0).length + ' pieces';
     $('red-count').textContent = 'Red · ' + state.board.flat().filter(p => p < 0).length + ' pieces';
     $('board').replaceChildren();
+    const heat = heatData(), markers = lineMarkers();
     for (let y = 8; y >= 0; y--) for (let x = 0; x < 9; x++) {
       const piece = state.board[y][x], square = document.createElement('button');
       const legal = options.some(m => same(m.target, [x, y]));
       const goal = x === y && (x === 0 || x === 8);
       const label = coord(x, y);
+      const index = y * 9 + x, marker = markers.get(index);
       square.id = 'square-' + label;
       square.className = 'square' + ((x + y) % 2 ? ' dark' : '') +
         (goal ? x === 0 ? ' goal-blue' : ' goal-red' : '') +
+        (heat ? ' heat' : '') + (marker ? ' ' + marker.role : '') +
         (same(selected, [x, y]) ? ' selected' : '') + (legal ? piece ? ' capture' : ' legal' : '') +
         (state.moves.at(-1)?.includes(label) ? ' last' : '');
+      let overlay = '';
+      if (heat) {
+        const step = heatStep(heat.cells[index], heat.scale);
+        square.style.setProperty('--heat', step.background);
+        square.style.setProperty('--heat-ink', step.ink);
+        if (Math.abs(heat.cells[index]) >= 0.05) {
+          overlay += '<span class="heat-value">' + signed(heat.cells[index]) + '</span>';
+        }
+      }
+      if (marker && marker.number) overlay += '<span class="step">' + marker.number + '</span>';
       square.setAttribute('aria-label', label + (piece ? ' ' + (piece > 0 ? 'Blue ' : 'Red ') + names[Math.abs(piece)] : ' empty') +
-        (goal ? x === 0 ? ', Red target' : ', Blue target' : '') + (legal ? ', legal destination' : ''));
+        (goal ? x === 0 ? ', Red target' : ', Blue target' : '') + (legal ? ', legal destination' : '') +
+        (heat ? ', contributing ' + heat.cells[index].toFixed(2) : '') +
+        (marker && marker.number ? ', step ' + marker.number + ' of the selected line' : ''));
       square.setAttribute('aria-pressed', String(!!same(selected, [x, y])));
       square.disabled = busy || !ongoing || state.ai_turn;
       square.innerHTML = '<span class="coordinate">' + label + '</span>' +
         (piece ? '<span aria-hidden="true" class="piece ' + (piece > 0 ? 'blue' : 'red') + '">' + symbols[Math.abs(piece)] + '</span>' : '') +
-        (goal ? '<span class="goal">GOAL</span>' : '');
+        (goal ? '<span class="goal">GOAL</span>' : '') + overlay;
       square.onclick = () => choose(x, y);
       $('board').append(square);
     }
@@ -234,7 +327,199 @@
       const item = document.createElement('li'); item.textContent = move; return item;
     }));
     $('history').scrollTop = $('history').scrollHeight;
+    for (const id of ['analyse', 'perspective', 'analyse-search', 'analyse-exact', 'analyse-depth',
+                      'analyse-time', 'analyse-work', 'heat-all', 'heat-none', 'heat-active']) $(id).disabled = busy;
+    renderAnalysis();
   }
+  // Heatmap ramps: gold favours the perspective player, violet favours the
+  // opponent, with a neutral midpoint. Equal steps per arm; the ink flips on
+  // the darkest violet step so cell numbers stay readable.
+  const RAMP = {
+    positive: ['#f6ecd0', '#ecd79b', '#dfb84e', '#ca8a04'],
+    negative: ['#e9e4f7', '#cfc3ee', '#a693de', '#6d28d9'],
+    neutral: '#eeede8',
+  };
+  const LIGHT_INK = {'#6d28d9': '#ffffff'};
+  // Mirrors attribution.DEFAULT_MODULES: everything except overload, which
+  // replays every legal reply and is requested only when it is selected.
+  const BASE_MODULES = ['piece_count', 'clear_run', 'piece_advantage',
+                        'attacking_position', 'defensive_position', 'local_pressure'];
+  const moduleNames = {piece_count: 'Material', clear_run: 'Clear run', piece_advantage: 'Piece advantage',
+    attacking_position: 'Attacking position', defensive_position: 'Defensive position',
+    overload: 'Overload', local_pressure: 'Local pressure'};
+  const squareIndex = label => 'ABCDEFGHI'.indexOf(label[0]) + 9 * (Number(label[1]) - 1);
+  const fmt = (value, digits = 2) => value === null || value === undefined ? '—' : value.toFixed(digits);
+  const signed = value => (value > 0 ? '+' : value < 0 ? '-' : '') +
+    Math.abs(value).toFixed(Math.abs(value) >= 100 ? 0 : 1);
+  const escapeHtml = text => String(text).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+  function heatStep(value, scale) {
+    if (!scale || !isFinite(value) || Math.abs(value) < scale / 100) return {background: RAMP.neutral, ink: '#242b2b'};
+    const arm = value > 0 ? RAMP.positive : RAMP.negative;
+    const background = arm[Math.min(arm.length - 1, Math.floor(Math.abs(value) / scale * arm.length))];
+    return {background, ink: LIGHT_INK[background] || '#242b2b'};
+  }
+
+  // A heatmap drawn over a board it was not computed for would be a lie, so a
+  // stale report paints nothing until it is recomputed.
+  function heatData() {
+    if (!analysis || analysis.status !== 'completed' || !analysis.decomposed) return null;
+    if (analysis.revision !== state.revision || !heatModules.size) return null;
+    const cells = new Array(81).fill(0);
+    for (const name of heatModules) {
+      const module = analysis.modules[name];
+      if (module) for (let i = 0; i < 81; i++) cells[i] += module.squares[i];
+    }
+    const scale = Math.max(...cells.map(Math.abs));
+    return {cells, scale, total: cells.reduce((a, b) => a + b, 0)};
+  }
+
+  function lineMarkers() {
+    const markers = new Map();
+    if (!activeLine) return markers;
+    activeLine.forEach((move, step) => {
+      const [from, to] = move.split('->');
+      const source = squareIndex(from), target = squareIndex(to);
+      if (source >= 0 && !markers.has(source)) markers.set(source, {role: 'line-from'});
+      if (target >= 0) markers.set(target, {role: 'line-to', number: step + 1});
+    });
+    return markers;
+  }
+
+  async function analyse() {
+    if (busy || !state) return;
+    for (const id of ['analyse-depth', 'analyse-time', 'analyse-work']) {
+      if (!$(id).reportValidity()) return;
+    }
+    busy = true;
+    pendingCommand = 'analyze';
+    render();
+    try {
+      const choice = $('perspective').value;
+      const body = {revision: state.revision,
+                    modules: [...new Set([...BASE_MODULES, ...heatModules])],
+                    search: $('analyse-search').checked,
+                    exact_root: $('analyse-exact').checked,
+                    depth: $('analyse-depth').valueAsNumber,
+                    time: $('analyse-time').valueAsNumber,
+                    work: $('analyse-work').valueAsNumber};
+      if (choice !== '') body.perspective = Number(choice);
+      const response = await fetch('/api/analyze', {
+        method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Unable to analyse this position.');
+      if (!heatModules.size && data.modules) {
+        heatModules = new Set(Object.keys(data.modules).filter(
+          name => data.modules[name].active && name !== 'clear_run'));
+      }
+      analysis = data;
+      activeLine = null;
+      $('error').hidden = true;
+    } catch (error) {
+      $('error').textContent = error.message;
+      $('error').hidden = false;
+    } finally {
+      busy = false;
+      pendingCommand = null;
+      render();
+    }
+  }
+
+  function moduleBadges(name, module) {
+    const badges = [];
+    if (module.preview) badges.push('<span class="tag preview" title="Not part of the score at this configuration; shown at its configured coefficient.">preview</span>');
+    const binding = (module.caps || []).filter(cap => cap.binding);
+    if (binding.length) badges.push('<span class="tag cap" title="' + escapeHtml(binding.map(
+      cap => `${cap.side} ${cap.name || 'total'}: ${fmt(cap.raw)} capped to ${fmt(cap.used)}`).join('; ')) +
+      '">at cap</span>');
+    if (module.residual !== null && module.residual !== undefined && Math.abs(module.residual) > 1e-6) {
+      badges.push('<span class="tag bad" title="The squares do not sum to the evaluator’s own term. This is a bug in the attribution or the module.">residual ' +
+        escapeHtml(module.residual.toExponential(1)) + '</span>');
+    }
+    if (name === 'clear_run') badges.push('<span class="tag" title="Binary proof or zero; it has no per-square decomposition.">proof only</span>');
+    return badges.join('');
+  }
+
+  function renderAnalysis() {
+    const status = $('analysis-status'), body = $('analysis-body');
+    if (!analysis) {
+      body.hidden = true;
+      status.textContent = busy && pendingCommand === 'analyze' ? 'Analysing…' : 'Not analysed yet.';
+      return;
+    }
+    if (analysis.status !== 'completed') {
+      body.hidden = true;
+      status.textContent = 'Analysis stopped (' + (analysis.reason || analysis.status) + '). Raise the depth, time or work limit.';
+      return;
+    }
+    body.hidden = false;
+    const who = analysis.perspective === 0 ? 'Blue' : 'Red';
+    const parts = ['Perspective ' + who + ' · score ' + fmt(analysis.score)];
+    if (analysis.clipped) parts.push('clipped to ±' + fmt(analysis.heuristic_limit, 0) + ' (raw ' + fmt(analysis.raw_score) + ')');
+    else if (analysis.saturated) parts.push('at the ±' + fmt(analysis.heuristic_limit, 0) + ' ordinary limit');
+    if (!analysis.decomposed) parts.push(analysis.note || 'No per-square decomposition.');
+    if (analysis.revision !== state.revision) parts.push('the board has moved on — analyse again');
+    if (analysis.residual !== undefined && Math.abs(analysis.residual) > 1e-6) parts.push('total residual ' + analysis.residual.toExponential(1));
+    status.textContent = parts.join(' · ');
+    const rows = [];
+    for (const [name, module] of Object.entries(analysis.modules || {})) {
+      rows.push('<tr class="' + (module.active ? '' : 'off') + '"><td><label><input type="checkbox" data-module="' +
+        name + '"' + (heatModules.has(name) ? ' checked' : '') + (name === 'clear_run' ? ' disabled' : '') + '> ' +
+        moduleNames[name] + '</label>' + moduleBadges(name, module) + '</td>' +
+        '<td class="num">' + fmt(module.weight) + '</td>' +
+        '<td class="num">' + fmt(module.own.used) + '</td>' +
+        '<td class="num">' + fmt(module.opponent.used) + '</td>' +
+        '<td class="num">' + (module.term === null ? '(' + fmt(module.attributed) + ')' : fmt(module.term)) + '</td></tr>');
+    }
+    $('module-rows').innerHTML = rows.join('');
+    $('module-total').innerHTML = '<tr><td>Total score</td><td></td><td></td><td></td><td class="num">' +
+      fmt(analysis.score) + '</td></tr>';
+    for (const box of $('module-rows').querySelectorAll('input[data-module]')) {
+      box.onchange = () => {
+        if (box.checked) heatModules.add(box.dataset.module); else heatModules.delete(box.dataset.module);
+        // Newly selected modules may not be in this report yet; ask for them.
+        if (box.checked && !(box.dataset.module in analysis.modules)) analyse(); else render();
+      };
+    }
+    const heat = heatData();
+    const swatches = [...RAMP.negative].reverse().concat(RAMP.neutral, RAMP.positive)
+      .map(colour => '<span class="swatch" style="background:' + colour + '"></span>').join('');
+    $('heat-legend').innerHTML = '<span>favours ' + (who === 'Blue' ? 'Red' : 'Blue') + '</span>' + swatches +
+      '<span>favours ' + who + '</span>' + (heat ? '<span>· full scale ±' + fmt(heat.scale) + '</span>' : '');
+    $('heat-note').textContent = heat
+      ? heatModules.size + ' module(s) selected, summing to ' + fmt(heat.total) +
+        ' across the board. Cell numbers are score points contributed by that square.'
+      : analysis.revision !== state.revision ? 'The heatmap is hidden because this report describes an earlier position.'
+      : 'Select at least one module to paint the board.';
+    const search = analysis.search;
+    $('lines-panel').hidden = !search;
+    if (!search) return;
+    const replies = search.root_moves || [];
+    const inexact = replies.filter(row => row.bound !== 'exact').length;
+    const depths = new Set(replies.map(row => row.depth));
+    $('lines-note').textContent = 'Completed depth ' + search.completed_depth + ' · stopped on ' + search.stop_reason +
+      ' · ' + search.nodes.toLocaleString() + ' nodes in ' + search.elapsed.toFixed(2) + 's' +
+      (depths.size > 1 ? ' · scores come from different depths (' + [...depths].sort().join(', ') +
+        ') and are not directly comparable — the deeper pass was interrupted' : '') +
+      (inexact ? ' · ' + inexact + ' replies are bounds (≤/≥) rather than scores: alpha–beta proves an exact value only for the reply it selects. Tick “Exact score per reply” to score them all.' : '') +
+      ' · select a reply to draw its line on the board.';
+    $('lines').innerHTML = replies.map((row, index) => {
+      const bound = row.bound === 'upper' ? '≤ ' : row.bound === 'lower' ? '≥ ' : '';
+      return '<li role="option" data-line="' + index + '" aria-selected="' + (activeLine === row.line) +
+        '" class="' + (row.selected ? 'best' : '') + '"><span class="move">' + escapeHtml(row.move) +
+        (row.selected ? ' ★' : '') + '</span><span class="tag">depth ' + row.depth + '</span>' +
+        '<span class="score">' + bound + fmt(row.score) + '</span>' +
+        (row.line.length > 1 ? '<span class="pv">' + escapeHtml(row.line.join('  ')) + '</span>' : '') + '</li>';
+    }).join('');
+    for (const item of $('lines').children) {
+      item.onclick = () => {
+        const line = search.root_moves[Number(item.dataset.line)].line;
+        activeLine = activeLine === line ? null : line;
+        render();
+      };
+    }
+  }
+
   $('undo').onclick = () => request('undo');
   $('copy-position').onclick = async () => {
     const pgn = state.pgn;
@@ -292,6 +577,19 @@
     });
   };
   $('retry').onclick = () => request('ai');
+  $('analyse').onclick = () => analyse();
+  $('perspective').onchange = () => analyse();
+  $('heat-none').onclick = () => { heatModules.clear(); render(); };
+  $('heat-all').onclick = () => {
+    heatModules = new Set(Object.keys(moduleNames).filter(name => name !== 'clear_run'));
+    analyse();
+  };
+  $('heat-active').onclick = () => {
+    if (!analysis || !analysis.modules) return analyse();
+    heatModules = new Set(Object.keys(analysis.modules).filter(
+      name => analysis.modules[name].active && name !== 'clear_run'));
+    render();
+  };
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && state) { selected = null; render(); }
   });

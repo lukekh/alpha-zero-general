@@ -84,3 +84,34 @@ genome evolves the same coefficients while preserving variable material through
 mutation, crossover, exports and native configuration. See [tuning](TUNING.md).
 Earlier benchmark archives require their recorded implementation because source
 fingerprints change.
+
+
+## Linear scarcity variant
+
+`variable_material_linear` drops the square root from the own-scarcity factor,
+so a type is valued at
+
+```text
+BASE * (prey + REG) / (predator + REG) * (target + REG) / (own[kind] + REG)
+```
+
+It requires `variable_material_enabled` and is off by default. Python and Rust
+agree exactly; the native wire carries it as material mode `2`, extending the
+existing digit so every caller sending `0` or `1` is unaffected.
+
+**It is a different valuation, not a cheaper approximation of the same one.** A
+type held at half the average army size is worth twice the base rather than
+about 1.41 times it, so concentration is priced far more aggressively. On an
+even army the two coincide, because scarcity is exactly one and one is its own
+square root. Which plays better is a tournament question, not an algebraic one.
+
+It is **not** faster in any measurable way. `sqrt` is a single hardware
+instruction, and it does not show above the call overhead:
+
+| | per evaluation | per value kernel call |
+| --- | ---: | ---: |
+| variable, with square root | 12.17 us | 536 ns |
+| variable, linear | 12.08 us | 539 ns |
+
+The 0.7% on the left is inside run-to-run noise, and the kernel measurement puts
+the linear form marginally slower. Adopt it if it plays better, not to save time.

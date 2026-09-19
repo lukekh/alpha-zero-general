@@ -324,5 +324,80 @@ class PlayServerTests(unittest.TestCase):
         self.assertEqual(len(self.game.moves), 1)
 
 
+class AnalysisEndpointTests(unittest.TestCase):
+    """The browser's read-only view of the evaluator, over the real session."""
+
+    def setUp(self):
+        self.game = GameSession()
+
+    def analyse(self, **data):
+        return self.game.analyse(dict(revision=self.game.revision, **data))
+
+    def test_squares_reconcile_with_the_reported_score(self):
+        report = self.analyse()
+        self.assertEqual(report["status"], "completed")
+        self.assertTrue(report["decomposed"])
+        self.assertEqual(len(report["total"]), 81)
+        self.assertAlmostEqual(sum(report["total"]), report["raw_score"], places=6)
+        for name, module in report["modules"].items():
+            self.assertEqual(len(module["squares"]), 81)
+            if module["residual"] is not None:
+                self.assertAlmostEqual(module["residual"], 0., places=6)
+
+    def test_analysis_never_advances_the_game(self):
+        before = self.game.board.get_state().tobytes()
+        self.analyse(search=True, depth=1)
+        self.assertEqual(self.game.revision, 0)
+        self.assertEqual(self.game.moves, [])
+        self.assertEqual(self.game.board.get_state().tobytes(), before)
+
+    def test_perspective_flips_every_square(self):
+        blue, red = self.analyse(perspective=0), self.analyse(perspective=1)
+        self.assertAlmostEqual(blue["score"], -red["score"], places=9)
+        for own, other in zip(blue["total"], red["total"]):
+            self.assertAlmostEqual(own, -other, places=9)
+
+    def test_search_reports_every_legal_reply(self):
+        report = self.analyse(search=True, depth=1, time=20., work=10_000_000)
+        search = report["search"]
+        replies = search["root_moves"]
+        legal = {move["action"] for move in self.game.snapshot()["legal"]}
+        self.assertEqual({row["action"] for row in replies}, legal)
+        self.assertEqual(sum(row["selected"] for row in replies), 1)
+        selected = next(row for row in replies if row["selected"])
+        self.assertEqual(selected["action"], search["action"])
+        self.assertEqual(search["move"], search["line"][0])
+        self.assertEqual([row["score"] for row in replies],
+                         sorted((row["score"] for row in replies), reverse=True))
+
+    def test_exact_root_scores_every_reply_without_bounds(self):
+        report = self.analyse(search=True, exact_root=True, depth=1, time=20., work=10_000_000)
+        search = report["search"]
+        self.assertTrue(search["exact_root"])
+        self.assertEqual({row["bound"] for row in search["root_moves"]}, {"exact"})
+
+    def test_overload_is_computed_only_when_requested(self):
+        self.assertNotIn("overload", self.analyse()["modules"])
+        self.assertIn("overload", self.analyse(modules=["piece_count", "overload"])["modules"])
+
+    def test_limits_are_clamped_and_validated(self):
+        report = self.analyse(depth=1000, time=1e9, work=10**12)
+        self.assertLessEqual(report["config"]["max_depth"], 8)
+        self.assertLessEqual(report["config"]["time_limit"], 30.)
+        self.assertLessEqual(report["config"]["node_limit"], 50_000_000)
+        for bad in (dict(revision=99), dict(modules=["nope"]), dict(modules="all"),
+                    dict(perspective=3), dict(depth=1.5), dict(time=-1), dict(work=-1)):
+            with self.subTest(payload=bad):
+                with self.assertRaises(ValueError):
+                    self.game.analyse({"revision": self.game.revision, **bad})
+
+    def test_a_finished_game_reports_no_search(self):
+        # Walk Blue's B5 rock into A1 is impossible; instead exhaust the board
+        # by asking for analysis after the session records a terminal reason.
+        report = self.analyse(search=True, depth=1)
+        self.assertIsNotNone(report["search"])
+        self.assertEqual(self.game.board.get_terminal_reason(), "ongoing")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -19,6 +19,12 @@ AB_OPTION_FIELDS = ('nmp_enabled', 'futility_enabled', 'nmp_min_depth', 'nmp_red
                     'futility_max_depth', 'futility_margin', 'attack_enabled', 'defence_enabled', 'overload_enabled',
                     'max_depth', 'time_limit', 'node_limit')
 
+# Analysis runs on demand from the browser and must not become a way to hang
+# the shared game lock. These ceilings apply on top of the requested limits.
+ANALYSIS_MAX_SECONDS = 30.
+ANALYSIS_MAX_WORK = 50_000_000
+ANALYSIS_MAX_DEPTH = 8
+
 
 class BaselineOpponent:
     def __init__(self, kind):
@@ -182,6 +188,83 @@ class GameSession:
             analysis=analysis,
         )
 
+    def analyse(self, data):
+        """Per-square heuristic attribution for the position now on the board.
+
+        Read-only: no move is made and the revision is unchanged. A fresh
+        budget keeps diagnostics from competing with the opponent's own search,
+        and the caller's limits are clamped so a browser cannot stall the game.
+        """
+        from .heuristics.attribution import DEFAULT_MODULES, attribute
+        from .heuristics.budget import Budget, BudgetExpired
+        from .heuristics.evaluation import MODULES, Evaluator
+        from .heuristics.search import AlphaBetaPlayer
+        from .IntransitiveDisplay import move_to_str
+        from .IntransitiveGame import IntransitiveGame
+        if type(data.get('revision')) is not int or data['revision'] != self.revision:
+            raise ValueError('The board changed. Refresh and try again.')
+        modules = data.get('modules', list(DEFAULT_MODULES))
+        if (type(modules) is not list or not all(type(name) is str for name in modules)
+                or set(modules) - set(MODULES)):
+            raise ValueError('Choose analysis modules from the evaluator module list.')
+        state = search_observation(self.board.get_state())
+        side = self.board.get_next_player()
+        perspective = data.get('perspective', side)
+        if type(perspective) is not int or perspective not in (0, 1):
+            raise ValueError('Choose Blue or Red as the analysis perspective.')
+        config = replace(self.analysis_config(), **self.analysis_limits(data))
+        game = IntransitiveGame()
+        budget = Budget(config.node_limit, config.time_limit)
+        try:
+            explanation = Evaluator(game, config).explain(state, perspective, budget, diagnostics=False)
+            report = attribute(game, state, perspective, budget, config,
+                               modules=modules, explanation=explanation)
+            report['status'] = 'completed'
+        except BudgetExpired as expired:
+            return dict(status='budget exhausted', reason=expired.reason, revision=self.revision,
+                        config=config.to_dict(), requested_modules=modules)
+        report.update(revision=self.revision, side_to_move=side, config=config.to_dict(),
+                      requested_modules=modules,
+                      work=budget.work, elapsed=budget.clock() - budget.start)
+        report['search'] = None
+        if data.get('search') and self.board.get_terminal_reason() == 'ongoing':
+            exact_root = bool(data.get('exact_root'))
+            result = AlphaBetaPlayer(game, config).analyze(state, exact_root=exact_root)
+            report['search'] = dict(
+                action=result.action, move=move_to_str(result.action), score=result.score,
+                completed_depth=result.completed_depth, selected_depth=result.selected_depth,
+                stop_reason=result.stop_reason, score_bound=result.score_bound,
+                selection_source=result.selection_source, exact_root=result.exact_root,
+                nodes=result.nodes, work=result.work, elapsed=result.elapsed,
+                root_moves=result.root_moves, side=side,
+                line=[move_to_str(step) for step in result.pv])
+        return report
+
+    def analysis_config(self):
+        from .heuristics.config import SearchConfig
+        if getattr(self.opponent, 'kind', None) == 'alphabeta':
+            return self.opponent.config
+        return self.opponent_factory.config if self.opponent_factory else SearchConfig()
+
+    @staticmethod
+    def analysis_limits(data):
+        """Validate and clamp the browser's requested analysis limits."""
+        limits = {}
+        for key, field, ceiling, kind in (('depth', 'max_depth', ANALYSIS_MAX_DEPTH, int),
+                                          ('time', 'time_limit', ANALYSIS_MAX_SECONDS, float),
+                                          ('work', 'node_limit', ANALYSIS_MAX_WORK, int)):
+            value = data.get(key)
+            if value is None:
+                continue
+            if kind is int and type(value) is not int:
+                raise ValueError(f'Analysis {key} must be a whole number.')
+            if kind is float and (type(value) not in (int, float) or value != value):
+                raise ValueError(f'Analysis {key} must be a number.')
+            if value < 0:
+                raise ValueError(f'Analysis {key} must not be negative.')
+            limits[field] = min(kind(value), ceiling)
+        return limits
+
     def make_move(self, action):
         before = self.board.get_state()
         self.board.make_move(action, self.board.get_next_player())
@@ -217,6 +300,9 @@ class GameSession:
                 # copied message; verbose route traces can be recomputed later.
                 for name in ('races', 'config', 'pv', 'search_score'):
                     search['explanation'].pop(name, None)
+                # Per-reply rows are an analysis view, not part of the decision
+                # record, and they would dominate the copied position.
+                search.pop('root_moves', None)
             self.ai_decisions[ply] = dict(ply=ply, action=action, state_sha256=state_hash(before),
                                           search=search)
         elif command == "undo":
@@ -297,7 +383,7 @@ class PlayHandler(BaseHTTPRequestHandler):
         if self.headers.get("Content-Type") != "application/json":
             self.respond(415, {"error": "Expected JSON."})
             return
-        if self.path not in ("/api/move", "/api/ai", "/api/undo", "/api/restart"):
+        if self.path not in ("/api/move", "/api/ai", "/api/undo", "/api/restart", "/api/analyze"):
             self.respond(404, {"error": "Not found"})
             return
         try:
@@ -308,7 +394,8 @@ class PlayHandler(BaseHTTPRequestHandler):
             if not isinstance(data, dict):
                 raise ValueError("Expected a JSON object.")
             with self.server.game_lock:
-                state = self.server.game.update(self.path.removeprefix("/api/"), data)
+                state = (self.server.game.analyse(data) if self.path == "/api/analyze"
+                         else self.server.game.update(self.path.removeprefix("/api/"), data))
         except (ValueError, UnicodeDecodeError) as exc:
             self.respond(400, {"error": str(exc)})
             return

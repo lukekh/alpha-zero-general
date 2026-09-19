@@ -66,10 +66,56 @@ def pressure_totals(pieces, radius=4):
     return blue, red
 
 
+@njit(cache=True)
+def pressure_squares(pieces, radius=4):
+    """Per-attacker attack credit, indexed by square; totals match the pair sums.
+
+    Every pair contributes its whole value to the attacker's square, so summing
+    the Blue-signed and Red-signed squares reproduces `pressure_totals`.
+    """
+    if radius != 3 and radius != 4:
+        raise ValueError('Pressure radius must be three or four')
+    squares = np.empty(81, dtype=np.int16)
+    codes = np.empty(81, dtype=np.int8)
+    count = 0
+    for y in range(9):
+        for x in range(9):
+            code = pieces[y,x]
+            if code:
+                squares[count], codes[count] = y*9+x, code
+                count += 1
+    defenders = np.zeros((count,radius+1), dtype=np.int16)
+    for victim in range(count):
+        defender_kind = abs(int(codes[victim])) % 3 + 1
+        for friend in range(count):
+            if codes[victim]*int(codes[friend]) <= 0 or abs(int(codes[friend])) != defender_kind:
+                continue
+            distance = DISTANCES[squares[victim],squares[friend]]
+            if 1 <= distance <= radius:
+                defenders[victim,distance] += 1
+        for ring in range(2,radius+1):
+            defenders[victim,ring] += defenders[victim,ring-1]
+    attack = np.zeros(81, dtype=np.float64)
+    for first in range(count):
+        for second in range(first+1,count):
+            a, b = int(codes[first]), int(codes[second])
+            if a*b >= 0 or abs(a) == abs(b):
+                continue
+            distance = DISTANCES[squares[first],squares[second]]
+            if not 1 <= distance <= radius:
+                continue
+            attacker, victim = (first,second) if abs(a)%3+1 == abs(b) else (second,first)
+            attack[squares[attacker]] += WEIGHTS[distance]*DISCOUNTS[defenders[victim,distance]]
+    return attack
+
+
 @lru_cache(maxsize=1)
 def warm_pressure_kernel():
     # Warm default and explicit-radius calls for both board layouts.
     for pieces in (np.zeros((9,9),dtype=np.int8),np.zeros((9,9,84),dtype=np.int8)[:,:,0]):
+        pressure_squares(pieces)
+        pressure_squares(pieces,3)
+        pressure_squares(pieces,4)
         pressure_totals(pieces)
         pressure_totals(pieces,3)
         pressure_totals(pieces,4)
