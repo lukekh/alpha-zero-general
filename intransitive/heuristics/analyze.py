@@ -128,7 +128,6 @@ def main():
                                           node_limit=args.work, nmp_enabled=args.nmp,
                                           futility_enabled=args.futility, pvs_enabled=args.pvs,
                                           selective_evaluator_enabled=args.selective_evaluator,
-                                          futility_enabled=args.futility,
                                           razoring_enabled=args.razoring,
                                           reverse_futility_enabled=args.reverse_futility,
                                           move_count_pruning_enabled=args.move_count,
