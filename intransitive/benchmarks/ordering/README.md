@@ -319,11 +319,19 @@ that `prove` (including its proof node count) and `certificate` are byte-for-byt
 unchanged by every mechanism.
 
 The broad run's non-passing tests are the repository's existing known failures —
-`test_game_blunders` depth-3 cases, the `test_greedy_process` spawn comparison
-and two `test_search_performance` cases. Every one of them reproduces
-identically on an untouched `git archive` of the merge base, with the same test
-names and the same messages (`482 != 406`, `unused route`), so this change adds
-no failure and fixes none. The measurements above were re-run after merging
+four `test_game_blunders` depth-3 cases, the `test_greedy_process` spawn
+comparison, two `test_search_performance` cases and the
+`test_compiled_proof` work-interruption case, whose `prove` patch does not
+accept the `stats` keyword that issue #72's certificate statistics added to the
+leaf call. Every one of them reproduces identically on an untouched
+`git archive` of `origin/master`, with the same test names and the same
+messages, so this change adds no failure and fixes none.
+
+`test_material.variants()` gained entries for `counter_move_enabled`,
+`continuation_enabled`, `iir_reduction` and `iir_mode`, on the same terms as the
+`razoring_enabled` and `race_reduction_enabled` entries already there: a field
+whose validity depends on a sibling moves that sibling with it, and a two-valued
+enum moves within its own range. The measurements above were re-run after merging
 master's exchange, shallow-pruning and certificate work and reproduce
 bit-for-bit: the new ranking keys sit beside the exchange key without disturbing
 it, and every default path is untouched.
