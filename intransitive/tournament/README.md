@@ -135,8 +135,25 @@ Reference entries are included for context. Evolutionary callers select only
 Reports include each opponent and colour, W/L/unfinished, failures, pending
 games, completion, completed/selected depths, stopped searches, latency, work,
 search/startup CPU and wall time, and process peak memory. Complete JSON records
-include all moves and state hashes. Known child CPU covers worker warmup and
-searches; interpreter imports and work lost before a response are unavailable.
+include all moves and state hashes.
+
+A protocol may declare the opt-in selective techniques — `nmp_enabled`,
+`futility_enabled`, `lmr_enabled`, `quiescence_enabled`, `mvv_lva_enabled`, with
+`pvs_enabled` and the margins that govern them — and every one of them is part of
+the frozen protocol record and therefore of each candidate's search identity.
+`manifest` builds every candidate's effective configuration at freeze time, so a
+protocol that declares a technique those evolved scales cannot support fails
+before a single game is played, naming the candidate and
+`selective_evaluator_enabled`.
+
+`report.json` then carries `selective_firing` per protocol: the totalled
+counters, which declared techniques actually fired, which stayed silent, and any
+precondition that made a declared technique unreachable. A declared technique
+that never fires across the whole run is listed in the report's top-level
+`warnings`, because a parameter governing code that executes zero times cannot
+be tuned and must not be mistaken for a measured one (issue #66).
+
+Known child CPU covers worker warmup and searches; interpreter imports and work lost before a response are unavailable.
 Parent wall time includes waiting, and the benchmark also measures total CLI
 wall time including parent initialization and input validation.
 

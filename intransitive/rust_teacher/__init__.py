@@ -73,7 +73,16 @@ class RustTeacher:
         settings = dict(nmp_enabled=nmp_enabled, nmp_min_depth=nmp_min_depth,
             nmp_reduction=nmp_reduction, futility_enabled=futility_enabled,
             futility_max_depth=futility_max_depth, futility_margin=futility_margin)
-        SearchConfig(mvv_lva_enabled=mvv_lva_enabled, selective_evaluator_enabled=selective_evaluator_enabled, **settings)
+        # Validate the request against the scales it will actually search with,
+        # so the selective interlock decides the same way in both backends.
+        SearchConfig(mvv_lva_enabled=mvv_lva_enabled, selective_evaluator_enabled=selective_evaluator_enabled,
+                     count_weight=material, advantage_weight=advantage,
+                     attack_weight=attack, attack_enabled=bool(attack),
+                     defence_weight=defence, defence_enabled=bool(defence),
+                     variable_material_enabled=variable_material_enabled,
+                     variable_material_linear=variable_material_linear,
+                     pressure_enabled=bool(weight), pressure_weight=weight or 1.,
+                     pressure_radius=radius, **settings)
         mode = self.material_mode(variable_material_enabled, variable_material_linear)
         options = f'{str(nmp_enabled).lower()} {nmp_min_depth} {nmp_reduction} ' + \
                   f'{str(futility_enabled).lower()} {futility_max_depth} {futility_margin}'

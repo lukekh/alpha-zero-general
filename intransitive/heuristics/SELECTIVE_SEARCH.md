@@ -37,8 +37,8 @@ throughout verification. Only a non-mate verified fail-high cuts off, returning
 beta as a selective lower bound and a legal verification line. Reduced-depth
 verification can still miss deeper zugzwangs and tactics.
 
-`futility_max_depth=2` (1..2), `futility_margin=1` (finite multiplier 1..16):
-after searching at least one move, skip an eligible quiet child when
+`futility_max_depth=2` (1..2), `futility_margin=1` (finite multiplier
+1/16..16): after searching at least one move, skip an eligible quiet child when
 `static + depth * multiplier * (count_weight/2 + advantage_weight + 8*pressure_weight)
 <= alpha`. Disabled pressure contributes zero. Thus the default material-only
 margins are 75/150 evaluator units, versus 100 per piece; pressure 10 yields
@@ -46,16 +46,38 @@ margins are 75/150 evaluator units, versus 100 per piece; pressure 10 yields
 Keep every fastest runner (including retreating moves), all captures, moves
 within three steps of the goal, and moves with an enemy within two steps of
 source or destination. The shared guard also protects immediate quiet wins,
-corner defence and low-mobility forced replies. No reverse futility, razoring,
-late-move reductions or weight tuning is included.
+corner defence and low-mobility forced replies. No reverse futility, razoring
+or weight tuning is included.
 
-Without the experimental evaluator option below, selection is effective only with flat material, count=100, advantage=25 and the standard
+The experimental allowance separates the terms a quiet ply can move from the
+terms it cannot. The shared guard excludes every position where either side has
+a capture available, and `quiet` excludes capture moves, so across the first
+skipped ply the piece counts are fixed: material and advantage contribute
+exactly nothing to that ply's change and are charged only from the second ply,
+where the skipped subtree can capture. The module terms stay at the
+conservative per-side feature ranges, which bound the evaluation rather than one
+ply of it, so `futility_margin` remains the tuning knob and the multiplier is
+symmetric around one. At the adopted genome the original allowance left the
+technique eligible thousands of times per move and pruning nothing at all. See
+the [activation measurement](../benchmarks/selective_activation/README.md) for
+the sweep that locates the allowance at which it starts to prune. The original
+non-experimental branch is unchanged, because its margins are what #60
+validated.
+
+Without the experimental evaluator option below, the conservative margins are
+calibrated only for flat material, count=100, advantage=25 and the standard
 predator/prey bonuses (1, .5, .25), no attack/defence/overload modules, and
-pressure disabled or weight in 0..20 (radius 3 or 4). Unsupported evolved scales
-keep the requested flags in provenance but disable **both** pruning methods;
-`effective=false` explains this in diagnostics. Ordinary evaluation continues
-unchanged. Python's legacy expanded-state/custom-game backend explicitly
-rejects selective options. Native's unsupported arguments raise errors.
+pressure disabled or weight in 0..20 (radius 3 or 4). Enabling either pruning
+method with any other scales is a **configuration error** in both backends:
+`SearchConfig.__post_init__` and the native `Config::validate` refuse it and
+name `selective_evaluator_enabled` as the deliberate opt-in. Neither backend
+accepts the flags and then prunes nothing. Issue #66 found that the previous
+silent interlock disabled both methods on **every** move of a 37,299-move
+tuning run whose frozen protocol declared them, which is indistinguishable from
+a permanent off switch. Unsupported scales remain loadable while both methods
+are off, and ordinary evaluation is unchanged. Python's legacy
+expanded-state/custom-game backend explicitly rejects selective options.
+Native's unsupported arguments raise errors.
 
 ## Experimental evolved and variable-material evaluators
 
@@ -113,15 +135,100 @@ Rust probes clone the complete position, including incremental material and
 pressure; normal and verification move stacks unwind on every Result error.
 Neither implementation exports a hypothetical state or null action.
 
-Null and verification searches bypass TT reads/writes, and do not update
-killers/history ordering. Python's table is scoped by the full configuration
-identity, with a selective namespace; Rust recreates its cached Search whenever
-any protocol setting changes. Even ordinary ancestors of selectively pruned
-nodes are thus isolated from pruning-disabled results. `exact` internal TT
+Null probes bypass TT reads and writes entirely, and neither they nor
+verification searches update killers/history ordering. Verification keeps its
+own `verified-v1` namespace, described under **Reductions** below. Python's
+table is scoped by the full configuration identity, with a selective namespace;
+Rust recreates its cached Search whenever any protocol setting changes. Even
+ordinary ancestors of selectively pruned nodes are thus isolated from
+pruning-disabled results, because the namespaces never meet. `exact` internal TT
 bounds mean exact only within that configuration's search procedure. Public
 Python/native adapter bounds use `selective_exact` etc. Enabled Python results
 report proof `unknown`; native uses `selective_result`, never `proven_result`,
 for a mate-range search result. Bounded terminal proof APIs remain unchanged.
+
+## Activation preconditions
+
+A technique can be declared, supported and still never execute, because each one
+also needs a search shape. `heuristics.config.activation(config)` reports those
+preconditions from the configuration alone, before a node is searched, and
+`blocked(config)` summarises the ones that apply:
+
+| Technique | Precondition | Why |
+| --- | --- | --- |
+| NMP | `pvs_enabled` | Eligibility requires a null window on entry, and only a PVS scout search reliably creates one. TT tightening is excluded on purpose. |
+| NMP | `max_depth > nmp_min_depth` | The root never prunes, so the deepest eligible node has `max_depth - 1` plies left. |
+| futility | `pvs_enabled` | The same null-window eligibility. |
+| futility | `max_depth >= 2` | There must be a non-root frontier node. |
+| LMR | `ordering_enabled` or `compiled_ordering_enabled` | Reductions need a move order worth trusting. |
+| LMR | `max_depth > lmr_min_depth` | As for NMP. |
+| MVV-LVA | `variable_material_enabled` | Flat material values every type at BASE, so the victim/attacker keys are constant and the compiled sort returns exactly the old order. |
+| NMP, futility, quiescence | compact Python backend | The legacy expanded-state backend rejects them. |
+
+Every one of these was a live blocker in the tuning runs audited by issue #66:
+the protocol ran at `depth=2` with PVS off, so NMP, futility and LMR could not
+fire even once, and its flat-material candidates would not have been reordered
+by MVV-LVA either. Each search result now reports `selective.declared`,
+`selective.fired`, `selective.unreachable` and a `disabled_reason` summary, and
+`effective` means *every declared technique can execute*, not merely that the
+evaluator scales are supported. The paired-match harness carries the same
+settings in its frozen protocol and flags a declared-but-silent technique in the
+run report; see [the harness README](../tournament/README.md).
+
+A depth-mode protocol that raises `max_depth` to clear those minimums must raise
+the optimizer's `min_completed_depth` with it, or a move that completes below the
+old minimum silently costs the candidate its eligibility. A selective result is
+never exempt from that rule: its `stop_reason` is `selective_result`, never
+`proven_result`, and only a proof is exempt.
+
+## Reductions, and what they cost
+
+Late move reductions are a separate opt-in (`lmr_enabled`), and they compose
+with the scout searches rather than competing with them. A scout search and a
+reduction used to be alternatives, so whenever PVS applied — every non-first
+move of every PV node — the reduction was skipped, and LMR only ever ran below
+an already-null window. It now reduces whichever narrow search happens first:
+the scout is searched at `depth - 1 - R`, re-searched at full depth if it beats
+alpha, and only then re-searched at full width if it lands inside the window.
+With PVS off the behaviour is unchanged, which is the path the existing
+reduction tests cover.
+
+`nmp_reduction` and `lmr_reduction` are fixed plies, and `nmp_reduction` may not
+exceed `nmp_min_depth - 2`, so at the default minimum depth a probe removes a
+single ply and costs almost what the search it replaces would. Three optional
+divisors let a reduction grow instead, all defaulting to zero, which is exactly
+the fixed behaviour:
+
+| Setting | Effect |
+| --- | --- |
+| `nmp_depth_divisor` | Adds `(depth - nmp_min_depth) // divisor` probe plies. |
+| `lmr_depth_divisor` | Adds `(depth - lmr_min_depth) // divisor` plies. |
+| `lmr_index_divisor` | Adds `(index - lmr_min_index) // divisor` plies for later moves. |
+
+Every total is clamped so at least one ply survives below the reduction: a
+reduced search is never a static leaf, and a null probe always retains a probe
+ply. The native teacher has a fixed schedule and no LMR, so
+`Genome.native_arguments` refuses a genome carrying a nonzero divisor rather
+than passing a parameter Rust would ignore.
+
+Verification searches keep their own transposition namespace, `verified-v1`,
+instead of running with the table switched off. A verification search is
+ordinary alpha-beta on the real position, so repeated verifications may reuse
+each other's work, while a pruned ancestor still cannot read any of it: the two
+namespaces never meet. Null probes remain entirely un-tabled, because they
+search a hypothetical position with the modelling draw rules suspended and
+nothing they compute is a value for any real key.
+
+Two costs were removed without changing a single answer. The shared board
+guard and the quiet-move test no longer scan in Python: distances are table
+lookups, the capture test is an indexed occupancy read, and the part of the
+quiet test that depends only on the position is hoisted out of the per-move
+loop instead of being recomputed for every candidate. Their work charges are
+unchanged, so node and work counts are identical either way, and a reference
+implementation of the original loops is asserted equal to them across every
+legal move of nine positions. The node's static evaluation is also deferred:
+NMP needs it before the move loop, but a futility node computes it only once a
+candidate quiet child actually appears, instead of at every guarded node.
 
 ## Configuration, diagnostics and labels
 
@@ -133,8 +240,11 @@ config = SearchConfig(nmp_enabled=True, futility_enabled=True)
 # Native: RustTeacher.analyze(state, nmp_enabled=True, futility_enabled=True)
 ```
 
-The analysis CLI accepts `--nmp/--no-nmp` and `--futility/--no-futility`;
-`--config` supplies numeric parameters. Browser settings expose both flags;
+The analysis CLI accepts `--nmp/--no-nmp` and `--futility/--no-futility`, plus
+`--pvs/--no-pvs` and `--selective-evaluator/--no-selective-evaluator` for the
+two preconditions without which those flags cannot do anything; `--config`
+supplies numeric parameters. Browser settings expose the same four switches, so
+a game using evolved weights can turn pruning on rather than only being refused.
 Last AI analysis and exported PGN diagnostics retain effective settings,
 selective depth, counters and identity. Existing JSON configuration plumbing
 also carries this identity into checkpoint/tournament manifests. Changing a
@@ -172,7 +282,10 @@ PGN move notation or training-record action format changes.
 ## Evidence and references
 
 See [bounded validation](../benchmarks/selective/README.md), including known
-baseline tactical failures, divergences, uncertainty and adoption decision.
+baseline tactical failures, divergences, uncertainty and adoption decision, and
+the [issue #66 activation measurement](../benchmarks/selective_activation/README.md),
+which records the first configuration in which these techniques actually run and
+attributes a node count to each of them separately.
 The conceptual references are [Verified Null-Move Pruning, v1](https://arxiv.org/abs/0808.1125v1)
 and [Stockfish search.cpp at 031dfeb4](https://github.com/official-stockfish/Stockfish/blob/031dfeb437fa6b06cdbdf4ef89dfb82f6b83c4d3/src/search.cpp).
 The paper's chess results do not establish performance or zugzwang safety in

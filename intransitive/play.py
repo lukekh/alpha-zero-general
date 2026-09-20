@@ -15,8 +15,12 @@ from .IntransitiveConstants import action_destination, decode_action, format_coo
 from .IntransitiveLogicNumba import Board, search_observation
 
 
+# Null move and futility need a scout window to exist at all, and refuse evolved
+# evaluator weights unless their experimental margins are opted in to, so both
+# switches are settable wherever those two are.
 AB_OPTION_FIELDS = ('nmp_enabled', 'futility_enabled', 'nmp_min_depth', 'nmp_reduction',
-                    'futility_max_depth', 'futility_margin', 'attack_enabled', 'defence_enabled', 'overload_enabled',
+                    'futility_max_depth', 'futility_margin', 'pvs_enabled',
+                    'selective_evaluator_enabled', 'attack_enabled', 'defence_enabled', 'overload_enabled',
                     'max_depth', 'time_limit', 'node_limit')
 
 # Analysis runs on demand from the browser and must not become a way to hang

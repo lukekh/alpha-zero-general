@@ -140,6 +140,11 @@ class Genome:
             raise ValueError('Rust requires depth 1..32, proof_depth <= 2 and proof_nodes <= 64')
         if config.table_entries > 1_000_000:
             raise ValueError('Rust requires table_entries <= 1000000')
+        # Native has a fixed reduction schedule. Passing a divisor it cannot
+        # honour would repeat exactly the fault issue #66 exists to remove:
+        # a declared parameter governing code that never runs.
+        if config.nmp_depth_divisor or config.lmr_depth_divisor or config.lmr_index_divisor:
+            raise ValueError('Rust has no adaptive reduction schedule; leave the divisors at zero')
         # The wire protocol uses unsigned 64-bit integers and millisecond time.
         if config.node_limit >= 2**64 or config.time_limit >= 2**64 / 1000:
             raise ValueError('Native time/work limits exceed the unsigned 64-bit protocol')

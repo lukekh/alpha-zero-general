@@ -4,7 +4,48 @@ import math
 
 import numpy as np
 
+from ..heuristics.config import ORDERING_COUNTERS, SELECTIVE_COUNTERS, TECHNIQUE_COUNTERS, activation
 from .runner import FINAL
+from .spec import effective_config
+
+
+def selective_counters(moves):
+    """Total only the additive selective/ordering counters across played moves."""
+    totals = dict.fromkeys(SELECTIVE_COUNTERS + ORDERING_COUNTERS, 0)
+    for move in moves:
+        for group, names in (('selective', SELECTIVE_COUNTERS), ('ordering', ORDERING_COUNTERS)):
+            reported = move['result'].get(group) or {}
+            for name in names:
+                totals[name] += int(reported.get(name, 0))
+    return totals
+
+
+def firing_report(config, moves):
+    """Which declared techniques actually executed, and why any did not.
+
+    A technique a protocol declares but which never once increments its counter
+    has been paid for and not used, and one whose configuration makes it a no-op
+    has been paid for and cannot matter. Both are warned about, so a dead
+    parameter cannot be mistaken for a measured one (issue #66).
+    """
+    totals = selective_counters(moves)
+    preconditions = activation(config)
+    declared = sorted(name for name, row in preconditions.items() if row['enabled'])
+    fired = [name for name in declared if totals[TECHNIQUE_COUNTERS[name]]]
+    silent = [name for name in declared if name not in fired]
+    warnings = []
+    for name in declared:
+        blockers = preconditions[name]['blockers']
+        if blockers:
+            warnings.append(f'{name} is enabled in the protocol but cannot take effect as '
+                            f'configured: ' + '; '.join(blockers))
+        elif name in silent:
+            warnings.append(f'{name} is enabled in the protocol with no configuration blocker, '
+                            f'but never fired in {len(moves)} moves: every position refused it')
+    return dict(counters=totals, declared=declared, fired=fired, silent=silent,
+                unreachable={name: preconditions[name]['blockers'] for name in declared
+                             if preconditions[name]['blockers']},
+                moves=len(moves), warnings=warnings)
 
 
 def report(spec, rows):
@@ -88,12 +129,23 @@ def report(spec, rows):
                     search_wall_seconds=sum(latencies),
                     search_cpu_seconds=sum(m['cpu_seconds'] for m in moves),
                     work=sum(m['result']['work'] for m in moves),
+                    selective_counters=selective_counters(moves),
                     startup_wall_seconds=sum(s['parent_seconds'] for s in startups),
                     startup_cpu_seconds=sum(s['cpu_seconds'] for s in startups),
                     peak_candidate_rss_bytes=max([m['peak_rss_bytes'] for m in moves + startups], default=0))
 
-    boards = {}
+    boards, firing, warnings = {}, {}, []
+    played = defaultdict(list)
+    for task in spec['tasks']:
+        row = by_id.get(task['id'])
+        if row:
+            played[spec['protocols'][task['protocol']]['mode']].extend(row['moves'])
     for limits in spec['protocols']:
+        # The engine that played is the authority on what the search could do, so
+        # read the preconditions off a candidate's own effective configuration.
+        firing[limits['mode']] = firing_report(effective_config(spec['candidates'][0], limits),
+                                               played[limits['mode']])
+        warnings.extend(f"{limits['mode']}: {text}" for text in firing[limits['mode']]['warnings'])
         board = []
         for candidate in spec['candidates']:
             items = [i for i in entries if i['candidate'] == candidate['sha256'] and i['mode'] == limits['mode']]
@@ -108,6 +160,7 @@ def report(spec, rows):
             board.append(summary)
         boards[limits['mode']] = sorted(board, key=lambda r: (not r['eligible'], -r['win_points_lower'], r['candidate']))
     return dict(schema=spec['schema'], manifest_sha256=spec['sha256'], leaderboards=boards,
+                selective_firing=firing, warnings=warnings,
                 protocols=spec['protocols'], scheduled_matches=len(spec['tasks']),
                 final_matches=sum(r['status'] in FINAL for r in rows),
                 distinct_starts=len(spec['selected_positions']),

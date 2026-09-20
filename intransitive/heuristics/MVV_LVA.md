@@ -11,7 +11,12 @@ attacker's value uses the moving player's army. Counts, prey/predator ratios
 and balance therefore update after each capture. Highest victim value comes
 first; equal victim values prefer the least valuable attacker. The final
 existing action tie-break remains deterministic. With flat material all types
-are 100, so these extra keys preserve the old move order.
+are 100, so these extra keys preserve the old move order. Enabling this option
+on a flat-material candidate therefore cannot change a node count, and
+`heuristics.config.activation` reports that as a precondition rather than
+leaving it to be discovered from an unchanged measurement; the
+[activation benchmark](../benchmarks/selective_activation/README.md) records the
+unchanged counts.
 
 Immediate wins, the preferred TT/PV move, previous root scores and corner defence
 retain priority. Enhanced ordering also retains its existing safe-capture and

@@ -102,13 +102,19 @@ def main():
                         help='Enable experimental guarded null move pruning')
     parser.add_argument('--futility', action=argparse.BooleanOptionalAction, default=None,
                         help='Enable experimental forward futility pruning')
+    parser.add_argument('--pvs', action=argparse.BooleanOptionalAction, default=None,
+                        help='Enable scout windows; without them neither technique above ever fires')
+    parser.add_argument('--selective-evaluator', action=argparse.BooleanOptionalAction, default=None,
+                        help='Opt in to the experimental margins, required for evolved evaluator weights')
     args = parser.parse_args()
     try:
         text = sys.stdin.read() if args.record == '-' else Path(args.record).read_text()
         config = SearchConfig.from_file(args.config) if args.config else load_record(text).config
         overrides = {k: v for k, v in dict(max_depth=args.depth, time_limit=args.time,
                                           node_limit=args.work, nmp_enabled=args.nmp,
-                                          futility_enabled=args.futility).items() if v is not None}
+                                          futility_enabled=args.futility, pvs_enabled=args.pvs,
+                                          selective_evaluator_enabled=args.selective_evaluator).items()
+                     if v is not None}
         report = analyze_record(text, ply=args.ply, last_ai=args.last_ai,
                                 config=replace(config, **overrides), moves=args.move)
     except (ValueError, TypeError, OSError) as exc:

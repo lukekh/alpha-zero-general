@@ -24,6 +24,11 @@ def main(argv=None):
     prepare.add_argument('--seconds', type=float, default=.05)
     prepare.add_argument('--max-plies', type=int, default=8)
     prepare.add_argument('--game-seconds', type=float, default=30.)
+    prepare.add_argument('--selective', action='store_true',
+                         help='Declare NMP, futility, LMR and MVV-LVA, together with the PVS windows, '
+                              'the experimental evaluator opt-in and the depth they need to fire')
+    prepare.add_argument('--futility-margin', type=float, default=1.,
+                         help='Allowance multiplier in 1/16..16; the default prunes nothing at evolved scales')
     for name in ('run', 'verify'):
         command = commands.add_parser(name)
         command.add_argument('--manifest', type=Path, required=True)
@@ -38,7 +43,14 @@ def main(argv=None):
             dict(name='pressure-9x9-archive-225dc40', weights={'pressure_weight': 10.}, role='archive')]
         candidates = [candidate(**item) for item in inputs]
         positions = generate_positions(args.seed, args.lines)
-        limits = dict(depth=args.depth, max_plies=args.max_plies, game_seconds=args.game_seconds)
+        # The techniques come as a set because they share preconditions: without
+        # PVS neither NMP nor futility ever sees a null window, and without the
+        # experimental opt-in evolved candidate scales refuse both outright.
+        selective = dict(nmp_enabled=True, futility_enabled=True, lmr_enabled=True,
+                         mvv_lva_enabled=True, pvs_enabled=True,
+                         selective_evaluator_enabled=True) if args.selective else {}
+        limits = dict(depth=args.depth, max_plies=args.max_plies, game_seconds=args.game_seconds,
+                      futility_margin=args.futility_margin, **selective)
         spec = manifest(candidates, positions, [protocol('depth', seconds=args.depth_seconds, **limits),
                                                protocol('wall', seconds=args.seconds, **limits)],
                         pool=args.pool, position_limit=args.positions)

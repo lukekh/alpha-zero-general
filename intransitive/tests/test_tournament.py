@@ -19,7 +19,7 @@ from intransitive.heuristics.config import SearchConfig
 from intransitive.heuristics.search import SearchResult
 from intransitive.record import state_hash
 from intransitive.tests.test_draws import load_history, sparse_position
-from intransitive.tournament.report import report
+from intransitive.tournament.report import firing_report, report
 from intransitive.tournament.runner import (EngineProcess, MatchFailure,
                                            play_match, replay, run)
 from intransitive.tournament.spec import (candidate, effective_config, manifest,
@@ -262,6 +262,49 @@ class TournamentTests(unittest.TestCase):
         summary = report(spec, [row])['leaderboards']['depth'][0]
         self.assertEqual(summary['win_points_lower'], 0.)
         self.assertFalse(summary['eligible'])
+
+    def test_protocol_declares_selective_settings_and_report_flags_silence(self):
+        # Issue #66: a protocol can now declare the selective techniques, every
+        # candidate is checked against the scale interlock at freeze time, and a
+        # declared technique that never fires is flagged in the run report.
+        limits = protocol('wall', max_plies=4, seconds=10., lmr_enabled=True,
+                          nmp_enabled=True, futility_enabled=True, pvs_enabled=True,
+                          mvv_lva_enabled=True, selective_evaluator_enabled=True)
+        for name in ('nmp_enabled', 'futility_enabled', 'lmr_enabled', 'mvv_lva_enabled',
+                     'pvs_enabled', 'selective_evaluator_enabled'):
+            self.assertTrue(limits['search'][name], name)
+        entrants = [candidate('A'), candidate('B', {'advantage_weight': 50.})]
+        start = [position([], seed=54, stage='official', pool='search')]
+        spec = manifest(entrants, start, [limits])
+        self.assertEqual(effective_config(spec['candidates'][0], limits).nmp_enabled, True)
+        # The same protocol without the experimental opt-in names the candidate
+        # and the flag instead of searching without the techniques it declares.
+        with self.assertRaisesRegex(ValueError, 'selective_evaluator_enabled'):
+            manifest(entrants, start, [protocol('wall', max_plies=4, seconds=10., nmp_enabled=True,
+                                                pvs_enabled=True)])
+        row = self.play(spec)
+        result = report(spec, [row])
+        firing = result['selective_firing']['wall']
+        self.assertEqual(firing['declared'], ['futility', 'lmr', 'mvv_lva', 'nmp'])
+        self.assertEqual(firing['fired'], [])
+        self.assertEqual(firing['silent'], firing['declared'])
+        self.assertEqual(firing['moves'], len(row['moves']))
+        # Flat-material candidates cannot reorder captures at all, so MVV-LVA is
+        # reported as unable to take effect rather than merely silent.
+        self.assertEqual(list(firing['unreachable']), ['mvv_lva'])
+        self.assertEqual(len(result['warnings']), 4)
+        for text in result['warnings']:
+            self.assertTrue(text.startswith('wall: '), text)
+        self.assertEqual(sum('never fired' in text for text in result['warnings']), 3)
+        self.assertEqual(sum('cannot take effect' in text for text in result['warnings']), 1)
+        self.assertEqual(firing['counters']['nmp_attempts'], 0)
+        self.assertIn('selective_counters', result['leaderboards']['wall'][0])
+        # A configuration blocker is named rather than left to be discovered by
+        # running the protocol and finding a zero counter.
+        shallow = protocol('depth', depth=2, max_plies=4, seconds=10., lmr_enabled=True)
+        unreachable = firing_report(effective_config(manifest(entrants, start, [shallow])['candidates'][0],
+                                                     shallow), [])['unreachable']
+        self.assertIn('lmr_min_depth', unreachable['lmr'][0])
 
     def test_red_canonical_goal_and_absolute_winner(self):
         spec = self.spec(max_plies=1)

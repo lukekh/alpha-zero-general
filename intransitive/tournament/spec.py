@@ -88,11 +88,19 @@ def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
              quiescence_enabled=False, quiescence_max_plies=8, lmr_enabled=False,
              lmr_min_depth=3, lmr_min_index=3, lmr_reduction=1, certificate_enabled=False,
              ordering_enabled=False, compiled_ordering_enabled=True,
+             nmp_enabled=False, nmp_min_depth=3, nmp_reduction=1,
+             futility_enabled=False, futility_max_depth=2, futility_margin=1.,
+             selective_evaluator_enabled=False, pvs_enabled=False,
+             aspiration_enabled=False, mvv_lva_enabled=False,
              adjudicate_unfinished=False):
     if mode not in MODES:
         raise ValueError('Expected depth or wall protocol')
     # Selective settings are frozen run settings shared by every candidate, not
-    # evolved genes; SearchConfig validates their ranges and interlocks.
+    # evolved genes; SearchConfig validates their ranges and interlocks. NMP and
+    # futility only ever see a null window under PVS, so a protocol that declares
+    # them must also declare it; the placeholder evaluator scales below are
+    # whitelisted so that the scale interlock is decided per candidate, in
+    # manifest(), rather than against weights no candidate will actually use.
     search = SearchConfig(max_depth=64 if mode == 'wall' else depth,
                           time_limit=seconds, node_limit=node_limit,
                           proof_depth=proof_depth, proof_nodes=proof_nodes,
@@ -102,7 +110,14 @@ def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
                           lmr_min_index=lmr_min_index, lmr_reduction=lmr_reduction,
                           certificate_enabled=certificate_enabled,
                           ordering_enabled=ordering_enabled,
-                          compiled_ordering_enabled=compiled_ordering_enabled)
+                          compiled_ordering_enabled=compiled_ordering_enabled,
+                          nmp_enabled=nmp_enabled, nmp_min_depth=nmp_min_depth,
+                          nmp_reduction=nmp_reduction, futility_enabled=futility_enabled,
+                          futility_max_depth=futility_max_depth, futility_margin=futility_margin,
+                          selective_evaluator_enabled=selective_evaluator_enabled,
+                          pvs_enabled=pvs_enabled, aspiration_enabled=aspiration_enabled,
+                          mvv_lva_enabled=mvv_lva_enabled,
+                          advantage_weight=25., attack_enabled=False, defence_enabled=False)
     if search.max_depth < 1 or search.time_limit <= 0 or search.node_limit < 1:
         raise ValueError('Search limits must be positive')
     if type(max_plies) is not int or max_plies < 1:
@@ -253,7 +268,15 @@ def manifest(candidates, positions, protocols, *, pool='search', position_limit=
         # Other supported common SearchConfig options remain configurable.
         if set(settings) != set(rebuilt['search']):
             raise ValueError('Invalid shared search settings')
-        effective_config(candidates[0], limits)
+        # Every candidate, not only the first: the selective interlock depends on
+        # each candidate's own evolved scales, and a run whose protocol declares
+        # a technique those scales cannot support must fail here, at freeze time,
+        # rather than quietly searching without it.
+        for item in candidates:
+            try:
+                effective_config(item, limits)
+            except ValueError as exc:
+                raise ValueError(f'{item["name"]} cannot run this protocol: {exc}') from exc
         rebuilt['search'] = settings
         if limits != rebuilt or (limits['mode'] == 'wall' and settings['max_depth'] != 64):
             raise ValueError('Invalid protocol')
