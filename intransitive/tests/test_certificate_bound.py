@@ -295,33 +295,51 @@ class CutoffTests(unittest.TestCase):
 
 
 class GuardTests(unittest.TestCase):
+    """The guard matters exactly where the search cannot see the decision.
+
+    `DISTANT_RUN` holds a certified seven-ply run with every piece more than
+    three steps from its corner, so `selective.guarded` permits pruning through
+    it and — with the leaf certificate off — the children score as ordinary
+    quiet positions. That is the case the certificate is needed for.
+    """
+
     @classmethod
     def setUpClass(cls):
         cls.game = IntransitiveGame()
-        cls.base = dict(max_depth=4, nmp_enabled=True, futility_enabled=True,
-                        lmr_enabled=True, ordering_enabled=True, pvs_enabled=True,
-                        **ISOLATED)
+        cls.base = dict(nmp_enabled=True, futility_enabled=True, lmr_enabled=True,
+                        ordering_enabled=True, selective_evaluator_enabled=True, **ISOLATED)
 
-    def test_a_certified_branch_is_exempt_from_pruning_and_reduction(self):
-        guarded = AlphaBetaPlayer(self.game, SearchConfig(
-            certificate_guard_enabled=True, **self.base)).analyze(DISTANT_RUN)
-        plain = AlphaBetaPlayer(self.game, SearchConfig(**self.base)).analyze(DISTANT_RUN)
+    def pair(self, **overrides):
+        settings = dict(self.base, **overrides)
+        return (AlphaBetaPlayer(self.game, SearchConfig(
+                    certificate_guard_enabled=True, **settings)).analyze(DISTANT_RUN),
+                AlphaBetaPlayer(self.game, SearchConfig(**settings)).analyze(DISTANT_RUN))
+
+    def test_a_certified_node_is_refused_null_move_and_futility_eligibility(self):
+        # Narrow windows are what make a node a pruning candidate at all.
+        guarded, plain = self.pair(max_depth=4, pvs_enabled=True)
         self.assertGreater(guarded.certificate['certified'], 0,
                            'the fixture never certified anything')
-        # Null-move and futility eligibility refused at certified nodes...
         self.assertGreater(guarded.certificate['guards'], 0)
         self.assertLess(guarded.selective['static_evaluations'],
                         plain.selective['static_evaluations'])
-        # ...and no child of a certified node gets a shallower look first.
-        self.assertGreater(guarded.certificate['unreduced'], 0)
-        self.assertLessEqual(guarded.selective['lmr_reduced'], plain.selective['lmr_reduced'])
         self.assertLessEqual(guarded.selective['futility_pruned'],
                              plain.selective['futility_pruned'])
         self.assertEqual(guarded.score, plain.score)
 
+    def test_no_child_of_a_certified_node_gets_a_shallower_look(self):
+        # Reductions only reach a node's children when PVS is not probing them.
+        guarded, plain = self.pair(max_depth=5, pvs_enabled=False)
+        self.assertGreater(guarded.certificate['unreduced'], 0)
+        # Every prevented reduction is one the unguarded search performed.
+        self.assertEqual(plain.selective['lmr_reduced'] - guarded.selective['lmr_reduced'],
+                         guarded.certificate['unreduced'])
+        self.assertEqual(guarded.score, plain.score)
+
     def test_the_guard_alone_never_produces_a_cutoff(self):
         result = AlphaBetaPlayer(self.game, SearchConfig(
-            certificate_guard_enabled=True, **self.base)).analyze(DISTANT_RUN)
+            certificate_guard_enabled=True, max_depth=4, pvs_enabled=True,
+            **self.base)).analyze(DISTANT_RUN)
         self.assertGreater(result.certificate['certified'], 0)
         self.assertEqual(result.certificate['cutoffs'], 0)
 

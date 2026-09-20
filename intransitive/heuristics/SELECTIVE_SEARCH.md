@@ -86,7 +86,12 @@ safety. The original margin remains unchanged when this option is false.
 
 A selective mate-range score no longer ends iterative deepening early: the
 requested depth must finish, since such a score is not a mate certificate.
-Unpruned proven results can still finish early. Tournament depth validation
+Unpruned proven results can still finish early. The opt-in
+[corner-run certificate bound](CERTIFICATE_SEARCH.md) is one of those: it is a
+proof, so it does not make a search selective, while the race reduction it ships
+alongside does and joins this list. That document also describes the guard which
+exempts a certified branch from both methods above, replacing the board guard's
+`max(3, ceil(depth/2))` corner proxy with the certificate itself. Tournament depth validation
 continues to exclude incomplete requested selective searches.
 
 The combined native wire form appends four coefficients, a `0/1` variable-mode

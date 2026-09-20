@@ -782,7 +782,12 @@ impl Search {
     /// The race gate answers that question first, from one pass over the board,
     /// and names the side worth certifying. Most positions stop there, which is
     /// what makes asking at an interior node affordable.
-    fn certificate(&mut self, p: &Position) -> Option<f64> {
+    ///
+    /// A sweep that survives the gate costs about what a node visit costs, so
+    /// it is charged as one, the way an extra static evaluation is. The gate
+    /// itself is an order of magnitude cheaper and is not; Python's finer work
+    /// unit charges both, and the two budgets were never comparable anyway.
+    fn certificate(&mut self, p: &Position) -> Result<Option<f64>, &'static str> {
         // The run makes no captures, so the no-capture counter runs its whole
         // length. A shorter allowance can only withhold a certificate.
         let run = p.history.len() as i32 - p.start as i32 - 1;
@@ -791,16 +796,17 @@ impl Search {
         let side = clear_run::race_gate(p, clock_left, self.config.certificate_plies);
         if side == clear_run::NO_SIDE {
             self.certificate_stats[1] += 1;
-            return None;
+            return Ok(None);
         }
+        self.visit(false)?;
         let side = side as u8;
         let plies = clear_run::certify(p, side, clock_left, self.config.certificate_plies);
         if plies == clear_run::NO_RUN {
-            return None;
+            return Ok(None);
         }
         self.certificate_stats[2] += 1;
         let score = MATE - f64::from(plies);
-        Some(if side == p.side { score } else { -score })
+        Ok(Some(if side == p.side { score } else { -score }))
     }
 
     fn proof_safe(p: &Position, depth: usize) -> bool {
@@ -1047,7 +1053,7 @@ impl Search {
                 }
             }
             if self.config.certificate_enabled && !p.hypothetical {
-                if let Some(score) = self.certificate(p) {
+                if let Some(score) = self.certificate(p)? {
                     return Ok((
                         if score > 0.0 { score - ply as f64 } else { score + ply as f64 },
                         vec![],
@@ -1116,7 +1122,7 @@ impl Search {
                 || (self.config.certificate_guard_enabled
                     && !self.selective_disabled
                     && (self.config.nmp_enabled || self.config.futility_enabled)));
-        let run = if probe { self.certificate(p) } else { None };
+        let run = if probe { self.certificate(p)? } else { None };
         if let Some(score) = run {
             if self.config.certificate_cutoff_enabled {
                 // Proven, and proven without reference to depth: the runner

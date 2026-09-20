@@ -765,15 +765,19 @@ class AlphaBetaPlayer:
         evaluation, so it still licenses a reduction and never a cutoff.
         """
         cfg = self.config
-        if certified:
-            self._certificate_stats['unreduced'] += 1
-            return False
-        late = index >= cfg.lmr_min_index or (quiet_horizon and index)
+        # The first move of a node is never reduced. After that the index rule
+        # qualifies it, or the race test does in the index rule's place.
+        late = bool(index) and (index >= cfg.lmr_min_index or quiet_horizon)
         allowed = (cfg.lmr_enabled and not self._selective_disabled
                    and (cfg.ordering_enabled or cfg.compiled_ordering_enabled)
                    and depth >= cfg.lmr_min_depth and late
                    and ply > 0 and not capture and isfinite(best)
                    and abs(best) < MATE_THRESHOLD)
+        if certified:
+            # Count the reductions actually prevented, not every refusal: a
+            # search with reductions off would have refused this anyway.
+            self._certificate_stats['unreduced'] += allowed
+            return False
         if allowed and quiet_horizon and index < cfg.lmr_min_index:
             self._certificate_stats['race_reductions'] += 1
         return allowed
@@ -801,10 +805,11 @@ class AlphaBetaPlayer:
                 and isinstance(state, SearchPosition)):
             return False
         self._certificate_stats['race_probes'] += 1
+        budget.charge(len(state.occurrences) + 1)
         if state.modelling_draws and (state.clock + depth >= NO_CAPTURE_LIMIT
                                       or any(count > 1 for count in state.occurrences.values())):
             return False
-        budget.charge(3 * 81 + len(state.occurrences))
+        budget.charge(3 * 81)
         if not no_terminal_win_in_horizon(state.pieces, side, state.a1, depth):
             return False
         quiet, pairs = no_capture_in_horizon(state.pieces, depth)
