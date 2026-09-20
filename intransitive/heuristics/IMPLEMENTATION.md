@@ -70,6 +70,13 @@ yield to an unrefuted alternative. With no completed child, a legal fallback has
 coverage from the chosen branch's depth. Terminal roots reject move selection.
 See [ANYTIME_SEARCH.md](ANYTIME_SEARCH.md) for result fields and draw-safe folding.
 
+Enhanced ordering additionally keeps killers and history, and can keep counter
+moves and continuation history; a moveless deep node can buy an ordering move
+with a shallow search. All of that is opt-in and documented in
+[MOVE_ORDERING.md](MOVE_ORDERING.md), together with the first-move cutoff rate,
+mean cutoff index and per-depth cutoff distribution reported in
+`SearchResult.ordering`.
+
 Each result reports `stop_reason` (`time`, `work`, `maximum_depth`, or
 `proven_result`), `effective_limits`, and `diagnostics_status`. Time is checked
 before work on each charged operation and therefore wins a simultaneous
@@ -231,7 +238,17 @@ python -m intransitive.heuristics.benchmark --output checkpoints/issue34-benchma
   --seeds 0 1 --modes nodes wall --depth 2 --nodes 200000 --seconds .1 --simulations 8
 python -m intransitive.heuristics.benchmark \
   --verify-report intransitive/heuristics/evidence/comparison.json.gz
+python -m intransitive.heuristics.ordering_benchmark --output /tmp/ordering.json \
+  fixed --depth 4 --positions 16 --schedules plain lmr lmr-pvs
+python -m intransitive.heuristics.ordering_benchmark table /tmp/ordering.json
 ```
+
+`ordering_benchmark` is the separate ablation for the opt-in ordering
+mechanisms: a fixed-depth ladder that reports nodes, first-move cutoff rate,
+mean cutoff index and the per-depth cutoff distribution, plus paired equal-time
+games. Its corpus comes from its seed, and every row records any enabled
+mechanism that then executed zero times. See
+[the ordering results](../benchmarks/ordering/README.md).
 
 The benchmark extracts only `on/baseline.pt` from the committed #16 archive into
 its output directory, or accepts an explicit frozen `--checkpoint`. It records

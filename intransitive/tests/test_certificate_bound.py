@@ -324,8 +324,13 @@ class GuardTests(unittest.TestCase):
         self.assertGreater(guarded.certificate['certified'], 0,
                            'the fixture never certified anything')
         self.assertGreater(guarded.certificate['guards'], 0)
-        self.assertLess(guarded.selective['static_evaluations'],
-                        plain.selective['static_evaluations'])
+        # Eligibility is what the guard refuses. A static evaluation used to
+        # stand in for it, but issue #66 defers the evaluation for members that
+        # may never need one, so a refused node no longer always costs one.
+        self.assertLess(guarded.selective['selective_eligible'],
+                        plain.selective['selective_eligible'])
+        self.assertLessEqual(guarded.selective['static_evaluations'],
+                             plain.selective['static_evaluations'])
         self.assertLessEqual(guarded.selective['futility_pruned'],
                              plain.selective['futility_pruned'])
         self.assertEqual(guarded.score, plain.score)

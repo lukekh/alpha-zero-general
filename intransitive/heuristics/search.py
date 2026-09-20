@@ -74,15 +74,27 @@ def selective_mode_early(config):
     to bounds the true value already respects. The certificate cutoff returns
     a proof, and its guard only ever refuses a reduction. None of the three
     makes a result heuristic or withdraws a certificate. The race reduction
-    does reduce, so it belongs here.
+    does reduce, so it belongs here, and so does internal iterative
+    *reduction*, which returns a shallower value than the caller asked for.
+    Internal iterative *deepening* does not: it only pays nodes to find an
+    ordering move and leaves the completed value alone.
     """
     return (config.selective_pruning() or config.quiescence_enabled
-            or config.lmr_enabled or config.race_reduction_enabled)
+            or config.lmr_enabled or config.race_reduction_enabled
+            or (config.iir_enabled and config.iir_mode == 'reduce'))
 
 
 def selective_needs_compact(config):
     """Features that read `SearchPosition` state and so need that backend."""
     return config.selective_pruning() or config.quiescence_enabled
+
+
+ORDERING_COUNTERS = (
+    'ordered_nodes', 'beta_cutoffs', 'first_move_cutoffs', 'cutoff_index_sum',
+    'cutoff_from_preferred', 'cutoff_from_killer', 'cutoff_from_counter',
+    'cutoff_from_other', 'counter_move_available', 'counter_move_updates',
+    'continuation_updates', 'history_updates', 'history_decays',
+    'iir_nodes', 'iir_reduced_plies', 'iir_deepen_searches')
 
 
 @dataclass
@@ -364,11 +376,20 @@ class AlphaBetaPlayer:
         self._exact_root = False
         self._killers = np.full((65,2),-1,dtype=np.int64)
         self._history = np.zeros((2,648),dtype=np.int64)
+        # Refutations indexed by the move that led here, and the continuation
+        # tables indexed by that move and (optionally) our own previous one.
+        self._counter_moves = np.full((2,648),-1,dtype=np.int64)
+        self._continuation = None
+        self._zero_continuation = np.zeros(648,dtype=np.int32)
+        # Actions on the path from the root; -1 marks a hypothetical null turn.
+        self._path = []
         self._selective_disabled = False
         self._null_context = False
         self._below_horizon = False
         self._table_namespace = b''
         self._selective_stats = {}
+        self._ordering_stats = dict.fromkeys(ORDERING_COUNTERS, 0)
+        self._cutoffs_by_depth = np.zeros((65,3),dtype=np.int64)
         self._certificate_stats = {}
 
     def reload(self):
@@ -383,12 +404,14 @@ class AlphaBetaPlayer:
         self._table_namespace = b'selective-v1\0' if selective_mode_early(self.config) else b''
         self._certificate_stats = dict.fromkeys(("probes", "gated", "certified", "cutoffs",
             "guards", "unreduced", "race_probes", "race_quiet", "race_reductions"), 0)
+        self._ordering_stats = dict.fromkeys(ORDERING_COUNTERS, 0)
+        self._cutoffs_by_depth = np.zeros((65,3),dtype=np.int64)
         warm_search_kernels()
         warm_material_kernels()
         warm_position_kernels()
         if self.config.compiled_ordering_enabled or self.config.ordering_enabled or self.config.mvv_lva_enabled:
             from .ordering import warm_ordering
-            warm_ordering()
+            warm_ordering(self.config.continuation_enabled and self.config.ordering_enabled)
         if self._exchange_active():
             exchange.warm_exchange_kernels()
         if self.config.pressure_enabled and self.config.pressure_weight:
@@ -412,6 +435,12 @@ class AlphaBetaPlayer:
             self._identity = identity
         self._killers.fill(-1)
         self._history.fill(0)
+        self._counter_moves.fill(-1)
+        # Allocated per search, so nothing survives into the next move. Only a
+        # configuration that reads the rows pays for them.
+        self._continuation = (np.zeros((self.config.continuation_plies,2,648,648),dtype=np.int32)
+                              if self.config.continuation_enabled and self.config.ordering_enabled else None)
+        self._path.clear()
         self._mvv_lva_nodes = 0
         self._mvv_lva_captures = 0
         self._see_nodes = 0
@@ -579,6 +608,34 @@ class AlphaBetaPlayer:
             self._mvv_lva_captures += bool(pieces[y,x])
         return material_order_values(counts, side, self.config.variable_material_enabled)
 
+    def _ordering_context(self, side):
+        """The counter move and continuation rows for the path that led here.
+
+        `self._path` holds the actions played from the root, so its last entry
+        is the opponent's reply being answered and the one before it is this
+        side's own previous move. A hypothetical null turn stores -1 and
+        therefore supplies no context at all, rather than borrowing its
+        grandparent's.
+        """
+        counter, one, two = -1, None, None
+        cfg = self.config
+        if not cfg.ordering_enabled:
+            return counter, one, two
+        previous = self._path[-1] if self._path else -1
+        if previous < 0:
+            return counter, one, two
+        if cfg.counter_move_enabled:
+            counter = int(self._counter_moves[side, previous])
+            if counter >= 0:
+                self._ordering_stats['counter_move_available'] += 1
+        if self._continuation is not None:
+            one = self._continuation[0, side, previous]
+            if cfg.continuation_plies > 1:
+                own = self._path[-2] if len(self._path) > 1 else -1
+                # A constant row keeps one compiled signature per ply count.
+                two = self._continuation[1, side, own] if own >= 0 else self._zero_continuation
+        return counter, one, two
+
     def _ordered(self, state, side, preferred, budget, root=False, ply=0, *, terminal_checked=False):
         compact = isinstance(state, SearchPosition)
         legal = ((state.raw_legal() if terminal_checked else state.legal()) if compact
@@ -590,16 +647,25 @@ class AlphaBetaPlayer:
             a1 = state.a1 if compact else int(state[:,:,82:84].flat[2])
             # Same baseline rank-work charge when only compilation is enabled.
             budget.charge(len(actions)*(83 if self.config.ordering_enabled else 2))
+            # Each additional ordering key is one more lookup per candidate. The
+            # charge follows the configuration, never the data, so identical
+            # settings always cost identical work.
+            keys = (self.config.counter_move_enabled
+                    + (self.config.continuation_plies if self._continuation is not None else 0))
+            if keys:
+                budget.charge(len(actions)*keys)
             prior = np.full(648,-np.inf)
             if root:
                 for action,row in self._root_previous.items():
                     prior[action] = row['score']
             capture_values = self._capture_order_values(state, side, actions, budget)
             see_scores = self._see_order_scores(state, side, actions, budget)
+            counter, continuation, continuation2 = self._ordering_context(side)
             kernel = ordered_actions if self.config.compiled_ordering_enabled else ordered_actions.py_func
             ordered = kernel(pieces,actions,side,80 if side == a1 else 0,
                 -1 if preferred is None else preferred,prior,self._killers[min(ply,64)],
-                self._history[side],self.config.ordering_enabled,capture_values,see_scores)
+                self._history[side],self.config.ordering_enabled,capture_values,see_scores,
+                counter,continuation,continuation2)
             budget.check()
             for action in ordered:
                 budget.charge()
@@ -730,6 +796,27 @@ class AlphaBetaPlayer:
         # get to discard a move on a static score and a margin.
         certified = run is not None and cfg.certificate_guard_enabled
         quiet_horizon = not certified and self._quiet_horizon(state, side, depth, ply, budget)
+        # A deep node with no move to try first is searched in whatever order
+        # the static keys happen to give. Either buy an ordering move with a
+        # shallow pass, or stop paying full depth for an unordered node. A
+        # certified node keeps its full depth on the same terms as the guard
+        # refuses a reduction; deepening only spends nodes, so it still runs.
+        if (cfg.iir_enabled and preferred is None and ply > 0
+                and depth >= cfg.iir_min_depth and not self._selective_disabled):
+            if certified and cfg.iir_mode == 'reduce':
+                self._certificate_stats['unreduced'] += 1
+            else:
+                self._ordering_stats['iir_nodes'] += 1
+                if cfg.iir_mode == 'deepen':
+                    self._ordering_stats['iir_deepen_searches'] += 1
+                    # The shallow value is discarded: only its move is used, so
+                    # the completed value is the one full depth gives.
+                    _, line = self._search(state, depth - 1 - cfg.iir_reduction,
+                                           alpha, beta, ply, budget)
+                    preferred = line[0] if line else None
+                else:
+                    self._ordering_stats['iir_reduced_plies'] += cfg.iir_reduction
+                    depth -= cfg.iir_reduction
         # One shared eligibility shape for the whole family: non-root, non-PV
         # on entry, finite window strictly inside the evaluator's clipping
         # range, a supported evaluator scale, and the Intransitive board guard.
@@ -758,6 +845,11 @@ class AlphaBetaPlayer:
                                  and not (futility or razoring or reverse or move_count)))
         # Move-count pruning asks the evaluator nothing, and futility asks only
         # once a candidate quiet child actually appears, so neither pays here.
+        if safe:
+            # What the guards actually control. A static evaluation used to
+            # stand in for this, but it is now deferred for the members that
+            # may never need one, so eligibility is counted for itself.
+            self._selective_stats['selective_eligible'] += 1
         if safe and (null_move or razoring or reverse):
             static = self._static(state, side, budget)
         if safe and reverse:
@@ -790,11 +882,13 @@ class AlphaBetaPlayer:
                 self._selective_stats['nmp_attempts'] += 1
                 reduction = self._null_reduction(depth)
                 probe_nodes = budget.nodes
+                self._path.append(-1)
                 try:
                     with selective.unpruned(self, null=True), state.null_turn():
                         value, _ = self._search(state, depth - 1 - reduction,
                                                 -beta, nextafter(-beta, inf), ply + 1, budget)
                 finally:
+                    self._path.pop()
                     self._selective_stats['null_nodes'] += budget.nodes - probe_nodes
                 if -value >= beta and abs(value) < MATE_THRESHOLD:
                     self._selective_stats['verification_searches'] += 1
@@ -815,6 +909,7 @@ class AlphaBetaPlayer:
         # Every candidate move in this node shares the runner and enemy scan.
         quiet_context = selective.quiet_context(state) if safe and (futility or move_count) else None
         best, pv = -inf, []
+        self._ordering_stats['ordered_nodes'] += 1
         for index, (action, child) in enumerate(self._ordered(
                 state, side, preferred, budget, root=progress is not None, ply=ply, terminal_checked=True)):
             if (safe and move_count and index >= cfg.move_count_base + depth * depth
@@ -846,6 +941,7 @@ class AlphaBetaPlayer:
             elif int(child[:, :, 82:84].flat[3]) == 0:
                 x, y = action_destination(action)
                 self._material_counts = after_capture(counts, int(state[y, x, 0]))
+            self._path.append(action)
             try:
                 # Scores are binary64, including fractional heuristics. Adjacent
                 # representable endpoints leave no possible score between them.
@@ -876,6 +972,7 @@ class AlphaBetaPlayer:
                     budget.pvs_researches += 1
                     value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
             finally:
+                self._path.pop()
                 if compact:
                     state.pop()
                 self._material_counts = counts
@@ -892,13 +989,7 @@ class AlphaBetaPlayer:
                 alpha = max(alpha, best)
             if alpha >= beta or best == MATE - ply - 1:
                 if alpha >= beta:
-                    self._ordering_cutoffs += 1
-                    self._ordering_first_cutoffs += index == 0
-                if self.config.ordering_enabled and not self._selective_disabled and alpha >= beta and not capture:
-                    killers = self._killers[min(ply,64)]
-                    if killers[0] != action:
-                        killers[1],killers[0] = killers[0],action
-                    self._history[side,action] = min(32767,int(self._history[side,action])+depth*depth)
+                    self._cutoff(side, action, index, depth, ply, capture, preferred)
                 break
         if progress is not None:
             progress.finished = alpha_original < best < beta_original
@@ -924,6 +1015,80 @@ class AlphaBetaPlayer:
         if cfg.nmp_depth_divisor:
             reduction += (depth - cfg.nmp_min_depth) // cfg.nmp_depth_divisor
         return max(1, min(reduction, depth - 2))
+
+    def _bonus(self, table, index, bonus):
+        """One bounded ordering credit.
+
+        Aging uses the usual gravity update, whose fixed point is `history_max`,
+        so a statistic can neither run away nor need a rescaling pass. Without
+        it the original saturating update is kept exactly.
+        """
+        if self.config.history_aging_enabled:
+            table[index] += bonus - int(table[index]) * bonus // self.config.history_max
+        else:
+            table[index] = min(32767, int(table[index]) + bonus)
+
+    def _cutoff(self, side, action, index, depth, ply, capture, preferred):
+        """Record where the beta cutoff came from, then credit the move.
+
+        Attribution reads the killer and counter tables before they are
+        updated, so a move is credited to what actually ordered it first.
+        Quiet moves only: a capture is already ordered by its own keys.
+        """
+        stats = self._ordering_stats
+        stats['beta_cutoffs'] += 1
+        stats['cutoff_index_sum'] += index
+        stats['first_move_cutoffs'] += not index
+        # The issue #67 counters measure the same two quantities and are read
+        # by its benchmark, so they stay the same two numbers.
+        self._ordering_cutoffs += 1
+        self._ordering_first_cutoffs += not index
+        row = self._cutoffs_by_depth[min(max(depth, 0), 64)]
+        row[0] += 1
+        row[1] += not index
+        row[2] += index
+        cfg = self.config
+        killers = self._killers[min(ply, 64)]
+        previous = self._path[-1] if self._path else -1
+        if preferred is not None and action == preferred:
+            stats['cutoff_from_preferred'] += 1
+        elif cfg.ordering_enabled and action in (killers[0], killers[1]):
+            stats['cutoff_from_killer'] += 1
+        elif cfg.counter_move_enabled and previous >= 0 and action == self._counter_moves[side, previous]:
+            stats['cutoff_from_counter'] += 1
+        else:
+            stats['cutoff_from_other'] += 1
+        if not cfg.ordering_enabled or self._selective_disabled or capture:
+            return
+        if killers[0] != action:
+            killers[1], killers[0] = killers[0], action
+        bonus = depth * depth
+        self._bonus(self._history[side], action, bonus)
+        stats['history_updates'] += 1
+        if previous < 0:
+            return
+        if cfg.counter_move_enabled:
+            self._counter_moves[side, previous] = action
+            stats['counter_move_updates'] += 1
+        if self._continuation is not None:
+            self._bonus(self._continuation[0, side, previous], action, bonus)
+            stats['continuation_updates'] += 1
+            own = self._path[-2] if len(self._path) > 1 else -1
+            if cfg.continuation_plies > 1 and own >= 0:
+                self._bonus(self._continuation[1, side, own], action, bonus)
+                stats['continuation_updates'] += 1
+
+    def _decay(self):
+        """Halve ordering statistics between root iterations.
+
+        Cutoffs found early in a search describe a shallower tree than the one
+        about to be searched. Halving keeps their order without letting the
+        first iterations outweigh everything the deepest one learns.
+        """
+        self._history >>= 1
+        if self._continuation is not None:
+            self._continuation >>= 1
+        self._ordering_stats['history_decays'] += 1
 
     def _reducible(self, depth, index, capture, ply, best, *, certified=False,
                    quiet_horizon=False):
@@ -1062,6 +1227,8 @@ class AlphaBetaPlayer:
         stop_reason = 'maximum_depth'
         try:
             for target in range(1, self.config.max_depth + 1):
+                if self.config.history_aging_enabled and target > 1:
+                    self._decay()
                 self._root_progress = RootProgress(target, len(actions), action if depth else None)
                 low, high = -inf, inf
                 width = self.config.aspiration_window
@@ -1236,7 +1403,9 @@ class AlphaBetaPlayer:
             seconds=budget.module_seconds.get('certificate', 0.),
             calls=budget.module_calls.get('certificate', 0))
         quiescing = self.config.quiescence_enabled and compact
-        result.ordering = dict(mvv_lva_enabled=self.config.mvv_lva_enabled,
+        cutoffs = self._ordering_stats['beta_cutoffs']
+        result.ordering = dict(self._ordering_stats,
+            mvv_lva_enabled=self.config.mvv_lva_enabled,
             mvv_lva_nodes=self._mvv_lva_nodes, mvv_lva_captures=self._mvv_lva_captures,
             cutoffs=self._ordering_cutoffs, first_cutoffs=self._ordering_first_cutoffs,
             see_nodes=self._see_nodes, see_captures=self._see_captures,
@@ -1248,7 +1417,22 @@ class AlphaBetaPlayer:
             see_effective=dict(ordering=self.config.see_ordering_enabled,
                                quiescence_ordering=self.config.see_quiescence_ordering_enabled and quiescing,
                                quiescence_pruning=self.config.see_quiescence_pruning_enabled and quiescing,
-                               delta=self.config.delta_pruning_enabled and quiescing))
+                               delta=self.config.delta_pruning_enabled and quiescing),
+            ordering_enabled=self.config.ordering_enabled,
+            counter_move_enabled=self.config.counter_move_enabled,
+            continuation_enabled=self.config.continuation_enabled,
+            continuation_plies=self.config.continuation_plies,
+            history_aging_enabled=self.config.history_aging_enabled,
+            iir_enabled=self.config.iir_enabled, iir_mode=self.config.iir_mode,
+            # The quantities that predict whether a reduction schedule is safe.
+            # The first move searched has index zero.
+            first_move_cutoff_rate=(self._ordering_stats['first_move_cutoffs']/cutoffs
+                                    if cutoffs else None),
+            mean_cutoff_index=(self._ordering_stats['cutoff_index_sum']/cutoffs
+                               if cutoffs else None),
+            cutoffs_by_depth={int(level): dict(cutoffs=int(counts[0]),
+                                               first_move=int(counts[1]), index_sum=int(counts[2]))
+                              for level, counts in enumerate(self._cutoffs_by_depth) if counts[0]})
         result.root_moves = root_moves
         result.exact_root = bool(exact_root)
         self.last_result = result

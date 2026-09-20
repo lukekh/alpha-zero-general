@@ -121,7 +121,9 @@ def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
              futility_enabled=False, futility_max_depth=2, futility_margin=1.,
              selective_evaluator_enabled=False, pvs_enabled=False,
              aspiration_enabled=False, mvv_lva_enabled=False,
-             adjudicate_unfinished=False):
+             counter_move_enabled=False, continuation_enabled=False, continuation_plies=1,
+             history_aging_enabled=False, iir_enabled=False, iir_mode='reduce',
+             iir_min_depth=4, iir_reduction=1, adjudicate_unfinished=False):
     if mode not in MODES:
         raise ValueError('Expected depth or wall protocol')
     # Selective settings are frozen run settings shared by every candidate, not
@@ -150,6 +152,12 @@ def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
                           selective_evaluator_enabled=selective_evaluator_enabled,
                           pvs_enabled=pvs_enabled, aspiration_enabled=aspiration_enabled,
                           mvv_lva_enabled=mvv_lva_enabled,
+                          counter_move_enabled=counter_move_enabled,
+                          continuation_enabled=continuation_enabled,
+                          continuation_plies=continuation_plies,
+                          history_aging_enabled=history_aging_enabled,
+                          iir_enabled=iir_enabled, iir_mode=iir_mode,
+                          iir_min_depth=iir_min_depth, iir_reduction=iir_reduction,
                           advantage_weight=25., attack_enabled=False, defence_enabled=False)
     if search.max_depth < 1 or search.time_limit <= 0 or search.node_limit < 1:
         raise ValueError('Search limits must be positive')
