@@ -1,20 +1,20 @@
 test tests::experimental_selective_weights_and_restoration ... ok
+test tests::modelling_only_draw_and_win_precedence ... ok
 test tests::mvv_lva_preserves_legal_moves_state_and_flat_order ... ok
 test tests::open_rule_fires_where_the_pair_rule_cannot ... ok
-test tests::modelling_only_draw_and_win_precedence ... ok
 test tests::proof_only_moves_preserve_material_on_budget_exit ... ok
 test tests::rings_and_defenders ... ok
-test tests::proof_gate_never_skips_a_decidable_position ... ok
 test tests::roundtrip_and_undo ... ok
 test tests::selective_guards_cutoffs_and_cancellation ... ok
 test tests::variable_material_formula_and_extinction ... ok
-test tests::bitboards_edges_captures_and_temporary_undo ... ok
+test tests::proof_gate_never_skips_a_decidable_position ... ok
 test clear_run::tests::the_gate_never_hides_a_certificate ... ok
+test tests::bitboards_edges_captures_and_temporary_undo ... ok
 test tests::material_restored_after_search_cutoffs_and_cancellation ... ok
 test tests::bitboard_exposure_matches_scan_with_removed_pieces ... ok
 test tests::material_trajectories_siblings_and_full_unwind ... ok
 
-test result: ok. 30 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.19s
+test result: ok. 30 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.18s
 
      Running unittests src/main.rs (target/release/deps/intransitive_rust_teacher-124d51e6310105b4)
 

@@ -25,6 +25,13 @@ class SearchConfig:
     futility_margin: float = 1.
     quiescence_enabled: bool = False  # Experimental capture-resolving leaf search.
     quiescence_max_plies: int = 8  # Ceiling on the capture chain examined.
+    see_ordering_enabled: bool = False  # Cyclic static exchange key in main-search ordering.
+    see_quiescence_ordering_enabled: bool = False  # Order quiescence captures by exchange swing.
+    see_quiescence_pruning_enabled: bool = False  # Skip quiescence captures the series says lose.
+    see_threshold: float = 0.  # Swing below this is skipped; zero keeps even trades.
+    compiled_see_enabled: bool = True  # False selects the Python exchange reference.
+    delta_pruning_enabled: bool = False  # Skip quiescence captures that cannot reach alpha.
+    delta_margin: float = 1.  # Multiplier on the evaluator-unit non-material allowance.
     lmr_enabled: bool = False  # Experimental late move reductions.
     lmr_min_depth: int = 3  # Shallower nodes keep full-depth children.
     lmr_min_index: int = 3  # Moves before this keep full depth.
@@ -87,6 +94,11 @@ class SearchConfig:
         if (type(self.futility_margin) not in (int, float) or not math.isfinite(self.futility_margin)
                 or not 1 <= self.futility_margin <= 16):
             raise ValueError('futility_margin must be finite in 1..16')
+        if (type(self.delta_margin) not in (int, float) or not math.isfinite(self.delta_margin)
+                or not 0 <= self.delta_margin <= 16):
+            raise ValueError('delta_margin must be finite in 0..16')
+        if type(self.see_threshold) not in (int, float) or not math.isfinite(self.see_threshold):
+            raise ValueError('see_threshold must be finite')
         if self.variable_material_linear and not self.variable_material_enabled:
             raise ValueError('variable_material_linear requires variable_material_enabled')
         # A flag that silently does nothing is worse than a rejected config:

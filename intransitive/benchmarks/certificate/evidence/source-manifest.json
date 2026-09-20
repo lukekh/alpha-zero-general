@@ -1,13 +1,13 @@
 {
   "schema": "intransitive-certificate-bound-source-manifest-v1",
   "baseline": "8d22a1117f9fcb4fdc89057f13c5f48255ad5c26",
-  "note": "Complete implementation identity for issue #70. The diff digest inside each report excludes files that were untracked when it ran; these hashes do not.",
+  "note": "Complete implementation identity for issue #70, hashed after merging master's #71. The diff digest inside each report excludes files that were untracked when it ran; these hashes do not. The reports themselves were produced at 7c17569, before that merge; post_merge_check.py verifies the completed rows still reproduce.",
   "rust": "rustc 1.74.1 (a28077b28 2023-12-04)",
   "files": {
     "intransitive/heuristics/clear_run.py": "76dc6213a49ce3e8075bff5b2dd160f4207f64537672486af22fff956c96b785",
     "intransitive/heuristics/kernels.py": "f062bb8fd8bb0a699a8904166865cd259ba9d109904b762ef61a4185972a4ca4",
-    "intransitive/heuristics/search.py": "4695372bcb0c97029c4dc679726f8c5a57c325b619caa2558114fc89bfd92a46",
-    "intransitive/heuristics/config.py": "79e63df88bf4409a7547414bd12ef2b2053db7b987875e711c6345a15fe567b8",
+    "intransitive/heuristics/search.py": "89d38a8272221caaebbf0df5ec03e39e07752ae13d51cafa8193d7c5c54303d1",
+    "intransitive/heuristics/config.py": "d2f6d9c68fb08c703f41b5cbf07bf1daccd8cb479961965da37a09e8d473d2db",
     "intransitive/heuristics/analyze.py": "c7020fc16d2b580f86e4230b22f712b0adef6db0dec7329ce4b2cdba88aee141",
     "intransitive/heuristics/CERTIFICATE_SEARCH.md": "5264aae12c66963c69353e152e6233640aed2dee61384e1eb14f042569b91841",
     "intransitive/rust_teacher/src/clear_run.rs": "f551b0f80b7273257b8bee3e45f9088f144c6070d5c314ddd90497547eed85ac",
@@ -19,6 +19,9 @@
     "intransitive/tests/test_rust_teacher.py": "fd4b84f4b92ba98112951a1292d9087859b004f5946aa3b2fb7d177f902d8e73",
     "intransitive/benchmarks/certificate/plan.json": "25ff6c8cd7895ed2623a4103f77e68611732657dde5ca8145a4993c20004c1ba",
     "intransitive/benchmarks/certificate/reproduce.py": "5e5a20a420ae0fb34a2066a39fa18dee9596849d4f03b35f927e19edbc918252",
-    "intransitive/benchmarks/certificate/README.md": "279657b9d97ccaa1ba81e86e5b2e91938aab73f7c619bbd8a25bb5937359201d"
-  }
+    "intransitive/benchmarks/certificate/README.md": "c2eb5d770c01e662dfa17a4fde34b450db9e641c38708b6260319000450aff8c",
+    "intransitive/benchmarks/certificate/post_merge_check.py": "29f49d1dc0443a43be03e6aa70341588479f5e5f4d7becd255f89be7fcb58172",
+    "intransitive/tests/test_material.py": "aa7d5983a9de45c1860a02affe87b9bb70bda8762642d9b3ae38f0881e26fb63"
+  },
+  "measured_at": "7c17569b70ff3361146f96f2fde1b1d91fa0db80"
 }

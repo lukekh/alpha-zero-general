@@ -528,3 +528,11 @@ are independently configurable in Python/native search and default off. Their
 completed depths are selective; they are not exhaustive labels or certificates.
 
 See [variable-value MVV-LVA ordering](MVV_LVA.md) and the [module-scale example](MODULE_SCALE.md).
+
+The cyclic capture rule has no least-valuable-attacker order, so the
+[static exchange evaluation](EXCHANGE.md) is a different algorithm rather than a
+port: the recapturing kind is forced by the cycle and the series terminates on the
+target's neighbourhood. It supplies an optional capture-ordering key and two
+optional quiescence filters, alongside quiescence delta pruning whose margin is
+stated in evaluator units. All of them default off; the
+[bounded measurements](../benchmarks/exchange/README.md) carry the adoption decision.

@@ -1,0 +1,84 @@
+{
+  "issue": 67,
+  "title": "Cyclic static exchange evaluation and quiescence delta pruning",
+  "predeclared": "Parameters, positions, modes and the adoption rule were fixed before any measurement was taken. No weight or margin was tuned on these positions.",
+  "positions": {
+    "generator": "seeded capture-biased prefix, then baseline-engine self-play",
+    "identity": "intransitive.tournament.spec.position (opening-action replay, sha256, orbit hash, pool split)",
+    "seed": 67,
+    "lines": 14,
+    "prefix_plies": 6,
+    "max_plies": 70,
+    "engine_seconds": 300.0,
+    "min_ply": 8,
+    "min_captures": 2,
+    "pools": [
+      "search",
+      "validation"
+    ],
+    "limit": 8,
+    "note": "Issue #66's 4-14x figure came from real weight-evolution games and its five positions are not archived here, so the multiplier is re-established from scratch: every ratio compares rows measured in the same run, on the same position, in the same material mode. Positions must carry at least two legal captures, because random legal play produces positions where quiescence resolves nothing and no filter can be measured."
+  },
+  "work": {
+    "depth": 2,
+    "seconds_cap": 300.0,
+    "material_modes": [
+      "flat",
+      "variable"
+    ],
+    "modes": [
+      "baseline",
+      "quiescence",
+      "quiescence+see",
+      "quiescence+delta0",
+      "quiescence+delta1",
+      "quiescence+see+delta0"
+    ],
+    "measure": [
+      "work",
+      "nodes",
+      "quiescence_captures",
+      "quiescence_see_skips",
+      "quiescence_delta_skips",
+      "elapsed",
+      "action",
+      "score"
+    ]
+  },
+  "ordering": {
+    "depth": 3,
+    "seconds_cap": 300.0,
+    "material_modes": [
+      "flat",
+      "variable"
+    ],
+    "modes": [
+      "killers",
+      "mvv",
+      "see",
+      "see+mvv"
+    ],
+    "measure": [
+      "nodes",
+      "work",
+      "cutoffs",
+      "first_cutoffs",
+      "action",
+      "score"
+    ]
+  },
+  "paired": {
+    "plies_cap": 40,
+    "seconds_per_move": 0.2,
+    "arms": [
+      "see-ordering",
+      "quiescence-see",
+      "quiescence-delta"
+    ],
+    "colours": 2,
+    "adjudication": "A capped game is also scored by the shared static evaluator with proof and search disabled. Both engines share that evaluator here, so this is one evaluator's opinion, not two independent ones; raw and adjudicated results are reported separately.",
+    "max_depth": 20,
+    "harness": "Games run in process, as the issue #60 benchmark's paired play does. The #54 harness freezes one shared search configuration for every candidate and confirms it with a child handshake, so an SEE-versus-no-SEE match cannot be expressed in its manifest. This reuses #54's position generator and identity record, its Wilson interval convention and its capped-game adjudication rule, and reports per-move nodes and completed depth so a reader can check that equal time really bought comparable search."
+  },
+  "adoption": "Every switch stays off unless equal-time paired play gives a decisive-score Wilson lower bound of at least 0.45 AND the quiescence work multiplier falls. Node or work reduction alone is not acceptance. Keeping everything disabled is an accepted outcome."
+}

@@ -18,6 +18,7 @@ from .evaluation import Evaluator, MATE, MATE_THRESHOLD, terminal_value
 from .kernels import (no_capture_in_horizon, no_terminal_win_in_horizon, winning_actions,
                       warm_search_kernels)
 from .material import after_capture, count_pieces, warm_material_kernels
+from . import exchange
 from ..IntransitiveConstants import NO_CAPTURE_LIMIT, action_destination
 from ..IntransitiveDisplay import move_to_str
 from .position import SearchPosition, warm_position_kernels
@@ -375,7 +376,8 @@ class AlphaBetaPlayer:
         self._selective_stats = dict.fromkeys(("nmp_attempts", "nmp_cutoffs", "nmp_skips",
             "verification_searches", "verification_failures", "futility_eligible",
             "futility_pruned", "static_evaluations", "null_nodes", "verification_nodes",
-            "quiescence_captures", "lmr_reduced", "lmr_researches"), 0)
+            "quiescence_captures", "quiescence_see_skips", "quiescence_delta_skips",
+            "lmr_reduced", "lmr_researches"), 0)
         self._certificate_stats = dict.fromkeys(("probes", "gated", "certified", "cutoffs",
             "guards", "unreduced", "race_probes", "race_quiet", "race_reductions"), 0)
         warm_search_kernels()
@@ -384,6 +386,8 @@ class AlphaBetaPlayer:
         if self.config.compiled_ordering_enabled or self.config.ordering_enabled or self.config.mvv_lva_enabled:
             from .ordering import warm_ordering
             warm_ordering()
+        if self._exchange_active():
+            exchange.warm_exchange_kernels()
         if self.config.pressure_enabled and self.config.pressure_weight:
             from .pressure import warm_pressure_kernel
             warm_pressure_kernel()
@@ -407,6 +411,10 @@ class AlphaBetaPlayer:
         self._history.fill(0)
         self._mvv_lva_nodes = 0
         self._mvv_lva_captures = 0
+        self._see_nodes = 0
+        self._see_captures = 0
+        self._ordering_cutoffs = 0
+        self._ordering_first_cutoffs = 0
         self.evaluator = Evaluator(self.game, self.config)
         self._material_root = None
         self._material_counts = None
@@ -419,6 +427,37 @@ class AlphaBetaPlayer:
             return from_table(proof['score'], ply), proof['pv']
         return self.evaluator.score(state, side, budget, proof=proof, counts=self._material_counts), []
 
+    def _exchange_active(self):
+        """Whether any application site of the exchange evaluation is switched on."""
+        cfg = self.config
+        return (cfg.see_ordering_enabled or cfg.see_quiescence_ordering_enabled
+                or cfg.see_quiescence_pruning_enabled or cfg.delta_pruning_enabled)
+
+    def _exchange_survey(self, pieces, counts, side, actions, budget):
+        """Per-action exchange swings and immediate gains; see EXCHANGE.md.
+
+        Charged before and after: the neighbourhood scan is per candidate, the
+        bounded series only per capture. Neither is a search.
+        """
+        budget.charge(8 + 4*len(actions))
+        swings, gains, captures = exchange.survey(pieces, counts, side, actions, self.config)
+        budget.charge(20*captures)
+        self._see_nodes += 1
+        self._see_captures += captures
+        return swings, gains, captures
+
+    def _see_order_scores(self, state, side, actions, budget):
+        if not self.config.see_ordering_enabled:
+            return None
+        compact = isinstance(state, SearchPosition)
+        if not compact:
+            budget.charge(81)
+        counts = state.counts if compact else count_pieces(state)
+        pieces = state.pieces if compact else state[:, :, 0]
+        swings, _, _ = self._exchange_survey(pieces, counts, side, actions, budget)
+        budget.check()
+        return swings
+
     def _quiesce(self, state, side, alpha, beta, ply, budget, remaining):
         """Resolve captures past the horizon, standing pat on quiet positions.
 
@@ -429,6 +468,11 @@ class AlphaBetaPlayer:
 
         The stand-pat score is the ordinary leaf, including its proof, so a
         position with no captures costs exactly what it did before.
+
+        The optional exchange and delta filters skip captures, so they can miss
+        a resource the full capture list would have found. They never skip a
+        capture onto the mover's own goal, and are refused entirely at a node
+        where neither counting argument rules out stalemating the opponent.
         """
         budget.visit()
         terminal = terminal_value(self.game, state, side, ply)
@@ -443,11 +487,38 @@ class AlphaBetaPlayer:
         if stand_pat > alpha:
             alpha = stand_pat
         pieces = state.pieces
-        for action in state.legal():
-            action = int(action)
+        cfg = self.config
+        actions = state.legal()
+        swings = gains = None
+        filtering = cfg.see_quiescence_pruning_enabled or cfg.delta_pruning_enabled
+        if (cfg.see_quiescence_ordering_enabled or filtering) and len(actions):
+            swings, gains, captures = self._exchange_survey(
+                pieces, state.counts, side, actions, budget)
+            if cfg.see_quiescence_ordering_enabled and captures:
+                # Stable, so equal swings keep the generator's ascending order.
+                order = np.argsort(-swings, kind='stable')
+                actions, swings, gains = actions[order], swings[order], gains[order]
+        allowance = 0.
+        if filtering and swings is not None:
+            budget.charge(81)
+            filtering = exchange.stalemate_safe(pieces, side)
+            allowance = exchange.delta_allowance(cfg) if cfg.delta_pruning_enabled else 0.
+        else:
+            filtering = False
+        goal = 80 if side == state.a1 else 0
+        for index in range(len(actions)):
+            action = int(actions[index])
             x, y = action_destination(action)
             if not pieces[y, x]:
                 continue  # quiet moves are the caller's business, not ours
+            if filtering and 9*y + x != goal:
+                if cfg.see_quiescence_pruning_enabled and swings[index] < cfg.see_threshold:
+                    self._selective_stats['quiescence_see_skips'] += 1
+                    continue
+                if (cfg.delta_pruning_enabled
+                        and stand_pat + gains[index] + allowance <= alpha):
+                    self._selective_stats['quiescence_delta_skips'] += 1
+                    continue
             self._selective_stats['quiescence_captures'] += 1
             state.push(action)
             counts = self._material_counts
@@ -508,10 +579,11 @@ class AlphaBetaPlayer:
                 for action,row in self._root_previous.items():
                     prior[action] = row['score']
             capture_values = self._capture_order_values(state, side, actions, budget)
+            see_scores = self._see_order_scores(state, side, actions, budget)
             kernel = ordered_actions if self.config.compiled_ordering_enabled else ordered_actions.py_func
             ordered = kernel(pieces,actions,side,80 if side == a1 else 0,
                 -1 if preferred is None else preferred,prior,self._killers[min(ply,64)],
-                self._history[side],self.config.ordering_enabled,capture_values)
+                self._history[side],self.config.ordering_enabled,capture_values,see_scores)
             budget.check()
             for action in ordered:
                 budget.charge()
@@ -521,6 +593,8 @@ class AlphaBetaPlayer:
         actions = list(map(int, legal))
         pieces = state.pieces if compact else state[:, :, 0]
         capture_values = self._capture_order_values(state, side, actions, budget)
+        see_scores = self._see_order_scores(state, side, actions, budget)
+        swing_of = {} if see_scores is None else dict(zip(actions, map(float, see_scores)))
         a1 = state.a1 if compact else int(state[:, :, 82:84].flat[2])
         goal = 80 if side == a1 else 0
         own_goal = 80 - goal
@@ -541,6 +615,7 @@ class AlphaBetaPlayer:
             return (win, action == preferred,
                     prior['score'] if prior else -inf,
                     dest in threats or dest == own_goal, pieces[dy, dx] != 0,
+                    swing_of.get(action, 0.),
                     capture_values[1,abs(int(pieces[dy,dx]))-1] if capture_values is not None and pieces[dy,dx] else 0.,
                     -capture_values[0,abs(int(pieces[action//8//9,action//8%9]))-1] if capture_values is not None and pieces[dy,dx] else 0.,
                     -max(abs(dx - goal % 9), abs(dy - goal // 9)), -action)
@@ -735,6 +810,9 @@ class AlphaBetaPlayer:
             if progress is None or not self._exact_root:
                 alpha = max(alpha, best)
             if alpha >= beta or best == MATE - ply - 1:
+                if alpha >= beta:
+                    self._ordering_cutoffs += 1
+                    self._ordering_first_cutoffs += index == 0
                 if self.config.ordering_enabled and not self._selective_disabled and alpha >= beta and not capture:
                     killers = self._killers[min(ply,64)]
                     if killers[0] != action:
@@ -1026,8 +1104,20 @@ class AlphaBetaPlayer:
             plies=self.config.certificate_plies,
             seconds=budget.module_seconds.get('certificate', 0.),
             calls=budget.module_calls.get('certificate', 0))
+        quiescing = self.config.quiescence_enabled and compact
         result.ordering = dict(mvv_lva_enabled=self.config.mvv_lva_enabled,
-            mvv_lva_nodes=self._mvv_lva_nodes, mvv_lva_captures=self._mvv_lva_captures)
+            mvv_lva_nodes=self._mvv_lva_nodes, mvv_lva_captures=self._mvv_lva_captures,
+            cutoffs=self._ordering_cutoffs, first_cutoffs=self._ordering_first_cutoffs,
+            see_nodes=self._see_nodes, see_captures=self._see_captures,
+            compiled_see_enabled=self.config.compiled_see_enabled,
+            see_threshold=self.config.see_threshold,
+            delta_allowance=(exchange.delta_allowance(self.config)
+                             if self.config.delta_pruning_enabled else 0.),
+            # An enabled site that cannot run must say so rather than look off.
+            see_effective=dict(ordering=self.config.see_ordering_enabled,
+                               quiescence_ordering=self.config.see_quiescence_ordering_enabled and quiescing,
+                               quiescence_pruning=self.config.see_quiescence_pruning_enabled and quiescing,
+                               delta=self.config.delta_pruning_enabled and quiescing))
         result.root_moves = root_moves
         result.exact_root = bool(exact_root)
         self.last_result = result

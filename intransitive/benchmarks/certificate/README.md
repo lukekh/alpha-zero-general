@@ -56,9 +56,10 @@ deadlines, and there is one timing sample per cell.
 
 [evidence/source-manifest.json](evidence/source-manifest.json) hashes every
 implementation file, which a diff digest cannot do for files that were
-untracked when a run started. [evidence/tests.log](evidence/tests.log) is 265
-Python tests, [evidence/rust-tests.log](evidence/rust-tests.log) is 30 Rust
-tests, and both pass.
+untracked when a run started. [evidence/tests.log](evidence/tests.log) is 303
+Python tests after merging master's #71,
+[evidence/rust-tests.log](evidence/rust-tests.log) is 30 Rust tests, and both
+pass.
 
 [evidence/clippy.log](evidence/clippy.log): `cargo clippy --offline
 --all-targets -- -D warnings` under Rust 1.74.1 reports two lints, both on
@@ -121,9 +122,13 @@ completed fixed-depth measurement.
 
 The leaf certificate is the large effect, and it is concentrated exactly where
 it should be. On the `certified` fixture — a forced seven-ply run with every
-piece more than three steps from its corner — the depth-5 target goes from
-71,439 nodes and 8.23 s to **64 nodes and 0.00 s**, resolving at depth 1
-because the bounded proof reaches the run from a leaf.
+piece more than three steps from its corner — the arm without it **never
+finishes**: at a depth-5 target it spends the whole 8-second cap and reaches
+depth 4, and at a depth-6 target it reaches depth 5. The arm with it resolves
+at depth 1 in **64 nodes and under 0.01 s**, because the bounded proof reaches
+the run from a leaf. The node counts of the unfinished arm (71,439 and 72,944)
+are wall-clock artifacts and should not be read as a ratio; what is solid is
+"did not finish in 8 s" against "finished immediately".
 
 The cutoff then has little left to do on that fixture: the leaf term has
 already ended the search before any interior node exists. Its 157 cutoffs come
@@ -250,6 +255,29 @@ games, so the option was live rather than dormant. Forty-eight games from
 Both sides reached a median completed depth of 2 at these time controls, so
 these matches compare shallow searches; nothing here speaks to deeper play.
 
+## Reproducibility after #71
+
+These measurements were taken at `7c17569`, before #71's static exchange
+evaluation merged into master. Every option #71 adds defaults to off, so the
+engine configured here should behave identically — checked rather than
+asserted, by
+[`post_merge_check.py`](post_merge_check.py) against the recorded rows:
+
+```sh
+python -m intransitive.benchmarks.certificate.post_merge_check
+```
+
+[evidence/post-merge-check.log](evidence/post-merge-check.log): every completed
+row reproduces to the node, and the one row that differs is the `certified`
+depth-5 arm that hit the cap — which is the point made above about capped rows,
+landing on this document's own numbers.
+
+The merge also surfaced one genuine interaction. #71 repaired
+`test_material.py`'s configuration loop so that it actually runs, and the
+repaired loop flips every field in turn, including `race_reduction_enabled`,
+whose interlock with `lmr_enabled` then rejects the flip. It now moves its
+sibling with it, as `variable_material_linear` already did.
+
 ## Limitations
 
 - One machine, one timing sample per cell, and an 8-second cap that most depth
@@ -287,6 +315,6 @@ holds; the reduction it licenses is simply not worth having at these depths.
 
 The `pv` fix is unconditional, and `certificate_enabled` now works. Whether it
 should be *on* is a separate question this run does not settle, though its
-`certified`-fixture result — 71,439 nodes and 8.23 s down to 64 nodes and
-0.00 s — is the strongest number in this document, and its paired result
-(26–18) is the least bad of the four.
+`certified`-fixture result — an 8-second cap reached without finishing, against
+64 nodes and depth 1 — is the strongest evidence in this document, and its
+paired result (26–18) is the least bad of the four.
