@@ -32,14 +32,15 @@ fn handle(line: &str, cache: &mut Option<(Config, Search)>) -> Result<String, St
     match v.first().copied() {
         // Each optional group is positional and a later one implies every
         // earlier one, so the accepted lengths are a prefix table. A group must
-        // be listed on every length at or above the one that introduced it:
-        // certificate (24) was previously missing from all three lists, which
-        // silently dropped the caller's weights, material mode and selective
-        // settings from any request that enabled it.
-        Some("search" | "search_reuse") if matches!(v.len(),10|14|15|16|20|21|22|23|24|25|26|27) => {
-            let has_weights=matches!(v.len(),14|15|20|21|22|23|24|25|26|27);
-            let has_mode=matches!(v.len(),15|21|22|23|24|25|26|27);
-            let has_selective=matches!(v.len(),16|20|21|22|23|24|25|26|27);
+        // therefore be listed on every length at or above the one that
+        // introduced it. Certificate (24) and the certificate-bound group (27)
+        // were both missing from all three lists, which silently dropped the
+        // caller's weights, material mode and selective settings from any
+        // request that reached those lengths.
+        Some("search" | "search_reuse") if matches!(v.len(),10|14|15|16|20|21|22|23|24|27|28|29|30) => {
+            let has_weights=matches!(v.len(),14|15|20|21|22|23|24|27|28|29|30);
+            let has_mode=matches!(v.len(),15|21|22|23|24|27|28|29|30);
+            let has_selective=matches!(v.len(),16|20|21|22|23|24|27|28|29|30);
             let (variable,linear)=if has_mode {material_mode(v[13])?} else {(false,false)};
             let weights=if has_weights { Weights {variable_material_enabled:variable,variable_material_linear:linear,material:number(v[9])?,advantage:number(v[10])?,attack:number(v[11])?,defence:number(v[12])?} } else {Weights::default()};
             let offset=9+if has_weights {4} else {0}+if has_mode {1} else {0};
@@ -57,9 +58,18 @@ fn handle(line: &str, cache: &mut Option<(Config, Search)>) -> Result<String, St
             if v.len()>=22 {config.selective_evaluator_enabled=number(v[20])?;}
             if v.len()>=23 {config.mvv_lva_enabled=number(v[21])?;}
             if v.len()>=24 {config.certificate_enabled=number(v[22])?;}
-            if v.len()>=25 {config.threads=number(v[23])?;}
-            if v.len()>=26 {config.split_min_depth=number(v[24])?;}
-            if v.len()>=27 {config.split_min_siblings=number(v[25])?;}
+            // The certificate-as-a-bound group travels whole: a cutoff without
+            // its depth threshold would silently pick this binary's default.
+            // There is no length 25 or 26, so reaching 27 or beyond still means
+            // all three arrived together.
+            if v.len()>=27 {
+                config.certificate_cutoff_enabled=number(v[23])?;
+                config.certificate_cutoff_min_depth=number(v[24])?;
+                config.certificate_guard_enabled=number(v[25])?;
+            }
+            if v.len()>=28 {config.threads=number(v[26])?;}
+            if v.len()>=29 {config.split_min_depth=number(v[27])?;}
+            if v.len()>=30 {config.split_min_siblings=number(v[28])?;}
             let p=Position::from_bytes(&bytes(v[v.len()-1])?)?;
             if cache.as_ref().map(|x| &x.0)!=Some(&config) {
                 *cache=Some((config.clone(),Search::new(config.clone())?));
@@ -71,12 +81,16 @@ fn handle(line: &str, cache: &mut Option<(Config, Search)>) -> Result<String, St
                 config.threads,config.split_min_depth,config.split_min_siblings,
                 search.split_stats[0],search.split_stats[1],search.split_stats[2],search.split_stats[3]);
             let ordering=format!("{{\"mvv_lva_enabled\":{},\"mvv_lva_nodes\":{},\"mvv_lva_captures\":{}}}",config.mvv_lva_enabled,search.mvv_lva_stats[0],search.mvv_lva_stats[1]);
+            let runs=search.certificate_stats;
+            let certificate=format!("{{\"leaf_enabled\":{},\"cutoff_enabled\":{},\"cutoff_min_depth\":{},\"guard_enabled\":{},\"plies\":{},\"probes\":{},\"gated\":{},\"certified\":{},\"cutoffs\":{},\"guards\":{}}}",
+                config.certificate_enabled,config.certificate_cutoff_enabled,config.certificate_cutoff_min_depth,
+                config.certificate_guard_enabled,config.certificate_plies,runs[0],runs[1],runs[2],runs[3],runs[4]);
             let settings=format!("{{\"version\":\"intransitive-selective-v1\",\"selective_evaluator_enabled\":{},\"enabled\":{},\"effective\":{},\"nmp_enabled\":{},\"nmp_min_depth\":{},\"nmp_reduction\":{},\"futility_enabled\":{},\"futility_max_depth\":{},\"futility_margin\":{},\"nmp_attempts\":{},\"nmp_cutoffs\":{},\"nmp_skips\":{},\"verification_searches\":{},\"verification_failures\":{},\"futility_eligible\":{},\"futility_pruned\":{},\"static_evaluations\":{},\"null_nodes\":{},\"verification_nodes\":{}}}",
                 config.selective_evaluator_enabled,config.nmp_enabled||config.futility_enabled,(config.nmp_enabled||config.futility_enabled)&&config.selective_supported(),
                 config.nmp_enabled,config.nmp_min_depth,config.nmp_reduction,config.futility_enabled,config.futility_max_depth,config.futility_margin,
                 stats[0],stats[1],stats[2],stats[3],stats[4],stats[5],stats[6],stats[7],stats[8],stats[9]);
-            Ok(format!("{{\"parallel\":{},\"ordering\":{},\"selective\":{},\"action\":{},\"score\":{},\"completed_depth\":{},\"target_depth\":{},\"complete\":{},\"stop_reason\":{:?},\"nodes\":{},\"proof_nodes\":{},\"seconds\":{},\"pv\":{:?},\"tt_hits\":{},\"table_entries\":{},\"table_bytes\":{},\"work\":{}}}",
-                split,ordering,settings,r.action.map_or("null".into(),|x|x.to_string()),r.score.map_or("null".into(),|x|x.to_string()),
+            Ok(format!("{{\"parallel\":{},\"ordering\":{},\"certificate\":{},\"selective\":{},\"action\":{},\"score\":{},\"completed_depth\":{},\"target_depth\":{},\"complete\":{},\"stop_reason\":{:?},\"nodes\":{},\"proof_nodes\":{},\"seconds\":{},\"pv\":{:?},\"tt_hits\":{},\"table_entries\":{},\"table_bytes\":{},\"work\":{}}}",
+                split,ordering,certificate,settings,r.action.map_or("null".into(),|x|x.to_string()),r.score.map_or("null".into(),|x|x.to_string()),
                 r.completed_depth,r.target_depth,r.complete,r.stop_reason,r.nodes,r.proof_nodes,r.seconds,r.pv,search.tt_hits,search.table_entries(),search.table_bytes(),r.nodes))
         },
         Some("inspect") if v.len()==4 || v.len()==8 || v.len()==9 => {

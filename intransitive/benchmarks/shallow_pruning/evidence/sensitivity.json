@@ -1,0 +1,389 @@
+{
+  "issue": 68,
+  "plan": {
+    "acceptance": "defaults stay off unless equal-time paired play is at least non-regressive; node reduction alone is not acceptance",
+    "calibration": {
+      "corpus": {
+        "games": 12,
+        "helper": "intransitive.tests.test_attribution.random_positions",
+        "plies": 40,
+        "seed": 680920
+      },
+      "depths": [
+        1,
+        2,
+        3
+      ],
+      "quantity": "(depth-d alpha-beta value minus static evaluation) / selective.allowance(config)",
+      "rule": "each margin default must cover the largest observed swing over the calibration corpus on the supported scale; the adopted-scale requirement is reported separately and is not silently folded into the default",
+      "scales": [
+        "supported",
+        "adopted"
+      ]
+    },
+    "fixed_depth": {
+      "corpus": {
+        "games": 8,
+        "helper": "intransitive.tests.test_attribution.random_positions",
+        "note": "disjoint seed from the calibration corpus",
+        "plies": 40,
+        "seed": 680921
+      },
+      "depth": 4,
+      "modes": [
+        "baseline",
+        "quiescence",
+        "razoring",
+        "reverse_futility",
+        "move_count",
+        "mate_distance",
+        "all"
+      ],
+      "reference": {
+        "other": "baseline",
+        "razoring": "quiescence"
+      },
+      "rule": "a technique that never fires on this corpus is not accepted",
+      "sample": 40,
+      "seconds_cap": 120.0
+    },
+    "issue": 68,
+    "mate_oracle": {
+      "corpus": "intransitive.tests.test_tactics.CASES via tactical_oracle.load_case",
+      "rule": "mate-distance pruning must reproduce the action, score and bounded-proof verdict of the same search with it disabled, on every case"
+    },
+    "paired": {
+      "colours": "both, paired on the same start",
+      "interval": "Wilson 95% on decisive games",
+      "max_plies": 80,
+      "note": "15 held-out positions, both colours, five candidate modes: 150 games",
+      "positions": "intransitive.tournament.spec.generate_positions(seed=6854), heldout pool",
+      "seconds_per_move": 0.25,
+      "termination": "official wins only; a capped game is unfinished, never a draw"
+    },
+    "predeclared": "2026-09-20, before any measurement below was run",
+    "sensitivity": {
+      "corpus": "the fixed-depth corpus, truncated",
+      "rule": "report firing rate, node ratio and action changes against the mode's reference; a setting below the calibrated margin is recorded as measured-unsafe, not adopted",
+      "sample": 20,
+      "sweeps": {
+        "move_count_base": [
+          2,
+          4,
+          8,
+          12,
+          24
+        ],
+        "razoring_margin": [
+          0.125,
+          0.25,
+          0.5,
+          1.0,
+          1.5
+        ],
+        "reverse_futility_margin": [
+          0.25,
+          0.5,
+          1.0,
+          2.0
+        ]
+      }
+    },
+    "techniques": [
+      "razoring",
+      "reverse_futility",
+      "move_count",
+      "mate_distance"
+    ]
+  },
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "positions": 20,
+  "python": "3.11.4",
+  "revision": "8d22a1117f9fcb4fdc89057f13c5f48255ad5c26",
+  "rows": [
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 48765,
+      "fired": 44,
+      "mode": "razoring",
+      "node_ratio": 0.9870861880361563,
+      "nodes": 342894,
+      "parameter": "razoring_margin",
+      "reference_nodes": 347380,
+      "value": 0.125
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 48765,
+      "fired": 44,
+      "mode": "razoring",
+      "node_ratio": 0.9870861880361563,
+      "nodes": 342894,
+      "parameter": "razoring_margin",
+      "reference_nodes": 347380,
+      "value": 0.25
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 48765,
+      "fired": 44,
+      "mode": "razoring",
+      "node_ratio": 0.9870861880361563,
+      "nodes": 342894,
+      "parameter": "razoring_margin",
+      "reference_nodes": 347380,
+      "value": 0.5
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 49027,
+      "fired": 38,
+      "mode": "razoring",
+      "node_ratio": 0.9897288272209108,
+      "nodes": 343812,
+      "parameter": "razoring_margin",
+      "reference_nodes": 347380,
+      "value": 1.0
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 49027,
+      "fired": 0,
+      "mode": "razoring",
+      "node_ratio": 1.0,
+      "nodes": 347380,
+      "parameter": "razoring_margin",
+      "reference_nodes": 347380,
+      "value": 1.5
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 48952,
+      "fired": 778,
+      "mode": "reverse_futility",
+      "node_ratio": 0.9082385497525856,
+      "nodes": 193641,
+      "parameter": "reverse_futility_margin",
+      "reference_nodes": 213205,
+      "value": 0.25
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 48952,
+      "fired": 778,
+      "mode": "reverse_futility",
+      "node_ratio": 0.9082385497525856,
+      "nodes": 193641,
+      "parameter": "reverse_futility_margin",
+      "reference_nodes": 213205,
+      "value": 0.5
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 49166,
+      "fired": 266,
+      "mode": "reverse_futility",
+      "node_ratio": 0.9987523744752703,
+      "nodes": 212939,
+      "parameter": "reverse_futility_margin",
+      "reference_nodes": 213205,
+      "value": 1.0
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 49166,
+      "fired": 0,
+      "mode": "reverse_futility",
+      "node_ratio": 1.0,
+      "nodes": 213205,
+      "parameter": "reverse_futility_margin",
+      "reference_nodes": 213205,
+      "value": 2.0
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 119749,
+      "fired": 2326,
+      "mode": "move_count",
+      "node_ratio": 0.9854271710325743,
+      "nodes": 210098,
+      "parameter": "move_count_base",
+      "reference_nodes": 213205,
+      "value": 2
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 114559,
+      "fired": 2326,
+      "mode": "move_count",
+      "node_ratio": 0.9854271710325743,
+      "nodes": 210098,
+      "parameter": "move_count_base",
+      "reference_nodes": 213205,
+      "value": 4
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 104179,
+      "fired": 2325,
+      "mode": "move_count",
+      "node_ratio": 0.9854365516756174,
+      "nodes": 210100,
+      "parameter": "move_count_base",
+      "reference_nodes": 213205,
+      "value": 8
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 93799,
+      "fired": 2320,
+      "mode": "move_count",
+      "node_ratio": 0.9854740742477897,
+      "nodes": 210108,
+      "parameter": "move_count_base",
+      "reference_nodes": 213205,
+      "value": 12
+    },
+    {
+      "changed_action": 0,
+      "changed_score": 0,
+      "eligible": 62659,
+      "fired": 2068,
+      "mode": "move_count",
+      "node_ratio": 0.9872329448183673,
+      "nodes": 210483,
+      "parameter": "move_count_base",
+      "reference_nodes": 213205,
+      "value": 24
+    }
+  ],
+  "source_sha256": {
+    "benchmarks/shallow_pruning/plan.json": "58937b7093944b0d41ea62a0b396520f085f743070cec46a27dba8c468698e63",
+    "benchmarks/shallow_pruning/reproduce.py": "4c14da1546984b86540e67b12517651d0dada6f0a74eaebcc34027acf2700444",
+    "heuristics/__init__.py": "ff4e8417659a9b2f088e2de8c4fbeaf46e5413e4d4a8c6bc16c44978aa1268aa",
+    "heuristics/analyze.py": "222033c5b12c816fe7e21875122fd1cbfb2d82ace9cd64e4b92748a0cb673d2f",
+    "heuristics/attribution.py": "a0ce3c863782b459fcc9edb9cdf8a0bebf487d7aaaa8330f96f844033cc3b8a6",
+    "heuristics/audit.py": "57114f2fe48f873fa2c84d34db7fb0205e6f7c9a4ea387e022c1faaea3f6bfa2",
+    "heuristics/benchmark.py": "563fbf7c5b699e01203873e14187817961719f4560cd5df3358aef4482103084",
+    "heuristics/budget.py": "e42a50138a20a701d002348d7fffa1d9a13c12a35b423d35e197348d734bc773",
+    "heuristics/clear_run.py": "18f4dbfc9426ec0a895f0097e1b59e33292ec44d1fcd03f3f67fe7d1588970bb",
+    "heuristics/config.py": "135df40a50341005182b35d2f5d43790d3749fc9aeccb1a464755b7b95c4a4db",
+    "heuristics/evaluation.py": "cc6f87e8f6fe13ac61c7d124bfefb95e7f7ebeabced7fd2f934c93ada62b804a",
+    "heuristics/features.py": "e9c8d91b88d3108a6b6bc10188e620330bafb1e7b40d22bc691031330c99e3cc",
+    "heuristics/flood.py": "dd3727daa184ccf6414bb1281afc681be64e5a0f5f40f3b2ac7f0e1befcc709c",
+    "heuristics/geometry.py": "e43cce5c917409c47513c6448ef43847f487ac3f23dfef21a1796969c0998786",
+    "heuristics/kernels.py": "efd16d18ae7a2d950a96321ab9cb1c5a76cefa3dceaa52811a0e34e48795469e",
+    "heuristics/material.py": "c6c9f02368631ce0f3bc25da9156217e2f65180ff938bb7202a979e730fea63c",
+    "heuristics/mcts.py": "c64a36fbb3b47a4ea33f221cf402c24433e51e082886f81c29a3fc625ae9edfb",
+    "heuristics/moves.py": "4ae346271d78e489e5e95c54508978e6495e9ccc48e3d7bf3426b70c70c67657",
+    "heuristics/ordering.py": "1e0a0eeee1915d5a46ed887548441dd43411524ba805612812c410a06a99c40d",
+    "heuristics/position.py": "9b7786d7c14ac0759a130e45453dc3d60b985f53cf29439ac1d21296d92d52dc",
+    "heuristics/pressure.py": "b75bca13be8d3c00b1831c018b70770fe6119a6ca7e15d6c233438065886373a",
+    "heuristics/proof.py": "849e4cdfbd2f4c43204477fb321d365b0e5aa0c94a14a531c1c6fa684fadd774",
+    "heuristics/search.py": "3d6d56a565ac97bb891b50207b0c1e55d7134274ee606834123197dc05569667",
+    "heuristics/selective.py": "b47f2b15ac08b162080b0a505b9640e6c7b21ed7b43c773215065c41b2cc88ed",
+    "heuristics/tuning.py": "d1ca7f12aa32b2b878560884ae67f6988b4ceb703270fd6b451cd15273ee6532",
+    "tests/test_shallow_pruning.py": "a43b7dbcd7fb519374662dcc5c028d18be4fa6bc54901ff77396c309f6d00201"
+  },
+  "stage": "sensitivity",
+  "summary": {
+    "move_count@12": {
+      "changed_action": 0,
+      "eligible": 93799,
+      "fired": 2320,
+      "nodes": 0.9854740742477897
+    },
+    "move_count@2": {
+      "changed_action": 0,
+      "eligible": 119749,
+      "fired": 2326,
+      "nodes": 0.9854271710325743
+    },
+    "move_count@24": {
+      "changed_action": 0,
+      "eligible": 62659,
+      "fired": 2068,
+      "nodes": 0.9872329448183673
+    },
+    "move_count@4": {
+      "changed_action": 0,
+      "eligible": 114559,
+      "fired": 2326,
+      "nodes": 0.9854271710325743
+    },
+    "move_count@8": {
+      "changed_action": 0,
+      "eligible": 104179,
+      "fired": 2325,
+      "nodes": 0.9854365516756174
+    },
+    "razoring@0.125": {
+      "changed_action": 0,
+      "eligible": 48765,
+      "fired": 44,
+      "nodes": 0.9870861880361563
+    },
+    "razoring@0.25": {
+      "changed_action": 0,
+      "eligible": 48765,
+      "fired": 44,
+      "nodes": 0.9870861880361563
+    },
+    "razoring@0.5": {
+      "changed_action": 0,
+      "eligible": 48765,
+      "fired": 44,
+      "nodes": 0.9870861880361563
+    },
+    "razoring@1.0": {
+      "changed_action": 0,
+      "eligible": 49027,
+      "fired": 38,
+      "nodes": 0.9897288272209108
+    },
+    "razoring@1.5": {
+      "changed_action": 0,
+      "eligible": 49027,
+      "fired": 0,
+      "nodes": 1.0
+    },
+    "reverse_futility@0.25": {
+      "changed_action": 0,
+      "eligible": 48952,
+      "fired": 778,
+      "nodes": 0.9082385497525856
+    },
+    "reverse_futility@0.5": {
+      "changed_action": 0,
+      "eligible": 48952,
+      "fired": 778,
+      "nodes": 0.9082385497525856
+    },
+    "reverse_futility@1.0": {
+      "changed_action": 0,
+      "eligible": 49166,
+      "fired": 266,
+      "nodes": 0.9987523744752703
+    },
+    "reverse_futility@2.0": {
+      "changed_action": 0,
+      "eligible": 49166,
+      "fired": 0,
+      "nodes": 1.0
+    }
+  },
+  "warmup_seconds": 29.5601758750272
+}

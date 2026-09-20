@@ -10,6 +10,6 @@ test_the_node_budget_bounds_every_thread_together (intransitive.tests.test_paral
 test_the_search_identity_records_the_parallel_settings (intransitive.tests.test_parallel_search.ParallelSearchTests.test_the_search_identity_records_the_parallel_settings) ... ok
 
 ----------------------------------------------------------------------
-Ran 10 tests in 100.758s
+Ran 10 tests in 93.614s
 
 OK

@@ -50,12 +50,19 @@ python -m intransitive.benchmarks.ybwc.reproduce --stage baseline \
 The baseline request uses no parallel wire fields, so the old binary accepts it
 unchanged — which is itself the compatibility check.
 
-Test and lint output is archived beside the data:
-[rust-tests.log](evidence/rust-tests.log) (34 native tests),
+Test and lint output is archived beside the data, refreshed after master was
+merged in: [rust-tests.log](evidence/rust-tests.log) (36 native tests),
 [parallel-tests.log](evidence/parallel-tests.log) (10 tests),
-[integration-tests.log](evidence/integration-tests.log) (62 tests across
-`test_rust_teacher`, `test_selective_search`, `test_mvv_lva`, `test_clear_run`,
-`test_tuning`, `test_variable_material` and `test_signed_search`).
+[integration-tests.log](evidence/integration-tests.log) (153 tests across
+`test_rust_teacher`, `test_certificate_bound`, `test_selective_search`,
+`test_mvv_lva`, `test_clear_run`, `test_tuning`, `test_variable_material`,
+`test_signed_search`, `test_exchange` and `test_shallow_pruning`).
+
+The measurements below were taken before #67's certificate bound and #68's
+shallow pruning were merged in. Both are off by default and neither touches the
+default search path: after the merge the same three searches returned the same
+node counts to the unit — 541,905 at one thread, 564,118 at two and 700,102 at
+four — so the numbers still describe this code.
 
 `cargo clippy --all-targets -- -D warnings` **fails, and failed identically
 before this work**: `clear_run.rs:67` (`int_plus_one`) and `routes.rs:452`

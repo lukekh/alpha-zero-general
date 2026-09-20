@@ -153,7 +153,9 @@ states its reason:
 ## Wire protocol and rollback
 
 `threads`, `split_min_depth` and `split_min_siblings` are three further
-positional fields, appended after `certificate_enabled`. The client only sends
+positional fields, appended after the certificate-as-a-bound group from #67, at
+request lengths 28, 29 and 30. Because the table is positional, asking for
+threads also sends that group at its own defaults. The client only sends any of
 them when they differ from the defaults, so a default request is byte-identical
 to the one older binaries already accept. Rolling back is deleting the argument:
 `threads = 1` restores the frozen baseline exactly, which
@@ -167,10 +169,21 @@ nodes. `search_identity` records the three settings and
 
 ### One fix this needed first
 
-The positional length table in `main.rs` listed `certificate_enabled`'s length
-(24 tokens) in none of the `has_weights`, `has_mode` or `has_selective` sets, so
-any request that enabled the certificate silently fell back to the default
-weights, flat material and default selective settings. That is fixed here,
-because the new fields sit behind that length and would have inherited the same
-hole. Nothing recorded relied on it: the certificate is off by default and its
-own parity result does not depend on evaluation weights.
+The positional length table in `main.rs` is a prefix table: a group must be
+listed on every length at or above the one that introduced it. Two were not.
+`certificate_enabled`'s length (24 tokens) appeared in none of the
+`has_weights`, `has_mode` or `has_selective` sets, and the certificate-bound
+group's length (27) inherited the same hole, so **any request enabling the
+certificate, or using the certificate as a search bound, silently fell back to
+the default weights, flat material and default selective settings.**
+
+Confirmed against the pre-change binary: a depth-three opening search with
+`material=1, advantage=0, attack=0, defence=0` scores 0, and the same request
+with `certificate_enabled=True` scored 16.948 — the default weights' answer.
+
+Both are fixed here, because the parallel fields sit behind those lengths and
+would have inherited the hole a third time. The certificate and its bound are
+off by default, and the clear-run certificate's decision does not depend on
+evaluation weights, so the recorded parity and bound results stand; but any
+future measurement that combines those options with non-default weights needs
+this fix to mean what it says.

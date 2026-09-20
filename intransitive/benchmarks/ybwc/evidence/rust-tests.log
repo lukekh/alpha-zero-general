@@ -7,47 +7,49 @@ warning: function `flag` is never used
    = note: `#[warn(dead_code)]` on by default
 
 warning: `intransitive-rust-teacher` (bin "intransitive-rust-teacher" test) generated 1 warning
-    Finished release [optimized] target(s) in 0.04s
+    Finished release [optimized] target(s) in 0.03s
      Running unittests src/lib.rs (intransitive/rust_teacher/target/release/deps/intransitive_rust_teacher-70a5ea696ff83bf1)
 
-running 35 tests
+running 37 tests
 test clear_run::tests::chebyshev_and_arrival_match_the_python_definitions ... ok
-test routes::tests::predator_is_the_unique_capturing_code ... ok
+test clear_run::tests::a_held_corner_and_a_covered_corner_are_refused_without_certifying ... ok
+test routes::tests::a_piece_with_no_predator_left_is_safe_at_any_ply ... ok
 test routes::tests::passable_masks_admit_exactly_empty_and_prey_squares ... ok
 test routes::tests::multi_source_flood_is_the_minimum_over_single_sources ... ok
-test routes::tests::a_piece_with_no_predator_left_is_safe_at_any_ply ... ok
-test tests::a_side_that_could_run_out_of_pieces_is_not_cleared ... ok
-test tests::a_piece_within_reach_of_its_corner_still_blocks_the_gate ... ok
+test routes::tests::predator_is_the_unique_capturing_code ... ok
 test tests::a_parallel_mate_is_not_reported_as_a_proven_result ... ok
+test tests::a_piece_within_reach_of_its_corner_still_blocks_the_gate ... ok
+test tests::a_side_that_could_run_out_of_pieces_is_not_cleared ... ok
 test tests::benchmark_legal_moves ... ignored, manual release-mode microbenchmark; ISSUE62_POSITIONS is a directory of .bin states
 test tests::a_time_out_reaches_every_worker_and_unwinds ... ok
-test tests::cancellation_never_labels_partial ... ok
 test routes::tests::profiles_match_the_inline_squares_and_deadlines ... ok
-test tests::material_extinction_and_quiet_type_order ... ok
+test tests::cancellation_never_labels_partial ... ok
 test routes::tests::safe_matches_the_per_enemy_scan_at_every_square_and_ply ... ok
-test tests::incremental_pressure_updates_stationary_victims_and_dense_fallback ... ok
 test tests::experimental_selective_weights_and_restoration ... ok
+test routes::tests::flood_matches_the_queue_search_for_every_piece ... ok
 test clear_run::tests::a_claimed_run_of_two_plies_is_always_really_forced ... ok
+test tests::material_extinction_and_quiet_type_order ... ok
+test tests::incremental_pressure_updates_stationary_victims_and_dense_fallback ... ok
 test tests::modelling_only_draw_and_win_precedence ... ok
 test tests::open_rule_fires_where_the_pair_rule_cannot ... ok
 test tests::parallel_interlocks_are_refused_at_configuration_time ... ok
-test routes::tests::flood_matches_the_queue_search_for_every_piece ... ok
 test tests::mvv_lva_preserves_legal_moves_state_and_flat_order ... ok
+test tests::proof_gate_never_skips_a_decidable_position ... ok
 test tests::proof_only_moves_preserve_material_on_budget_exit ... ok
 test tests::rings_and_defenders ... ok
 test tests::roundtrip_and_undo ... ok
 test tests::selective_guards_cutoffs_and_cancellation ... ok
 test tests::split_points_exclude_proof_selective_and_shallow_nodes ... ok
 test tests::variable_material_formula_and_extinction ... ok
-test tests::proof_gate_never_skips_a_decidable_position ... ok
 test tests::bitboards_edges_captures_and_temporary_undo ... ok
+test clear_run::tests::the_gate_never_hides_a_certificate ... ok
 test tests::material_restored_after_search_cutoffs_and_cancellation ... ok
 test tests::bitboard_exposure_matches_scan_with_removed_pieces ... ok
 test tests::material_trajectories_siblings_and_full_unwind ... ok
 test tests::parallel_work_never_exceeds_the_reserved_budget ... ok
 test tests::parallel_search_matches_one_thread_and_reproduces_itself ... ok
 
-test result: ok. 34 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.04s
+test result: ok. 36 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 3.03s
 
      Running unittests src/main.rs (intransitive/rust_teacher/target/release/deps/intransitive_rust_teacher-124d51e6310105b4)
 

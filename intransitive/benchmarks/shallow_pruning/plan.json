@@ -1,0 +1,96 @@
+{
+  "issue": 68,
+  "predeclared": "2026-09-20, before any measurement below was run",
+  "techniques": [
+    "razoring",
+    "reverse_futility",
+    "move_count",
+    "mate_distance"
+  ],
+  "calibration": {
+    "corpus": {
+      "helper": "intransitive.tests.test_attribution.random_positions",
+      "games": 12,
+      "plies": 40,
+      "seed": 680920
+    },
+    "quantity": "(depth-d alpha-beta value minus static evaluation) / selective.allowance(config)",
+    "depths": [
+      1,
+      2,
+      3
+    ],
+    "scales": [
+      "supported",
+      "adopted"
+    ],
+    "rule": "each margin default must cover the largest observed swing over the calibration corpus on the supported scale; the adopted-scale requirement is reported separately and is not silently folded into the default"
+  },
+  "fixed_depth": {
+    "corpus": {
+      "helper": "intransitive.tests.test_attribution.random_positions",
+      "games": 8,
+      "plies": 40,
+      "seed": 680921,
+      "note": "disjoint seed from the calibration corpus"
+    },
+    "sample": 40,
+    "depth": 4,
+    "seconds_cap": 120.0,
+    "modes": [
+      "baseline",
+      "quiescence",
+      "razoring",
+      "reverse_futility",
+      "move_count",
+      "mate_distance",
+      "all"
+    ],
+    "reference": {
+      "razoring": "quiescence",
+      "other": "baseline"
+    },
+    "rule": "a technique that never fires on this corpus is not accepted"
+  },
+  "sensitivity": {
+    "sample": 20,
+    "corpus": "the fixed-depth corpus, truncated",
+    "sweeps": {
+      "razoring_margin": [
+        0.125,
+        0.25,
+        0.5,
+        1.0,
+        1.5
+      ],
+      "reverse_futility_margin": [
+        0.25,
+        0.5,
+        1.0,
+        2.0
+      ],
+      "move_count_base": [
+        2,
+        4,
+        8,
+        12,
+        24
+      ]
+    },
+    "rule": "report firing rate, node ratio and action changes against the mode's reference; a setting below the calibrated margin is recorded as measured-unsafe, not adopted"
+  },
+  "mate_oracle": {
+    "corpus": "intransitive.tests.test_tactics.CASES via tactical_oracle.load_case",
+    "rule": "mate-distance pruning must reproduce the action, score and bounded-proof verdict of the same search with it disabled, on every case"
+  },
+  "paired": {
+    "positions": "intransitive.tournament.spec.generate_positions(seed=6854), heldout pool",
+    "seconds_per_move": 0.25,
+    "max_plies": 80,
+    "colours": "both, paired on the same start",
+    "termination": "official wins only; a capped game is unfinished, never a draw",
+    "interval": "Wilson 95% on decisive games",
+    "note": "15 held-out positions, both colours, five candidate modes: 150 games"
+  },
+  "acceptance": "defaults stay off unless equal-time paired play is at least non-regressive; node reduction alone is not acceptance"
+}
