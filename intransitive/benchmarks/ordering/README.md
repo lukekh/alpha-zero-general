@@ -301,6 +301,39 @@ search, because the deepest non-root node has only three plies remaining. The
 ladder therefore sets `iir_min_depth=3` for its IIR rows, and the reports carry
 the firing counts rather than leaving a zero to be found by hand later.
 
+## Validation
+
+```sh
+ORT_DISABLE_TELEMETRY=1 uv run python -m unittest intransitive.tests.test_move_ordering -v
+ORT_DISABLE_TELEMETRY=1 uv run python -m unittest discover -s intransitive/tests -v
+```
+
+`test_move_ordering` covers defaults and bounds, the `ordering_enabled`
+interlock, exact inertness when the flags are off, the kernel's ranking of each
+new key, that no legal move is ever dropped, that each mechanism fires and
+updates its own counters, that gravity bounds every statistic, that both IIR
+modes fire and that only the reduction declares itself a non-certificate, that
+the whole sound ladder returns plain alpha-beta's completed score and depth,
+that the tables are cleared per search and survive concurrent processes, and
+that `prove` (including its proof node count) and `certificate` are byte-for-byte
+unchanged by every mechanism.
+
+The broad run executes **688 tests: 680 pass**, with 12 skipped (native teacher
+not built). The eight non-passing tests are the repository's existing known
+failures — four `test_game_blunders` depth-3 cases, the `test_material`
+configuration-identity `TypeError`, the `test_greedy_process` spawn comparison
+and two `test_search_performance` cases. Every one of them reproduces
+identically on an untouched `git archive` of the merge base, with the same test
+names and the same messages (`482 != 406`, `unused route`), so this change adds
+no failure and fixes none.
+
+Inertness was additionally checked outside the test suite, by running one probe
+against the merge-base checkout and the same probe against this branch: 48
+paired searches over 12 positions and four configurations (plain, ordering,
+ordering + MVV-LVA, ordering + LMR + PVS) at depth 4, matching exactly on
+action, score, nodes, work, completed depth, principal variation and both LMR
+counters.
+
 ## Limitations
 
 - One corpus, one seed, two genomes, one machine. These are bounded
