@@ -45,9 +45,10 @@ margins are 75/150 evaluator units, versus 100 per piece; pressure 10 yields
 155/310. These are experimental margins, not upper bounds on future gains.
 Keep every fastest runner (including retreating moves), all captures, moves
 within three steps of the goal, and moves with an enemy within two steps of
-source or destination. The shared guard also protects immediate quiet wins,
-corner defence and low-mobility forced replies. No reverse futility, razoring,
-late-move reductions or weight tuning is included.
+source or destination. Issue #68 additionally refuses any move that vacates or
+occupies a square on a shortest enemy king route to the enemy's corner; see
+*The reviewed quiet predicate* below. The shared guard also protects immediate
+quiet wins, corner defence and low-mobility forced replies.
 
 Without the experimental evaluator option below, selection is effective only with flat material, count=100, advantage=25 and the standard
 predator/prey bonuses (1, .5, .25), no attack/defence/overload modules, and
@@ -56,6 +57,124 @@ keep the requested flags in provenance but disable **both** pruning methods;
 `effective=false` explains this in diagnostics. Ordinary evaluation continues
 unchanged. Python's legacy expanded-state/custom-game backend explicitly
 rejects selective options. Native's unsupported arguments raise errors.
+
+## Internal iterative reduction (issue #69)
+
+`iir_enabled` with `iir_mode='reduce'` searches a deep node that has no
+transposition-table move at `depth - iir_reduction` and stores the result at
+that reduced depth, so it returns a shallower value than the caller asked for
+and joins the selective family: `selective_mode_early` covers it, results report
+`selective_exact` and proof `unknown`, the table uses the selective namespace,
+and a mate-range score no longer ends iterative deepening early. It is refused
+at the root, inside null and verification subtrees, and — like a late-move
+reduction — on a node holding a clear-run certificate under
+`certificate_guard_enabled`. `iir_mode='deepen'` discards the shallow value and
+keeps only the move, so it is **not** selective. Both, and the three ordering
+tables that accompany them, are documented in [MOVE_ORDERING.md](MOVE_ORDERING.md).
+
+## Shallow-depth cutoffs v1 (issue #68)
+
+Four more independently opt-in techniques, **all default false**. Three are
+heuristic and join the selective family; the fourth is value preserving and
+deliberately does not.
+
+| flag | parameters | eligibility | effect |
+|---|---|---|---|
+| `razoring_enabled` | `razoring_max_depth` 1..4 (2), `razoring_margin` (0,64] (1.5) | shared guard, plus `quiescence_enabled` | `static + margin <= alpha` runs quiescence; a value still at or below alpha is returned as a selective **upper** bound |
+| `reverse_futility_enabled` | `reverse_futility_max_depth` 1..6 (2), `reverse_futility_margin` (0,64] (1.0) | shared guard | `static - margin >= beta` returns beta as a selective **lower** bound, with no probe search |
+| `move_count_pruning_enabled` | `move_count_max_depth` 1..8 (3), `move_count_base` 1..64 (12) | shared guard | children from index `base + depth²` onward that are quiet are **skipped**, not reduced |
+| `mate_distance_pruning_enabled` | none | non-root, not inside a null or verification search | narrows to `[-MATE+ply, MATE-ply-1]` and cuts when the window closes |
+
+`razoring_enabled` without `quiescence_enabled` is a configuration error, not a
+silent downgrade: razoring returns a quiescence value, and without quiescence
+it would return the bare static score — a different and far more aggressive
+technique that has not been measured.
+
+The first three reuse the issue #60 eligibility block unchanged — non-root,
+non-PV on entry, finite window inside the ±10,000 clipping range, a supported
+evaluator scale and `selective.guarded()` — so they inherit every Intransitive
+exclusion listed above rather than restating it. They are covered by the
+certificate guard on the same terms as NMP and futility: a node with a
+certified forced run is exempt from all five, and enabling any of them is
+enough to make the guard probe for one. Mate-distance pruning is outside that
+too, and runs *before* the certificate probe, because narrowing the window
+costs nothing while the probe costs board passes. A node eligible only for
+move-count pruning pays for no static evaluation, because move-count pruning
+asks the evaluator nothing. Counters are `*_eligible` (the node or child
+reached the test) and `*_applied` / `*_pruned` (the test fired), plus
+`razoring_nodes` for quiescence work charged to razoring. All of it shares the
+one move budget.
+
+Every node keeps at least one searched child. Move-count pruning requires a
+finite incumbent, which only exists once a child has returned, and forward
+futility requires a nonzero index. **Stalemate loses in Intransitive, so a node
+emptied of moves would be scored as a draw rather than the loss it is**; that
+is why the property is tested directly rather than argued from the thresholds.
+
+### Margins are measured, not inherited
+
+`selective.allowance(config)` is one ply of evaluator units in the current
+scales, and every margin in the family — futility, razoring and reverse
+futility — is `depth × multiplier × allowance`. For both new margins a **larger
+multiplier fires less often** and is the conservative direction.
+
+The multipliers were fixed from the measured distribution of
+(depth-*d* alpha-beta value − static evaluation) ÷ allowance over 480 random
+positions, at *d* = 1, 2, 3:
+
+| scale | allowance | largest rise per ply | largest fall per ply | shipped razoring / reverse |
+|---|---:|---:|---:|---|
+| `supported()` | 75.0 | 1.476 | 0.729 | 1.5 / 1.0 |
+| adopted route genome | 287.4 | 0.413 | 0.162 | 1.5 / 1.0 |
+
+Both defaults cover every observed swing on **both** scales. They are not
+equally *tight* on both: because `allowance()` sums weight ceilings rather than
+the swing those modules actually produce, the adopted genome needs roughly a
+quarter of the supported scale's multiplier. The margins therefore admit
+fractional values, and an evolved genome that wants these techniques to fire at
+all should set them explicitly from its own measurement. This is a heuristic
+allowance measured on one corpus, **not a bound**; it says nothing about weight
+ranges outside the measured ones, and #55 can move the evaluator underneath it.
+
+### The reviewed quiet predicate
+
+Issue #68 required `selective.quiet()` to be re-examined before more techniques
+depended on it. Captures, threat creation and the mover's own fastest runners
+were already excluded, and `guarded()` already refuses any node with an
+available capture or a piece within three steps of its own corner, which covers
+immediate corner threats and forced defensive replies. The gap was
+corner-threat *prevention*: a blocker could be walked off the enemy's route, or
+a blocking square declined, and still count as quiet. `selective.blocks()` now
+tests whether a square lies on a shortest enemy king route to the enemy corner —
+king distance is additive exactly along such a route — and a move that vacates
+or occupies one is no longer quiet. An occupied route square is a real
+obstruction here precisely because `guarded()` has already excluded positions
+where it could simply be captured.
+
+The predicate is strictly narrower than the issue #60 one: it can only refuse
+pruning. Measured consequence — it, not the index threshold, is what limits
+move-count pruning: sweeping `move_count_base` from 2 to 24 changes the number
+of skipped children by under 12%.
+
+### What this does not change
+
+Mate-distance pruning is excluded from `selective_mode_early()` and from
+`SearchConfig.selective_pruning()`. It narrows the window to bounds the true
+value already satisfies, so a search using it still reports ordinary `exact`
+bounds and may still publish a proven result. It is verified against the
+bounded-proof oracle rather than assumed: see the measurements. The other three
+withdraw the certificate exactly as NMP and futility do.
+
+These four are **Python only**. `Genome.native_arguments()` raises rather than
+returning a native search that ignores them, and the exhaustive-label pipelines
+(`teacher_config`, the supervised trainer, the dataset expander) reject the
+three heuristic members through `SearchConfig.selective_pruning()`. The
+analysis CLI exposes `--razoring`, `--reverse-futility`, `--move-count` and
+`--mate-distance`; the browser option whitelist is unchanged.
+
+See [bounded validation](../benchmarks/shallow_pruning/README.md) for firing
+rates, node costs, the mate-distance oracle check and the equal-time paired
+result, including which of the four are recommended for adoption.
 
 ## Experimental evolved and variable-material evaluators
 
@@ -86,7 +205,12 @@ safety. The original margin remains unchanged when this option is false.
 
 A selective mate-range score no longer ends iterative deepening early: the
 requested depth must finish, since such a score is not a mate certificate.
-Unpruned proven results can still finish early. Tournament depth validation
+Unpruned proven results can still finish early. The opt-in
+[corner-run certificate bound](CERTIFICATE_SEARCH.md) is one of those: it is a
+proof, so it does not make a search selective, while the race reduction it ships
+alongside does and joins this list. That document also describes the guard which
+exempts a certified branch from both methods above, replacing the board guard's
+`max(3, ceil(depth/2))` corner proxy with the certificate itself. Tournament depth validation
 continues to exclude incomplete requested selective searches.
 
 The combined native wire form appends four coefficients, a `0/1` variable-mode
@@ -168,6 +292,11 @@ identity; it must not call depth-N selective choices exhaustive optimal labels.
 Rollback: set both flags false/restart the opponent, or load any old preset.
 Config changes invalidate cached search results. No rules, action encoding,
 PGN move notation or training-record action format changes.
+
+Quiescence's own selective filters — the cyclic exchange evaluation and delta
+pruning — are specified separately in [EXCHANGE.md](EXCHANGE.md). They share this
+document's rules: opt-in, off by default, part of the search identity, and never
+a certificate.
 
 ## Evidence and references
 

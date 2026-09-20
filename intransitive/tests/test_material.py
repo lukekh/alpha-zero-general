@@ -109,21 +109,47 @@ class MaterialTests(unittest.TestCase):
             self.assertEqual(evaluator.material.values.cache_info().misses, 1)
         self.assertGreater(len(different_orders), 6)
 
+    def variants(self):
+        """One valid change per configuration field, with the field it belongs to.
+
+        `value + 1` is not generally a configuration: `futility_max_depth` and
+        `pressure_radius` are bounded enums, `nmp_reduction` and `lmr_reduction`
+        are capped by a sibling depth, `variable_material_linear` requires
+        `variable_material_enabled`, `race_reduction_enabled` requires
+        `lmr_enabled`, and the two version strings have no neighbouring accepted
+        value at all. The two enums move within their own range; the four
+        constrained fields move their sibling with them. Every other field
+        moves alone.
+        """
+        special = {
+            'futility_max_depth': dict(futility_max_depth=1),
+            'nmp_reduction': dict(nmp_min_depth=4, nmp_reduction=2),
+            'lmr_reduction': dict(lmr_min_depth=4, lmr_reduction=2),
+            'pressure_radius': dict(pressure_radius=3),
+            'variable_material_linear': dict(variable_material_enabled=True,
+                                             variable_material_linear=True),
+            'race_reduction_enabled': dict(lmr_enabled=True, race_reduction_enabled=True),
+            'razoring_enabled': dict(quiescence_enabled=True, razoring_enabled=True),
+        }
+        for name in self.config.to_dict():
+            value = getattr(self.config, name)
+            if type(value) is str:
+                continue
+            yield name, special.get(name, {name: not value if type(value) is bool else value + 1})
+
     def test_configuration_identity_clamping_and_bounded_cache(self):
         state = position({'D4': 1, 'E4': 3, 'F6': -2})
         evaluator = Evaluator(self.game, self.config)
         self.assert_score(evaluator, state, count_pieces(state))
         old = evaluator.material
-        for name in self.config.to_dict():
-            value = getattr(self.config, name)
-            if name == 'evaluator_version':
-                continue
-            changed = not value if type(value) is bool else value + 1
-            if name == 'pressure_radius':
-                # A bounded enum: exercise the other supported window size.
-                changed = 3 if value == 4 else 4
-            evaluator.config = replace(self.config, **{name: changed})
-            self.assert_score(evaluator, state, count_pieces(state))
+        covered = set()
+        for name, overrides in self.variants():
+            with self.subTest(field=name):
+                evaluator.config = replace(self.config, **overrides)
+                self.assert_score(evaluator, state, count_pieces(state))
+            covered.add(name)
+        # Every field except the two version strings must have been exercised.
+        self.assertEqual(covered, set(self.config.to_dict()) - {'search_version', 'evaluator_version'})
         evaluator.config = replace(self.config, count_weight=1e9)
         self.assert_score(evaluator, state, count_pieces(state))
         self.assertIsNot(old, evaluator.material)

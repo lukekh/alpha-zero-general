@@ -28,6 +28,7 @@ import numpy as np
 from numba import njit
 
 NO_RUN = -1
+NO_SIDE = -1
 UNREACHABLE = 1 << 20
 
 
@@ -36,6 +37,83 @@ def _arrival(moves, side, turn):
     if moves == 0:
         return 0
     return 2 * moves - (1 if side == turn else 0)
+
+
+@njit(cache=True)
+def race_gate(pieces, turn, a1, clock_left, limit):
+    """The only side whose certificate could survive here, or `NO_SIDE`.
+
+    `certify` sweeps the whole board once per enemy piece and then floods once
+    per runner. This reads the board once, and every refusal it makes is one
+    the full argument would have made too, from the same free-board bound — so
+    the gate never hides a certificate, it only declines to look for one that
+    cannot exist.
+
+    Write `d` for the fewest king steps any of this side's pieces needs to
+    reach its corner, ignoring the board. A run of `moves` steps has
+    `moves >= d`, and `_arrival` is monotone in moves, so `_arrival(d)` is the
+    earliest ply any run of this side could possibly finish on. `certify`
+    already refuses a run that
+
+    * needs more than `limit` moves, so `d > limit` refuses every run;
+    * does not finish strictly inside the draw clock;
+    * does not arrive strictly before the other side's own fastest free-board
+      arrival at *its* corner — the same `own_goal_race` comparison, over the
+      same pieces, on the same bound;
+    * steps onto an occupied square, and the corner is a square like any
+      other, so a corner held by anyone refuses every run; or
+    * arrives at the corner no earlier than an enemy could stand on it. That
+      is `soonest[goal] > ply` in `_safe_run`, read here at the earliest `ply`
+      any run could have.
+
+    Each condition is evaluated at the most permissive run the side could hold,
+    so passing the gate is necessary, never sufficient.
+
+    The race comparison is strict, and both sides read it from the same two
+    numbers, so at most one side can pass it: passing says this side's fastest
+    arrival is strictly earlier than the other's, and that cannot hold both
+    ways. A caller certifies one side rather than two, or skips the position.
+    """
+    goals0 = 80 if a1 == 0 else 0
+    goals = np.empty(2, dtype=np.int64)
+    goals[0] = goals0
+    goals[1] = 80 - goals0
+    # `nearest`/`steps` skip a piece already standing on its goal, as the runner
+    # loop in `certify` does. `race` keeps every piece, as `_soonest_enemy`
+    # does, and `cover` is that same arrival read at the other side's corner.
+    nearest = np.full(2, UNREACHABLE, dtype=np.int64)
+    steps = np.full(2, UNREACHABLE, dtype=np.int64)
+    race = np.full(2, UNREACHABLE, dtype=np.int64)
+    cover = np.full(2, UNREACHABLE, dtype=np.int64)
+    for y in range(9):
+        for x in range(9):
+            code = int(pieces[y, x])
+            if not code:
+                continue
+            side = int(code < 0)
+            goal = int(goals[side])
+            moves = max(abs(goal // 9 - y), abs(goal % 9 - x))
+            ply = _arrival(moves, side, turn)
+            if ply < race[side]:
+                race[side] = ply
+            other = int(goals[1 - side])
+            reach = _arrival(max(abs(other // 9 - y), abs(other % 9 - x)), side, turn)
+            if reach < cover[1 - side]:
+                cover[1 - side] = reach
+            if y * 9 + x == goal:
+                continue
+            if moves < steps[side]:
+                steps[side] = moves
+            if ply < nearest[side]:
+                nearest[side] = ply
+    for index in range(2):
+        side = turn if index == 0 else 1 - turn
+        if (steps[side] <= limit and nearest[side] < clock_left
+                and nearest[side] < race[1 - side]
+                and pieces[goals[side] // 9, goals[side] % 9] == 0
+                and cover[side] > nearest[side]):
+            return side
+    return NO_SIDE
 
 
 @njit(cache=True)
@@ -154,5 +232,6 @@ def certify(pieces, side, turn, a1, clock_left, limit=20):
 
 def warm_certificate_kernel():
     board = np.zeros((9, 9, 84), dtype=np.int8)[:, :, 0]
+    race_gate(board, 0, 0, 80, 20)
     certify(board, 0, 0, 0, 80)
     certify(board, 1, 0, 0, 80)

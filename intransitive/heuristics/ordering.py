@@ -22,14 +22,17 @@ def exposed(pieces, square, code, removed):
 
 @njit(cache=True)
 def ordered_actions(pieces, actions, side, goal, preferred, prior, killers, history, enhanced,
-                    capture_values=None, counter=-1, continuation=None, continuation2=None):
-    """Exact old rank when enhanced=False and capture_values=None; otherwise add safe capture/escape,
-    killer, counter-move and (continuation) history priorities. The final action key makes ties
-    deterministic. A counter of -1 and absent continuation rows leave a constant column, so the
-    surrounding order is exactly the killer/history order.
+                    capture_values=None, see_scores=None, counter=-1,
+                    continuation=None, continuation2=None):
+    """Exact old rank when enhanced=False and every optional key is absent; otherwise add
+    safe capture/escape, exchange, killer, counter-move and (continuation) history priorities.
+    The exchange key outranks the MVV-LVA keys. A counter of -1 and absent continuation rows
+    leave constant columns, so the surrounding order is exactly the killer/history order.
+    The final action key makes ties deterministic.
     """
     wins = winning_actions(pieces,actions,side,goal)
-    extra = 2 if capture_values is not None else 0
+    swing = 1 if see_scores is not None else 0
+    extra = swing + (2 if capture_values is not None else 0)
     ranks = np.zeros((len(actions),12+extra),dtype=np.float64)
     own_goal = 80-goal
     for i in range(len(actions)):
@@ -48,10 +51,12 @@ def ordered_actions(pieces, actions, side, goal, preferred, prior, killers, hist
         ranks[i,6] = occupant != 0
         ranks[i,10+extra] = -max(abs(x-goal%9),abs(y-goal//9))
         ranks[i,11+extra] = -action
+        if see_scores is not None:
+            ranks[i,7] = see_scores[i]
         if capture_values is not None and occupant != 0:
             mover = int(pieces[square//9,square%9])
-            ranks[i,7] = capture_values[1,abs(occupant)-1]
-            ranks[i,8] = -capture_values[0,abs(mover)-1]
+            ranks[i,7+swing] = capture_values[1,abs(occupant)-1]
+            ranks[i,8+swing] = -capture_values[0,abs(mover)-1]
         if enhanced:
             mover = int(pieces[square//9,square%9])
             unsafe = exposed(pieces,destination,mover,destination)
@@ -105,7 +110,8 @@ def warm_ordering(continuation=False):
     pairs = ((None,None),(row,None),(row,row)) if continuation else ((None,None),)
     for board in (np.zeros((9,9),dtype=np.int8),np.zeros((9,9,84),dtype=np.int8)[:,:,0]):
         for values in (None, np.ones((2,3), dtype=np.float64)):
-            for one, two in pairs:
-                ordered_actions(board,np.empty(0,dtype=np.int64),0,80,-1,
-                                np.full(648,-np.inf),np.full(2,-1,dtype=np.int64),
-                                np.zeros(648,dtype=np.int64),False,values,-1,one,two)
+            for swings in (None, np.zeros(0, dtype=np.float64)):
+                for one, two in pairs:
+                    ordered_actions(board,np.empty(0,dtype=np.int64),0,80,-1,
+                                    np.full(648,-np.inf),np.full(2,-1,dtype=np.int64),
+                                    np.zeros(648,dtype=np.int64),False,values,swings,-1,one,two)

@@ -318,14 +318,15 @@ that the tables are cleared per search and survive concurrent processes, and
 that `prove` (including its proof node count) and `certificate` are byte-for-byte
 unchanged by every mechanism.
 
-The broad run executes **688 tests: 680 pass**, with 12 skipped (native teacher
-not built). The eight non-passing tests are the repository's existing known
-failures — four `test_game_blunders` depth-3 cases, the `test_material`
-configuration-identity `TypeError`, the `test_greedy_process` spawn comparison
+The broad run's non-passing tests are the repository's existing known failures —
+`test_game_blunders` depth-3 cases, the `test_greedy_process` spawn comparison
 and two `test_search_performance` cases. Every one of them reproduces
 identically on an untouched `git archive` of the merge base, with the same test
 names and the same messages (`482 != 406`, `unused route`), so this change adds
-no failure and fixes none.
+no failure and fixes none. The measurements above were re-run after merging
+master's exchange, shallow-pruning and certificate work and reproduce
+bit-for-bit: the new ranking keys sit beside the exchange key without disturbing
+it, and every default path is untouched.
 
 Inertness was additionally checked outside the test suite, by running one probe
 against the merge-base checkout and the same probe against this branch: 48

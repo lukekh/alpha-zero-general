@@ -115,8 +115,8 @@ class InertWhenOffTests(unittest.TestCase):
         for kernel in (ordered_actions, ordered_actions.py_func):
             with self.subTest(kernel=kernel):
                 reference = kernel(*args)
-                np.testing.assert_array_equal(reference, kernel(*args, None, -1, None, None))
-                np.testing.assert_array_equal(reference, kernel(*args, None, -1, empty, empty))
+                np.testing.assert_array_equal(reference, kernel(*args, None, None, -1, None, None))
+                np.testing.assert_array_equal(reference, kernel(*args, None, None, -1, empty, empty))
 
 
 class OrderingKeyTests(unittest.TestCase):
@@ -143,7 +143,7 @@ class OrderingKeyTests(unittest.TestCase):
                         continuation=None, continuation2=None)
         defaults.update(changes)
         return (self.state[:, :, 0], self.actions, 0, 80, defaults['preferred'],
-                np.full(648, -np.inf), defaults['killers'], defaults['history'], True, None,
+                np.full(648, -np.inf), defaults['killers'], defaults['history'], True, None, None,
                 defaults['counter'], defaults['continuation'], defaults['continuation2'])
 
     def test_the_candidates_are_separated_by_the_tested_keys_alone(self):
@@ -197,7 +197,7 @@ class OrderingKeyTests(unittest.TestCase):
                 for extra in ({}, dict(counter=int(legal[4])), dict(continuation=rows),
                               dict(continuation=rows, continuation2=rows[::-1].copy())):
                     args = (state[:, :, 0], legal, 0, 80, -1, np.full(648, -np.inf), killers,
-                            np.arange(648, dtype=np.int64) % 5, enhanced, None,
+                            np.arange(648, dtype=np.int64) % 5, enhanced, None, None,
                             extra.get('counter', -1), extra.get('continuation'),
                             extra.get('continuation2'))
                     order = list(map(int, kernel(*args)))

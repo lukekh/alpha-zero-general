@@ -553,6 +553,11 @@ pub struct Config {
     /// Experimental forced corner-run certificate; off unless asked for.
     pub certificate_enabled: bool,
     pub certificate_plies: i32,
+    /// Experimental certificate as an interior search bound.
+    pub certificate_cutoff_enabled: bool,
+    pub certificate_cutoff_min_depth: usize,
+    /// Certified nodes refuse null-move and futility pruning.
+    pub certificate_guard_enabled: bool,
     pub table_entries: usize,
 }
 impl Default for Config {
@@ -576,6 +581,9 @@ impl Default for Config {
             proof_nodes: 64,
             certificate_enabled: false,
             certificate_plies: 20,
+            certificate_cutoff_enabled: false,
+            certificate_cutoff_min_depth: 2,
+            certificate_guard_enabled: false,
             table_entries: 10000,
         }
     }
@@ -611,6 +619,8 @@ impl Config {
             || !(1..=8).contains(&self.nmp_reduction)
             || self.nmp_reduction + 2 > self.nmp_min_depth
             || !(1..=2).contains(&self.futility_max_depth)
+            || !(1..=32).contains(&self.certificate_cutoff_min_depth)
+            || !(1..=64).contains(&self.certificate_plies)
             || !self.futility_margin.is_finite()
             || !(1.0..=16.0).contains(&self.futility_margin)
             || !(1..=32).contains(&self.depth)
@@ -657,6 +667,8 @@ pub struct Search {
     root_scores: HashMap<u16, f64>,
     pub tt_hits: u64,
     pub selective_stats: [u64; 10],
+    /// probes, gated, certified, cutoffs, guards.
+    pub certificate_stats: [u64; 5],
     pub mvv_lva_stats: [u64; 2],
     selective_disabled: bool,
 }
@@ -677,6 +689,7 @@ impl Search {
             root_scores: HashMap::new(),
             tt_hits: 0,
             selective_stats: [0; 10],
+            certificate_stats: [0; 5],
             mvv_lva_stats: [0; 2],
             selective_disabled: false,
         })
@@ -765,19 +778,35 @@ impl Search {
     ///
     /// At most one side can certify: each run requires the other to be unable
     /// to reach its own corner first.
-    fn certificate(&self, p: &Position) -> Option<f64> {
+    ///
+    /// The race gate answers that question first, from one pass over the board,
+    /// and names the side worth certifying. Most positions stop there, which is
+    /// what makes asking at an interior node affordable.
+    ///
+    /// A sweep that survives the gate costs about what a node visit costs, so
+    /// it is charged as one, the way an extra static evaluation is. The gate
+    /// itself is an order of magnitude cheaper and is not; Python's finer work
+    /// unit charges both, and the two budgets were never comparable anyway.
+    fn certificate(&mut self, p: &Position) -> Result<Option<f64>, &'static str> {
         // The run makes no captures, so the no-capture counter runs its whole
         // length. A shorter allowance can only withhold a certificate.
         let run = p.history.len() as i32 - p.start as i32 - 1;
         let clock_left = (NO_CAPTURE_LIMIT - run).max(0);
-        for side in [p.side, 1 - p.side] {
-            let plies = clear_run::certify(p, side, clock_left, self.config.certificate_plies);
-            if plies != clear_run::NO_RUN {
-                let score = MATE - f64::from(plies);
-                return Some(if side == p.side { score } else { -score });
-            }
+        self.certificate_stats[0] += 1;
+        let side = clear_run::race_gate(p, clock_left, self.config.certificate_plies);
+        if side == clear_run::NO_SIDE {
+            self.certificate_stats[1] += 1;
+            return Ok(None);
         }
-        None
+        self.visit(false)?;
+        let side = side as u8;
+        let plies = clear_run::certify(p, side, clock_left, self.config.certificate_plies);
+        if plies == clear_run::NO_RUN {
+            return Ok(None);
+        }
+        self.certificate_stats[2] += 1;
+        let score = MATE - f64::from(plies);
+        Ok(Some(if side == p.side { score } else { -score }))
     }
 
     fn proof_safe(p: &Position, depth: usize) -> bool {
@@ -1024,7 +1053,7 @@ impl Search {
                 }
             }
             if self.config.certificate_enabled && !p.hypothetical {
-                if let Some(score) = self.certificate(p) {
+                if let Some(score) = self.certificate(p)? {
                     return Ok((
                         if score > 0.0 { score - ply as f64 } else { score + ply as f64 },
                         vec![],
@@ -1080,6 +1109,36 @@ impl Search {
             }
         }
         key[0] = depth as u8;
+        // A certified forced run is a statement about the game rather than
+        // about this horizon, so it is worth asking before a single move is
+        // generated. The race gate inside `certificate` keeps a node with no
+        // runner in range at one board pass. A hypothetical position is
+        // excluded: its side-to-move flip never happened, and the certificate
+        // reads the turn.
+        let probe = ply > 0
+            && !p.hypothetical
+            && ((self.config.certificate_cutoff_enabled
+                && depth >= self.config.certificate_cutoff_min_depth)
+                || (self.config.certificate_guard_enabled
+                    && !self.selective_disabled
+                    && (self.config.nmp_enabled || self.config.futility_enabled)));
+        let run = if probe { self.certificate(p)? } else { None };
+        if let Some(score) = run {
+            if self.config.certificate_cutoff_enabled {
+                // Proven, and proven without reference to depth: the runner
+                // cannot be stopped, so nothing deeper at this node can refute
+                // it. What it does not prove is that the win is no quicker, so
+                // the node is stored as a bound — lower when the mover runs,
+                // upper when the defender does — never as an exact score.
+                self.certificate_stats[3] += 1;
+                let value = if score > 0.0 { score - ply as f64 } else { score + ply as f64 };
+                self.store(key, value, vec![], if score > 0.0 { 1 } else { -1 }, ply);
+                return Ok((value, vec![]));
+            }
+        }
+        // The game is about to be decided here, so the cheap heuristics do not
+        // get to discard a move on a static score and a margin.
+        let certified = run.is_some() && self.config.certificate_guard_enabled;
         let active = !self.selective_disabled
             && self.config.selective_supported()
             && ply > 0
@@ -1090,7 +1149,10 @@ impl Search {
         let candidate = active
             && ((self.config.nmp_enabled && depth >= self.config.nmp_min_depth)
                 || (self.config.futility_enabled && depth <= self.config.futility_max_depth));
-        let safe = candidate && Self::guarded(p, depth);
+        if candidate && certified {
+            self.certificate_stats[4] += 1;
+        }
+        let safe = candidate && !certified && Self::guarded(p, depth);
         let static_score = if safe {
             self.visit(false)?; // additional static evaluation is charged
             self.selective_stats[7] += 1;
@@ -1231,6 +1293,7 @@ impl Search {
         self.proof_nodes = 0;
         self.tt_hits = 0;
         self.selective_stats = [0; 10];
+        self.certificate_stats = [0; 5];
         self.mvv_lva_stats = [0; 2];
         if !reuse {
             self.table.clear();

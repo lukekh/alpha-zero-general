@@ -1,0 +1,5757 @@
+{
+  "disagreements": [],
+  "issue": 68,
+  "plan": {
+    "acceptance": "defaults stay off unless equal-time paired play is at least non-regressive; node reduction alone is not acceptance",
+    "calibration": {
+      "corpus": {
+        "games": 12,
+        "helper": "intransitive.tests.test_attribution.random_positions",
+        "plies": 40,
+        "seed": 680920
+      },
+      "depths": [
+        1,
+        2,
+        3
+      ],
+      "quantity": "(depth-d alpha-beta value minus static evaluation) / selective.allowance(config)",
+      "rule": "each margin default must cover the largest observed swing over the calibration corpus on the supported scale; the adopted-scale requirement is reported separately and is not silently folded into the default",
+      "scales": [
+        "supported",
+        "adopted"
+      ]
+    },
+    "fixed_depth": {
+      "corpus": {
+        "games": 8,
+        "helper": "intransitive.tests.test_attribution.random_positions",
+        "note": "disjoint seed from the calibration corpus",
+        "plies": 40,
+        "seed": 680921
+      },
+      "depth": 4,
+      "modes": [
+        "baseline",
+        "quiescence",
+        "razoring",
+        "reverse_futility",
+        "move_count",
+        "mate_distance",
+        "all"
+      ],
+      "reference": {
+        "other": "baseline",
+        "razoring": "quiescence"
+      },
+      "rule": "a technique that never fires on this corpus is not accepted",
+      "sample": 40,
+      "seconds_cap": 120.0
+    },
+    "issue": 68,
+    "mate_oracle": {
+      "corpus": "intransitive.tests.test_tactics.CASES via tactical_oracle.load_case",
+      "rule": "mate-distance pruning must reproduce the action, score and bounded-proof verdict of the same search with it disabled, on every case"
+    },
+    "paired": {
+      "colours": "both, paired on the same start",
+      "interval": "Wilson 95% on decisive games",
+      "max_plies": 80,
+      "note": "15 held-out positions, both colours, five candidate modes: 150 games",
+      "positions": "intransitive.tournament.spec.generate_positions(seed=6854), heldout pool",
+      "seconds_per_move": 0.25,
+      "termination": "official wins only; a capped game is unfinished, never a draw"
+    },
+    "predeclared": "2026-09-20, before any measurement below was run",
+    "sensitivity": {
+      "corpus": "the fixed-depth corpus, truncated",
+      "rule": "report firing rate, node ratio and action changes against the mode's reference; a setting below the calibrated margin is recorded as measured-unsafe, not adopted",
+      "sample": 20,
+      "sweeps": {
+        "move_count_base": [
+          2,
+          4,
+          8,
+          12,
+          24
+        ],
+        "razoring_margin": [
+          0.125,
+          0.25,
+          0.5,
+          1.0,
+          1.5
+        ],
+        "reverse_futility_margin": [
+          0.25,
+          0.5,
+          1.0,
+          2.0
+        ]
+      }
+    },
+    "techniques": [
+      "razoring",
+      "reverse_futility",
+      "move_count",
+      "mate_distance"
+    ]
+  },
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "python": "3.11.4",
+  "revision": "8d22a1117f9fcb4fdc89057f13c5f48255ad5c26",
+  "rows": [
+    {
+      "case": "001_immediate_goal_diagonal_finish_blue",
+      "configuration": "proof",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "002_immediate_goal_diagonal_finish_red",
+      "configuration": "proof",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "003_immediate_goal_file_finish_blue",
+      "configuration": "proof",
+      "expected": 568,
+      "matches_expected": true,
+      "off": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "004_immediate_goal_file_finish_red",
+      "configuration": "proof",
+      "expected": 14,
+      "matches_expected": true,
+      "off": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "005_immediate_goal_rank_finish_blue",
+      "configuration": "proof",
+      "expected": 634,
+      "matches_expected": true,
+      "off": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "006_immediate_goal_rank_finish_red",
+      "configuration": "proof",
+      "expected": 76,
+      "matches_expected": true,
+      "off": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "007_immediate_goal_capture_corner_diagonal_blue",
+      "configuration": "proof",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "008_immediate_goal_capture_corner_diagonal_red",
+      "configuration": "proof",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "009_immediate_goal_capture_corner_file_blue",
+      "configuration": "proof",
+      "expected": 568,
+      "matches_expected": true,
+      "off": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "010_immediate_goal_capture_corner_file_red",
+      "configuration": "proof",
+      "expected": 14,
+      "matches_expected": true,
+      "off": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "011_immediate_goal_capture_corner_rank_blue",
+      "configuration": "proof",
+      "expected": 634,
+      "matches_expected": true,
+      "off": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "012_immediate_goal_capture_corner_rank_red",
+      "configuration": "proof",
+      "expected": 76,
+      "matches_expected": true,
+      "off": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "013_immediate_goal_win_before_diagonal_racer_blue",
+      "configuration": "proof",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "014_immediate_goal_win_before_diagonal_racer_red",
+      "configuration": "proof",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "015_immediate_goal_win_before_file_racer_blue",
+      "configuration": "proof",
+      "expected": 568,
+      "matches_expected": true,
+      "off": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "016_immediate_goal_win_before_file_racer_red",
+      "configuration": "proof",
+      "expected": 14,
+      "matches_expected": true,
+      "off": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "017_immediate_goal_win_before_rank_racer_blue",
+      "configuration": "proof",
+      "expected": 634,
+      "matches_expected": true,
+      "off": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "018_immediate_goal_win_before_rank_racer_red",
+      "configuration": "proof",
+      "expected": 76,
+      "matches_expected": true,
+      "off": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "019_immediate_goal_capture_goal_before_counter_race_blue",
+      "configuration": "proof",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "020_immediate_goal_capture_goal_before_counter_race_red",
+      "configuration": "proof",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 4,
+        "proof_score": 99999.0,
+        "proof_status": "proven",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "021_clear_run_unopposed_diagonal_blue",
+      "configuration": "proof",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 167,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 167,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "022_clear_run_unopposed_diagonal_red",
+      "configuration": "proof",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 167,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 167,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "023_clear_run_outrun_near_predator_blue",
+      "configuration": "proof",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 174,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 174,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "024_clear_run_outrun_near_predator_red",
+      "configuration": "proof",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 174,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 174,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "025_clear_run_avoid_lower_interception_blue",
+      "configuration": "proof",
+      "expected": 553,
+      "matches_expected": true,
+      "off": {
+        "action": 553,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 149,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 553,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 149,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "026_clear_run_avoid_lower_interception_red",
+      "configuration": "proof",
+      "expected": 157,
+      "matches_expected": true,
+      "off": {
+        "action": 157,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 148,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 157,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 148,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "027_clear_run_edge_run_around_predator_blue",
+      "configuration": "proof",
+      "expected": 626,
+      "matches_expected": true,
+      "off": {
+        "action": 626,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 93,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 626,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 93,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "028_clear_run_edge_run_around_predator_red",
+      "configuration": "proof",
+      "expected": 148,
+      "matches_expected": true,
+      "off": {
+        "action": 148,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 104,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 148,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 104,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "029_clear_run_avoid_left_interception_blue",
+      "configuration": "proof",
+      "expected": 489,
+      "matches_expected": true,
+      "off": {
+        "action": 489,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 154,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 489,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 154,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "030_clear_run_avoid_left_interception_red",
+      "configuration": "proof",
+      "expected": 93,
+      "matches_expected": true,
+      "off": {
+        "action": 93,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 145,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 93,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 145,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "031_clear_run_file_run_around_predator_blue",
+      "configuration": "proof",
+      "expected": 496,
+      "matches_expected": true,
+      "off": {
+        "action": 496,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 87,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 496,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 87,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "032_clear_run_file_run_around_predator_red",
+      "configuration": "proof",
+      "expected": 22,
+      "matches_expected": true,
+      "off": {
+        "action": 22,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 91,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 22,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 91,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "033_clear_run_capture_to_open_run_blue",
+      "configuration": "proof",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 333,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 333,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "034_clear_run_capture_to_open_run_red",
+      "configuration": "proof",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 334,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 334,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "035_clear_run_capture_before_defender_arrives_blue",
+      "configuration": "proof",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 246,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 246,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "036_clear_run_capture_before_defender_arrives_red",
+      "configuration": "proof",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 234,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 234,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "037_clear_run_run_instead_of_side_capture_blue",
+      "configuration": "proof",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 368,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 368,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "038_clear_run_run_instead_of_side_capture_red",
+      "configuration": "proof",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 368,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 368,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "039_clear_run_run_instead_of_other_piece_capture_blue",
+      "configuration": "proof",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 810,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 810,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "040_clear_run_run_instead_of_other_piece_capture_red",
+      "configuration": "proof",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 810,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 810,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "041_goal_defence_capture_diagonal_runner_blue",
+      "configuration": "proof",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1124,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 4,
+        "eligible": 46,
+        "nodes": 1124,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "042_goal_defence_capture_diagonal_runner_red",
+      "configuration": "proof",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1124,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 4,
+        "eligible": 46,
+        "nodes": 1124,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "043_goal_defence_capture_rank_runner_blue",
+      "configuration": "proof",
+      "expected": 93,
+      "matches_expected": true,
+      "off": {
+        "action": 93,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1400,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 93,
+        "completed_depth": 4,
+        "eligible": 52,
+        "nodes": 1400,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "044_goal_defence_capture_rank_runner_red",
+      "configuration": "proof",
+      "expected": 489,
+      "matches_expected": true,
+      "off": {
+        "action": 489,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1400,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 489,
+        "completed_depth": 4,
+        "eligible": 52,
+        "nodes": 1400,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "045_goal_defence_capture_file_runner_blue",
+      "configuration": "proof",
+      "expected": 157,
+      "matches_expected": true,
+      "off": {
+        "action": 157,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1400,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 157,
+        "completed_depth": 4,
+        "eligible": 52,
+        "nodes": 1400,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "046_goal_defence_capture_file_runner_red",
+      "configuration": "proof",
+      "expected": 553,
+      "matches_expected": true,
+      "off": {
+        "action": 553,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1400,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 553,
+        "completed_depth": 4,
+        "eligible": 52,
+        "nodes": 1400,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "047_goal_defence_edge_capture_rank_runner_blue",
+      "configuration": "proof",
+      "expected": 22,
+      "matches_expected": true,
+      "off": {
+        "action": 22,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1367,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 22,
+        "completed_depth": 4,
+        "eligible": 43,
+        "nodes": 1367,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "048_goal_defence_edge_capture_rank_runner_red",
+      "configuration": "proof",
+      "expected": 496,
+      "matches_expected": true,
+      "off": {
+        "action": 496,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1367,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 496,
+        "completed_depth": 4,
+        "eligible": 43,
+        "nodes": 1367,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "049_goal_defence_edge_capture_file_runner_blue",
+      "configuration": "proof",
+      "expected": 148,
+      "matches_expected": true,
+      "off": {
+        "action": 148,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1367,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 148,
+        "completed_depth": 4,
+        "eligible": 43,
+        "nodes": 1367,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "050_goal_defence_edge_capture_file_runner_red",
+      "configuration": "proof",
+      "expected": 626,
+      "matches_expected": true,
+      "off": {
+        "action": 626,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1367,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 626,
+        "completed_depth": 4,
+        "eligible": 43,
+        "nodes": 1367,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "051_goal_defence_paper_corner_block_blue",
+      "configuration": "proof",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 188,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 2,
+        "eligible": 7,
+        "nodes": 188,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "052_goal_defence_paper_corner_block_red",
+      "configuration": "proof",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 189,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 2,
+        "eligible": 7,
+        "nodes": 189,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "053_goal_defence_rock_corner_block_blue",
+      "configuration": "proof",
+      "expected": 14,
+      "matches_expected": true,
+      "off": {
+        "action": 14,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 242,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 14,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 242,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "054_goal_defence_rock_corner_block_red",
+      "configuration": "proof",
+      "expected": 568,
+      "matches_expected": true,
+      "off": {
+        "action": 568,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 241,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 568,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 241,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "055_goal_defence_scissors_corner_block_blue",
+      "configuration": "proof",
+      "expected": 76,
+      "matches_expected": true,
+      "off": {
+        "action": 76,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 168,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 76,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 168,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "056_goal_defence_scissors_corner_block_red",
+      "configuration": "proof",
+      "expected": 634,
+      "matches_expected": true,
+      "off": {
+        "action": 634,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 166,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 634,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 166,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "057_goal_defence_block_two_runners_blue",
+      "configuration": "proof",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 238,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 2,
+        "eligible": 7,
+        "nodes": 238,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "058_goal_defence_block_two_runners_red",
+      "configuration": "proof",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 238,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 2,
+        "eligible": 7,
+        "nodes": 238,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "059_goal_defence_block_two_runners_ignore_bait_blue",
+      "configuration": "proof",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 7092,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 7092,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "060_goal_defence_block_two_runners_ignore_bait_red",
+      "configuration": "proof",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 7230,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 7230,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "061_save_piece_three_predators_northwest_exit_blue",
+      "configuration": "proof",
+      "expected": 247,
+      "matches_expected": true,
+      "off": {
+        "action": 247,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 1193,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 247,
+        "completed_depth": 2,
+        "eligible": 5,
+        "nodes": 1193,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "062_save_piece_three_predators_northwest_exit_red",
+      "configuration": "proof",
+      "expected": 407,
+      "matches_expected": true,
+      "off": {
+        "action": 407,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 1193,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 407,
+        "completed_depth": 2,
+        "eligible": 5,
+        "nodes": 1193,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "063_save_piece_three_predators_northeast_exit_blue",
+      "configuration": "proof",
+      "expected": 321,
+      "matches_expected": true,
+      "off": {
+        "action": 321,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 24732,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99994.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 321,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 24732,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99994.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "064_save_piece_three_predators_northeast_exit_red",
+      "configuration": "proof",
+      "expected": 325,
+      "matches_expected": true,
+      "off": {
+        "action": 325,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 26698,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99994.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 325,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 26698,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99994.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "065_save_piece_three_predators_west_exit_blue",
+      "configuration": "proof",
+      "expected": 263,
+      "matches_expected": true,
+      "off": {
+        "action": 263,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 25255,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 263,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 25255,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "066_save_piece_three_predators_west_exit_red",
+      "configuration": "proof",
+      "expected": 263,
+      "matches_expected": true,
+      "off": {
+        "action": 263,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 25177,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 263,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 25177,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "067_save_piece_three_predators_southeast_exit_blue",
+      "configuration": "proof",
+      "expected": 395,
+      "matches_expected": true,
+      "off": {
+        "action": 395,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 29513,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 395,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 29513,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "068_save_piece_three_predators_southeast_exit_red",
+      "configuration": "proof",
+      "expected": 315,
+      "matches_expected": true,
+      "off": {
+        "action": 315,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 31205,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 315,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 31205,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "069_save_piece_left_edge_escape_blue",
+      "configuration": "proof",
+      "expected": 216,
+      "matches_expected": true,
+      "off": {
+        "action": 216,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 538,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 216,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 538,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "070_save_piece_left_edge_escape_red",
+      "configuration": "proof",
+      "expected": 622,
+      "matches_expected": true,
+      "off": {
+        "action": 622,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 691,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 622,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 691,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "071_save_piece_right_edge_escape_blue",
+      "configuration": "proof",
+      "expected": 352,
+      "matches_expected": true,
+      "off": {
+        "action": 352,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 560,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 352,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 560,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "072_save_piece_right_edge_escape_red",
+      "configuration": "proof",
+      "expected": 38,
+      "matches_expected": true,
+      "off": {
+        "action": 38,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 740,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 38,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 740,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "073_save_piece_bottom_edge_escape_blue",
+      "configuration": "proof",
+      "expected": 26,
+      "matches_expected": true,
+      "off": {
+        "action": 26,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 689,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 26,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 689,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "074_save_piece_bottom_edge_escape_red",
+      "configuration": "proof",
+      "expected": 428,
+      "matches_expected": true,
+      "off": {
+        "action": 428,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 584,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 428,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 584,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "075_save_piece_top_edge_escape_blue",
+      "configuration": "proof",
+      "expected": 610,
+      "matches_expected": true,
+      "off": {
+        "action": 610,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 571,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 610,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 571,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "076_save_piece_top_edge_escape_red",
+      "configuration": "proof",
+      "expected": 292,
+      "matches_expected": true,
+      "off": {
+        "action": 292,
+        "completed_depth": 2,
+        "eligible": 0,
+        "nodes": 852,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 292,
+        "completed_depth": 2,
+        "eligible": 4,
+        "nodes": 852,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "077_save_piece_escape_ignore_poisoned_rock_blue",
+      "configuration": "proof",
+      "expected": 319,
+      "matches_expected": true,
+      "off": {
+        "action": 319,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 39160,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99994.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 319,
+        "completed_depth": 4,
+        "eligible": 106,
+        "nodes": 39160,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99994.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "078_save_piece_escape_ignore_poisoned_rock_red",
+      "configuration": "proof",
+      "expected": 399,
+      "matches_expected": true,
+      "off": {
+        "action": 399,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 39009,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99994.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 399,
+        "completed_depth": 4,
+        "eligible": 106,
+        "nodes": 39009,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99994.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "079_save_piece_escape_ignore_poisoned_scissors_blue",
+      "configuration": "proof",
+      "expected": 331,
+      "matches_expected": true,
+      "off": {
+        "action": 331,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 48954,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 331,
+        "completed_depth": 4,
+        "eligible": 106,
+        "nodes": 48954,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "080_save_piece_escape_ignore_poisoned_scissors_red",
+      "configuration": "proof",
+      "expected": 251,
+      "matches_expected": true,
+      "off": {
+        "action": 251,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 47954,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 251,
+        "completed_depth": 4,
+        "eligible": 106,
+        "nodes": 47954,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "081_safe_capture_free_central_scissors_blue",
+      "configuration": "proof",
+      "expected": 241,
+      "matches_expected": true,
+      "off": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 26510,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 343,
+        "nodes": 26510,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "082_safe_capture_free_central_scissors_red",
+      "configuration": "proof",
+      "expected": 405,
+      "matches_expected": true,
+      "off": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 26506,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 344,
+        "nodes": 26506,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "083_safe_capture_free_edge_paper_blue",
+      "configuration": "proof",
+      "expected": 303,
+      "matches_expected": true,
+      "off": {
+        "action": 303,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 5828,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 303,
+        "completed_depth": 4,
+        "eligible": 111,
+        "nodes": 5828,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "084_safe_capture_free_edge_paper_red",
+      "configuration": "proof",
+      "expected": 543,
+      "matches_expected": true,
+      "off": {
+        "action": 543,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 5593,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 543,
+        "completed_depth": 4,
+        "eligible": 116,
+        "nodes": 5593,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "085_safe_capture_scissors_safe_or_poisoned_blue",
+      "configuration": "proof",
+      "expected": 241,
+      "matches_expected": true,
+      "off": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 21357,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -275.0,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 149,
+        "nodes": 21357,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -275.0,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "086_safe_capture_scissors_safe_or_poisoned_red",
+      "configuration": "proof",
+      "expected": 405,
+      "matches_expected": true,
+      "off": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 21427,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -275.0,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 148,
+        "nodes": 21427,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -275.0,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "087_safe_capture_rocks_safe_or_poisoned_blue",
+      "configuration": "proof",
+      "expected": 255,
+      "matches_expected": true,
+      "off": {
+        "action": 255,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 13129,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 255,
+        "completed_depth": 4,
+        "eligible": 134,
+        "nodes": 13129,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "088_safe_capture_rocks_safe_or_poisoned_red",
+      "configuration": "proof",
+      "expected": 335,
+      "matches_expected": true,
+      "off": {
+        "action": 335,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 12393,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 335,
+        "completed_depth": 4,
+        "eligible": 134,
+        "nodes": 12393,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "089_safe_capture_papers_safe_or_poisoned_blue",
+      "configuration": "proof",
+      "expected": 327,
+      "matches_expected": true,
+      "off": {
+        "action": 327,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 12919,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 327,
+        "completed_depth": 4,
+        "eligible": 134,
+        "nodes": 12919,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "090_safe_capture_papers_safe_or_poisoned_red",
+      "configuration": "proof",
+      "expected": 327,
+      "matches_expected": true,
+      "off": {
+        "action": 327,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 12033,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 327,
+        "completed_depth": 4,
+        "eligible": 134,
+        "nodes": 12033,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "091_safe_capture_remove_last_paper_blue",
+      "configuration": "proof",
+      "expected": 241,
+      "matches_expected": true,
+      "off": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 23472,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 171.875,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 331,
+        "nodes": 23472,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 171.875,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "092_safe_capture_remove_last_paper_red",
+      "configuration": "proof",
+      "expected": 405,
+      "matches_expected": true,
+      "off": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 23470,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 171.875,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 331,
+        "nodes": 23470,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 171.875,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "093_safe_capture_capture_attacker_to_save_scissors_blue",
+      "configuration": "proof",
+      "expected": 241,
+      "matches_expected": true,
+      "off": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 15069,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 228,
+        "nodes": 15069,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "094_safe_capture_capture_attacker_to_save_scissors_red",
+      "configuration": "proof",
+      "expected": 405,
+      "matches_expected": true,
+      "off": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 15721,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 229,
+        "nodes": 15721,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "095_safe_capture_capture_forking_scissors_blue",
+      "configuration": "proof",
+      "expected": 241,
+      "matches_expected": true,
+      "off": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 37960,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 240.625,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 487,
+        "nodes": 37960,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 240.625,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "096_safe_capture_capture_forking_scissors_red",
+      "configuration": "proof",
+      "expected": 405,
+      "matches_expected": true,
+      "off": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 38215,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 240.625,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 488,
+        "nodes": 38215,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 240.625,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+      "configuration": "proof",
+      "expected": 262,
+      "matches_expected": true,
+      "off": {
+        "action": 262,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 11604,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 262,
+        "completed_depth": 4,
+        "eligible": 124,
+        "nodes": 11604,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+      "configuration": "proof",
+      "expected": 256,
+      "matches_expected": true,
+      "off": {
+        "action": 256,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 10956,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 256,
+        "completed_depth": 4,
+        "eligible": 124,
+        "nodes": 10956,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+      "configuration": "proof",
+      "expected": 382,
+      "matches_expected": true,
+      "off": {
+        "action": 382,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 10901,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 382,
+        "completed_depth": 4,
+        "eligible": 123,
+        "nodes": 10901,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+      "configuration": "proof",
+      "expected": 456,
+      "matches_expected": true,
+      "off": {
+        "action": 456,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 10805,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 456,
+        "completed_depth": 4,
+        "eligible": 122,
+        "nodes": 10805,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "001_immediate_goal_diagonal_finish_blue",
+      "configuration": "tree",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "002_immediate_goal_diagonal_finish_red",
+      "configuration": "tree",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "003_immediate_goal_file_finish_blue",
+      "configuration": "tree",
+      "expected": 568,
+      "matches_expected": true,
+      "off": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "004_immediate_goal_file_finish_red",
+      "configuration": "tree",
+      "expected": 14,
+      "matches_expected": true,
+      "off": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "005_immediate_goal_rank_finish_blue",
+      "configuration": "tree",
+      "expected": 634,
+      "matches_expected": true,
+      "off": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "006_immediate_goal_rank_finish_red",
+      "configuration": "tree",
+      "expected": 76,
+      "matches_expected": true,
+      "off": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "007_immediate_goal_capture_corner_diagonal_blue",
+      "configuration": "tree",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "008_immediate_goal_capture_corner_diagonal_red",
+      "configuration": "tree",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "009_immediate_goal_capture_corner_file_blue",
+      "configuration": "tree",
+      "expected": 568,
+      "matches_expected": true,
+      "off": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "010_immediate_goal_capture_corner_file_red",
+      "configuration": "tree",
+      "expected": 14,
+      "matches_expected": true,
+      "off": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "011_immediate_goal_capture_corner_rank_blue",
+      "configuration": "tree",
+      "expected": 634,
+      "matches_expected": true,
+      "off": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "012_immediate_goal_capture_corner_rank_red",
+      "configuration": "tree",
+      "expected": 76,
+      "matches_expected": true,
+      "off": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "013_immediate_goal_win_before_diagonal_racer_blue",
+      "configuration": "tree",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "014_immediate_goal_win_before_diagonal_racer_red",
+      "configuration": "tree",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "015_immediate_goal_win_before_file_racer_blue",
+      "configuration": "tree",
+      "expected": 568,
+      "matches_expected": true,
+      "off": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 568,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "016_immediate_goal_win_before_file_racer_red",
+      "configuration": "tree",
+      "expected": 14,
+      "matches_expected": true,
+      "off": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 14,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "017_immediate_goal_win_before_rank_racer_blue",
+      "configuration": "tree",
+      "expected": 634,
+      "matches_expected": true,
+      "off": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 634,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "018_immediate_goal_win_before_rank_racer_red",
+      "configuration": "tree",
+      "expected": 76,
+      "matches_expected": true,
+      "off": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 76,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "019_immediate_goal_capture_goal_before_counter_race_blue",
+      "configuration": "tree",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "020_immediate_goal_capture_goal_before_counter_race_red",
+      "configuration": "tree",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 1,
+        "eligible": 0,
+        "nodes": 2,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99999.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "021_clear_run_unopposed_diagonal_blue",
+      "configuration": "tree",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 112,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 28,
+        "nodes": 56,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 7,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "022_clear_run_unopposed_diagonal_red",
+      "configuration": "tree",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 112,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 28,
+        "nodes": 56,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 7,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "023_clear_run_outrun_near_predator_blue",
+      "configuration": "tree",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 88,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 26,
+        "nodes": 60,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 4,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "024_clear_run_outrun_near_predator_red",
+      "configuration": "tree",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 91,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 26,
+        "nodes": 60,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 4,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "025_clear_run_avoid_lower_interception_blue",
+      "configuration": "tree",
+      "expected": 553,
+      "matches_expected": true,
+      "off": {
+        "action": 553,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 89,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 553,
+        "completed_depth": 3,
+        "eligible": 26,
+        "nodes": 56,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 5,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "026_clear_run_avoid_lower_interception_red",
+      "configuration": "tree",
+      "expected": 157,
+      "matches_expected": true,
+      "off": {
+        "action": 157,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 91,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 157,
+        "completed_depth": 3,
+        "eligible": 27,
+        "nodes": 58,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 5,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "027_clear_run_edge_run_around_predator_blue",
+      "configuration": "tree",
+      "expected": 626,
+      "matches_expected": true,
+      "off": {
+        "action": 626,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 62,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 626,
+        "completed_depth": 3,
+        "eligible": 18,
+        "nodes": 41,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 3,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "028_clear_run_edge_run_around_predator_red",
+      "configuration": "tree",
+      "expected": 148,
+      "matches_expected": true,
+      "off": {
+        "action": 148,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 63,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 148,
+        "completed_depth": 3,
+        "eligible": 19,
+        "nodes": 43,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 3,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "029_clear_run_avoid_left_interception_blue",
+      "configuration": "tree",
+      "expected": 489,
+      "matches_expected": true,
+      "off": {
+        "action": 489,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 90,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 489,
+        "completed_depth": 3,
+        "eligible": 27,
+        "nodes": 58,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 5,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "030_clear_run_avoid_left_interception_red",
+      "configuration": "tree",
+      "expected": 93,
+      "matches_expected": true,
+      "off": {
+        "action": 93,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 89,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 93,
+        "completed_depth": 3,
+        "eligible": 26,
+        "nodes": 56,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 5,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "031_clear_run_file_run_around_predator_blue",
+      "configuration": "tree",
+      "expected": 496,
+      "matches_expected": true,
+      "off": {
+        "action": 496,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 61,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 496,
+        "completed_depth": 3,
+        "eligible": 18,
+        "nodes": 41,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 3,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "032_clear_run_file_run_around_predator_red",
+      "configuration": "tree",
+      "expected": 22,
+      "matches_expected": true,
+      "off": {
+        "action": 22,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 62,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 22,
+        "completed_depth": 3,
+        "eligible": 18,
+        "nodes": 41,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 3,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "033_clear_run_capture_to_open_run_blue",
+      "configuration": "tree",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 121,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 31,
+        "nodes": 65,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 7,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "034_clear_run_capture_to_open_run_red",
+      "configuration": "tree",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 121,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 31,
+        "nodes": 65,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 7,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "035_clear_run_capture_before_defender_arrives_blue",
+      "configuration": "tree",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 96,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 26,
+        "nodes": 56,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 5,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "036_clear_run_capture_before_defender_arrives_red",
+      "configuration": "tree",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 96,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 26,
+        "nodes": 56,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 5,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "037_clear_run_run_instead_of_side_capture_blue",
+      "configuration": "tree",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 154,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 48,
+        "nodes": 105,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 7,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "038_clear_run_run_instead_of_side_capture_red",
+      "configuration": "tree",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 154,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 48,
+        "nodes": 105,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 7,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "039_clear_run_run_instead_of_other_piece_capture_blue",
+      "configuration": "tree",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 368,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 3,
+        "eligible": 71,
+        "nodes": 151,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 15,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "040_clear_run_run_instead_of_other_piece_capture_red",
+      "configuration": "tree",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 0,
+        "nodes": 368,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 3,
+        "eligible": 71,
+        "nodes": 151,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 15,
+        "score": 99997.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "041_goal_defence_capture_diagonal_runner_blue",
+      "configuration": "tree",
+      "expected": 165,
+      "matches_expected": true,
+      "off": {
+        "action": 165,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 137,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 165,
+        "completed_depth": 4,
+        "eligible": 46,
+        "nodes": 137,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "042_goal_defence_capture_diagonal_runner_red",
+      "configuration": "tree",
+      "expected": 481,
+      "matches_expected": true,
+      "off": {
+        "action": 481,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 137,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 481,
+        "completed_depth": 4,
+        "eligible": 46,
+        "nodes": 137,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "043_goal_defence_capture_rank_runner_blue",
+      "configuration": "tree",
+      "expected": 93,
+      "matches_expected": true,
+      "off": {
+        "action": 93,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 164,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 93,
+        "completed_depth": 4,
+        "eligible": 52,
+        "nodes": 164,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "044_goal_defence_capture_rank_runner_red",
+      "configuration": "tree",
+      "expected": 489,
+      "matches_expected": true,
+      "off": {
+        "action": 489,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 164,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 489,
+        "completed_depth": 4,
+        "eligible": 52,
+        "nodes": 164,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "045_goal_defence_capture_file_runner_blue",
+      "configuration": "tree",
+      "expected": 157,
+      "matches_expected": true,
+      "off": {
+        "action": 157,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 164,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 157,
+        "completed_depth": 4,
+        "eligible": 52,
+        "nodes": 164,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "046_goal_defence_capture_file_runner_red",
+      "configuration": "tree",
+      "expected": 553,
+      "matches_expected": true,
+      "off": {
+        "action": 553,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 164,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 553,
+        "completed_depth": 4,
+        "eligible": 52,
+        "nodes": 164,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "047_goal_defence_edge_capture_rank_runner_blue",
+      "configuration": "tree",
+      "expected": 22,
+      "matches_expected": true,
+      "off": {
+        "action": 22,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 143,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 22,
+        "completed_depth": 4,
+        "eligible": 43,
+        "nodes": 143,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "048_goal_defence_edge_capture_rank_runner_red",
+      "configuration": "tree",
+      "expected": 496,
+      "matches_expected": true,
+      "off": {
+        "action": 496,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 143,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 496,
+        "completed_depth": 4,
+        "eligible": 43,
+        "nodes": 143,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "049_goal_defence_edge_capture_file_runner_blue",
+      "configuration": "tree",
+      "expected": 148,
+      "matches_expected": true,
+      "off": {
+        "action": 148,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 143,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 148,
+        "completed_depth": 4,
+        "eligible": 43,
+        "nodes": 143,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "050_goal_defence_edge_capture_file_runner_red",
+      "configuration": "tree",
+      "expected": 626,
+      "matches_expected": true,
+      "off": {
+        "action": 626,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 143,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 626,
+        "completed_depth": 4,
+        "eligible": 43,
+        "nodes": 143,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "051_goal_defence_paper_corner_block_blue",
+      "configuration": "tree",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 150,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 4,
+        "eligible": 58,
+        "nodes": 114,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 11,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "052_goal_defence_paper_corner_block_red",
+      "configuration": "tree",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 152,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 4,
+        "eligible": 58,
+        "nodes": 114,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 11,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "053_goal_defence_rock_corner_block_blue",
+      "configuration": "tree",
+      "expected": 14,
+      "matches_expected": true,
+      "off": {
+        "action": 14,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 186,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 14,
+        "completed_depth": 4,
+        "eligible": 58,
+        "nodes": 108,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 14,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "054_goal_defence_rock_corner_block_red",
+      "configuration": "tree",
+      "expected": 568,
+      "matches_expected": true,
+      "off": {
+        "action": 568,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 186,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 568,
+        "completed_depth": 4,
+        "eligible": 58,
+        "nodes": 108,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 14,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "055_goal_defence_scissors_corner_block_blue",
+      "configuration": "tree",
+      "expected": 76,
+      "matches_expected": true,
+      "off": {
+        "action": 76,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 129,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 76,
+        "completed_depth": 4,
+        "eligible": 49,
+        "nodes": 93,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 11,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "056_goal_defence_scissors_corner_block_red",
+      "configuration": "tree",
+      "expected": 634,
+      "matches_expected": true,
+      "off": {
+        "action": 634,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 129,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 634,
+        "completed_depth": 4,
+        "eligible": 49,
+        "nodes": 93,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 11,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "057_goal_defence_block_two_runners_blue",
+      "configuration": "tree",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 166,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 4,
+        "eligible": 65,
+        "nodes": 126,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 13,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "058_goal_defence_block_two_runners_red",
+      "configuration": "tree",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 166,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 4,
+        "eligible": 65,
+        "nodes": 126,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 13,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "059_goal_defence_block_two_runners_ignore_bait_blue",
+      "configuration": "tree",
+      "expected": 85,
+      "matches_expected": true,
+      "off": {
+        "action": 85,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 373,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 85,
+        "completed_depth": 4,
+        "eligible": 104,
+        "nodes": 373,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "060_goal_defence_block_two_runners_ignore_bait_red",
+      "configuration": "tree",
+      "expected": 561,
+      "matches_expected": true,
+      "off": {
+        "action": 561,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 373,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 561,
+        "completed_depth": 4,
+        "eligible": 104,
+        "nodes": 373,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "061_save_piece_three_predators_northwest_exit_blue",
+      "configuration": "tree",
+      "expected": 247,
+      "matches_expected": true,
+      "off": {
+        "action": 247,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 656,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 247,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 178,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 23,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "062_save_piece_three_predators_northwest_exit_red",
+      "configuration": "tree",
+      "expected": 407,
+      "matches_expected": true,
+      "off": {
+        "action": 407,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 614,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 407,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 178,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 23,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "063_save_piece_three_predators_northeast_exit_blue",
+      "configuration": "tree",
+      "expected": 321,
+      "matches_expected": true,
+      "off": {
+        "action": 321,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 725,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 321,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 725,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "064_save_piece_three_predators_northeast_exit_red",
+      "configuration": "tree",
+      "expected": 325,
+      "matches_expected": true,
+      "off": {
+        "action": 325,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 725,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 325,
+        "completed_depth": 4,
+        "eligible": 94,
+        "nodes": 725,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "065_save_piece_three_predators_west_exit_blue",
+      "configuration": "tree",
+      "expected": 263,
+      "matches_expected": true,
+      "off": {
+        "action": 263,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 729,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 263,
+        "completed_depth": 4,
+        "eligible": 96,
+        "nodes": 729,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "066_save_piece_three_predators_west_exit_red",
+      "configuration": "tree",
+      "expected": 263,
+      "matches_expected": true,
+      "off": {
+        "action": 263,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 729,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 263,
+        "completed_depth": 4,
+        "eligible": 96,
+        "nodes": 729,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "067_save_piece_three_predators_southeast_exit_blue",
+      "configuration": "tree",
+      "expected": 395,
+      "matches_expected": true,
+      "off": {
+        "action": 395,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 729,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 395,
+        "completed_depth": 4,
+        "eligible": 96,
+        "nodes": 729,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "068_save_piece_three_predators_southeast_exit_red",
+      "configuration": "tree",
+      "expected": 315,
+      "matches_expected": true,
+      "off": {
+        "action": 315,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 731,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 315,
+        "completed_depth": 4,
+        "eligible": 97,
+        "nodes": 731,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -318.75,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "069_save_piece_left_edge_escape_blue",
+      "configuration": "tree",
+      "expected": 216,
+      "matches_expected": true,
+      "off": {
+        "action": 216,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 261,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 216,
+        "completed_depth": 4,
+        "eligible": 64,
+        "nodes": 122,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 15,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "070_save_piece_left_edge_escape_red",
+      "configuration": "tree",
+      "expected": 622,
+      "matches_expected": true,
+      "off": {
+        "action": 622,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 248,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 622,
+        "completed_depth": 4,
+        "eligible": 64,
+        "nodes": 122,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 15,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "071_save_piece_right_edge_escape_blue",
+      "configuration": "tree",
+      "expected": 352,
+      "matches_expected": true,
+      "off": {
+        "action": 352,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 339,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 352,
+        "completed_depth": 4,
+        "eligible": 69,
+        "nodes": 284,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 6,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "072_save_piece_right_edge_escape_red",
+      "configuration": "tree",
+      "expected": 38,
+      "matches_expected": true,
+      "off": {
+        "action": 38,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 339,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 38,
+        "completed_depth": 4,
+        "eligible": 69,
+        "nodes": 298,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 5,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "073_save_piece_bottom_edge_escape_blue",
+      "configuration": "tree",
+      "expected": 26,
+      "matches_expected": true,
+      "off": {
+        "action": 26,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 248,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 26,
+        "completed_depth": 4,
+        "eligible": 64,
+        "nodes": 122,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 15,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "074_save_piece_bottom_edge_escape_red",
+      "configuration": "tree",
+      "expected": 428,
+      "matches_expected": true,
+      "off": {
+        "action": 428,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 261,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 428,
+        "completed_depth": 4,
+        "eligible": 64,
+        "nodes": 122,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 15,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "075_save_piece_top_edge_escape_blue",
+      "configuration": "tree",
+      "expected": 610,
+      "matches_expected": true,
+      "off": {
+        "action": 610,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 339,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 610,
+        "completed_depth": 4,
+        "eligible": 69,
+        "nodes": 254,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 8,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "076_save_piece_top_edge_escape_red",
+      "configuration": "tree",
+      "expected": 292,
+      "matches_expected": true,
+      "off": {
+        "action": 292,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 347,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      },
+      "on": {
+        "action": 292,
+        "completed_depth": 4,
+        "eligible": 73,
+        "nodes": 262,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 8,
+        "score": -99996.0,
+        "stop_reason": "proven_result"
+      }
+    },
+    {
+      "case": "077_save_piece_escape_ignore_poisoned_rock_blue",
+      "configuration": "tree",
+      "expected": 319,
+      "matches_expected": true,
+      "off": {
+        "action": 319,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 991,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 319,
+        "completed_depth": 4,
+        "eligible": 117,
+        "nodes": 991,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "078_save_piece_escape_ignore_poisoned_rock_red",
+      "configuration": "tree",
+      "expected": 399,
+      "matches_expected": true,
+      "off": {
+        "action": 399,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 996,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 399,
+        "completed_depth": 4,
+        "eligible": 119,
+        "nodes": 996,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "079_save_piece_escape_ignore_poisoned_scissors_blue",
+      "configuration": "tree",
+      "expected": 331,
+      "matches_expected": true,
+      "off": {
+        "action": 331,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 991,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 331,
+        "completed_depth": 4,
+        "eligible": 117,
+        "nodes": 991,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "080_save_piece_escape_ignore_poisoned_scissors_red",
+      "configuration": "tree",
+      "expected": 251,
+      "matches_expected": true,
+      "off": {
+        "action": 251,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 996,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 251,
+        "completed_depth": 4,
+        "eligible": 119,
+        "nodes": 996,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -421.875,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "081_safe_capture_free_central_scissors_blue",
+      "configuration": "tree",
+      "expected": 241,
+      "matches_expected": true,
+      "off": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 935,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 343,
+        "nodes": 935,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "082_safe_capture_free_central_scissors_red",
+      "configuration": "tree",
+      "expected": 405,
+      "matches_expected": true,
+      "off": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 937,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 344,
+        "nodes": 937,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "083_safe_capture_free_edge_paper_blue",
+      "configuration": "tree",
+      "expected": 303,
+      "matches_expected": true,
+      "off": {
+        "action": 303,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 318,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 303,
+        "completed_depth": 4,
+        "eligible": 111,
+        "nodes": 318,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "084_safe_capture_free_edge_paper_red",
+      "configuration": "tree",
+      "expected": 543,
+      "matches_expected": true,
+      "off": {
+        "action": 543,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 323,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 543,
+        "completed_depth": 4,
+        "eligible": 116,
+        "nodes": 323,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -34.375,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "085_safe_capture_scissors_safe_or_poisoned_blue",
+      "configuration": "tree",
+      "expected": 241,
+      "matches_expected": true,
+      "off": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 683,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -275.0,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 149,
+        "nodes": 683,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -275.0,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "086_safe_capture_scissors_safe_or_poisoned_red",
+      "configuration": "tree",
+      "expected": 405,
+      "matches_expected": true,
+      "off": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 674,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -275.0,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 148,
+        "nodes": 674,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -275.0,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "087_safe_capture_rocks_safe_or_poisoned_blue",
+      "configuration": "tree",
+      "expected": 255,
+      "matches_expected": true,
+      "off": {
+        "action": 255,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 493,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 255,
+        "completed_depth": 4,
+        "eligible": 137,
+        "nodes": 493,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "088_safe_capture_rocks_safe_or_poisoned_red",
+      "configuration": "tree",
+      "expected": 335,
+      "matches_expected": true,
+      "off": {
+        "action": 335,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 489,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 335,
+        "completed_depth": 4,
+        "eligible": 136,
+        "nodes": 489,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "089_safe_capture_papers_safe_or_poisoned_blue",
+      "configuration": "tree",
+      "expected": 327,
+      "matches_expected": true,
+      "off": {
+        "action": 327,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 491,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 327,
+        "completed_depth": 4,
+        "eligible": 137,
+        "nodes": 491,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "090_safe_capture_papers_safe_or_poisoned_red",
+      "configuration": "tree",
+      "expected": 327,
+      "matches_expected": true,
+      "off": {
+        "action": 327,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 485,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 327,
+        "completed_depth": 4,
+        "eligible": 134,
+        "nodes": 485,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "091_safe_capture_remove_last_paper_blue",
+      "configuration": "tree",
+      "expected": 241,
+      "matches_expected": true,
+      "off": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 886,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 171.875,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 331,
+        "nodes": 886,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 171.875,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "092_safe_capture_remove_last_paper_red",
+      "configuration": "tree",
+      "expected": 405,
+      "matches_expected": true,
+      "off": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 886,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 171.875,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 331,
+        "nodes": 886,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 171.875,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "093_safe_capture_capture_attacker_to_save_scissors_blue",
+      "configuration": "tree",
+      "expected": 241,
+      "matches_expected": true,
+      "off": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 610,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 228,
+        "nodes": 610,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "094_safe_capture_capture_attacker_to_save_scissors_red",
+      "configuration": "tree",
+      "expected": 405,
+      "matches_expected": true,
+      "off": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 619,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 229,
+        "nodes": 619,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 103.125,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "095_safe_capture_capture_forking_scissors_blue",
+      "configuration": "tree",
+      "expected": 241,
+      "matches_expected": true,
+      "off": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1267,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 240.625,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 241,
+        "completed_depth": 4,
+        "eligible": 472,
+        "nodes": 1267,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 240.625,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "096_safe_capture_capture_forking_scissors_red",
+      "configuration": "tree",
+      "expected": 405,
+      "matches_expected": true,
+      "off": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 1265,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 240.625,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 405,
+        "completed_depth": 4,
+        "eligible": 472,
+        "nodes": 1265,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": 240.625,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+      "configuration": "tree",
+      "expected": 262,
+      "matches_expected": true,
+      "off": {
+        "action": 262,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 460,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 262,
+        "completed_depth": 4,
+        "eligible": 124,
+        "nodes": 460,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+      "configuration": "tree",
+      "expected": 256,
+      "matches_expected": true,
+      "off": {
+        "action": 256,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 458,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 256,
+        "completed_depth": 4,
+        "eligible": 126,
+        "nodes": 458,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+      "configuration": "tree",
+      "expected": 382,
+      "matches_expected": true,
+      "off": {
+        "action": 382,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 452,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 382,
+        "completed_depth": 4,
+        "eligible": 123,
+        "nodes": 452,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    },
+    {
+      "case": "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+      "configuration": "tree",
+      "expected": 456,
+      "matches_expected": true,
+      "off": {
+        "action": 456,
+        "completed_depth": 4,
+        "eligible": 0,
+        "nodes": 457,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      },
+      "on": {
+        "action": 456,
+        "completed_depth": 4,
+        "eligible": 125,
+        "nodes": 457,
+        "proof_score": null,
+        "proof_status": "unknown",
+        "pruned": 0,
+        "score": -137.5,
+        "stop_reason": "maximum_depth"
+      }
+    }
+  ],
+  "source_sha256": {
+    "benchmarks/shallow_pruning/plan.json": "58937b7093944b0d41ea62a0b396520f085f743070cec46a27dba8c468698e63",
+    "benchmarks/shallow_pruning/reproduce.py": "4c14da1546984b86540e67b12517651d0dada6f0a74eaebcc34027acf2700444",
+    "heuristics/__init__.py": "ff4e8417659a9b2f088e2de8c4fbeaf46e5413e4d4a8c6bc16c44978aa1268aa",
+    "heuristics/analyze.py": "222033c5b12c816fe7e21875122fd1cbfb2d82ace9cd64e4b92748a0cb673d2f",
+    "heuristics/attribution.py": "a0ce3c863782b459fcc9edb9cdf8a0bebf487d7aaaa8330f96f844033cc3b8a6",
+    "heuristics/audit.py": "57114f2fe48f873fa2c84d34db7fb0205e6f7c9a4ea387e022c1faaea3f6bfa2",
+    "heuristics/benchmark.py": "563fbf7c5b699e01203873e14187817961719f4560cd5df3358aef4482103084",
+    "heuristics/budget.py": "e42a50138a20a701d002348d7fffa1d9a13c12a35b423d35e197348d734bc773",
+    "heuristics/clear_run.py": "18f4dbfc9426ec0a895f0097e1b59e33292ec44d1fcd03f3f67fe7d1588970bb",
+    "heuristics/config.py": "135df40a50341005182b35d2f5d43790d3749fc9aeccb1a464755b7b95c4a4db",
+    "heuristics/evaluation.py": "cc6f87e8f6fe13ac61c7d124bfefb95e7f7ebeabced7fd2f934c93ada62b804a",
+    "heuristics/features.py": "e9c8d91b88d3108a6b6bc10188e620330bafb1e7b40d22bc691031330c99e3cc",
+    "heuristics/flood.py": "dd3727daa184ccf6414bb1281afc681be64e5a0f5f40f3b2ac7f0e1befcc709c",
+    "heuristics/geometry.py": "e43cce5c917409c47513c6448ef43847f487ac3f23dfef21a1796969c0998786",
+    "heuristics/kernels.py": "efd16d18ae7a2d950a96321ab9cb1c5a76cefa3dceaa52811a0e34e48795469e",
+    "heuristics/material.py": "c6c9f02368631ce0f3bc25da9156217e2f65180ff938bb7202a979e730fea63c",
+    "heuristics/mcts.py": "c64a36fbb3b47a4ea33f221cf402c24433e51e082886f81c29a3fc625ae9edfb",
+    "heuristics/moves.py": "4ae346271d78e489e5e95c54508978e6495e9ccc48e3d7bf3426b70c70c67657",
+    "heuristics/ordering.py": "1e0a0eeee1915d5a46ed887548441dd43411524ba805612812c410a06a99c40d",
+    "heuristics/position.py": "9b7786d7c14ac0759a130e45453dc3d60b985f53cf29439ac1d21296d92d52dc",
+    "heuristics/pressure.py": "b75bca13be8d3c00b1831c018b70770fe6119a6ca7e15d6c233438065886373a",
+    "heuristics/proof.py": "849e4cdfbd2f4c43204477fb321d365b0e5aa0c94a14a531c1c6fa684fadd774",
+    "heuristics/search.py": "3d6d56a565ac97bb891b50207b0c1e55d7134274ee606834123197dc05569667",
+    "heuristics/selective.py": "b47f2b15ac08b162080b0a505b9640e6c7b21ed7b43c773215065c41b2cc88ed",
+    "heuristics/tuning.py": "d1ca7f12aa32b2b878560884ae67f6988b4ceb703270fd6b451cd15273ee6532",
+    "tests/test_shallow_pruning.py": "a43b7dbcd7fb519374662dcc5c028d18be4fa6bc54901ff77396c309f6d00201"
+  },
+  "stage": "mate",
+  "summary": {
+    "proof": {
+      "cases": 100,
+      "disagreements": 0,
+      "eligible": 6068,
+      "expected_action": 100,
+      "node_ratio": 1.0,
+      "nodes_off": 735680,
+      "nodes_on": 735680,
+      "pruned": 0
+    },
+    "tree": {
+      "cases": 100,
+      "disagreements": 0,
+      "eligible": 7864,
+      "expected_action": 100,
+      "node_ratio": 0.8975081673179168,
+      "nodes_off": 31222,
+      "nodes_on": 28022,
+      "pruned": 353
+    }
+  },
+  "warmup_seconds": 18.665234334010165
+}

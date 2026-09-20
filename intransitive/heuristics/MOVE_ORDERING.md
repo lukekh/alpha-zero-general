@@ -53,7 +53,11 @@ children would otherwise be searched in whatever order the static keys give.
   iterative deepening early.
 
 Both modes are refused inside null-move and verification subtrees, at the root,
-and where a move is already known.
+and where a move is already known. A node holding a clear-run certificate under
+`certificate_guard_enabled` also keeps its full depth: the reduction is refused
+on the same terms the guard refuses a late-move reduction, and counted in
+`certificate.unreduced`. Deepening only spends nodes, so the guard leaves it
+alone.
 
 ## Ranking order
 
@@ -62,8 +66,9 @@ The compiled and reference ranking paths share one kernel. Enhanced ordering
 
 1. immediate wins, then the preferred transposition-table/PV move, then previous
    root scores, then corner defence;
-2. safe captures, escapes from an exposed square, captures, and — when
-   `mvv_lva_enabled` — the victim/attacker values of [MVV-LVA](MVV_LVA.md);
+2. safe captures, escapes from an exposed square, captures, then — when
+   enabled — the exchange swing of [SEE](EXCHANGE.md) and the victim/attacker
+   values of [MVV-LVA](MVV_LVA.md);
 3. **killers**, then the **counter move**, then **flat history plus the
    continuation scores**;
 4. distance to the goal, then the action index as a deterministic tie-break.
@@ -107,7 +112,9 @@ have their own move order and never read or write these tables.
   counted under `cutoff_from_preferred`, because that is the slot it filled.
 
 `lmr_reduced` and `lmr_researches` remain in `SearchResult.selective`; their
-ratio is the re-search rate this issue is measured against.
+ratio is the re-search rate this issue is measured against. `cutoffs` and
+`first_cutoffs` are the issue #67 names for `beta_cutoffs` and
+`first_move_cutoffs`; they are the same two numbers and both are published.
 
 ## Cost
 
