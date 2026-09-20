@@ -15,7 +15,8 @@ from .budget import Budget, BudgetExpired
 from . import selective
 from .config import SearchConfig
 from .evaluation import Evaluator, MATE, MATE_THRESHOLD, terminal_value
-from .kernels import no_terminal_win_in_horizon, winning_actions, warm_search_kernels
+from .kernels import (no_capture_in_horizon, no_terminal_win_in_horizon, winning_actions,
+                      warm_search_kernels)
 from .material import after_capture, count_pieces, warm_material_kernels
 from ..IntransitiveConstants import NO_CAPTURE_LIMIT, action_destination
 from ..IntransitiveDisplay import move_to_str
@@ -66,9 +67,16 @@ def from_table(score, ply):
 
 
 def selective_mode_early(config):
-    """Whether any opt-in selective feature is on for this config."""
+    """Whether any opt-in selective feature is on for this config.
+
+    The certificate cutoff and its guard are deliberately absent. A cutoff
+    returns a proof, and the guard only ever refuses a reduction, so neither
+    turns a mate score into a selective result. The race reduction does reduce,
+    so it belongs here.
+    """
     return (config.nmp_enabled or config.futility_enabled
-            or config.quiescence_enabled or config.lmr_enabled)
+            or config.quiescence_enabled or config.lmr_enabled
+            or config.race_reduction_enabled)
 
 
 @dataclass
@@ -115,6 +123,7 @@ class SearchResult:
     requested_simulations: int = 0
     max_tree_depth: int = 0
     selective: dict = field(default_factory=dict)
+    certificate: dict = field(default_factory=dict)
     ordering: dict = field(default_factory=dict)
     root_moves: list = field(default_factory=list)
     exact_root: bool = False
@@ -218,14 +227,20 @@ def prove_reference(game, state, config, budget, *, compiled_order=False):
         budget.module_calls['proof'] += 1
 
 
-def certificate(state, config, budget):
+def certificate(state, config, budget, stats=None):
     """A forced corner run for either side, or None.
 
     Returns the score from the side to move's perspective, so a run by the
     opponent reports as a loss. At most one side can certify: each run requires
     the other to be unable to reach its own corner first.
+
+    The race gate answers that question first, from one pass over the board,
+    and names the side worth certifying. Most positions stop there, which is
+    what makes asking at an interior node affordable; the charge reflects that,
+    one board pass for a refusal and a pass per piece for the full argument,
+    rather than the flat constant this used to spend either way.
     """
-    from .clear_run import NO_RUN, certify
+    from .clear_run import NO_RUN, NO_SIDE, certify, race_gate
     compact = isinstance(state, SearchPosition)
     if compact:
         pieces, turn, a1 = state.pieces, state.side, state.a1
@@ -239,27 +254,39 @@ def certificate(state, config, budget):
     clock_left = max(0, NO_CAPTURE_LIMIT - clock)
     start = perf_counter()
     try:
-        budget.charge(2 * 81)
-        for side in (turn, 1 - turn):
-            plies = certify(pieces, side, turn, a1, clock_left, config.certificate_plies)
-            if plies != NO_RUN:
-                score = MATE - plies
-                return score if side == turn else -score
-        return None
+        if stats is not None:
+            stats['probes'] += 1
+        budget.charge(81)
+        side = int(race_gate(pieces, turn, a1, clock_left, config.certificate_plies))
+        if side == NO_SIDE:
+            if stats is not None:
+                stats['gated'] += 1
+            return None
+        budget.charge(81 * max(1, int(np.count_nonzero(pieces))))
+        plies = certify(pieces, side, turn, a1, clock_left, config.certificate_plies)
+        if plies == NO_RUN:
+            return None
+        if stats is not None:
+            stats['certified'] += 1
+        score = MATE - plies
+        return score if side == turn else -score
     finally:
         budget.module_seconds['certificate'] += perf_counter() - start
         budget.module_calls['certificate'] += 1
 
 
-def prove(game, state, config, budget, *, specialised=True):
+def prove(game, state, config, budget, *, specialised=True, stats=None):
     """Bounded terminal search, then the run certificate if it is enabled."""
     result = prove_terminal(game, state, config, budget, specialised=specialised)
     if result['status'] == 'proven' or not config.certificate_enabled:
         return result
-    score = certificate(state, config, budget)
+    score = certificate(state, config, budget, stats)
     if score is None:
         return result
-    return dict(status='proven', score=score, plies=int(MATE - abs(score)),
+    # The certificate argues that a run cannot be stopped, not which squares
+    # it walks, so it publishes no line. Callers read `pv`, so say so in the
+    # result rather than leaving the key out.
+    return dict(status='proven', score=score, plies=int(MATE - abs(score)), pv=[],
                 source='clear-run certificate', nodes=result.get('nodes', 0))
 
 
@@ -334,6 +361,7 @@ class AlphaBetaPlayer:
         self._selective_disabled = False
         self._null_context = False
         self._selective_stats = {}
+        self._certificate_stats = {}
 
     def reload(self):
         self.table.clear()
@@ -348,6 +376,8 @@ class AlphaBetaPlayer:
             "verification_searches", "verification_failures", "futility_eligible",
             "futility_pruned", "static_evaluations", "null_nodes", "verification_nodes",
             "quiescence_captures", "lmr_reduced", "lmr_researches"), 0)
+        self._certificate_stats = dict.fromkeys(("probes", "gated", "certified", "cutoffs",
+            "guards", "unreduced", "race_probes", "race_quiet", "race_reductions"), 0)
         warm_search_kernels()
         warm_material_kernels()
         warm_position_kernels()
@@ -362,7 +392,8 @@ class AlphaBetaPlayer:
             warm_proof_kernel()
             from .proof import warm_compact_proof_kernel
             warm_compact_proof_kernel()
-        if self.config.certificate_enabled:
+        if (self.config.certificate_enabled or self.config.certificate_cutoff_enabled
+                or self.config.certificate_guard_enabled):
             from .clear_run import warm_certificate_kernel
             warm_certificate_kernel()
         if self.config.attack_enabled or self.config.defence_enabled or self.config.overload_enabled:
@@ -382,7 +413,8 @@ class AlphaBetaPlayer:
 
     def _leaf(self, state, side, ply, budget):
         proof = ({'status': 'unknown'} if self._null_context else
-                 prove(self.game, state, self.config, budget))
+                 prove(self.game, state, self.config, budget,
+                       stats=self._certificate_stats))
         if proof['status'] == 'proven':
             return from_table(proof['score'], ply), proof['pv']
         return self.evaluator.score(state, side, budget, proof=proof, counts=self._material_counts), []
@@ -564,13 +596,38 @@ class AlphaBetaPlayer:
             if not self._quiescence_active():
                 self._store(key, depth, value, 'exact', line, ply)
             return value, line
+        cfg = self.config
+        # A certified forced run is a statement about the game rather than
+        # about this horizon, so it is worth asking before a single move is
+        # generated. The race gate inside `certificate` keeps a node with no
+        # runner in range at one board pass. A null-move subtree is excluded:
+        # its side-to-move flip never happened, and `certify` reads the turn.
+        run = None
+        if (ply and not self._null_context
+                and ((cfg.certificate_cutoff_enabled and depth >= cfg.certificate_cutoff_min_depth)
+                     or (cfg.certificate_guard_enabled and not self._selective_disabled
+                         and (cfg.nmp_enabled or cfg.futility_enabled or cfg.lmr_enabled)))):
+            run = certificate(state, cfg, budget, self._certificate_stats)
+        if run is not None and cfg.certificate_cutoff_enabled:
+            # Proven, and proven without reference to depth: the runner cannot
+            # be stopped, so nothing deeper at this node can refute it. What it
+            # does not prove is that the win is no quicker, so the node is
+            # stored as a bound — lower when the mover runs, upper when the
+            # defender does — and never as an exact score.
+            self._certificate_stats['cutoffs'] += 1
+            value = from_table(run, ply)
+            self._store(key, depth, value, 'lower' if run > 0 else 'upper', [], ply)
+            return value, []
         hint = entry or (self.table.get((key, self._hints.get(key, -1)))
                          if self.use_table else None)
         preferred = hint.best_move if hint else None
         if progress is not None and progress.incumbent is not None:
             preferred = progress.incumbent
         static = None
-        cfg = self.config
+        # The game is about to be decided here, so the cheap heuristics do not
+        # get to discard a move on a static score and a margin.
+        certified = run is not None and cfg.certificate_guard_enabled
+        quiet_horizon = not certified and self._quiet_horizon(state, side, depth, ply, budget)
         active = ((cfg.nmp_enabled or cfg.futility_enabled)
                   and compact and not self._selective_disabled and selective.supported(cfg)
                   and ply > 0 and isfinite(alpha) and isfinite(beta)
@@ -578,7 +635,9 @@ class AlphaBetaPlayer:
                   and max(abs(alpha), abs(beta)) < 10000)
         candidate = active and ((cfg.nmp_enabled and depth >= cfg.nmp_min_depth)
                                or (cfg.futility_enabled and depth <= cfg.futility_max_depth))
-        safe = candidate and selective.guarded(state, depth, budget)
+        if candidate and certified:
+            self._certificate_stats['guards'] += 1
+        safe = candidate and not certified and selective.guarded(state, depth, budget)
         if safe:
             self._selective_stats['static_evaluations'] += 1
             evaluation_start = perf_counter()
@@ -646,7 +705,8 @@ class AlphaBetaPlayer:
                     if alpha < -value < beta:
                         budget.pvs_researches += 1
                         value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
-                elif self._reducible(depth, index, capture, ply, best):
+                elif self._reducible(depth, index, capture, ply, best,
+                                     certified=certified, quiet_horizon=quiet_horizon):
                     # Late, quiet moves get a shallower look first; anything that
                     # beats alpha is re-searched at full depth before it counts.
                     self._selective_stats['lmr_reduced'] += 1
@@ -688,19 +748,70 @@ class AlphaBetaPlayer:
         self._store(key, depth, best, bound, pv, ply)
         return best, pv
 
-    def _reducible(self, depth, index, capture, ply, best):
+    def _reducible(self, depth, index, capture, ply, best, *, certified=False,
+                   quiet_horizon=False):
         """Whether this child may be searched shallower first.
 
         Reductions need a move order worth trusting, so they are refused unless
         ordering is on. Captures, the first `lmr_min_index` moves, the root, and
         any node still without a value are always searched in full.
+
+        A certified node is exempt outright: a forced run is being carried out
+        or defended here, and no reply to it gets a shallower look. Where the
+        race test has shown the branch quiet, the index condition is dropped
+        instead — `lmr_min_index` is a guess that late moves matter less, and
+        the test has replaced it with an argument that nothing in reach of this
+        horizon matters at all. That argument bounds the tactics, not the
+        evaluation, so it still licenses a reduction and never a cutoff.
         """
         cfg = self.config
-        return (cfg.lmr_enabled and not self._selective_disabled
-                and (cfg.ordering_enabled or cfg.compiled_ordering_enabled)
-                and depth >= cfg.lmr_min_depth and index >= cfg.lmr_min_index
-                and ply > 0 and not capture and isfinite(best)
-                and abs(best) < MATE_THRESHOLD)
+        if certified:
+            self._certificate_stats['unreduced'] += 1
+            return False
+        late = index >= cfg.lmr_min_index or (quiet_horizon and index)
+        allowed = (cfg.lmr_enabled and not self._selective_disabled
+                   and (cfg.ordering_enabled or cfg.compiled_ordering_enabled)
+                   and depth >= cfg.lmr_min_depth and late
+                   and ply > 0 and not capture and isfinite(best)
+                   and abs(best) < MATE_THRESHOLD)
+        if allowed and quiet_horizon and index < cfg.lmr_min_index:
+            self._certificate_stats['race_reductions'] += 1
+        return allowed
+
+    def _quiet_horizon(self, state, side, depth, ply, budget):
+        """Nothing decisive can happen within the remaining `depth` plies.
+
+        Both tests are free-board Chebyshev arguments, and both hold whatever
+        either side plays: `no_terminal_win_in_horizon` rules out a corner win
+        and a stalemate, `no_capture_in_horizon` rules out every capture.
+        Modelling draws are ruled out separately, since a repetition or the
+        eightieth noncapture would end the branch inside the horizon.
+
+        Route distances cannot be used for this. `geometry.distance_map` and
+        `nearest_distance` read the board as it stands and allow only the
+        mover's own captures, so a route blocked now reports a distance longer
+        than the one actually available once the blocker steps aside: an
+        overestimate, not an admissible lower bound on arrival. Chebyshev
+        distance is admissible, because one king step changes each coordinate
+        by at most one whatever occupies the board.
+        """
+        cfg = self.config
+        if not (cfg.race_reduction_enabled and cfg.lmr_enabled and ply
+                and depth >= cfg.lmr_min_depth and not self._selective_disabled
+                and isinstance(state, SearchPosition)):
+            return False
+        self._certificate_stats['race_probes'] += 1
+        if state.modelling_draws and (state.clock + depth >= NO_CAPTURE_LIMIT
+                                      or any(count > 1 for count in state.occurrences.values())):
+            return False
+        budget.charge(3 * 81 + len(state.occurrences))
+        if not no_terminal_win_in_horizon(state.pieces, side, state.a1, depth):
+            return False
+        quiet, pairs = no_capture_in_horizon(state.pieces, depth)
+        budget.charge(81 + int(pairs))
+        if quiet:
+            self._certificate_stats['race_quiet'] += 1
+        return bool(quiet)
 
     def _store(self, key, depth, value, bound, pv, ply):
         if self.use_table and self.config.table_entries:
@@ -874,8 +985,7 @@ class AlphaBetaPlayer:
         explanation['stop_reason'] = stop_reason
         explanation['diagnostics_status'] = diagnostics_status
         explanation['effective_limits'] = effective_limits
-        selective_mode = (self.config.nmp_enabled or self.config.futility_enabled
-                          or self.config.quiescence_enabled or self.config.lmr_enabled)
+        selective_mode = selective_mode_early(self.config)
         if selective_mode:
             if score_bound is not None:
                 score_bound = 'selective_' + score_bound
@@ -902,6 +1012,15 @@ class AlphaBetaPlayer:
             effective=selective_mode and selective.supported(self.config),
             disabled_reason=None if selective.supported(self.config) else 'unsupported evaluator scales',
             depth=selected_depth, identity=self.config.identity())
+        result.certificate = dict(self._certificate_stats,
+            leaf_enabled=self.config.certificate_enabled,
+            cutoff_enabled=self.config.certificate_cutoff_enabled,
+            cutoff_min_depth=self.config.certificate_cutoff_min_depth,
+            guard_enabled=self.config.certificate_guard_enabled,
+            race_reduction_enabled=self.config.race_reduction_enabled,
+            plies=self.config.certificate_plies,
+            seconds=budget.module_seconds.get('certificate', 0.),
+            calls=budget.module_calls.get('certificate', 0))
         result.ordering = dict(mvv_lva_enabled=self.config.mvv_lva_enabled,
             mvv_lva_nodes=self._mvv_lva_nodes, mvv_lva_captures=self._mvv_lva_captures)
         result.root_moves = root_moves

@@ -29,6 +29,7 @@ class SearchConfig:
     lmr_min_depth: int = 3  # Shallower nodes keep full-depth children.
     lmr_min_index: int = 3  # Moves before this keep full depth.
     lmr_reduction: int = 1  # Plies removed from a reduced child.
+    race_reduction_enabled: bool = False  # Reduce provably quiet branches on principle.
     evaluator_version: str = 'intransitive-heuristics-v2'
     count_weight: float = 100.
     variable_material_enabled: bool = False  # Replace flat piece counts with BASE/REG values.
@@ -56,6 +57,9 @@ class SearchConfig:
     proof_nodes: int = 64
     certificate_enabled: bool = False  # Experimental forced corner-run certificate.
     certificate_plies: int = 20  # Longest run the certificate will certify.
+    certificate_cutoff_enabled: bool = False  # Experimental certificate as an interior bound.
+    certificate_cutoff_min_depth: int = 2  # Shallowest node that may pay for a probe.
+    certificate_guard_enabled: bool = False  # Certified nodes refuse NMP/futility/LMR.
     table_entries: int = 10000
     mvv_lva_enabled: bool = False
     pvs_enabled: bool = False
@@ -71,7 +75,8 @@ class SearchConfig:
             raise ValueError('Unsupported search version')
         for name, low, high in (('nmp_min_depth', 3, 32), ('nmp_reduction', 1, 8), ('futility_max_depth', 1, 2),
                                 ('quiescence_max_plies', 1, 32), ('lmr_min_depth', 2, 32),
-                                ('lmr_min_index', 1, 64), ('lmr_reduction', 1, 8)):
+                                ('lmr_min_index', 1, 64), ('lmr_reduction', 1, 8),
+                                ('certificate_cutoff_min_depth', 1, 32)):
             value = getattr(self, name)
             if type(value) is not int or not low <= value <= high:
                 raise ValueError(f'{name} must be an integer in {low}..{high}')
@@ -84,6 +89,10 @@ class SearchConfig:
             raise ValueError('futility_margin must be finite in 1..16')
         if self.variable_material_linear and not self.variable_material_enabled:
             raise ValueError('variable_material_linear requires variable_material_enabled')
+        # A flag that silently does nothing is worse than a rejected config:
+        # the race test only ever relaxes an LMR condition.
+        if self.race_reduction_enabled and not self.lmr_enabled:
+            raise ValueError('race_reduction_enabled requires lmr_enabled')
         if self.evaluator_version == 'intransitive-heuristics-v1':
             # Preserve old preset loading while recording the actual new semantics.
             object.__setattr__(self, 'evaluator_version', 'intransitive-heuristics-v2')
