@@ -18,6 +18,11 @@ leaving it to be discovered from an unchanged measurement; the
 [activation benchmark](../benchmarks/selective_activation/README.md) records the
 unchanged counts.
 
+Material value does not decide who wins an exchange under a cyclic capture rule,
+so these keys are weak on their own. `see_ordering_enabled` adds an exchange key
+that ranks above the victim/attacker keys; see [EXCHANGE.md](EXCHANGE.md). The two
+are independent switches and either can be used without the other.
+
 Immediate wins, the preferred TT/PV move, previous root scores and corner defence
 retain priority. Enhanced ordering also retains its existing safe-capture and
 escape groups. MVV-LVA orders captures within those tactical groups, ahead of

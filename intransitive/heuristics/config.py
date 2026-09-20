@@ -14,7 +14,8 @@ TECHNIQUE_COUNTERS = {'nmp': 'nmp_attempts', 'futility': 'futility_eligible',
 SELECTIVE_COUNTERS = ('nmp_attempts', 'nmp_cutoffs', 'nmp_skips', 'verification_searches',
                       'verification_failures', 'futility_eligible', 'futility_pruned',
                       'static_evaluations', 'null_nodes', 'verification_nodes',
-                      'quiescence_captures', 'lmr_reduced', 'lmr_researches')
+                      'quiescence_captures', 'quiescence_see_skips', 'quiescence_delta_skips',
+                      'lmr_reduced', 'lmr_researches')
 ORDERING_COUNTERS = ('mvv_lva_nodes', 'mvv_lva_captures')
 
 TIME_FIRST_LIMITS = {
@@ -43,12 +44,20 @@ class SearchConfig:
     futility_margin: float = 1.
     quiescence_enabled: bool = False  # Experimental capture-resolving leaf search.
     quiescence_max_plies: int = 8  # Ceiling on the capture chain examined.
+    see_ordering_enabled: bool = False  # Cyclic static exchange key in main-search ordering.
+    see_quiescence_ordering_enabled: bool = False  # Order quiescence captures by exchange swing.
+    see_quiescence_pruning_enabled: bool = False  # Skip quiescence captures the series says lose.
+    see_threshold: float = 0.  # Swing below this is skipped; zero keeps even trades.
+    compiled_see_enabled: bool = True  # False selects the Python exchange reference.
+    delta_pruning_enabled: bool = False  # Skip quiescence captures that cannot reach alpha.
+    delta_margin: float = 1.  # Multiplier on the evaluator-unit non-material allowance.
     lmr_enabled: bool = False  # Experimental late move reductions.
     lmr_min_depth: int = 3  # Shallower nodes keep full-depth children.
     lmr_min_index: int = 3  # Moves before this keep full depth.
     lmr_reduction: int = 1  # Plies removed from a reduced child.
     lmr_depth_divisor: int = 0  # Extra plies per this much remaining depth above the minimum.
     lmr_index_divisor: int = 0  # Extra plies per this many late moves past the minimum index.
+    race_reduction_enabled: bool = False  # Reduce provably quiet branches on principle.
     evaluator_version: str = 'intransitive-heuristics-v2'
     count_weight: float = 100.
     variable_material_enabled: bool = False  # Replace flat piece counts with BASE/REG values.
@@ -76,6 +85,9 @@ class SearchConfig:
     proof_nodes: int = 64
     certificate_enabled: bool = False  # Experimental forced corner-run certificate.
     certificate_plies: int = 20  # Longest run the certificate will certify.
+    certificate_cutoff_enabled: bool = False  # Experimental certificate as an interior bound.
+    certificate_cutoff_min_depth: int = 2  # Shallowest node that may pay for a probe.
+    certificate_guard_enabled: bool = False  # Certified nodes refuse NMP/futility/LMR.
     table_entries: int = 10000
     mvv_lva_enabled: bool = False
     pvs_enabled: bool = False
@@ -93,7 +105,8 @@ class SearchConfig:
                                 ('quiescence_max_plies', 1, 32), ('lmr_min_depth', 2, 32),
                                 ('lmr_min_index', 1, 64), ('lmr_reduction', 1, 8),
                                 ('nmp_depth_divisor', 0, 32), ('lmr_depth_divisor', 0, 32),
-                                ('lmr_index_divisor', 0, 64)):
+                                ('lmr_index_divisor', 0, 64),
+                                ('certificate_cutoff_min_depth', 1, 32)):
             value = getattr(self, name)
             if type(value) is not int or not low <= value <= high:
                 raise ValueError(f'{name} must be an integer in {low}..{high}')
@@ -107,8 +120,17 @@ class SearchConfig:
         if (type(self.futility_margin) not in (int, float) or not math.isfinite(self.futility_margin)
                 or not 1/16 <= self.futility_margin <= 16):
             raise ValueError('futility_margin must be finite in 1/16..16')
+        if (type(self.delta_margin) not in (int, float) or not math.isfinite(self.delta_margin)
+                or not 0 <= self.delta_margin <= 16):
+            raise ValueError('delta_margin must be finite in 0..16')
+        if type(self.see_threshold) not in (int, float) or not math.isfinite(self.see_threshold):
+            raise ValueError('see_threshold must be finite')
         if self.variable_material_linear and not self.variable_material_enabled:
             raise ValueError('variable_material_linear requires variable_material_enabled')
+        # A flag that silently does nothing is worse than a rejected config:
+        # the race test only ever relaxes an LMR condition.
+        if self.race_reduction_enabled and not self.lmr_enabled:
+            raise ValueError('race_reduction_enabled requires lmr_enabled')
         if self.evaluator_version == 'intransitive-heuristics-v1':
             # Preserve old preset loading while recording the actual new semantics.
             object.__setattr__(self, 'evaluator_version', 'intransitive-heuristics-v2')

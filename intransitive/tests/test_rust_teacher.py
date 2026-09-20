@@ -133,6 +133,49 @@ class NativeTeacherTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.rust.request('inspect 3 10 '+bad.tobytes().hex())
 
+    def test_the_certificate_decides_the_same_positions_in_both_backends(self):
+        """Mate scores are the parity test; heuristic leaves are not.
+
+        A certified run is an integer distance both implementations either find
+        or do not, and it does not depend on tree shape, ordering or the table.
+        """
+        from intransitive.IntransitiveLogicNumba import search_observation
+        from intransitive.heuristics.evaluation import MATE_THRESHOLD
+        from intransitive.tests.test_certificate_bound import sparse_positions
+        config = SearchConfig(max_depth=2, certificate_enabled=True,
+            certificate_cutoff_enabled=True, certificate_cutoff_min_depth=1,
+            proof_depth=0, proof_nodes=0, node_limit=1_000_000_000, time_limit=600.)
+        game = IntransitiveGame()
+        decided, totals = 0, {'probes': 0, 'gated': 0, 'certified': 0, 'cutoffs': 0}
+        for state in sparse_positions(50, 2027, game):
+            python = AlphaBetaPlayer(game, config).analyze(state)
+            native = self.rust.analyze(search_observation(state), depth=2, seconds=30.,
+                radius=4, weight=0., proof_depth=0, proof_nodes=0, table_entries=10000,
+                certificate_enabled=True, certificate_cutoff_enabled=True,
+                certificate_cutoff_min_depth=1)
+            for name in totals:
+                totals[name] += native['certificate'][name]
+            if max(abs(python.score), abs(native['score'])) <= MATE_THRESHOLD:
+                continue
+            decided += 1
+            with self.subTest(score=python.score):
+                self.assertEqual(python.score, native['score'])
+        self.assertGreater(decided, 0, 'the corpus never decided a position')
+        self.assertGreater(totals['cutoffs'], 0, 'the native cutoff never fired')
+        self.assertGreater(totals['gated'], 0, 'the native gate never refused a node')
+
+    def test_the_certificate_bound_group_travels_whole(self):
+        # An incomplete group would leave the binary using its own defaults for
+        # the rest, so the wire form rejects it instead.
+        state = self.rust.encode(IntransitiveGame().getInitBoard())
+        prefix = ('search 2 1000 1000000 4 0 0 0 10000 100 23.967050360966205 '
+                  '25.714516982666414 32.5643023919054 0 false 3 1 false 2 1 '
+                  'false false true')
+        self.rust.request(f'{prefix} true 2 false {state}')
+        for tail in ('true', 'true 2', 'true 2 false extra'):
+            with self.assertRaises(ValueError):
+                self.rust.request(f'{prefix} {tail} {state}')
+
 
 if __name__ == '__main__':
     unittest.main()

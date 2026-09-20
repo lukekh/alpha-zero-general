@@ -95,6 +95,53 @@ def no_terminal_win_in_horizon(pieces, turn, a1_defender, depth):
 
 
 @njit(cache=True)
+def no_capture_in_horizon(pieces, depth):
+    """Sufficient condition only: no capture can occur within `depth` plies.
+
+    Returns the answer and the number of piece pairs examined, so the caller
+    charges the work actually done rather than a constant.
+
+    One ply moves one piece one king step, so the Chebyshev distance between
+    any two pieces changes by at most one per ply, and pieces are never
+    created: every capture in the subtree is between two pieces standing here
+    now. A capture landing at ply `t` is a step onto the victim's square, so
+    the pair stood one square apart after `t-1` plies and therefore no more
+    than `t` squares apart now. Keeping every capturable pair strictly further
+    apart than `depth` rules out every capture inside the horizon, whoever
+    moves and wherever they move.
+
+    Only ordered predator/prey pairs count. A piece cannot take its own
+    colour, its own type, or the type that takes it, so those pairs may stand
+    adjacent without threatening anything.
+    """
+    squares = np.empty(81, dtype=np.int64)
+    codes = np.empty(81, dtype=np.int64)
+    count = 0
+    for y in range(9):
+        for x in range(9):
+            code = int(pieces[y, x])
+            if code:
+                squares[count] = y * 9 + x
+                codes[count] = code
+                count += 1
+    pairs = 0
+    for i in range(count):
+        first = int(codes[i])
+        for j in range(i + 1, count):
+            pairs += 1
+            second = int(codes[j])
+            if first * second > 0:
+                continue
+            if not (abs(second) == abs(first) % 3 + 1
+                    or abs(first) == abs(second) % 3 + 1):
+                continue
+            a, b = int(squares[i]), int(squares[j])
+            if max(abs(a // 9 - b // 9), abs(a % 9 - b % 9)) <= depth:
+                return False, pairs
+    return True, pairs
+
+
+@njit(cache=True)
 def winning_actions(pieces, actions, side, goal):
     """Exact immediate corner/stalemate wins, without allocating history states."""
     board = pieces.copy()
@@ -119,6 +166,7 @@ def warm_search_kernels():
     # Match the strided board plane layout used by full game states.
     board = np.zeros((9, 9, 84), dtype=np.int8)[:, :, 0]
     no_terminal_win_in_horizon(board, 0, 0, 2)
+    no_capture_in_horizon(board, 2)
     winning_actions(board, np.empty(0, dtype=np.int64), 0, 80)
     # Compile rule queries/transitions before the first move's deadline.
     from ..IntransitiveGame import IntransitiveGame

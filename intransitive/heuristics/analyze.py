@@ -106,6 +106,12 @@ def main():
                         help='Enable scout windows; without them neither technique above ever fires')
     parser.add_argument('--selective-evaluator', action=argparse.BooleanOptionalAction, default=None,
                         help='Opt in to the experimental margins, required for evolved evaluator weights')
+    parser.add_argument('--certificate', action=argparse.BooleanOptionalAction, default=None,
+                        help='Score leaves with the forced corner-run certificate')
+    parser.add_argument('--certificate-cutoff', action=argparse.BooleanOptionalAction, default=None,
+                        help='Use a certified run as an interior search bound')
+    parser.add_argument('--certificate-guard', action=argparse.BooleanOptionalAction, default=None,
+                        help='Exempt certified branches from pruning and reduction')
     args = parser.parse_args()
     try:
         text = sys.stdin.read() if args.record == '-' else Path(args.record).read_text()
@@ -113,7 +119,10 @@ def main():
         overrides = {k: v for k, v in dict(max_depth=args.depth, time_limit=args.time,
                                           node_limit=args.work, nmp_enabled=args.nmp,
                                           futility_enabled=args.futility, pvs_enabled=args.pvs,
-                                          selective_evaluator_enabled=args.selective_evaluator).items()
+                                          selective_evaluator_enabled=args.selective_evaluator,
+                                          certificate_enabled=args.certificate,
+                                          certificate_cutoff_enabled=args.certificate_cutoff,
+                                          certificate_guard_enabled=args.certificate_guard).items()
                      if v is not None}
         report = analyze_record(text, ply=args.ply, last_ai=args.last_ai,
                                 config=replace(config, **overrides), moves=args.move)

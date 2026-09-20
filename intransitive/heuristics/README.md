@@ -23,6 +23,12 @@ bitboards. See the [Python/Rust node-throughput measurements](../benchmarks/lega
 Compiled legacy move ordering is now the default; enhanced ordering remains opt-in.
 [Further search efficiencies and measurements](../benchmarks/search_efficiencies/README.md)
 cover reusable proof storage and removal of redundant search work.
+The forced corner-run certificate can also be used as an interior search bound,
+with a guard that exempts certified branches from pruning and admissible
+race/horizon reductions. See the [contract](CERTIFICATE_SEARCH.md) and its
+[bounded validation](../benchmarks/certificate/README.md); every flag is opt-in
+and defaults to false. That work also fixed a missing `pv` key which made
+`certificate_enabled` raise as soon as a leaf certified.
 The original design follows below.
 
 Tracked in [implementation issue #34](https://github.com/lukekh/alpha-zero-general/issues/34),
@@ -527,3 +533,11 @@ declared technique could and did execute. The
 the configuration in which they first run and attributes a node count to each.
 
 See [variable-value MVV-LVA ordering](MVV_LVA.md) and the [module-scale example](MODULE_SCALE.md).
+
+The cyclic capture rule has no least-valuable-attacker order, so the
+[static exchange evaluation](EXCHANGE.md) is a different algorithm rather than a
+port: the recapturing kind is forced by the cycle and the series terminates on the
+target's neighbourhood. It supplies an optional capture-ordering key and two
+optional quiescence filters, alongside quiescence delta pruning whose margin is
+stated in evaluator units. All of them default off; the
+[bounded measurements](../benchmarks/exchange/README.md) carry the adoption decision.

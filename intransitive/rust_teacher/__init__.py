@@ -66,36 +66,50 @@ class RustTeacher:
                 attack=25.714516982666414, defence=32.5643023919054, variable_material_enabled=False,
                 variable_material_linear=False,
                 mvv_lva_enabled=False, selective_evaluator_enabled=False, nmp_enabled=False, nmp_min_depth=3, nmp_reduction=1,
-                futility_enabled=False, futility_max_depth=2, futility_margin=1., certificate_enabled=False):
+                futility_enabled=False, futility_max_depth=2, futility_margin=1., certificate_enabled=False,
+                certificate_cutoff_enabled=False, certificate_cutoff_min_depth=2,
+                certificate_guard_enabled=False):
         if not np.isfinite(seconds) or seconds < 0:
             raise ValueError('seconds must be finite and nonnegative')
         from ..heuristics.config import SearchConfig
         settings = dict(nmp_enabled=nmp_enabled, nmp_min_depth=nmp_min_depth,
             nmp_reduction=nmp_reduction, futility_enabled=futility_enabled,
             futility_max_depth=futility_max_depth, futility_margin=futility_margin)
+        runs = dict(certificate_enabled=certificate_enabled,
+            certificate_cutoff_enabled=certificate_cutoff_enabled,
+            certificate_cutoff_min_depth=certificate_cutoff_min_depth,
+            certificate_guard_enabled=certificate_guard_enabled)
         # Validate the request against the scales it will actually search with,
         # so the selective interlock decides the same way in both backends.
-        SearchConfig(mvv_lva_enabled=mvv_lva_enabled, selective_evaluator_enabled=selective_evaluator_enabled,
+        SearchConfig(mvv_lva_enabled=mvv_lva_enabled,
+                     selective_evaluator_enabled=selective_evaluator_enabled,
                      count_weight=material, advantage_weight=advantage,
                      attack_weight=attack, attack_enabled=bool(attack),
                      defence_weight=defence, defence_enabled=bool(defence),
                      variable_material_enabled=variable_material_enabled,
                      variable_material_linear=variable_material_linear,
                      pressure_enabled=bool(weight), pressure_weight=weight or 1.,
-                     pressure_radius=radius, **settings)
+                     pressure_radius=radius, **runs, **settings)
         mode = self.material_mode(variable_material_enabled, variable_material_linear)
         options = f'{str(nmp_enabled).lower()} {nmp_min_depth} {nmp_reduction} ' + \
                   f'{str(futility_enabled).lower()} {futility_max_depth} {futility_margin}'
+        # The certificate-as-a-bound group travels whole, so an old binary
+        # rejects the request instead of running with its own defaults.
+        bound = certificate_cutoff_enabled or certificate_guard_enabled
         # Each optional group is positional, so a later one implies the earlier.
-        if selective_evaluator_enabled or mvv_lva_enabled or certificate_enabled:
+        if selective_evaluator_enabled or mvv_lva_enabled or certificate_enabled or bound:
             mode = self.material_mode(variable_material_enabled, variable_material_linear) or ' 0'
             options += ' ' + str(selective_evaluator_enabled).lower()
-            if mvv_lva_enabled or certificate_enabled:
+            if mvv_lva_enabled or certificate_enabled or bound:
                 options += ' ' + str(mvv_lva_enabled).lower()
-            if certificate_enabled:
-                options += ' true'
+            if certificate_enabled or bound:
+                options += ' ' + str(certificate_enabled).lower()
+            if bound:
+                options += (f' {str(certificate_cutoff_enabled).lower()}'
+                            f' {certificate_cutoff_min_depth}'
+                            f' {str(certificate_guard_enabled).lower()}')
         # Preserve the existing wire forms when all selective options are defaults.
-        options = (' ' + options) if selective_evaluator_enabled or mvv_lva_enabled or certificate_enabled or settings != dict(nmp_enabled=False, nmp_min_depth=3,
+        options = (' ' + options) if selective_evaluator_enabled or mvv_lva_enabled or certificate_enabled or bound or settings != dict(nmp_enabled=False, nmp_min_depth=3,
             nmp_reduction=1, futility_enabled=False, futility_max_depth=2, futility_margin=1.) else ''
         command = 'search_reuse' if reuse else 'search'
         result = self.request(f'{command} {depth} {int(seconds*1000)} {node_limit} {radius} {weight} '
@@ -106,7 +120,7 @@ class RustTeacher:
             material=material, advantage=advantage, attack=attack, defence=defence,
             variable_material_enabled=variable_material_enabled,
             mvv_lva_enabled=mvv_lva_enabled, selective_evaluator_enabled=selective_evaluator_enabled,
-            certificate_enabled=certificate_enabled, **settings)
+            **runs, **settings)
         if 'selective' in result:
             result['selective']['depth'] = result['completed_depth']
         result['score_bound'] = ('selective_exact' if nmp_enabled or futility_enabled else 'exact') if result['score'] is not None else None
