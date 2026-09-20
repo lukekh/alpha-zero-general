@@ -87,6 +87,8 @@ def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
              timeout_grace=5., completion_required=.8, simulations=32, cpuct=1., value_scale=400.,
              quiescence_enabled=False, quiescence_max_plies=8, lmr_enabled=False,
              lmr_min_depth=3, lmr_min_index=3, lmr_reduction=1, certificate_enabled=False,
+             certificate_cutoff_enabled=False, certificate_cutoff_min_depth=2,
+             certificate_guard_enabled=False, race_reduction_enabled=False,
              ordering_enabled=False, compiled_ordering_enabled=True,
              adjudicate_unfinished=False):
     if mode not in MODES:
@@ -101,6 +103,10 @@ def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
                           lmr_enabled=lmr_enabled, lmr_min_depth=lmr_min_depth,
                           lmr_min_index=lmr_min_index, lmr_reduction=lmr_reduction,
                           certificate_enabled=certificate_enabled,
+                          certificate_cutoff_enabled=certificate_cutoff_enabled,
+                          certificate_cutoff_min_depth=certificate_cutoff_min_depth,
+                          certificate_guard_enabled=certificate_guard_enabled,
+                          race_reduction_enabled=race_reduction_enabled,
                           ordering_enabled=ordering_enabled,
                           compiled_ordering_enabled=compiled_ordering_enabled)
     if search.max_depth < 1 or search.time_limit <= 0 or search.node_limit < 1:

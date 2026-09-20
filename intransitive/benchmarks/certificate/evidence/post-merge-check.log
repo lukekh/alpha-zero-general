@@ -1,0 +1,8 @@
+certified  d=5 off recorded  71,439 nodes now  72,944 CAPPED, not reproducible
+certified  d=5 on  recorded      64 nodes now      64 MATCH
+sparse     d=3 off recorded  18,777 nodes now  18,777 MATCH
+sparse     d=3 on  recorded  18,777 nodes now  18,777 MATCH
+sparse     d=6 off recorded 598,448 nodes now 598,448 MATCH
+sparse     d=6 on  recorded 505,892 nodes now 505,892 MATCH
+opening    d=3 off recorded   3,828 nodes now   3,828 MATCH
+opening    d=3 on  recorded   3,828 nodes now   3,828 MATCH

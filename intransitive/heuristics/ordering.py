@@ -21,12 +21,15 @@ def exposed(pieces, square, code, removed):
 
 
 @njit(cache=True)
-def ordered_actions(pieces, actions, side, goal, preferred, prior, killers, history, enhanced, capture_values=None):
-    """Exact old rank when enhanced=False and capture_values=None; otherwise add safe capture/escape,
-    killer and history priorities. The final action key makes ties deterministic.
+def ordered_actions(pieces, actions, side, goal, preferred, prior, killers, history, enhanced,
+                    capture_values=None, see_scores=None):
+    """Exact old rank when enhanced=False and both extra key arrays are None; otherwise add
+    safe capture/escape, exchange, killer and history priorities. The exchange key outranks
+    the MVV-LVA keys. The final action key makes ties deterministic.
     """
     wins = winning_actions(pieces,actions,side,goal)
-    extra = 2 if capture_values is not None else 0
+    swing = 1 if see_scores is not None else 0
+    extra = swing + (2 if capture_values is not None else 0)
     ranks = np.zeros((len(actions),11+extra),dtype=np.float64)
     own_goal = 80-goal
     for i in range(len(actions)):
@@ -45,10 +48,12 @@ def ordered_actions(pieces, actions, side, goal, preferred, prior, killers, hist
         ranks[i,6] = occupant != 0
         ranks[i,9+extra] = -max(abs(x-goal%9),abs(y-goal//9))
         ranks[i,10+extra] = -action
+        if see_scores is not None:
+            ranks[i,7] = see_scores[i]
         if capture_values is not None and occupant != 0:
             mover = int(pieces[square//9,square%9])
-            ranks[i,7] = capture_values[1,abs(occupant)-1]
-            ranks[i,8] = -capture_values[0,abs(mover)-1]
+            ranks[i,7+swing] = capture_values[1,abs(occupant)-1]
+            ranks[i,8+swing] = -capture_values[0,abs(mover)-1]
         if enhanced:
             mover = int(pieces[square//9,square%9])
             unsafe = exposed(pieces,destination,mover,destination)
@@ -89,5 +94,7 @@ def material_order_values(counts, side, variable):
 def warm_ordering():
     for board in (np.zeros((9,9),dtype=np.int8),np.zeros((9,9,84),dtype=np.int8)[:,:,0]):
         for values in (None, np.ones((2,3), dtype=np.float64)):
-            ordered_actions(board,np.empty(0,dtype=np.int64),0,80,-1,
-                            np.full(648,-np.inf),np.full(2,-1,dtype=np.int64),np.zeros(648,dtype=np.int64),False,values)
+            for swings in (None, np.zeros(0, dtype=np.float64)):
+                ordered_actions(board,np.empty(0,dtype=np.int64),0,80,-1,
+                                np.full(648,-np.inf),np.full(2,-1,dtype=np.int64),
+                                np.zeros(648,dtype=np.int64),False,values,swings)

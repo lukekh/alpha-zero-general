@@ -79,7 +79,12 @@ technique that has not been measured.
 The first three reuse the issue #60 eligibility block unchanged — non-root,
 non-PV on entry, finite window inside the ±10,000 clipping range, a supported
 evaluator scale and `selective.guarded()` — so they inherit every Intransitive
-exclusion listed above rather than restating it. A node eligible only for
+exclusion listed above rather than restating it. They are covered by the
+certificate guard on the same terms as NMP and futility: a node with a
+certified forced run is exempt from all five, and enabling any of them is
+enough to make the guard probe for one. Mate-distance pruning is outside that
+too, and runs *before* the certificate probe, because narrowing the window
+costs nothing while the probe costs board passes. A node eligible only for
 move-count pruning pays for no static evaluation, because move-count pruning
 asks the evaluator nothing. Counters are `*_eligible` (the node or child
 reached the test) and `*_applied` / `*_pruned` (the test fired), plus
@@ -186,7 +191,12 @@ safety. The original margin remains unchanged when this option is false.
 
 A selective mate-range score no longer ends iterative deepening early: the
 requested depth must finish, since such a score is not a mate certificate.
-Unpruned proven results can still finish early. Tournament depth validation
+Unpruned proven results can still finish early. The opt-in
+[corner-run certificate bound](CERTIFICATE_SEARCH.md) is one of those: it is a
+proof, so it does not make a search selective, while the race reduction it ships
+alongside does and joins this list. That document also describes the guard which
+exempts a certified branch from both methods above, replacing the board guard's
+`max(3, ceil(depth/2))` corner proxy with the certificate itself. Tournament depth validation
 continues to exclude incomplete requested selective searches.
 
 The combined native wire form appends four coefficients, a `0/1` variable-mode
@@ -268,6 +278,11 @@ identity; it must not call depth-N selective choices exhaustive optimal labels.
 Rollback: set both flags false/restart the opponent, or load any old preset.
 Config changes invalidate cached search results. No rules, action encoding,
 PGN move notation or training-record action format changes.
+
+Quiescence's own selective filters — the cyclic exchange evaluation and delta
+pruning — are specified separately in [EXCHANGE.md](EXCHANGE.md). They share this
+document's rules: opt-in, off by default, part of the search identity, and never
+a certificate.
 
 ## Evidence and references
 

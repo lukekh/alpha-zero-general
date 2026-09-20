@@ -110,6 +110,12 @@ def main():
                         help='Enable experimental move-count pruning')
     parser.add_argument('--mate-distance', action=argparse.BooleanOptionalAction, default=None,
                         help='Enable value-preserving mate-distance pruning')
+    parser.add_argument('--certificate', action=argparse.BooleanOptionalAction, default=None,
+                        help='Score leaves with the forced corner-run certificate')
+    parser.add_argument('--certificate-cutoff', action=argparse.BooleanOptionalAction, default=None,
+                        help='Use a certified run as an interior search bound')
+    parser.add_argument('--certificate-guard', action=argparse.BooleanOptionalAction, default=None,
+                        help='Exempt certified branches from pruning and reduction')
     args = parser.parse_args()
     try:
         text = sys.stdin.read() if args.record == '-' else Path(args.record).read_text()
@@ -120,7 +126,10 @@ def main():
                                           razoring_enabled=args.razoring,
                                           reverse_futility_enabled=args.reverse_futility,
                                           move_count_pruning_enabled=args.move_count,
-                                          mate_distance_pruning_enabled=args.mate_distance).items() if v is not None}
+                                          mate_distance_pruning_enabled=args.mate_distance,
+                                          certificate_enabled=args.certificate,
+                                          certificate_cutoff_enabled=args.certificate_cutoff,
+                                          certificate_guard_enabled=args.certificate_guard).items() if v is not None}
         report = analyze_record(text, ply=args.ply, last_ai=args.last_ai,
                                 config=replace(config, **overrides), moves=args.move)
     except (ValueError, TypeError, OSError) as exc:

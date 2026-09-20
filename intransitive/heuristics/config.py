@@ -25,6 +25,13 @@ class SearchConfig:
     futility_margin: float = 1.
     quiescence_enabled: bool = False  # Experimental capture-resolving leaf search.
     quiescence_max_plies: int = 8  # Ceiling on the capture chain examined.
+    see_ordering_enabled: bool = False  # Cyclic static exchange key in main-search ordering.
+    see_quiescence_ordering_enabled: bool = False  # Order quiescence captures by exchange swing.
+    see_quiescence_pruning_enabled: bool = False  # Skip quiescence captures the series says lose.
+    see_threshold: float = 0.  # Swing below this is skipped; zero keeps even trades.
+    compiled_see_enabled: bool = True  # False selects the Python exchange reference.
+    delta_pruning_enabled: bool = False  # Skip quiescence captures that cannot reach alpha.
+    delta_margin: float = 1.  # Multiplier on the evaluator-unit non-material allowance.
     lmr_enabled: bool = False  # Experimental late move reductions.
     lmr_min_depth: int = 3  # Shallower nodes keep full-depth children.
     lmr_min_index: int = 3  # Moves before this keep full depth.
@@ -48,6 +55,7 @@ class SearchConfig:
     move_count_base: int = 12  # Children always searched, before depth squared.
     # Value preserving, so it is not part of the selective (heuristic) family.
     mate_distance_pruning_enabled: bool = False
+    race_reduction_enabled: bool = False  # Reduce provably quiet branches on principle.
     evaluator_version: str = 'intransitive-heuristics-v2'
     count_weight: float = 100.
     variable_material_enabled: bool = False  # Replace flat piece counts with BASE/REG values.
@@ -75,6 +83,9 @@ class SearchConfig:
     proof_nodes: int = 64
     certificate_enabled: bool = False  # Experimental forced corner-run certificate.
     certificate_plies: int = 20  # Longest run the certificate will certify.
+    certificate_cutoff_enabled: bool = False  # Experimental certificate as an interior bound.
+    certificate_cutoff_min_depth: int = 2  # Shallowest node that may pay for a probe.
+    certificate_guard_enabled: bool = False  # Certified nodes refuse NMP/futility/LMR.
     table_entries: int = 10000
     mvv_lva_enabled: bool = False
     pvs_enabled: bool = False
@@ -92,7 +103,8 @@ class SearchConfig:
                                 ('quiescence_max_plies', 1, 32), ('lmr_min_depth', 2, 32),
                                 ('lmr_min_index', 1, 64), ('lmr_reduction', 1, 8),
                                 ('razoring_max_depth', 1, 4), ('reverse_futility_max_depth', 1, 6),
-                                ('move_count_max_depth', 1, 8), ('move_count_base', 1, 64)):
+                                ('move_count_max_depth', 1, 8), ('move_count_base', 1, 64),
+                                ('certificate_cutoff_min_depth', 1, 32)):
             value = getattr(self, name)
             if type(value) is not int or not low <= value <= high:
                 raise ValueError(f'{name} must be an integer in {low}..{high}')
@@ -116,8 +128,17 @@ class SearchConfig:
             # return the bare static score, which is a different, untested and
             # far more aggressive technique.
             raise ValueError('razoring_enabled requires quiescence_enabled')
+        if (type(self.delta_margin) not in (int, float) or not math.isfinite(self.delta_margin)
+                or not 0 <= self.delta_margin <= 16):
+            raise ValueError('delta_margin must be finite in 0..16')
+        if type(self.see_threshold) not in (int, float) or not math.isfinite(self.see_threshold):
+            raise ValueError('see_threshold must be finite')
         if self.variable_material_linear and not self.variable_material_enabled:
             raise ValueError('variable_material_linear requires variable_material_enabled')
+        # A flag that silently does nothing is worse than a rejected config:
+        # the race test only ever relaxes an LMR condition.
+        if self.race_reduction_enabled and not self.lmr_enabled:
+            raise ValueError('race_reduction_enabled requires lmr_enabled')
         if self.evaluator_version == 'intransitive-heuristics-v1':
             # Preserve old preset loading while recording the actual new semantics.
             object.__setattr__(self, 'evaluator_version', 'intransitive-heuristics-v2')
