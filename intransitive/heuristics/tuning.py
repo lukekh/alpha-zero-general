@@ -140,6 +140,12 @@ class Genome:
             raise ValueError('Rust requires depth 1..32, proof_depth <= 2 and proof_nodes <= 64')
         if config.table_entries > 1_000_000:
             raise ValueError('Rust requires table_entries <= 1000000')
+        if (config.razoring_enabled or config.reverse_futility_enabled
+                or config.move_count_pruning_enabled or config.mate_distance_pruning_enabled):
+            # The issue #68 shallow-depth family is Python-only. Refuse the
+            # request instead of returning a native search that ignores it.
+            raise ValueError('Rust does not implement razoring, reverse futility, '
+                             'move-count or mate-distance pruning')
         # The wire protocol uses unsigned 64-bit integers and millisecond time.
         if config.node_limit >= 2**64 or config.time_limit >= 2**64 / 1000:
             raise ValueError('Native time/work limits exceed the unsigned 64-bit protocol')

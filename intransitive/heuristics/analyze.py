@@ -102,6 +102,14 @@ def main():
                         help='Enable experimental guarded null move pruning')
     parser.add_argument('--futility', action=argparse.BooleanOptionalAction, default=None,
                         help='Enable experimental forward futility pruning')
+    parser.add_argument('--razoring', action=argparse.BooleanOptionalAction, default=None,
+                        help='Enable experimental razoring (needs quiescence)')
+    parser.add_argument('--reverse-futility', action=argparse.BooleanOptionalAction, default=None,
+                        help='Enable experimental reverse futility pruning')
+    parser.add_argument('--move-count', action=argparse.BooleanOptionalAction, default=None,
+                        help='Enable experimental move-count pruning')
+    parser.add_argument('--mate-distance', action=argparse.BooleanOptionalAction, default=None,
+                        help='Enable value-preserving mate-distance pruning')
     parser.add_argument('--certificate', action=argparse.BooleanOptionalAction, default=None,
                         help='Score leaves with the forced corner-run certificate')
     parser.add_argument('--certificate-cutoff', action=argparse.BooleanOptionalAction, default=None,
@@ -115,6 +123,10 @@ def main():
         overrides = {k: v for k, v in dict(max_depth=args.depth, time_limit=args.time,
                                           node_limit=args.work, nmp_enabled=args.nmp,
                                           futility_enabled=args.futility,
+                                          razoring_enabled=args.razoring,
+                                          reverse_futility_enabled=args.reverse_futility,
+                                          move_count_pruning_enabled=args.move_count,
+                                          mate_distance_pruning_enabled=args.mate_distance,
                                           certificate_enabled=args.certificate,
                                           certificate_cutoff_enabled=args.certificate_cutoff,
                                           certificate_guard_enabled=args.certificate_guard).items() if v is not None}

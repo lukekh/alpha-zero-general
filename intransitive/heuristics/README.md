@@ -526,6 +526,11 @@ change the active training run, official rules or modelling draw limits.
 Experimental [guarded null move and forward futility pruning](SELECTIVE_SEARCH.md)
 are independently configurable in Python/native search and default off. Their
 completed depths are selective; they are not exhaustive labels or certificates.
+Issue #68 adds razoring, reverse futility and move-count pruning on the same
+guard (Python only, also off by default), plus value-preserving mate-distance
+pruning, which keeps ordinary bounds and certificates. The
+[bounded validation](../benchmarks/shallow_pruning/README.md) recommends
+adopting none of the three heuristic members as defaults.
 
 See [variable-value MVV-LVA ordering](MVV_LVA.md) and the [module-scale example](MODULE_SCALE.md).
 

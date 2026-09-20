@@ -129,6 +129,7 @@ class MaterialTests(unittest.TestCase):
             'variable_material_linear': dict(variable_material_enabled=True,
                                              variable_material_linear=True),
             'race_reduction_enabled': dict(lmr_enabled=True, race_reduction_enabled=True),
+            'razoring_enabled': dict(quiescence_enabled=True, razoring_enabled=True),
         }
         for name in self.config.to_dict():
             value = getattr(self.config, name)
