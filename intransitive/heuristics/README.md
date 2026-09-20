@@ -522,3 +522,9 @@ are independently configurable in Python/native search and default off. Their
 completed depths are selective; they are not exhaustive labels or certificates.
 
 See [variable-value MVV-LVA ordering](MVV_LVA.md) and the [module-scale example](MODULE_SCALE.md).
+
+Four further opt-in ordering mechanisms — [counter moves, continuation history,
+history aging and internal iterative deepening/reduction](MOVE_ORDERING.md) —
+default off and are measured in the
+[ordering benchmark](../benchmarks/ordering/README.md). Only the reduction mode
+is selective; the rest leave a completed unpruned score unchanged.

@@ -88,7 +88,9 @@ def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
              quiescence_enabled=False, quiescence_max_plies=8, lmr_enabled=False,
              lmr_min_depth=3, lmr_min_index=3, lmr_reduction=1, certificate_enabled=False,
              ordering_enabled=False, compiled_ordering_enabled=True,
-             adjudicate_unfinished=False):
+             counter_move_enabled=False, continuation_enabled=False, continuation_plies=1,
+             history_aging_enabled=False, iir_enabled=False, iir_mode='reduce',
+             iir_min_depth=4, iir_reduction=1, adjudicate_unfinished=False):
     if mode not in MODES:
         raise ValueError('Expected depth or wall protocol')
     # Selective settings are frozen run settings shared by every candidate, not
@@ -102,7 +104,13 @@ def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
                           lmr_min_index=lmr_min_index, lmr_reduction=lmr_reduction,
                           certificate_enabled=certificate_enabled,
                           ordering_enabled=ordering_enabled,
-                          compiled_ordering_enabled=compiled_ordering_enabled)
+                          compiled_ordering_enabled=compiled_ordering_enabled,
+                          counter_move_enabled=counter_move_enabled,
+                          continuation_enabled=continuation_enabled,
+                          continuation_plies=continuation_plies,
+                          history_aging_enabled=history_aging_enabled,
+                          iir_enabled=iir_enabled, iir_mode=iir_mode,
+                          iir_min_depth=iir_min_depth, iir_reduction=iir_reduction)
     if search.max_depth < 1 or search.time_limit <= 0 or search.node_limit < 1:
         raise ValueError('Search limits must be positive')
     if type(max_plies) is not int or max_plies < 1:
