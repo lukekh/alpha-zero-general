@@ -169,6 +169,11 @@ Rollback: set both flags false/restart the opponent, or load any old preset.
 Config changes invalidate cached search results. No rules, action encoding,
 PGN move notation or training-record action format changes.
 
+Quiescence's own selective filters — the cyclic exchange evaluation and delta
+pruning — are specified separately in [EXCHANGE.md](EXCHANGE.md). They share this
+document's rules: opt-in, off by default, part of the search identity, and never
+a certificate.
+
 ## Evidence and references
 
 See [bounded validation](../benchmarks/selective/README.md), including known
