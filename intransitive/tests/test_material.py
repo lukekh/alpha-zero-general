@@ -115,10 +115,11 @@ class MaterialTests(unittest.TestCase):
         `value + 1` is not generally a configuration: `futility_max_depth` and
         `pressure_radius` are bounded enums, `nmp_reduction` and `lmr_reduction`
         are capped by a sibling depth, `variable_material_linear` requires
-        `variable_material_enabled`, and the two version strings have no
-        neighbouring accepted value at all. The two enums move within their own
-        range; the three constrained fields move their sibling with them. Every
-        other field moves alone.
+        `variable_material_enabled`, `race_reduction_enabled` requires
+        `lmr_enabled`, and the two version strings have no neighbouring accepted
+        value at all. The two enums move within their own range; the four
+        constrained fields move their sibling with them. Every other field
+        moves alone.
         """
         special = {
             'futility_max_depth': dict(futility_max_depth=1),
@@ -127,6 +128,7 @@ class MaterialTests(unittest.TestCase):
             'pressure_radius': dict(pressure_radius=3),
             'variable_material_linear': dict(variable_material_enabled=True,
                                              variable_material_linear=True),
+            'race_reduction_enabled': dict(lmr_enabled=True, race_reduction_enabled=True),
         }
         for name in self.config.to_dict():
             value = getattr(self.config, name)
