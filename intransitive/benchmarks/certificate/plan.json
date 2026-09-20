@@ -53,5 +53,16 @@
     "unfinished": "Excluded from the win-rate denominator; never an official draw.",
     "insufficient_evidence": "Keep every new option disabled."
   },
-  "method": "Every option is measured against the same search with that option removed and nothing else changed. There is no cross-option comparison: the arms of different pairs do not share an engine."
+  "method": "Every option is measured against the same search with that option removed and nothing else changed. There is no cross-option comparison: the arms of different pairs do not share an engine.",
+  "extended": {
+    "why": "The predeclared run left the oracle with three checks and 24 of 32 paired games unfinished, so neither section could answer its question. These overrides add power to the same comparison; they do not change what is compared, and the predeclared run is published alongside rather than replaced.",
+    "declared_after": "the predeclared run, before the extended run",
+    "oracle": {
+      "maximum_verified_plies": 5,
+      "sparse_positions": 700
+    },
+    "paired_seconds_per_move": 0.05,
+    "paired_plies_cap": 220,
+    "paired_starts": 24
+  }
 }

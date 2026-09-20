@@ -15,7 +15,7 @@ import numpy as np
 from intransitive.IntransitiveConstants import NO_CAPTURE_LIMIT
 from intransitive.IntransitiveGame import IntransitiveGame
 from intransitive.heuristics import AlphaBetaPlayer
-from intransitive.heuristics.budget import Budget
+from intransitive.heuristics.budget import Budget, BudgetExpired
 from intransitive.heuristics.clear_run import NO_RUN, NO_SIDE, certify, race_gate
 from intransitive.heuristics.config import SearchConfig
 from intransitive.heuristics.evaluation import MATE, MATE_THRESHOLD
@@ -166,17 +166,20 @@ class GateTests(unittest.TestCase):
         self.assertEqual(int(race_gate(state[:, :, 0], 0, 0, 4, 20)), 0)
 
     def test_every_probe_is_charged(self):
-        state = position({'G7': 3, 'A5': -1})
         config = SearchConfig(certificate_enabled=True, **ISOLATED)
-        refused = position({'E5': 1, 'E6': -1})
-        for board, least in ((refused, 81), (state, 81 + 81 * 2)):
-            budget = unlimited()
-            certificate(board, config, budget)
-            self.assertGreaterEqual(budget.work, least)
+        # A gate refusal costs one board pass; the full argument costs a pass
+        # per piece on top of it.
+        refused = position({'E5': 1, 'E6': -1, 'I9': -1})
+        budget = unlimited()
+        self.assertIsNone(certificate(refused, config, budget))
+        self.assertEqual(budget.work, 81)
+        state = position({'G7': 3, 'A5': -1})
+        budget = unlimited()
+        self.assertIsNotNone(certificate(state, config, budget))
+        self.assertEqual(budget.work, 81 + 81 * 2)
         # A charge that cannot be paid stops the search rather than running free.
-        budget = Budget(40, 3600)
-        with self.assertRaises(Exception):
-            certificate(state, config, budget)
+        with self.assertRaises(BudgetExpired):
+            certificate(state, config, Budget(40, 3600))
 
 
 class CutoffTests(unittest.TestCase):
@@ -263,11 +266,11 @@ class CutoffTests(unittest.TestCase):
             plies = int(MATE - abs(result.score))
             if plies > 4:
                 continue  # full width past four plies is not worth the minutes
-            checked += 1
             reference = AlphaBetaPlayer(self.game, replace(
                 self.config, certificate_cutoff_enabled=False, max_depth=plies)).analyze(state)
             if reference.stopped or reference.score is None:
                 continue
+            checked += 1
             with self.subTest(plies=plies, score=result.score):
                 signed = reference.score * (1. if result.score > 0 else -1.)
                 self.assertGreater(signed, MATE_THRESHOLD,

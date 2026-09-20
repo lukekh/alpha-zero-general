@@ -289,9 +289,19 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--sections', nargs='+', choices=SECTIONS, default=list(SECTIONS))
+    parser.add_argument('--extended', action='store_true',
+                        help="Apply the plan's `extended` overrides, which add power to the "
+                             'oracle and paired sections without changing what they compare')
     parser.add_argument('--archived-source', help='Exact git archive revision, when outside a checkout')
     args = parser.parse_args()
     plan = json.loads((HERE / 'plan.json').read_text())
+    if args.extended:
+        extended = plan['extended']
+        plan['oracle'] = dict(plan['oracle'], **extended['oracle'])
+        plan['probe_corpus'] = dict(plan['probe_corpus'],
+                                    sparse_positions=extended['oracle']['sparse_positions'])
+        for name in ('paired_seconds_per_move', 'paired_plies_cap', 'paired_starts'):
+            plan[name] = extended[name]
     game = IntransitiveGame()
     report = dict(
         plan=plan, backend='python', platform=platform.platform(),
@@ -300,7 +310,7 @@ def main():
         source_diff_sha256=None if args.archived_source else hashlib.sha256(
             subprocess.check_output(['git', 'diff', 'HEAD'])).hexdigest(),
         engine=ENGINE, pairs={k: dict(on=v[0], off=v[1]) for k, v in PAIRS.items()},
-        sections=args.sections)
+        sections=args.sections, extended=args.extended, effective_plan=plan)
     start = perf_counter()
     warm = dict(ENGINE)
     for candidate, _ in PAIRS.values():

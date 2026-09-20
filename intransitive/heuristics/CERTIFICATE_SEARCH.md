@@ -9,6 +9,14 @@ to false.** Nothing here changes the rules, the evaluator's weights, the genome
 contract or any recorded outcome, and the bounded proof search remains
 unpruned and authoritative.
 
+The [bounded validation](../benchmarks/certificate/README.md) recommends
+leaving all three new flags off: the cutoff pays only in endgames with a runner
+in range, the race reduction fires and changes nothing, and the guard is
+measurably weaker at equal time because refusing to prune costs more than the
+branches it protects are worth at that time control. This document describes
+what the options do and why they are sound; it is not a recommendation to use
+them.
+
 The [certificate itself](clear_run.py) is unchanged. Everything below is about
 when it is asked, what its answer is allowed to mean inside the search, and
 what the search may do with it.
@@ -144,7 +152,10 @@ The guard and the cutoff are independent. With the cutoff on, a certified node
 returns before the move loop, so the guard's visible effect is the nodes where
 the cutoff is not enabled or not yet deep enough to probe.
 
-Measurement narrowed where the reduction half of the guard actually bites.
+Measured, the guard costs about 1% of nodes at fixed depth and loses 16–31 in
+equal-time paired games. Refusing to prune is exactly what it is for, and at a
+short time control that is a losing trade. Measurement also narrowed where the
+reduction half of the guard actually bites.
 With `certificate_enabled` on, the children of a certified node mostly come
 back as mate scores, and LMR was already refusing them through its existing
 `abs(best) < MATE_THRESHOLD` condition. The guard earns its place in the
@@ -182,10 +193,16 @@ the justification: `lmr_min_index` is a statistical guess that late moves
 matter less, and here it is replaced by an argument about what is reachable.
 The first move of a node is still searched in full.
 
+Measured, it fires — 221 quiet nodes and 210 extra reductions across the
+fixed-depth rows — and moves neither nodes nor work nor the paired result. The
+argument behind it holds; the reduction it licenses is not worth having at
+these depths.
+
 The test is only consulted where LMR is consulted, at `depth >= lmr_min_depth`
 and `ply > 0`, and it only ever grants a reduction the index rule would have
-refused. In practice it therefore does nothing below a five-ply search: at
-shallower targets the only nodes deep enough cut off at their first move.
+refused. It therefore does very little below a five-ply search: at shallower
+targets the only nodes deep enough are one ply from the root, and those
+usually cut off at their first move before a second child is considered.
 
 ## Work accounting
 
@@ -209,7 +226,12 @@ following `features.interception_plies`.
 
 `certificate_cutoff_min_depth` (integer 1..32, default 2) is the second cost
 control: it stops the tree paying for probes at nodes whose subtrees are too
-small to be worth cutting. The sweep behind the default is in the validation.
+small to be worth cutting. The sweep says the gate has already made the probe
+cheap enough that raising this threshold mostly costs cutoffs — on the one
+stage whose rows complete inside the cap, node and work reduction shrink
+monotonically from `1` to `4` and vanish once no cutoff fires. The default
+stays at 2, where it was fixed before measurement, because one stage is thin
+evidence for a default; endgame work should set it to 1.
 
 ## Configuration, diagnostics and the native wire form
 
@@ -218,7 +240,11 @@ small to be worth cutting. The sweep behind the default is in the validation.
 `to_dict()`/`identity()`, so they scope the transposition table, invalidate
 reused search state and appear in checkpoint and tournament manifests.
 `search_version` stays `intransitive-selective-v1` and every existing JSON
-configuration still loads with the new flags off.
+configuration still loads with the new flags off. `tournament.spec.protocol`
+accepts all four as frozen run settings, so #54's harness can carry them; note
+that its candidates differ by genome rather than by search flags, so an A/B of
+a search option is measured with the paired protocol #60 established, not by
+entering two candidates.
 
 `SearchResult.certificate` reports `probes`, `gated`, `certified`, `cutoffs`,
 `guards`, `unreduced`, `race_probes`, `race_quiet` and `race_reductions`, plus
