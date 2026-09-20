@@ -15,7 +15,7 @@ SELECTIVE_COUNTERS = ('nmp_attempts', 'nmp_cutoffs', 'nmp_skips', 'verification_
                       'verification_failures', 'futility_eligible', 'futility_pruned',
                       'static_evaluations', 'null_nodes', 'verification_nodes',
                       'quiescence_captures', 'quiescence_see_skips', 'quiescence_delta_skips',
-                      'lmr_reduced', 'lmr_researches')
+                      'quiescence_proof_nodes', 'lmr_reduced', 'lmr_researches')
 ORDERING_COUNTERS = ('mvv_lva_nodes', 'mvv_lva_captures')
 
 TIME_FIRST_LIMITS = {
@@ -39,6 +39,12 @@ class SearchConfig:
     # exceed `nmp_min_depth - 2`, so at the default minimum it is pinned at one
     # and a probe costs almost what the search it replaces would (issue #66).
     nmp_depth_divisor: int = 0
+    # The shared guard refuses any position where either side has a capture
+    # available. For a null probe the side to move's own captures argue against
+    # the zugzwang that guard exists to prevent, rather than for it; this lets
+    # the probe ignore them and keep every other exclusion, the opponent's
+    # captures included. Off by default (issue #66).
+    nmp_relaxed_guard_enabled: bool = False
     futility_enabled: bool = False
     futility_max_depth: int = 2
     futility_margin: float = 1.

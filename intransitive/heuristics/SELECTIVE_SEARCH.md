@@ -235,6 +235,40 @@ legal move of nine positions. The node's static evaluation is also deferred:
 NMP needs it before the move loop, but a futility node computes it only once a
 candidate quiet child actually appears, instead of at every guarded node.
 
+### The probe guard, and what it is for
+
+`nmp_relaxed_guard_enabled` (default off) drops exactly one clause of the shared
+guard, and only for a null probe: the captures available to the side to move.
+The clause exists to protect threatened retreats and forced capture and defence
+situations, which is a *futility* concern — futility skips one quiet move while
+a tactic is pending. A null probe's risk runs the other way. It is unsound where
+passing beats every legal move, and a side holding a capture is precisely a side
+that is not in zugzwang, so its own captures argue against the failure the guard
+exists to prevent. The opponent's captures still refuse the probe, because those
+are the threats a pass declines to answer. Futility reaches at most depth two and
+NMP starts at three, so the two never share a node and each gets the guard it
+needs.
+
+On sampled positions the shared guard refuses 58.3% for an available capture and
+10.4% for a runner near a goal, and admits 31.2%. Relaxing the capture clause
+doubles NMP's attempts at depth 4 and raises its cutoffs 14% at depth 6, with no
+change of move or score anywhere — and moves the node count within noise at every
+depth measured. The clause gated how often the technique fires, not whether it
+pays. What the measurement points at instead is verification, which is 6.1% of
+the whole tree at depth 6 and is paid on every non-mate fail-high before any
+cutoff is allowed.
+
+### What a quiescence chain costs
+
+A chain resolves captures the search would never have evaluated, and each one
+runs the same bounded proof an ordinary leaf runs. `quiescence_proof_nodes` and
+`module_seconds['quiescence_proof']` charge that separately from the horizon leaf
+the search would have reached anyway, so the question is answerable rather than
+assumed. Measured at depth 4 with proofs at their default, it is one proof node
+per resolved capture and under 1% of wall time: the proof gate rejects
+immediately at these positions. A chain's cost is its extra search nodes, which
+were +58% in the same measurement, and not its proofs.
+
 ## Configuration, diagnostics and labels
 
 `SearchConfig.to_dict()/identity()` includes `search_version=intransitive-selective-v1`

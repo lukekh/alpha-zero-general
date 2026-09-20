@@ -361,6 +361,7 @@ class AlphaBetaPlayer:
         self._history = np.zeros((2,648),dtype=np.int64)
         self._selective_disabled = False
         self._null_context = False
+        self._below_horizon = False
         self._table_namespace = b''
         self._selective_stats = {}
         self._certificate_stats = {}
@@ -418,9 +419,19 @@ class AlphaBetaPlayer:
         self._material_counts = None
 
     def _leaf(self, state, side, ply, budget):
-        proof = ({'status': 'unknown'} if self._null_context else
-                 prove(self.game, state, self.config, budget,
-                       stats=self._certificate_stats))
+        # A quiescence chain runs a bounded proof at every capture it resolves,
+        # not only at the horizon the search would have evaluated anyway. Charge
+        # those separately so the chain's real cost is visible (issue #66). Every
+        # ordinary leaf reaches this too, so it pays one boolean and no clock.
+        if self._below_horizon:
+            spent, started = budget.proof_nodes, perf_counter()
+            proof = prove(self.game, state, self.config, budget, stats=self._certificate_stats)
+            self._selective_stats['quiescence_proof_nodes'] += budget.proof_nodes - spent
+            budget.module_seconds['quiescence_proof'] += perf_counter() - started
+        else:
+            proof = ({'status': 'unknown'} if self._null_context else
+                     prove(self.game, state, self.config, budget,
+                           stats=self._certificate_stats))
         if proof['status'] == 'proven':
             return from_table(proof['score'], ply), proof['pv']
         return self.evaluator.score(state, side, budget, proof=proof, counts=self._material_counts), []
@@ -521,6 +532,8 @@ class AlphaBetaPlayer:
             state.push(action)
             counts = self._material_counts
             self._material_counts = state.counts
+            horizon = self._below_horizon
+            self._below_horizon = True
             try:
                 value, reply = self._quiesce(state, 1 - side, -beta, -alpha,
                                              ply + 1, budget, remaining - 1)
@@ -528,6 +541,7 @@ class AlphaBetaPlayer:
             finally:
                 state.pop()
                 self._material_counts = counts
+                self._below_horizon = horizon
             if value > best:
                 best, best_line = value, [action] + reply
             if value > alpha:
@@ -711,7 +725,11 @@ class AlphaBetaPlayer:
         candidate = probing or futile
         if candidate and certified:
             self._certificate_stats['guards'] += 1
-        safe = candidate and not certified and selective.guarded(state, depth, budget)
+        # Futility and NMP never share a node, so the guard each one gets is
+        # unambiguous: only a probing node may relax the own-capture clause.
+        safe = candidate and not certified and selective.guarded(
+            state, depth, budget,
+            ignore_own_captures=probing and cfg.nmp_relaxed_guard_enabled)
         if safe and probing:
             static = self._static(state, side, budget)
         if cfg.nmp_enabled:

@@ -6,7 +6,7 @@ import platform
 import sys
 
 from .runner import atomic_json, replay, run, validate_manifest
-from .spec import candidate, generate_positions, manifest, protocol
+from .spec import candidate, effective_config, generate_positions, manifest, protocol
 
 
 def main(argv=None):
@@ -29,6 +29,9 @@ def main(argv=None):
                               'the experimental evaluator opt-in and the depth they need to fire')
     prepare.add_argument('--futility-margin', type=float, default=1.,
                          help='Allowance multiplier in 1/16..16; the default prunes nothing at evolved scales')
+    prepare.add_argument('--probe', action='store_true',
+                         help='Search each selected position once per protocol and report whether the '
+                              'declared techniques can reach the depth they need under these limits')
     for name in ('run', 'verify'):
         command = commands.add_parser(name)
         command.add_argument('--manifest', type=Path, required=True)
@@ -57,8 +60,21 @@ def main(argv=None):
         if args.output.exists():
             raise ValueError('Manifest already exists; use it unchanged or choose a new path')
         atomic_json(args.output, spec)
-        print(json.dumps(dict(manifest=str(args.output), matches=len(spec['tasks']),
-                              corpus_positions=len(positions), stages=sorted({p['stage'] for p in positions}))))
+        summary = dict(manifest=str(args.output), matches=len(spec['tasks']),
+                       corpus_positions=len(positions), stages=sorted({p['stage'] for p in positions}))
+        if args.probe:
+            from .preflight import reachability
+            from .spec import unpack
+            selected = [unpack(p['state']) for p in spec['positions']
+                        if p['sha256'] in spec['selected_positions']]
+            # One candidate is enough: the depth a search reaches is a property
+            # of the protocol's limits, not of an evaluator's coefficients.
+            summary['reachability'] = {limits['mode']: reachability(
+                effective_config(spec['candidates'][0], limits), selected)
+                for limits in spec['protocols']}
+            summary['warnings'] = [f"{mode}: {text}" for mode, row
+                                   in summary['reachability'].items() for text in row['warnings']]
+        print(json.dumps(summary))
     else:
         spec = json.loads(args.manifest.read_text())
         if args.command == 'run':

@@ -175,6 +175,32 @@ class SelectiveTests(unittest.TestCase):
                 checked += 1
         self.assertGreater(checked, 250)
 
+    def test_relaxed_probe_guard_only_drops_the_side_to_move_captures(self):
+        """The relaxation is one clause, for one technique, in one direction."""
+        from intransitive.tests.test_attribution import random_positions
+        strict = relaxed = 0
+        for state in random_positions(games=4, plies=60, seed=101):
+            p = SearchPosition(state)
+            a = selective.guarded(p, 3, budget())
+            b = selective.guarded(p, 3, budget(), ignore_own_captures=True)
+            # Relaxing a refusal can only ever admit more positions.
+            self.assertFalse(a and not b)
+            strict += a
+            relaxed += b
+        self.assertGreater(relaxed, strict)
+        # The opponent's captures still refuse a probe: this is the threat a
+        # pass declines to answer, and it is why the clause is not simply gone.
+        p = SearchPosition(quiet_state())
+        self.assertTrue(selective.guarded(p, 3, budget(), ignore_own_captures=True))
+        with patch('intransitive.heuristics.selective.raw_movement_mask') as mask:
+            captures = np.zeros(648, dtype=np.int8)
+            captures[parse_move('B3 C4')] = 1
+            mask.side_effect = lambda pieces, side: (captures if side != p.side
+                                                     else np.ones(648, dtype=np.int8))
+            self.assertFalse(selective.guarded(p, 3, budget(), ignore_own_captures=True))
+        # The search only ever relaxes it for a probe, and only when asked.
+        self.assertFalse(replace(CONFIG, nmp_enabled=True).nmp_relaxed_guard_enabled)
+
     def test_reductions_are_adaptive_and_keep_a_ply_below_them(self):
         base = replace(CONFIG, lmr_enabled=True, selective_evaluator_enabled=True,
                        nmp_enabled=True, max_depth=12)

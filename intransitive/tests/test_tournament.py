@@ -306,6 +306,40 @@ class TournamentTests(unittest.TestCase):
                                                      shallow), [])['unreachable']
         self.assertIn('lmr_min_depth', unreachable['lmr'][0])
 
+    def test_preflight_predicts_a_technique_that_will_never_fire(self):
+        # A protocol can declare a technique with no configuration blocker and
+        # still never fire it, because no search under its time limit completes
+        # an iteration deep enough. That was only visible in the run report.
+        from intransitive.tournament.preflight import reachability, required_depth
+        entrant, states = candidate('A'), [IntransitiveGame().getInitBoard()]
+        common = dict(nmp_enabled=True, lmr_enabled=True, futility_enabled=True,
+                      pvs_enabled=True, selective_evaluator_enabled=True)
+        deep = protocol('depth', depth=4, seconds=60., **common)
+        report = reachability(effective_config(entrant, deep), states)
+        self.assertEqual(report['max_completed_depth'], 4)
+        self.assertEqual(report['warnings'], [])
+        for name in ('nmp', 'futility', 'lmr'):
+            self.assertEqual(report['techniques'][name]['positions_reaching'], 1, name)
+        # The root never prunes, so a technique needing d plies below it needs
+        # a completed iteration of d + 1.
+        config = effective_config(entrant, deep)
+        self.assertEqual(required_depth(config, 'nmp'), config.nmp_min_depth + 1)
+        self.assertEqual(required_depth(config, 'lmr'), config.lmr_min_depth + 1)
+        self.assertIsNone(required_depth(config, 'quiescence'))
+        # A wall protocol with a hopeless time limit is flagged before any game.
+        starved = protocol('wall', seconds=.001, **common)
+        report = reachability(effective_config(entrant, starved), states)
+        self.assertTrue(report['flagged'])
+        # Starved this hard, even futility's depth-two requirement goes unmet.
+        silent = {w.split()[0] for w in report['warnings']
+                  if 'will not fire under these limits' in w}
+        self.assertEqual(silent, {'nmp', 'lmr', 'futility'})
+        self.assertLess(report['max_completed_depth'], 2)
+        # A configuration blocker is reported as such, not as a depth shortfall.
+        shallow = protocol('depth', depth=2, seconds=60., **common)
+        report = reachability(effective_config(entrant, shallow), states)
+        self.assertTrue(any('never reaches nmp_min_depth' in w for w in report['warnings']))
+
     def test_red_canonical_goal_and_absolute_winner(self):
         spec = self.spec(max_plies=1)
         pieces = sparse_position()

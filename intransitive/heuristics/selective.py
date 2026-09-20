@@ -39,9 +39,19 @@ def distance(a, b):
     return max(abs(a % 9 - b % 9), abs(a // 9 - b // 9))
 
 
-def guarded(position, depth, budget):
+def guarded(position, depth, budget, *, ignore_own_captures=False):
     """The shared board exclusions. Same charge and same answer as the loops it
     replaces; the scans are vectorised because this runs at every eligible node.
+
+    `ignore_own_captures` drops one clause, and only for a null probe. The guard
+    refuses any position where either side has a capture available; that clause
+    exists to protect threatened retreats and forced capture and defence
+    situations, which is a futility concern, because futility skips one quiet
+    move while a tactic is pending. A null probe's risk is the opposite one:
+    it is unsound where passing beats every legal move, and a side holding a
+    capture is precisely a side that is not in zugzwang. The opponent's captures
+    still refuse the probe, because those are the threats a pass declines to
+    answer.
     """
     budget.charge(81 + 2 * 648)
     if position.clock + depth + 1 >= 80 or any(n > 1 for n in position.occurrences.values()):
@@ -60,8 +70,10 @@ def guarded(position, depth, budget):
         actions = np.flatnonzero(raw_movement_mask(position.pieces, side))
         if len(actions) < 8:
             return False
-        # Any available capture, on either side; this also covers forced
-        # captures and threatened retreats.
+        if ignore_own_captures and side == position.side:
+            continue
+        # Any available capture; this also covers forced captures and
+        # threatened retreats.
         if occupancy[DESTINATIONS[actions]].any():
             return False
     return True

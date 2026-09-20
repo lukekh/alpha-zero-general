@@ -146,6 +146,17 @@ protocol that declares a technique those evolved scales cannot support fails
 before a single game is played, naming the candidate and
 `selective_evaluator_enabled`.
 
+`prepare --probe` answers the same question before a run rather than after it.
+`activation` reports what the configuration forbids outright; it cannot report
+the other half, which is a protocol that declares a technique with no blocker at
+all and still never fires it because no search under its time limit completes an
+iteration deep enough. The probe searches each selected position once per
+protocol and says so: a wall protocol at 0.05 seconds a move reports `nmp needs
+a completed depth of 4 and the deepest probe reached 2`. It distinguishes a
+configuration blocker, a shortfall on every probe position, and a shortfall on
+only some, and it reports rather than rejects — a technique that fires unevenly
+is a real protocol, just a less informative one than it looks.
+
 `report.json` then carries `selective_firing` per protocol: the totalled
 counters, which declared techniques actually fired, which stayed silent, and any
 precondition that made a declared technique unreachable. A declared technique
