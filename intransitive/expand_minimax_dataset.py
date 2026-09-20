@@ -214,7 +214,7 @@ def run(output, primary, target, deadline=None, *, teacher_config=None, allow_te
     teacher_config = dict(TEACHER if teacher_config is None else teacher_config)
     from .heuristics import SearchConfig
     validated_teacher = SearchConfig(**teacher_config)
-    if validated_teacher.nmp_enabled or validated_teacher.futility_enabled:
+    if validated_teacher.selective_pruning():
         raise ValueError("Exhaustive teacher labels require selective pruning disabled")
     if teacher_config['max_depth'] < 5:
         raise ValueError('Teacher depth must be at least five')

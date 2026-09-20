@@ -15,7 +15,11 @@ SELECTIVE_COUNTERS = ('nmp_attempts', 'nmp_cutoffs', 'nmp_skips', 'verification_
                       'verification_failures', 'futility_eligible', 'futility_pruned',
                       'static_evaluations', 'null_nodes', 'verification_nodes',
                       'quiescence_captures', 'quiescence_see_skips', 'quiescence_delta_skips',
-                      'quiescence_proof_nodes', 'lmr_reduced', 'lmr_researches')
+                      'quiescence_proof_nodes', 'lmr_reduced', 'lmr_researches',
+                      'razoring_eligible', 'razoring_applied', 'razoring_nodes',
+                      'reverse_futility_eligible', 'reverse_futility_pruned',
+                      'move_count_eligible', 'move_count_pruned',
+                      'mate_distance_eligible', 'mate_distance_pruned')
 ORDERING_COUNTERS = ('mvv_lva_nodes', 'mvv_lva_captures')
 
 TIME_FIRST_LIMITS = {
@@ -63,6 +67,25 @@ class SearchConfig:
     lmr_reduction: int = 1  # Plies removed from a reduced child.
     lmr_depth_divisor: int = 0  # Extra plies per this much remaining depth above the minimum.
     lmr_index_divisor: int = 0  # Extra plies per this many late moves past the minimum index.
+    # Issue #68 shallow-depth cutoffs. Each is independently opt-in and off by
+    # default; every margin is a multiple of `selective.allowance()`, so a
+    # re-tuned genome moves them together instead of stranding a constant.
+    # Margin defaults are measured, not inherited: see benchmarks/shallow_pruning.
+    # Both cover every observed one-to-three ply swing of the evaluator on the
+    # `supported()` scale (1.48 and 0.73 allowances per ply) and on the adopted
+    # route genome (0.41 and 0.16). For both, a larger multiple fires less
+    # often and is the conservative direction.
+    razoring_enabled: bool = False  # Experimental drop to quiescence below alpha.
+    razoring_max_depth: int = 2  # Deeper nodes keep their full-width search.
+    razoring_margin: float = 1.5  # Allowance multiples per remaining ply.
+    reverse_futility_enabled: bool = False  # Experimental static null-move cutoff.
+    reverse_futility_max_depth: int = 2
+    reverse_futility_margin: float = 1.  # Allowance multiples per remaining ply.
+    move_count_pruning_enabled: bool = False  # Experimental late quiet-move skipping.
+    move_count_max_depth: int = 3
+    move_count_base: int = 12  # Children always searched, before depth squared.
+    # Value preserving, so it is not part of the selective (heuristic) family.
+    mate_distance_pruning_enabled: bool = False
     race_reduction_enabled: bool = False  # Reduce provably quiet branches on principle.
     evaluator_version: str = 'intransitive-heuristics-v2'
     count_weight: float = 100.
@@ -112,6 +135,8 @@ class SearchConfig:
                                 ('lmr_min_index', 1, 64), ('lmr_reduction', 1, 8),
                                 ('nmp_depth_divisor', 0, 32), ('lmr_depth_divisor', 0, 32),
                                 ('lmr_index_divisor', 0, 64),
+                                ('razoring_max_depth', 1, 4), ('reverse_futility_max_depth', 1, 6),
+                                ('move_count_max_depth', 1, 8), ('move_count_base', 1, 64),
                                 ('certificate_cutoff_min_depth', 1, 32)):
             value = getattr(self, name)
             if type(value) is not int or not low <= value <= high:
@@ -126,6 +151,19 @@ class SearchConfig:
         if (type(self.futility_margin) not in (int, float) or not math.isfinite(self.futility_margin)
                 or not 1/16 <= self.futility_margin <= 16):
             raise ValueError('futility_margin must be finite in 1/16..16')
+        # The issue #68 margins admit fractions: the measured safe multiplier
+        # on the adopted route genome is below one, because `allowance()` sums
+        # weight ceilings rather than the swing those modules actually produce.
+        for name in ('razoring_margin', 'reverse_futility_margin'):
+            value = getattr(self, name)
+            if (type(value) not in (int, float) or not math.isfinite(value)
+                    or not 0 < value <= 64):
+                raise ValueError(f'{name} must be finite in (0, 64]')
+        if self.razoring_enabled and not self.quiescence_enabled:
+            # Razoring returns a quiescence value. Without quiescence it would
+            # return the bare static score, which is a different, untested and
+            # far more aggressive technique.
+            raise ValueError('razoring_enabled requires quiescence_enabled')
         if (type(self.delta_margin) not in (int, float) or not math.isfinite(self.delta_margin)
                 or not 0 <= self.delta_margin <= 16):
             raise ValueError('delta_margin must be finite in 0..16')
@@ -179,6 +217,15 @@ class SearchConfig:
 
     def to_dict(self):
         return asdict(self)
+
+    def selective_pruning(self):
+        """Whether a heuristic cutoff that can change the returned value is on.
+
+        Mate-distance pruning is excluded: it narrows the window to bounds the
+        true value already satisfies, so it is value preserving.
+        """
+        return (self.nmp_enabled or self.futility_enabled or self.razoring_enabled
+                or self.reverse_futility_enabled or self.move_count_pruning_enabled)
 
     def identity(self):
         return json.dumps(self.to_dict(), sort_keys=True)

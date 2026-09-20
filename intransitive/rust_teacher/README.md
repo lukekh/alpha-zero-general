@@ -105,6 +105,20 @@ A completed selective search is not an exhaustive label or mate certificate.
 Opt-in [MVV-LVA capture ordering](../heuristics/MVV_LVA.md) uses current variable
 piece values via `RustTeacher.analyze(..., mvv_lva_enabled=True)`.
 
+## Experimental branch-parallel search
+
+`threads` enables a Young Brothers Wait Concept split and defaults to **one**,
+which is the exact sequential search. Helpers hold private transposition tables,
+split points depend only on the node and the configuration, and brothers are
+joined in order, so a given thread count reproduces itself; two thread counts
+agree on the score and the move but not on the node count. Proof and certificate
+search stay sequential, a parallel mate reports `parallel_result` rather than
+`proven_result`, and `Genome.native_arguments` pins `threads = 1` so no evolved
+weights or tournament result can come from a parallel search.
+
+See [the contract](PARALLEL_SEARCH.md) and the
+[measured report](../benchmarks/ybwc/README.md) for the numbers and the decision.
+
 
 ## Route feature performance
 

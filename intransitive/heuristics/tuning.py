@@ -145,11 +145,22 @@ class Genome:
         # a declared parameter governing code that never runs.
         if config.nmp_depth_divisor or config.lmr_depth_divisor or config.lmr_index_divisor:
             raise ValueError('Rust has no adaptive reduction schedule; leave the divisors at zero')
+        if (config.razoring_enabled or config.reverse_futility_enabled
+                or config.move_count_pruning_enabled or config.mate_distance_pruning_enabled):
+            # The issue #68 shallow-depth family is Python-only. Refuse the
+            # request instead of returning a native search that ignores it.
+            raise ValueError('Rust does not implement razoring, reverse futility, '
+                             'move-count or mate-distance pruning')
         # The wire protocol uses unsigned 64-bit integers and millisecond time.
         if config.node_limit >= 2**64 or config.time_limit >= 2**64 / 1000:
             raise ValueError('Native time/work limits exceed the unsigned 64-bit protocol')
         return dict(depth=config.max_depth, seconds=config.time_limit,
                     variable_material_enabled=config.variable_material_enabled,
+                    # A genome cannot carry a thread count. Evolved weights and
+                    # tournament results are only ever produced by the exact
+                    # single-threaded search, whatever #65 concluded about
+                    # branch-parallel search elsewhere.
+                    threads=1,
                     node_limit=config.node_limit, radius=config.pressure_radius,
                     weight=config.pressure_weight if config.pressure_enabled else 0.,
                     material=config.count_weight, advantage=config.advantage_weight,

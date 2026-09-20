@@ -531,6 +531,11 @@ configuration error rather than a silent no-op, and each search reports which
 declared technique could and did execute. The
 [activation measurement](../benchmarks/selective_activation/README.md) records
 the configuration in which they first run and attributes a node count to each.
+Issue #68 adds razoring, reverse futility and move-count pruning on the same
+guard (Python only, also off by default), plus value-preserving mate-distance
+pruning, which keeps ordinary bounds and certificates. The
+[bounded validation](../benchmarks/shallow_pruning/README.md) recommends
+adopting none of the three heuristic members as defaults.
 
 See [variable-value MVV-LVA ordering](MVV_LVA.md) and the [module-scale example](MODULE_SCALE.md).
 

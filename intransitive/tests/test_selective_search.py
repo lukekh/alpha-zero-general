@@ -149,9 +149,17 @@ class SelectiveTests(unittest.TestCase):
             own = [int(s) for s in np.flatnonzero(pieces) if int(pieces[s] < 0) == side]
             if distance(source, goal) <= min(distance(s, goal) for s in own):
                 return False
+            enemy_goal = 80 - goal
             for square in np.flatnonzero(pieces):
-                if (int(pieces[square] < 0) != side
-                        and min(distance(int(square), source), distance(int(square), target)) <= 2):
+                square = int(square)
+                if int(pieces[square] < 0) == side:
+                    continue
+                if min(distance(square, source), distance(square, target)) <= 2:
+                    return False
+                # Issue #68: vacating or taking a square on a shortest enemy
+                # route to its corner is defence, so it is never quiet.
+                if (selective.blocks(source, square, enemy_goal)
+                        or selective.blocks(target, square, enemy_goal)):
                     return False
             return distance(target, goal) > 3
 
@@ -188,7 +196,7 @@ class SelectiveTests(unittest.TestCase):
         states = random_positions(games=4, plies=60, seed=101)
         sample = quiet_ply_gains(cfg, states)
         self.assertGreater(sample['positions'], 0)
-        self.assertGreater(sample['moves'], 200)
+        self.assertGreater(sample['moves'], 50)
         full = calibrate(cfg, states, quantile=1.)
         # A quiet ply moves the score by a small fraction of what is charged.
         self.assertLess(full['max_gain'], full['allowance_at_unit_margin'] / 4)
@@ -446,7 +454,12 @@ class SelectiveTests(unittest.TestCase):
             self.assertFalse(selective.guarded(SearchPosition(state),3,budget()))
         p=SearchPosition(quiet_state())
         self.assertFalse(selective.quiet(p,parse_move('D4 E5'))) # fastest runner
-        self.assertTrue(selective.quiet(p,parse_move('A2 A1')))
+        self.assertTrue(selective.quiet(p,parse_move('A3 A4')))
+        # Issue #68 reviewed quiet(): occupying or vacating a square on a
+        # shortest enemy route to their corner is corner-threat prevention.
+        # A1 is that corner, so sitting on it stopped being a quiet move.
+        self.assertFalse(selective.quiet(p,parse_move('A2 A1')))
+        self.assertFalse(selective.quiet(p,parse_move('B2 C3')))
 
     def test_exercised_nmp_verification_futility_and_restoration(self):
         for nmp,futility in MODES[1:]:

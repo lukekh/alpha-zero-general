@@ -216,13 +216,21 @@ Two of the five refuted the hypothesis that motivated them, which is recorded
 here because a negative result is the reason not to do the work again.
 
 **The allowance is calibrated, not guessed.** `heuristics.calibration` samples
-the quantity the margin bounds: over 3,618 quiet moves from 183 guarded
-positions, the largest gain is **+12.81** against a charged allowance of
-**207.4**, and 99% of quiet moves lose ground. The multiplier covering the
-largest observed gain is **0.0617**, so the 1/16 used in the arms above is
-within one percent of the measurement — arrived at arbitrarily, and only now
-defensible. The tool ships; the constant does not, because it belongs to the
-route weights it was measured on.
+the quantity the margin bounds. Against a charged allowance of **207.4**, over
+202 quiet moves from 183 guarded positions, the largest gain is **−6.43**: every
+admitted quiet move loses ground, so the derived multiplier is **0**.
+
+Before issue #68 tightened `quiet`, the same corpus admitted 3,618 moves with a
+largest gain of **+12.81** and a derived multiplier of **0.0617** — which is why
+the 1/16 used in the arms above is close to right, having been chosen
+arbitrarily as the smallest value the configuration accepts. #68's route-blocking
+clause removed exactly the moves that could gain, which is a useful independent
+agreement between two changes made for different reasons. The tables above were
+measured before that merge and report the looser test.
+
+A zero margin is not a recommendation: 202 moves from one genome cannot license
+removing the allowance, and the tail this sample does not contain is the reason
+to keep it. The tool ships; the constant does not.
 
 **A search policy can now be scheduled against itself.** A candidate may carry
 `search` overrides that join its identity, so one genome under two policies is

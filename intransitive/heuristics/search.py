@@ -70,14 +70,19 @@ def from_table(score, ply):
 def selective_mode_early(config):
     """Whether any opt-in selective feature is on for this config.
 
-    The certificate cutoff and its guard are deliberately absent. A cutoff
-    returns a proof, and the guard only ever refuses a reduction, so neither
-    turns a mate score into a selective result. The race reduction does reduce,
-    so it belongs here.
+    Three deliberate absences. Mate-distance pruning only narrows the window
+    to bounds the true value already respects. The certificate cutoff returns
+    a proof, and its guard only ever refuses a reduction. None of the three
+    makes a result heuristic or withdraws a certificate. The race reduction
+    does reduce, so it belongs here.
     """
-    return (config.nmp_enabled or config.futility_enabled
-            or config.quiescence_enabled or config.lmr_enabled
-            or config.race_reduction_enabled)
+    return (config.selective_pruning() or config.quiescence_enabled
+            or config.lmr_enabled or config.race_reduction_enabled)
+
+
+def selective_needs_compact(config):
+    """Features that read `SearchPosition` state and so need that backend."""
+    return config.selective_pruning() or config.quiescence_enabled
 
 
 @dataclass
@@ -372,8 +377,7 @@ class AlphaBetaPlayer:
         self.last_result = None
 
     def _prepare(self, *, warm_proof=True):
-        if ((self.config.nmp_enabled or self.config.futility_enabled
-             or self.config.quiescence_enabled) and not self.use_compact):
+        if selective_needs_compact(self.config) and not self.use_compact:
             raise ValueError("Selective search requires the compact Python backend")
         self._selective_stats = dict.fromkeys(SELECTIVE_COUNTERS, 0)
         self._table_namespace = b'selective-v1\0' if selective_mode_early(self.config) else b''
@@ -682,6 +686,19 @@ class AlphaBetaPlayer:
                 self._store(key, depth, value, 'exact', line, ply)
             return value, line
         cfg = self.config
+        if cfg.mate_distance_pruning_enabled and ply and not self._selective_disabled:
+            # Free, so it runs before the certificate probe pays for its board
+            # passes. This node is not terminal, so it cannot already be lost,
+            # and the fastest win available is a child that ends the game —
+            # exactly the `MATE - ply - 1` the sibling loop already breaks on.
+            # Both are bounds the true value satisfies, so narrowing to them is
+            # value preserving: it changes how soon a known mate cuts, never
+            # which.
+            self._selective_stats['mate_distance_eligible'] += 1
+            alpha, beta = max(alpha, -MATE + ply), min(beta, MATE - ply - 1)
+            if alpha >= beta:
+                self._selective_stats['mate_distance_pruned'] += 1
+                return alpha, []
         # A certified forced run is a statement about the game rather than
         # about this horizon, so it is worth asking before a single move is
         # generated. The race gate inside `certificate` keeps a node with no
@@ -691,7 +708,7 @@ class AlphaBetaPlayer:
         if (ply and not self._null_context
                 and ((cfg.certificate_cutoff_enabled and depth >= cfg.certificate_cutoff_min_depth)
                      or (cfg.certificate_guard_enabled and not self._selective_disabled
-                         and (cfg.nmp_enabled or cfg.futility_enabled or cfg.lmr_enabled)))):
+                         and (cfg.selective_pruning() or cfg.lmr_enabled)))):
             run = certificate(state, cfg, budget, self._certificate_stats)
         if run is not None and cfg.certificate_cutoff_enabled:
             # Proven, and proven without reference to depth: the runner cannot
@@ -713,27 +730,63 @@ class AlphaBetaPlayer:
         # get to discard a move on a static score and a margin.
         certified = run is not None and cfg.certificate_guard_enabled
         quiet_horizon = not certified and self._quiet_horizon(state, side, depth, ply, budget)
-        active = ((cfg.nmp_enabled or cfg.futility_enabled)
+        # One shared eligibility shape for the whole family: non-root, non-PV
+        # on entry, finite window strictly inside the evaluator's clipping
+        # range, a supported evaluator scale, and the Intransitive board guard.
+        active = (cfg.selective_pruning()
                   and compact and not self._selective_disabled and selective.supported(cfg)
                   and ply > 0 and isfinite(alpha) and isfinite(beta)
                   and nextafter(alpha_original, inf) >= beta_original
                   and max(abs(alpha), abs(beta)) < 10000)
-        # The two techniques never share a node: futility reaches at most depth
-        # two and NMP starts at three, so each static score has exactly one user.
-        probing = active and cfg.nmp_enabled and depth >= cfg.nmp_min_depth
-        futile = active and cfg.futility_enabled and depth <= cfg.futility_max_depth
-        candidate = probing or futile
+        null_move = active and cfg.nmp_enabled and depth >= cfg.nmp_min_depth
+        futility = active and cfg.futility_enabled and depth <= cfg.futility_max_depth
+        razoring = (active and cfg.razoring_enabled and depth <= cfg.razoring_max_depth
+                    and self._quiescence_active())
+        reverse = active and cfg.reverse_futility_enabled and depth <= cfg.reverse_futility_max_depth
+        move_count = (active and cfg.move_count_pruning_enabled
+                      and depth <= cfg.move_count_max_depth)
+        candidate = null_move or futility or razoring or reverse or move_count
         if candidate and certified:
             self._certificate_stats['guards'] += 1
-        # Futility and NMP never share a node, so the guard each one gets is
-        # unambiguous: only a probing node may relax the own-capture clause.
+        # Only a null probe may relax the own-capture clause, and only when it
+        # is the sole reason this node is eligible: the rest of the family are
+        # statements about a node, not about one quiet child, so the clause
+        # still means to them what it always did.
         safe = candidate and not certified and selective.guarded(
             state, depth, budget,
-            ignore_own_captures=probing and cfg.nmp_relaxed_guard_enabled)
-        if safe and probing:
+            ignore_own_captures=(cfg.nmp_relaxed_guard_enabled and null_move
+                                 and not (futility or razoring or reverse or move_count)))
+        # Move-count pruning asks the evaluator nothing, and futility asks only
+        # once a candidate quiet child actually appears, so neither pays here.
+        if safe and (null_move or razoring or reverse):
             static = self._static(state, side, budget)
+        if safe and reverse:
+            self._selective_stats['reverse_futility_eligible'] += 1
+            if static - selective.reverse_margin(cfg, depth, state) >= beta:
+                # The mirror of a null move without the move: no hypothetical
+                # pass is made, so zugzwang is not a failure mode here.
+                self._selective_stats['reverse_futility_pruned'] += 1
+                self._store(key, depth, beta, 'lower', [], ply)
+                return beta, []
+        if safe and razoring:
+            self._selective_stats['razoring_eligible'] += 1
+            if static + selective.razor_margin(cfg, depth, state) <= alpha:
+                # Futility discards one quiet child; razoring gives up the
+                # node's full-width search and lets quiescence settle the
+                # captures instead. A quiescence value that still cannot reach
+                # alpha is the fail-low this node was going to report anyway.
+                razor_nodes = budget.nodes
+                try:
+                    value, line = self._quiesce(state, side, alpha, beta, ply, budget,
+                                                cfg.quiescence_max_plies)
+                finally:
+                    self._selective_stats['razoring_nodes'] += budget.nodes - razor_nodes
+                if value <= alpha and abs(value) < MATE_THRESHOLD:
+                    self._selective_stats['razoring_applied'] += 1
+                    self._store(key, depth, value, 'upper', line, ply)
+                    return value, line
         if cfg.nmp_enabled:
-            if safe and probing and static >= beta:
+            if safe and null_move and static >= beta:
                 self._selective_stats['nmp_attempts'] += 1
                 reduction = self._null_reduction(depth)
                 probe_nodes = budget.nodes
@@ -760,11 +813,21 @@ class AlphaBetaPlayer:
             else:
                 self._selective_stats['nmp_skips'] += 1
         # Every candidate move in this node shares the runner and enemy scan.
-        quiet_context = selective.quiet_context(state) if safe and futile else None
+        quiet_context = selective.quiet_context(state) if safe and (futility or move_count) else None
         best, pv = -inf, []
         for index, (action, child) in enumerate(self._ordered(
                 state, side, preferred, budget, root=progress is not None, ply=ply, terminal_checked=True)):
-            if (safe and futile and index and selective.quiet(state, action, quiet_context)):
+            if (safe and move_count and index >= cfg.move_count_base + depth * depth
+                    and isfinite(best) and abs(best) < MATE_THRESHOLD):
+                # The stronger form of a late-move reduction: skip the child
+                # rather than search it shallower. A finite `best` means a
+                # child has already returned, so no node can end up with zero
+                # searched moves and be mistaken for a stalemate.
+                self._selective_stats['move_count_eligible'] += 1
+                if selective.quiet(state, action, quiet_context):
+                    self._selective_stats['move_count_pruned'] += 1
+                    continue
+            if safe and futility and index and selective.quiet(state, action, quiet_context):
                 self._selective_stats['futility_eligible'] += 1
                 if static is None:
                     static = self._static(state, side, budget)
@@ -977,8 +1040,7 @@ class AlphaBetaPlayer:
         budget = budget or Budget(self.config.node_limit, self.config.time_limit)
         from ..IntransitiveGame import IntransitiveGame
         compact = self.use_compact and type(self.game) is IntransitiveGame
-        if ((self.config.nmp_enabled or self.config.futility_enabled
-             or self.config.quiescence_enabled) and not compact):
+        if selective_needs_compact(self.config) and not compact:
             raise ValueError("Selective search requires the Intransitive compact backend")
         # Validate/copy once on entry, including for a zero-budget fallback.
         search_state = (SearchPosition(state, modelling_draws=self.game.board.modelling_draws)
@@ -1162,6 +1224,7 @@ class AlphaBetaPlayer:
                          if counters[selective.TECHNIQUE_COUNTERS[name]]),
             disabled_reason='; '.join(f'{name}: {"; ".join(reasons)}'
                                       for name, reasons in unreachable.items()) or None,
+            mate_distance_enabled=self.config.mate_distance_pruning_enabled,
             depth=selected_depth, identity=self.config.identity())
         result.certificate = dict(self._certificate_stats,
             leaf_enabled=self.config.certificate_enabled,

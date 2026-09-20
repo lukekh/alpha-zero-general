@@ -92,7 +92,27 @@ def quiet_context(position):
     return goal, int(GOAL_DISTANCE[goal][occupied[mine]].min()), occupied[~mine]
 
 
+def blocks(square, piece, goal):
+    """Whether `square` lies on some shortest king route from `piece` to `goal`.
+
+    King distance is additive exactly along such a route, so the equality test
+    is the whole predicate. An occupied route square is a genuine obstruction
+    here: `guarded()` has already refused the node if any capture is available,
+    so the runner cannot simply take the blocker.
+    """
+    return distance(piece, square) + distance(square, goal) == distance(piece, goal)
+
+
 def quiet(position, action, context=None):
+    """Whether a move may be discarded by a margin test rather than searched.
+
+    Reviewed for issue #68 against corner-threat creation and prevention,
+    forced defence and races. Threat creation, captures and the mover's own
+    fastest runners were already excluded. Added: a move that vacates, or
+    occupies, a square on a shortest enemy route to the enemy's corner is
+    corner-threat prevention, so it is never quiet. This is deliberately
+    stricter than the issue #60 version; it can only refuse pruning.
+    """
     pieces = position.pieces.ravel()
     source = action // 8
     x, y = action_destination(action)
@@ -100,27 +120,32 @@ def quiet(position, action, context=None):
     if pieces[target]:
         return False
     goal, nearest, enemies = context if context is not None else quiet_context(position)
+    enemy_goal = 80 - goal
     # Keep every fastest runner, including moves away from its goal.
     if GOAL_DISTANCE[goal][source] <= nearest:
         return False
-    if enemies.size and (np.minimum(SQUARE_DISTANCE[enemies, source],
-                                    SQUARE_DISTANCE[enemies, target]) <= 2).any():
-        return False
+    for square in enemies:
+        square = int(square)
+        if min(distance(square, source), distance(square, target)) <= 2:
+            return False
+        if blocks(source, square, enemy_goal) or blocks(target, square, enemy_goal):
+            return False  # leaving or taking a blocking square is defence
     return GOAL_DISTANCE[goal][target] > 3
 
 
-def margin(config, depth, position=None):
-    """The allowance a skipped quiet child is credited with over `depth` plies.
+def allowance(config, position=None, *, material=True, positional=True):
+    """One ply of evaluator units, in this configuration's own scales.
 
-    The experimental branch separates the terms a quiet ply can move from the
-    terms it cannot. `guarded` excludes every position where either side has a
-    capture available and `quiet` excludes capture moves, so across the first
-    skipped ply the piece counts are fixed: material and advantage contribute
-    exactly nothing to that ply's change, and are charged only from the second
-    ply, where the skipped subtree can capture. The module terms remain the
-    conservative per-side feature ranges, which are a bound on the evaluation
-    and not on one ply of it, so `futility_margin` is still the tuning knob.
-    The original branch is unchanged: its margins are what #60 validated.
+    Every margin in the selective family is a multiple of this quantity, so a
+    re-tuned genome moves all of them together instead of silently invalidating
+    a constant. It is a local heuristic scale, never a bound on future gains.
+
+    The two components are separable because forward futility needs them apart:
+    it skips a *quiet* move at a node where `guarded` has already refused every
+    available capture, so across that first ply the piece counts cannot change
+    and the material term contributes nothing to it. No other margin in the
+    family has that guarantee -- razoring and reverse futility are statements
+    about a node, not about one quiet child -- so they take the whole quantity.
     """
     if config.selective_evaluator_enabled:
         # A local heuristic allowance, not a bound on future evaluation changes.
@@ -137,15 +162,46 @@ def margin(config, depth, position=None):
                                   for n, v in zip(own, values) if n])
         advantage_scale = max(abs(config.predator_zero_bonus),
                               abs(config.predator_scarcity_bonus)) + abs(config.prey_bonus)
-        material = piece_scale/2 + abs(config.advantage_weight)*advantage_scale
-        positional = 0.
-        for name, scale in (('attack', 3), ('defence', 4), ('overload', 2), ('pressure', 8)):
-            if getattr(config, name+'_enabled'):
-                positional += scale*abs(getattr(config, name+'_weight'))
-        return config.futility_margin*(depth*positional + max(0, depth - 1)*material)
+        total = (piece_scale/2 + abs(config.advantage_weight)*advantage_scale) if material else 0.
+        if positional:
+            for name, scale in (('attack', 3), ('defence', 4), ('overload', 2), ('pressure', 8)):
+                if getattr(config, name+'_enabled'):
+                    total += scale*abs(getattr(config, name+'_weight'))
+        return total
 
     weight = config.pressure_weight if config.pressure_enabled else 0.
-    return depth * config.futility_margin * (config.count_weight / 2 + config.advantage_weight + 8 * weight)
+    total = (config.count_weight / 2 + config.advantage_weight) if material else 0.
+    return total + (8 * weight if positional else 0.)
+
+
+def margin(config, depth, position=None):
+    """Forward futility: how much a skipped quiet child is allowed to gain.
+
+    Material is charged only from the second ply. The first skipped ply is a
+    quiet move at a node where no capture is available to either side, so the
+    piece counts across it are fixed and the material term cannot describe any
+    part of its change. The original non-experimental branch keeps the whole
+    quantity every ply, because its margins are what issue #60 validated.
+    """
+    if config.selective_evaluator_enabled:
+        return config.futility_margin * (
+            depth * allowance(config, position, material=False)
+            + max(0, depth - 1) * allowance(config, position, positional=False))
+    return depth * config.futility_margin * allowance(config, position)
+
+
+def razor_margin(config, depth, position=None):
+    """Razoring: how far below alpha a node may stand before dropping to
+    quiescence. Deliberately the most generous of the three, because a razored
+    node abandons its whole full-width search rather than one child."""
+    return depth * config.razoring_margin * allowance(config, position)
+
+
+def reverse_margin(config, depth, position=None):
+    """Reverse futility: how much the opponent is allowed to claw back from a
+    static score already above beta. Unlike null-move pruning it makes no
+    hypothetical pass, so zugzwang is not one of its failure modes."""
+    return depth * config.reverse_futility_margin * allowance(config, position)
 
 
 @contextmanager

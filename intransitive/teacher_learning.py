@@ -159,7 +159,7 @@ def decision_categories(game, canonical, action):
 
 def teacher_config(protocol):
     config = SearchConfig(**protocol['teacher']['search'])
-    if config.nmp_enabled or config.futility_enabled:
+    if config.selective_pruning():
         raise ValueError('Teacher protocol requires selective pruning disabled')
     return config
 

@@ -48,6 +48,10 @@ within three steps of the goal, and moves with an enemy within two steps of
 source or destination. The shared guard also protects immediate quiet wins,
 corner defence and low-mobility forced replies. No reverse futility, razoring
 or weight tuning is included.
+source or destination. Issue #68 additionally refuses any move that vacates or
+occupies a square on a shortest enemy king route to the enemy's corner; see
+*The reviewed quiet predicate* below. The shared guard also protects immediate
+quiet wins, corner defence and low-mobility forced replies.
 
 The experimental allowance separates the terms a quiet ply can move from the
 terms it cannot. The shared guard excludes every position where either side has
@@ -78,6 +82,110 @@ a permanent off switch. Unsupported scales remain loadable while both methods
 are off, and ordinary evaluation is unchanged. Python's legacy
 expanded-state/custom-game backend explicitly rejects selective options.
 Native's unsupported arguments raise errors.
+
+## Shallow-depth cutoffs v1 (issue #68)
+
+Four more independently opt-in techniques, **all default false**. Three are
+heuristic and join the selective family; the fourth is value preserving and
+deliberately does not.
+
+| flag | parameters | eligibility | effect |
+|---|---|---|---|
+| `razoring_enabled` | `razoring_max_depth` 1..4 (2), `razoring_margin` (0,64] (1.5) | shared guard, plus `quiescence_enabled` | `static + margin <= alpha` runs quiescence; a value still at or below alpha is returned as a selective **upper** bound |
+| `reverse_futility_enabled` | `reverse_futility_max_depth` 1..6 (2), `reverse_futility_margin` (0,64] (1.0) | shared guard | `static - margin >= beta` returns beta as a selective **lower** bound, with no probe search |
+| `move_count_pruning_enabled` | `move_count_max_depth` 1..8 (3), `move_count_base` 1..64 (12) | shared guard | children from index `base + depth²` onward that are quiet are **skipped**, not reduced |
+| `mate_distance_pruning_enabled` | none | non-root, not inside a null or verification search | narrows to `[-MATE+ply, MATE-ply-1]` and cuts when the window closes |
+
+`razoring_enabled` without `quiescence_enabled` is a configuration error, not a
+silent downgrade: razoring returns a quiescence value, and without quiescence
+it would return the bare static score — a different and far more aggressive
+technique that has not been measured.
+
+The first three reuse the issue #60 eligibility block unchanged — non-root,
+non-PV on entry, finite window inside the ±10,000 clipping range, a supported
+evaluator scale and `selective.guarded()` — so they inherit every Intransitive
+exclusion listed above rather than restating it. They are covered by the
+certificate guard on the same terms as NMP and futility: a node with a
+certified forced run is exempt from all five, and enabling any of them is
+enough to make the guard probe for one. Mate-distance pruning is outside that
+too, and runs *before* the certificate probe, because narrowing the window
+costs nothing while the probe costs board passes. A node eligible only for
+move-count pruning pays for no static evaluation, because move-count pruning
+asks the evaluator nothing. Counters are `*_eligible` (the node or child
+reached the test) and `*_applied` / `*_pruned` (the test fired), plus
+`razoring_nodes` for quiescence work charged to razoring. All of it shares the
+one move budget.
+
+Every node keeps at least one searched child. Move-count pruning requires a
+finite incumbent, which only exists once a child has returned, and forward
+futility requires a nonzero index. **Stalemate loses in Intransitive, so a node
+emptied of moves would be scored as a draw rather than the loss it is**; that
+is why the property is tested directly rather than argued from the thresholds.
+
+### Margins are measured, not inherited
+
+`selective.allowance(config)` is one ply of evaluator units in the current
+scales, and every margin in the family — futility, razoring and reverse
+futility — is `depth × multiplier × allowance`. For both new margins a **larger
+multiplier fires less often** and is the conservative direction.
+
+The multipliers were fixed from the measured distribution of
+(depth-*d* alpha-beta value − static evaluation) ÷ allowance over 480 random
+positions, at *d* = 1, 2, 3:
+
+| scale | allowance | largest rise per ply | largest fall per ply | shipped razoring / reverse |
+|---|---:|---:|---:|---|
+| `supported()` | 75.0 | 1.476 | 0.729 | 1.5 / 1.0 |
+| adopted route genome | 287.4 | 0.413 | 0.162 | 1.5 / 1.0 |
+
+Both defaults cover every observed swing on **both** scales. They are not
+equally *tight* on both: because `allowance()` sums weight ceilings rather than
+the swing those modules actually produce, the adopted genome needs roughly a
+quarter of the supported scale's multiplier. The margins therefore admit
+fractional values, and an evolved genome that wants these techniques to fire at
+all should set them explicitly from its own measurement. This is a heuristic
+allowance measured on one corpus, **not a bound**; it says nothing about weight
+ranges outside the measured ones, and #55 can move the evaluator underneath it.
+
+### The reviewed quiet predicate
+
+Issue #68 required `selective.quiet()` to be re-examined before more techniques
+depended on it. Captures, threat creation and the mover's own fastest runners
+were already excluded, and `guarded()` already refuses any node with an
+available capture or a piece within three steps of its own corner, which covers
+immediate corner threats and forced defensive replies. The gap was
+corner-threat *prevention*: a blocker could be walked off the enemy's route, or
+a blocking square declined, and still count as quiet. `selective.blocks()` now
+tests whether a square lies on a shortest enemy king route to the enemy corner —
+king distance is additive exactly along such a route — and a move that vacates
+or occupies one is no longer quiet. An occupied route square is a real
+obstruction here precisely because `guarded()` has already excluded positions
+where it could simply be captured.
+
+The predicate is strictly narrower than the issue #60 one: it can only refuse
+pruning. Measured consequence — it, not the index threshold, is what limits
+move-count pruning: sweeping `move_count_base` from 2 to 24 changes the number
+of skipped children by under 12%.
+
+### What this does not change
+
+Mate-distance pruning is excluded from `selective_mode_early()` and from
+`SearchConfig.selective_pruning()`. It narrows the window to bounds the true
+value already satisfies, so a search using it still reports ordinary `exact`
+bounds and may still publish a proven result. It is verified against the
+bounded-proof oracle rather than assumed: see the measurements. The other three
+withdraw the certificate exactly as NMP and futility do.
+
+These four are **Python only**. `Genome.native_arguments()` raises rather than
+returning a native search that ignores them, and the exhaustive-label pipelines
+(`teacher_config`, the supervised trainer, the dataset expander) reject the
+three heuristic members through `SearchConfig.selective_pruning()`. The
+analysis CLI exposes `--razoring`, `--reverse-futility`, `--move-count` and
+`--mate-distance`; the browser option whitelist is unchanged.
+
+See [bounded validation](../benchmarks/shallow_pruning/README.md) for firing
+rates, node costs, the mate-distance oracle check and the equal-time paired
+result, including which of the four are recommended for adoption.
 
 ## Experimental evolved and variable-material evaluators
 
@@ -245,14 +353,24 @@ one, where the skipped child is evaluated statically; from depth two the child
 gets a search that may capture, which is why material and advantage are charged
 from that ply and sit outside the measurement.
 
-On the adopted genome, over 3,618 quiet moves from 183 guarded positions: mean
-gain **−15.51**, p99 **−3.40**, and a largest observed gain of **+12.81** against
-a charged allowance of **207.4**. Ninety-nine percent of quiet moves lose ground,
-because a quiet move cedes the tempo; the allowance is protecting against a tail
-event that tops out near thirteen units. The multiplier covering the largest
-observed gain is **0.0617**, so the configuration's floor of 1/16 is the tightest
-expressible margin and about one percent more generous than the measurement asks
-for.
+On the adopted genome, over 202 quiet moves from 183 guarded positions: mean
+gain **−16.49** and a largest observed gain of **−6.43** against a charged
+allowance of **207.4**. Every admitted quiet move loses ground, because a quiet
+move cedes the tempo, so on this sample no multiplier is needed to cover a gain
+that never occurs and the derived margin is **0**.
+
+That is a stronger result than it was before issue #68 tightened `quiet`. Under
+the looser test the same corpus admitted 3,618 moves with a largest gain of
+**+12.81**, giving a derived multiplier of 0.0617 — which is why the 1/16 used
+elsewhere on this branch is close to right. Adding the route-blocking clause
+removed precisely the moves that could gain: a move that vacates or occupies a
+square on a shortest enemy route is corner-threat prevention, and that is what a
+gaining quiet move was. The two changes were made independently and agree.
+
+A margin of zero is not a recommendation. Two hundred moves from one genome
+cannot license removing the allowance, the configuration floor is 1/16 in any
+case, and the argument for keeping headroom is the tail this sample does not
+contain.
 
 `calibrate(config, states, quantile=…)` returns the multiplier covering a given
 fraction of observed gains. A quantile is not a bound: futility is a heuristic

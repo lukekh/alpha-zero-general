@@ -133,6 +133,7 @@ class MaterialTests(unittest.TestCase):
             'race_reduction_enabled': dict(lmr_enabled=True, race_reduction_enabled=True),
             'nmp_enabled': dict(selective_evaluator_enabled=True, nmp_enabled=True),
             'futility_enabled': dict(selective_evaluator_enabled=True, futility_enabled=True),
+            'razoring_enabled': dict(quiescence_enabled=True, razoring_enabled=True),
         }
         for name in self.config.to_dict():
             value = getattr(self.config, name)
