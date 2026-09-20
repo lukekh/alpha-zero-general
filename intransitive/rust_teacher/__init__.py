@@ -41,6 +41,29 @@ class RustTeacher:
         return state.tobytes().hex()
 
     @staticmethod
+    def parallel_settings(threads, split_min_depth, split_min_siblings, table_entries,
+                          futility_max_depth=2):
+        """Validate the branch-parallel interlocks before a search is started.
+
+        Every reason is stated here rather than discovered mid-search. The
+        memory rule is a product because each thread owns a private
+        transposition table; a shared one would be cheaper and would make the
+        search nondeterministic, which #54 and #55 cannot accept.
+        """
+        for name, value, low, high in (('threads', threads, 1, 64),
+                                       ('split_min_depth', split_min_depth, 2, 32),
+                                       ('split_min_siblings', split_min_siblings, 2, 64)):
+            if type(value) is not int or not low <= value <= high:
+                raise ValueError(f'{name} must be an integer in {low}..{high}')
+        if split_min_depth <= futility_max_depth:
+            raise ValueError('split_min_depth must exceed futility_max_depth: a split node hands '
+                             'its tail to helpers, which do not apply the futility margin')
+        if threads * table_entries > 1_000_000:
+            raise ValueError('threads * table_entries must be <= 1000000: each thread owns a '
+                             'private transposition table, so the ceiling is the product')
+        return (threads, split_min_depth, split_min_siblings) != (1, 4, 2)
+
+    @staticmethod
     def material_mode(enabled, linear=False):
         if type(enabled) is not bool or type(linear) is not bool:
             raise ValueError('variable material settings must be booleans')
@@ -66,7 +89,8 @@ class RustTeacher:
                 attack=25.714516982666414, defence=32.5643023919054, variable_material_enabled=False,
                 variable_material_linear=False,
                 mvv_lva_enabled=False, selective_evaluator_enabled=False, nmp_enabled=False, nmp_min_depth=3, nmp_reduction=1,
-                futility_enabled=False, futility_max_depth=2, futility_margin=1., certificate_enabled=False):
+                futility_enabled=False, futility_max_depth=2, futility_margin=1., certificate_enabled=False,
+                threads=1, split_min_depth=4, split_min_siblings=2):
         if not np.isfinite(seconds) or seconds < 0:
             raise ValueError('seconds must be finite and nonnegative')
         from ..heuristics.config import SearchConfig
@@ -74,19 +98,24 @@ class RustTeacher:
             nmp_reduction=nmp_reduction, futility_enabled=futility_enabled,
             futility_max_depth=futility_max_depth, futility_margin=futility_margin)
         SearchConfig(mvv_lva_enabled=mvv_lva_enabled, selective_evaluator_enabled=selective_evaluator_enabled, **settings)
+        parallel = self.parallel_settings(threads, split_min_depth, split_min_siblings,
+                                          table_entries, futility_max_depth)
         mode = self.material_mode(variable_material_enabled, variable_material_linear)
         options = f'{str(nmp_enabled).lower()} {nmp_min_depth} {nmp_reduction} ' + \
                   f'{str(futility_enabled).lower()} {futility_max_depth} {futility_margin}'
         # Each optional group is positional, so a later one implies the earlier.
-        if selective_evaluator_enabled or mvv_lva_enabled or certificate_enabled:
+        extended = selective_evaluator_enabled or mvv_lva_enabled or certificate_enabled or parallel
+        if extended:
             mode = self.material_mode(variable_material_enabled, variable_material_linear) or ' 0'
             options += ' ' + str(selective_evaluator_enabled).lower()
-            if mvv_lva_enabled or certificate_enabled:
+            if mvv_lva_enabled or certificate_enabled or parallel:
                 options += ' ' + str(mvv_lva_enabled).lower()
-            if certificate_enabled:
-                options += ' true'
+            if certificate_enabled or parallel:
+                options += ' ' + str(certificate_enabled).lower()
+            if parallel:
+                options += f' {threads} {split_min_depth} {split_min_siblings}'
         # Preserve the existing wire forms when all selective options are defaults.
-        options = (' ' + options) if selective_evaluator_enabled or mvv_lva_enabled or certificate_enabled or settings != dict(nmp_enabled=False, nmp_min_depth=3,
+        options = (' ' + options) if extended or settings != dict(nmp_enabled=False, nmp_min_depth=3,
             nmp_reduction=1, futility_enabled=False, futility_max_depth=2, futility_margin=1.) else ''
         command = 'search_reuse' if reuse else 'search'
         result = self.request(f'{command} {depth} {int(seconds*1000)} {node_limit} {radius} {weight} '
@@ -97,10 +126,22 @@ class RustTeacher:
             material=material, advantage=advantage, attack=attack, defence=defence,
             variable_material_enabled=variable_material_enabled,
             mvv_lva_enabled=mvv_lva_enabled, selective_evaluator_enabled=selective_evaluator_enabled,
-            certificate_enabled=certificate_enabled, **settings)
+            certificate_enabled=certificate_enabled, threads=threads,
+            split_min_depth=split_min_depth, split_min_siblings=split_min_siblings,
+            # Reproducible for a fixed thread count, not across thread counts:
+            # helpers hold private tables and a frozen window, so the tree a
+            # given count searches is fixed, but a different count searches a
+            # different tree. A search that runs out of time is reproducible in
+            # neither mode, exactly as the single-threaded search already was.
+            deterministic_for_thread_count=True, **settings)
         if 'selective' in result:
             result['selective']['depth'] = result['completed_depth']
-        result['score_bound'] = ('selective_exact' if nmp_enabled or futility_enabled else 'exact') if result['score'] is not None else None
+        # A parallel result is exact minimax at its completed depth, but it is
+        # not the single-threaded proof that the teacher-label paths accept,
+        # so it never borrows the bound name a certificate carries.
+        result['score_bound'] = (('selective_exact' if nmp_enabled or futility_enabled else
+                                  'parallel_exact' if threads > 1 else 'exact')
+                                 if result['score'] is not None else None)
         return result
 
 

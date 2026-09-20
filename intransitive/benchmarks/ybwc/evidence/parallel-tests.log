@@ -1,0 +1,15 @@
+test_defaults_are_recognised_as_the_unextended_wire_form (intransitive.tests.test_parallel_search.ParallelInterlockTests.test_defaults_are_recognised_as_the_unextended_wire_form) ... ok
+test_thread_and_memory_interlocks_state_their_reason (intransitive.tests.test_parallel_search.ParallelInterlockTests.test_thread_and_memory_interlocks_state_their_reason) ... ok
+test_a_fixed_thread_count_reproduces_itself (intransitive.tests.test_parallel_search.ParallelSearchTests.test_a_fixed_thread_count_reproduces_itself) ... ok
+test_a_native_genome_can_only_ask_for_a_single_threaded_search (intransitive.tests.test_parallel_search.ParallelSearchTests.test_a_native_genome_can_only_ask_for_a_single_threaded_search) ... ok
+test_a_parallel_result_is_never_offered_as_a_certificate (intransitive.tests.test_parallel_search.ParallelSearchTests.test_a_parallel_result_is_never_offered_as_a_certificate) ... ok
+test_every_thread_count_agrees_on_the_answer (intransitive.tests.test_parallel_search.ParallelSearchTests.test_every_thread_count_agrees_on_the_answer) ... ok
+test_one_thread_never_splits_and_keeps_the_sequential_stop_reasons (intransitive.tests.test_parallel_search.ParallelSearchTests.test_one_thread_never_splits_and_keeps_the_sequential_stop_reasons) ... ok
+test_splitting_actually_happens_and_is_charged_to_the_search (intransitive.tests.test_parallel_search.ParallelSearchTests.test_splitting_actually_happens_and_is_charged_to_the_search) ... ok
+test_the_node_budget_bounds_every_thread_together (intransitive.tests.test_parallel_search.ParallelSearchTests.test_the_node_budget_bounds_every_thread_together) ... ok
+test_the_search_identity_records_the_parallel_settings (intransitive.tests.test_parallel_search.ParallelSearchTests.test_the_search_identity_records_the_parallel_settings) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 100.758s
+
+OK

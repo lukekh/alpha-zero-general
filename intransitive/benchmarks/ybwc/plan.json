@@ -1,0 +1,67 @@
+{
+  "issue": 65,
+  "question": "Does YBWC branch-parallel search in the Rust teacher buy playing strength at equal wall clock, and can it be made reproducible enough for the #54 and #55 harnesses?",
+  "predeclared": "2026-09-20, before any measurement was taken",
+  "baseline_revision": "8d22a1117f9fcb4fdc89057f13c5f48255ad5c26",
+  "acceptance": {
+    "primary": "Equal-time paired play against the same engine at one thread. Adopt (default on) only if the decisive win rate at four threads has a 95% Wilson lower bound above 0.5.",
+    "secondary": "Node throughput is reported for diagnosis only and can never carry the decision.",
+    "null_outcome": "Keeping the feature implemented and disabled is a valid result."
+  },
+  "equivalence": {
+    "rule": "At threads = 1 the new binary must reproduce the frozen baseline's action, score, principal variation, completed depth, node count and stop reason exactly, on every recorded row.",
+    "determinism": "At each of threads 2, 3 and 4, repeated runs of the same request must agree on action, score, principal variation and node count. Determinism is claimed per thread count, not across thread counts, and not for a search that runs out of time."
+  },
+  "positions": {
+    "source": "intransitive.tournament.spec.generate_positions(seed=65, lines=9)",
+    "reason": "The #54 harness cannot run a native candidate: tournament.spec.candidate() rejects every backend but python. Its position generator, stage definitions, both-colour pairing and Wilson reporting are reused here against the native engine instead.",
+    "equivalence_and_overhead": "official start plus the first two opening, midgame and endgame starts by state hash",
+    "paired": "official start plus the first eight opening, midgame and endgame starts by state hash, each played from both colours"
+  },
+  "threads": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "hardware_note": "Measured on 4 performance + 4 efficiency cores. Thread counts above 4 are not measured and are not claimed.",
+  "fixed_depth": {
+    "depths": [
+      4,
+      5,
+      6
+    ],
+    "seconds_cap": 600,
+    "proof_nodes": 0
+  },
+  "fixed_time": {
+    "depth": 20,
+    "seconds": [
+      0.5,
+      2.0
+    ]
+  },
+  "paired_protocol": {
+    "mode": "wall",
+    "seconds_per_move": 0.5,
+    "max_plies": 100,
+    "thread_counts": [
+      2,
+      4
+    ],
+    "colours": "both",
+    "starts": "official start plus the first eight opening, midgame and endgame starts by state hash: 25 starts, 50 games per thread count",
+    "note": "Both engines are deterministic, so a start played twice from the same colour is the same game. The sample size is the number of distinct starts, not a number of repeats.",
+    "unfinished": "counted as unresolved and worth zero, as in #54; the decisive interval uses wins and losses only"
+  },
+  "settings": {
+    "split_min_depth": 4,
+    "split_min_siblings": 2,
+    "table_entries": 50000
+  },
+  "not_measured": [
+    "Shared transposition tables. Measuring them would mean shipping a nondeterministic search path, which the determinism constraint rules out before any measurement.",
+    "Thread counts above the machine's performance-core count.",
+    "Parallel proof or certificate search. Those paths stay sequential by construction."
+  ]
+}

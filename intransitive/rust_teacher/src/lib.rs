@@ -1,6 +1,8 @@
 //! Experimental opt-in selective search. No dependencies,
 //! unsafe code, neural inference, or changes to the live training pipeline.
 use std::collections::{HashMap, VecDeque};
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 mod clear_run;
 mod moves;
@@ -554,6 +556,13 @@ pub struct Config {
     pub certificate_enabled: bool,
     pub certificate_plies: i32,
     pub table_entries: usize,
+    /// Experimental YBWC branch-parallel search; one keeps the exact
+    /// single-threaded search, including its node counts and node order.
+    pub threads: usize,
+    /// Remaining depth a node needs before its younger brothers may be split.
+    pub split_min_depth: usize,
+    /// Unsearched brothers a node needs before splitting is worth a clone.
+    pub split_min_siblings: usize,
 }
 impl Default for Config {
     fn default() -> Self {
@@ -577,6 +586,9 @@ impl Default for Config {
             certificate_enabled: false,
             certificate_plies: 20,
             table_entries: 10000,
+            threads: 1,
+            split_min_depth: 4,
+            split_min_siblings: 2,
         }
     }
 }
@@ -622,6 +634,29 @@ impl Config {
         {
             return Err("Unsupported configuration: depth 1..32, radius 3/4, proof depth <=2 and nodes <=64".into());
         }
+        // Parallel interlocks are checked here, at load, so an unsupported
+        // thread count or table budget is a rejected configuration rather than
+        // something discovered part-way through a measured search.
+        if !(1..=64).contains(&self.threads) {
+            return Err("threads must be in 1..64".into());
+        }
+        if !(2..=32).contains(&self.split_min_depth) {
+            return Err("split_min_depth must be in 2..32; a split node needs a child to give away".into());
+        }
+        if !(2..=64).contains(&self.split_min_siblings) {
+            return Err("split_min_siblings must be in 2..64; a split needs at least two unsearched brothers".into());
+        }
+        // A split node hands its whole tail to the helpers, which do not apply
+        // the futility margin. Overlapping the two would silently drop the
+        // pruning the selective counters claim to be reporting.
+        if self.split_min_depth <= self.futility_max_depth {
+            return Err("split_min_depth must exceed futility_max_depth: a split node hands its tail to helpers, which do not apply the futility margin".into());
+        }
+        // Every thread owns a private table, so the memory ceiling is the
+        // product. Sharing one table would be cheaper and nondeterministic.
+        if self.threads.saturating_mul(self.table_entries) > 1000000 {
+            return Err("threads * table_entries must be <= 1000000: each thread owns a private transposition table".into());
+        }
         Ok(())
     }
 }
@@ -658,12 +693,20 @@ pub struct Search {
     pub tt_hits: u64,
     pub selective_stats: [u64; 10],
     pub mvv_lva_stats: [u64; 2],
+    /// Split nodes, chunks, brothers handed to a helper, helper nodes.
+    pub split_stats: [u64; 4],
     selective_disabled: bool,
+    /// Node allowance for this searcher. The master holds the whole configured
+    /// limit; inside a split it temporarily holds its own reserved slice.
+    budget: u64,
+    /// Shared with every helper so a time-out reaches all of them at once.
+    stop: Arc<AtomicBool>,
 }
 type Line = (f64, Vec<u16>);
 impl Search {
     pub fn new(config: Config) -> Result<Self, String> {
         config.validate()?;
+        let config_limit = config.node_limit;
         Ok(Self {
             config,
             start: Instant::now(),
@@ -678,14 +721,78 @@ impl Search {
             tt_hits: 0,
             selective_stats: [0; 10],
             mvv_lva_stats: [0; 2],
+            split_stats: [0; 4],
             selective_disabled: false,
+            budget: config_limit,
+            stop: Arc::new(AtomicBool::new(false)),
         })
     }
+    /// A helper searcher: its own table, killers, history and node counter,
+    /// sharing only the deadline and the stop flag. `threads` is forced to one
+    /// because helpers never split, which is what bounds live threads to the
+    /// configured count and keeps the split schedule a pure function of it.
+    fn helper(&self) -> Self {
+        let mut config = self.config.clone();
+        config.threads = 1;
+        Self {
+            config,
+            start: self.start,
+            nodes: 0,
+            proof_nodes: 0,
+            table: HashMap::new(),
+            fifo: VecDeque::new(),
+            killers: [[None; 2]; 64],
+            history: [[0; 648]; 2],
+            previous: HashMap::new(),
+            root_scores: HashMap::new(),
+            tt_hits: 0,
+            selective_stats: [0; 10],
+            mvv_lva_stats: [0; 2],
+            split_stats: [0; 4],
+            selective_disabled: false,
+            budget: 0,
+            stop: Arc::clone(&self.stop),
+        }
+    }
+    /// Hand a helper its reserved slice of the remaining budget and the move
+    /// ordering the master had reached. Both are fixed before any thread runs.
+    fn lease(&mut self, share: u64, killers: &[[Option<u16>; 2]; 64], history: &[[u32; 648]; 2]) {
+        self.nodes = 0;
+        self.proof_nodes = 0;
+        self.tt_hits = 0;
+        self.selective_stats = [0; 10];
+        self.mvv_lva_stats = [0; 2];
+        self.budget = share;
+        self.killers = *killers;
+        self.history = *history;
+    }
+    /// Charge a finished helper's work to the master. Counters are summed in
+    /// brother order, so the reported totals never depend on finishing order.
+    fn absorb(&mut self, helper: &Search) {
+        self.nodes += helper.nodes;
+        self.proof_nodes += helper.proof_nodes;
+        self.tt_hits += helper.tt_hits;
+        for (total, part) in self.selective_stats.iter_mut().zip(helper.selective_stats) {
+            *total += part;
+        }
+        for (total, part) in self.mvv_lva_stats.iter_mut().zip(helper.mvv_lva_stats) {
+            *total += part;
+        }
+        self.split_stats[3] += helper.nodes;
+    }
     fn visit(&mut self, proof: bool) -> Result<(), &'static str> {
-        if self.start.elapsed() >= Duration::from_millis(self.config.milliseconds) {
+        // The flag carries a time-out to every thread within one node instead
+        // of waiting for each to read the clock. Node exhaustion deliberately
+        // does not set it: each searcher holds a reserved slice, so it can stop
+        // on its own without making its brothers' node counts depend on timing.
+        if self.stop.load(Ordering::Relaxed) {
             return Err("time");
         }
-        if self.nodes >= self.config.node_limit {
+        if self.start.elapsed() >= Duration::from_millis(self.config.milliseconds) {
+            self.stop.store(true, Ordering::Relaxed);
+            return Err("time");
+        }
+        if self.nodes >= self.budget {
             return Err("nodes");
         }
         self.nodes += 1;
@@ -987,13 +1094,166 @@ impl Search {
             *c != 0 && owner(*c) != p.side && distance(s, source).min(distance(s, target)) <= 2
         })
     }
+    /// Where a split is allowed. The answer uses only the node's remaining
+    /// depth, its unsearched brother count and the configuration -- never
+    /// whether a helper happens to be idle. Fixed split points are what let a
+    /// given thread count reproduce itself run after run.
+    ///
+    /// Selective sub-searches and null-move clones stay sequential so their
+    /// recorded behaviour is the behaviour #60 measured. `split_min_depth`
+    /// already exceeds `futility_max_depth` by configuration interlock, so a
+    /// split node is never also a futility node.
+    fn splits(&self, p: &Position, depth: usize, remaining: usize) -> bool {
+        !self.selective_disabled
+            && !p.hypothetical
+            && depth >= self.config.split_min_depth
+            && remaining >= self.config.split_min_siblings
+    }
+    /// One younger brother, searched exactly as the sequential loop searches a
+    /// non-eldest child: a null-window probe first, then a full re-search if
+    /// the probe lands inside the window.
+    fn sibling(
+        &mut self,
+        p: &mut Position,
+        action: u16,
+        depth: usize,
+        alpha: f64,
+        beta: f64,
+        ply: usize,
+    ) -> Result<Line, &'static str> {
+        let undo = p.push(action);
+        let probe = next_up(alpha);
+        let child = if alpha.is_finite() && probe < beta {
+            match self.search(p, depth - 1, -probe, -alpha, ply + 1) {
+                Ok((v, _)) if alpha < -v && -v < beta => {
+                    self.search(p, depth - 1, -beta, -alpha, ply + 1)
+                }
+                other => other,
+            }
+        } else {
+            self.search(p, depth - 1, -beta, -alpha, ply + 1)
+        };
+        p.pop(undo);
+        child
+    }
+    /// Young brothers wait: the eldest child has already been searched, so
+    /// `alpha` carries its bound. The remaining brothers are searched in
+    /// chunks against the window frozen at the start of the chunk, joined in
+    /// brother order and then applied exactly as the sequential loop applies a
+    /// child. Freezing the window is what makes the schedule reproducible --
+    /// a brother's result never depends on when another brother finished.
+    ///
+    /// It is also sound. A frozen alpha is never above the live one, and
+    /// searching with a lower alpha only widens the window: an exact value
+    /// stays exact, a fail-low stays a fail-low against the higher bound, and
+    /// beta never moves inside a node so a fail-high stays a fail-high. The
+    /// price is the parallel search overhead -- brothers start without the
+    /// bound their elder brothers would have given them, so the tree is
+    /// larger. That is the cost this scheme is measured on.
+    #[allow(clippy::too_many_arguments)]
+    fn parallel_tail(
+        &mut self,
+        p: &mut Position,
+        tail: &[u16],
+        depth: usize,
+        alpha: &mut f64,
+        beta: f64,
+        ply: usize,
+        best: &mut Line,
+        helpers: &mut [Search],
+    ) -> Result<(), &'static str> {
+        let side = p.side;
+        self.split_stats[0] += 1;
+        let mut index = 0;
+        while index < tail.len() && *alpha < beta {
+            let width = (helpers.len() + 1).min(tail.len() - index);
+            let chunk = &tail[index..index + width];
+            let frozen = *alpha;
+            // Reserve every participant's slice before any of them runs. The
+            // chunk can then never spend more than the search had left,
+            // whatever order the threads finish in, and nothing is refunded
+            // beyond the nodes actually charged back below.
+            let share = self.budget.saturating_sub(self.nodes) / width as u64;
+            let (leading, rest) = (chunk[0], &chunk[1..]);
+            let mut parents: Vec<Position> = rest.iter().map(|_| p.clone()).collect();
+            for helper in helpers.iter_mut().take(width - 1) {
+                helper.lease(share, &self.killers, &self.history);
+            }
+            let reserved = std::mem::replace(&mut self.budget, self.nodes + share);
+            let mut outcomes: Vec<Result<Line, &'static str>> = Vec::with_capacity(width);
+            std::thread::scope(|scope| {
+                let mut handles = Vec::with_capacity(width - 1);
+                for ((helper, parent), &action) in
+                    helpers.iter_mut().zip(parents.iter_mut()).zip(rest)
+                {
+                    handles.push(
+                        scope.spawn(move || helper.sibling(parent, action, depth, frozen, beta, ply)),
+                    );
+                }
+                // The master takes one brother itself rather than idling, so
+                // live threads equal the configured count. Scope joins every
+                // helper before returning, on cutoff, time-out or panic alike,
+                // so no worker outlives the split that created it.
+                outcomes.push(self.sibling(p, leading, depth, frozen, beta, ply));
+                for handle in handles {
+                    outcomes.push(handle.join().unwrap_or(Err("worker panicked")));
+                }
+            });
+            self.budget = reserved;
+            for helper in helpers.iter().take(width - 1) {
+                self.absorb(helper);
+            }
+            self.split_stats[1] += 1;
+            self.split_stats[2] += width as u64 - 1;
+            for (&action, outcome) in chunk.iter().zip(outcomes) {
+                if *alpha >= beta {
+                    break;
+                }
+                let capture = p.board[destination(action).unwrap()] != 0;
+                let (value, line) = outcome?;
+                let value = -value;
+                if ply == 0 {
+                    self.root_scores.insert(action, value);
+                }
+                if value > best.0 {
+                    *best = (value, std::iter::once(action).chain(line).collect());
+                }
+                *alpha = alpha.max(value);
+                if *alpha >= beta {
+                    if !capture && !self.selective_disabled {
+                        if self.killers[ply][0] != Some(action) {
+                            self.killers[ply][1] = self.killers[ply][0];
+                            self.killers[ply][0] = Some(action);
+                        }
+                        let h = &mut self.history[side as usize][action as usize];
+                        *h = (*h + (depth * depth) as u32).min(32767);
+                    }
+                    break;
+                }
+            }
+            index += width;
+        }
+        Ok(())
+    }
     fn search(
+        &mut self,
+        p: &mut Position,
+        depth: usize,
+        alpha: f64,
+        beta: f64,
+        ply: usize,
+    ) -> Result<Line, &'static str> {
+        self.search_with(p, depth, alpha, beta, ply, &mut [])
+    }
+    #[allow(clippy::too_many_arguments)]
+    fn search_with(
         &mut self,
         p: &mut Position,
         depth: usize,
         mut alpha: f64,
         mut beta: f64,
         ply: usize,
+        helpers: &mut [Search],
     ) -> Result<Line, &'static str> {
         self.visit(false)?;
         if let Some(score) = p.terminal_score(ply) {
@@ -1145,7 +1405,19 @@ impl Search {
         }
         let mut best = (-f64::INFINITY, vec![]);
         let side = p.side;
-        for (index, action) in self.ordered(p, preferred, ply).into_iter().enumerate() {
+        let ordered = self.ordered(p, preferred, ply);
+        for index in 0..ordered.len() {
+            // Young brothers wait for the eldest. Once it has returned a bound,
+            // the whole remaining tail goes to `parallel_tail` in one call, so
+            // a node splits at most once and the master never holds a helper
+            // while descending somewhere else.
+            if index > 0 && !helpers.is_empty() && self.splits(p, depth, ordered.len() - index) {
+                self.parallel_tail(
+                    p, &ordered[index..], depth, &mut alpha, beta, ply, &mut best, helpers,
+                )?;
+                break;
+            }
+            let action = ordered[index];
             if safe
                 && self.config.futility_enabled
                 && depth <= self.config.futility_max_depth
@@ -1169,6 +1441,11 @@ impl Search {
                     }
                     other => other,
                 }
+            } else if index == 0 {
+                // Only the eldest child carries the helper pool onward, so
+                // splitting walks the leftmost spine and nowhere else. That is
+                // where a bound already exists to hand the younger brothers.
+                self.search_with(p, depth - 1, -beta, -alpha, ply + 1, helpers)
             } else {
                 self.search(p, depth - 1, -beta, -alpha, ply + 1)
             };
@@ -1232,6 +1509,13 @@ impl Search {
         self.tt_hits = 0;
         self.selective_stats = [0; 10];
         self.mvv_lva_stats = [0; 2];
+        self.split_stats = [0; 4];
+        self.budget = self.config.node_limit;
+        self.stop.store(false, Ordering::Relaxed);
+        // Helper tables are always fresh, including under `search_reuse`:
+        // carrying them between requests would make a result depend on the
+        // request history of every thread rather than only the master's.
+        let mut helpers: Vec<Search> = (1..self.config.threads).map(|_| self.helper()).collect();
         if !reuse {
             self.table.clear();
             self.fifo.clear();
@@ -1266,7 +1550,7 @@ impl Search {
         let root = p.clone();
         for depth in 1..=self.config.depth {
             self.root_scores.clear();
-            match self.search(&mut p, depth, -f64::INFINITY, f64::INFINITY, 0) {
+            match self.search_with(&mut p, depth, -f64::INFINITY, f64::INFINITY, 0, &mut helpers) {
                 Ok((score, line)) => {
                     result.action = line.first().copied();
                     result.score = Some(score);
@@ -1276,9 +1560,15 @@ impl Search {
                     if score.abs() > 90000.0
                         && (!(self.config.nmp_enabled || self.config.futility_enabled) || depth == self.config.depth) {
                         result.complete = true;
+                        // A mate found with helpers running is exact, but it is
+                        // not the single-threaded proof the label paths accept,
+                        // so it is reported under its own name rather than
+                        // borrowing the certificate's.
                         result.stop_reason =
                             if self.config.nmp_enabled || self.config.futility_enabled {
                                 "selective_result"
+                            } else if self.config.threads > 1 {
+                                "parallel_result"
                             } else {
                                 "proven_result"
                             };
@@ -2071,4 +2361,181 @@ mod tests {
         assert!(variable_piece_values([0; 3], [0; 3]).iter().all(|v| v.is_finite()));
     }
 
+
+    fn parallel_config(threads: usize, depth: usize) -> Config {
+        Config {
+            threads,
+            depth,
+            milliseconds: 600_000,
+            node_limit: 4_000_000,
+            proof_nodes: 0,
+            table_entries: 20_000,
+            ..Config::default()
+        }
+    }
+
+    /// The scheme is exact: a frozen, lower alpha only widens the window a
+    /// brother is searched with, so the root value and the selected move must
+    /// survive it. Node counts are expected to differ between thread counts --
+    /// that difference is the parallel search overhead -- but not between two
+    /// runs of the same thread count.
+    #[test]
+    fn parallel_search_matches_one_thread_and_reproduces_itself() {
+        let mut rng = GateRng(20260920);
+        let mut split_positions = 0;
+        let mut positions = 0;
+        for _ in 0..12 {
+            let position = fixture(&rng.pieces(16));
+            if position.terminal(true).is_some() {
+                continue;
+            }
+            positions += 1;
+            let mut single = Search::new(parallel_config(1, 4)).unwrap();
+            let reference = single.analyze(&position);
+            assert_eq!(single.split_stats, [0; 4], "one thread must never split");
+            for threads in 2..=4 {
+                let mut search = Search::new(parallel_config(threads, 4)).unwrap();
+                let first = search.analyze(&position);
+                let splits = search.split_stats;
+                let repeat = search.analyze(&position);
+                assert_eq!(first.score, reference.score);
+                assert_eq!(first.action, reference.action);
+                assert_eq!(first.completed_depth, reference.completed_depth);
+                // Same thread count, same tree: identical work, not merely an
+                // identical answer reached by a different amount of searching.
+                assert_eq!(first.nodes, repeat.nodes);
+                assert_eq!(first.score, repeat.score);
+                assert_eq!(first.action, repeat.action);
+                assert_eq!(first.pv, repeat.pv);
+                assert_eq!(splits, search.split_stats);
+                if splits[0] > 0 {
+                    split_positions += 1;
+                    assert!(splits[2] > 0 && splits[3] > 0);
+                }
+            }
+        }
+        assert!(positions >= 8, "corpus collapsed to {positions} positions");
+        assert!(split_positions > 0, "no position ever reached a split point");
+    }
+
+    /// Slices are reserved before any thread starts, so a chunk can never spend
+    /// more than the search had left however the threads interleave.
+    #[test]
+    fn parallel_work_never_exceeds_the_reserved_budget() {
+        let position = fixture(&GateRng(7788).pieces(16));
+        assert!(position.terminal(true).is_none());
+        for cap in [1, 7, 64, 1000, 25_000] {
+            let mut previous = None;
+            for threads in 1..=4 {
+                let mut search = Search::new(Config {
+                    node_limit: cap,
+                    ..parallel_config(threads, 6)
+                })
+                .unwrap();
+                let result = search.analyze(&position);
+                assert!(result.nodes <= cap, "{} nodes spent of {cap}", result.nodes);
+                if cap < 25_000 {
+                    assert_eq!(result.stop_reason, "nodes");
+                    assert!(!result.complete);
+                }
+                let repeat = search.analyze(&position).nodes;
+                assert_eq!(result.nodes, repeat, "node accounting depends on timing");
+                if threads == 1 {
+                    previous = Some(result.nodes);
+                }
+            }
+            assert!(previous.is_some());
+        }
+    }
+
+    /// Split points are a function of the node, not of who is idle, and the
+    /// paths that carry exactness claims are excluded from them.
+    #[test]
+    fn split_points_exclude_proof_selective_and_shallow_nodes() {
+        let position = fixture(&GateRng(991).pieces(16));
+        let mut search = Search::new(parallel_config(4, 6)).unwrap();
+        assert!(search.splits(&position, 4, 2));
+        assert!(!search.splits(&position, 3, 2), "below split_min_depth");
+        assert!(Config { split_min_depth: 3, futility_max_depth: 2, ..Config::default() }.validate().is_ok());
+        assert!(!search.splits(&position, 4, 1), "the eldest brother has no company");
+        let mut hypothetical = position.clone();
+        hypothetical.hypothetical = true;
+        assert!(!search.splits(&hypothetical, 6, 8), "null-move clones stay sequential");
+        search.selective_disabled = true;
+        assert!(!search.splits(&position, 6, 8), "selective sub-searches stay sequential");
+        search.selective_disabled = false;
+        // A helper never carries helpers of its own, so live threads are
+        // exactly `threads` and a helper's subtree is a sequential search.
+        assert_eq!(search.helper().config.threads, 1);
+    }
+
+    /// Every interlock is a load-time refusal that names its reason.
+    #[test]
+    fn parallel_interlocks_are_refused_at_configuration_time() {
+        for (config, expected) in [
+            (Config { threads: 0, ..Config::default() }, "threads must be in 1..64"),
+            (Config { threads: 65, ..Config::default() }, "threads must be in 1..64"),
+            (Config { split_min_depth: 1, ..Config::default() }, "split_min_depth must be in 2..32"),
+            (Config { split_min_siblings: 1, ..Config::default() }, "split_min_siblings must be in 2..64"),
+            (
+                Config { split_min_depth: 2, futility_max_depth: 2, ..Config::default() },
+                "split_min_depth must exceed futility_max_depth",
+            ),
+            (
+                Config { threads: 4, table_entries: 500_000, ..Config::default() },
+                "threads * table_entries must be <= 1000000",
+            ),
+        ] {
+            let message = config.validate().expect_err("configuration should be refused");
+            assert!(message.starts_with(expected), "{message}");
+        }
+        assert!(Config { threads: 8, table_entries: 125_000, ..Config::default() }.validate().is_ok());
+    }
+
+    /// A time-out has to reach every worker and leave nothing behind: the scope
+    /// joins each helper before the split returns, and the master's position
+    /// unwinds whichever thread noticed the deadline first.
+    #[test]
+    fn a_time_out_reaches_every_worker_and_unwinds() {
+        let original = fixture(&GateRng(4242).pieces(16));
+        assert!(original.terminal(true).is_none());
+        for threads in 1..=4 {
+            let mut search = Search::new(Config {
+                milliseconds: 0,
+                ..parallel_config(threads, 12)
+            })
+            .unwrap();
+            let mut p = original.clone();
+            let outcome = search.search_with(&mut p, 6, -f64::INFINITY, f64::INFINITY, 0, &mut []);
+            assert_eq!(outcome, Err("time"));
+            assert_eq!(p, original);
+            assert!(search.stop.load(Ordering::Relaxed));
+            // The flag is sticky within a search and cleared by the next one,
+            // so a timed-out request cannot silently stop the one after it.
+            let result = search.analyze(&original);
+            assert_eq!(result.stop_reason, "time");
+            assert!(!result.complete);
+        }
+    }
+
+    /// Parallel mates are exact but are not offered under the proof's name.
+    #[test]
+    fn a_parallel_mate_is_not_reported_as_a_proven_result() {
+        let position = fixture(&[(70, 1), (0, -1), (9, -2), (18, -3)]);
+        for threads in 1..=4 {
+            let mut search = Search::new(Config {
+                proof_depth: 2,
+                proof_nodes: 64,
+                ..parallel_config(threads, 5)
+            })
+            .unwrap();
+            let result = search.analyze(&position);
+            if result.score.map_or(false, |s| s.abs() > 90000.0) {
+                assert_eq!(
+                    result.stop_reason,
+                    if threads == 1 { "proven_result" } else { "parallel_result" }
+                );
+            }
+        }
+    }
 }

@@ -1,0 +1,21 @@
+{
+  "baseline_revision": "8d22a1117f9fcb4fdc89057f13c5f48255ad5c26",
+  "binary_sha256": "79d01893ccee54f3478b76e0062c6eaae594807a7e507c3b58296a3fdb0c5cd8",
+  "scope": "Changed and added implementation, test, documentation and harness sources; unchanged sources are identified by the baseline revision. Evidence JSON is excluded.",
+  "sha256": {
+    "intransitive/benchmarks/ybwc/README.md": "4ab2340d95d504291336099e1a23cf41b50f242ddedd8f8bf49018a1e5d07e48",
+    "intransitive/benchmarks/ybwc/plan.json": "fff2022949c0d7ef0b9d451a1c6e5fb84f917084489ec693ec75a671cd4e988a",
+    "intransitive/benchmarks/ybwc/reproduce.py": "f091b051c1dbbf25dd7bd5dd2d830f95a458b1574e66f2d3933ec46cb28e2d29",
+    "intransitive/heuristics/tuning.py": "a3c7eea150468475b6887d0fb7f8cafcb197341b91db32605caa01daa434dab3",
+    "intransitive/rust_teacher/PARALLEL_SEARCH.md": "cbd3c008e5159fa85ebb1562ade159c0d9e59ec61710b96b237497e3aad5d9b5",
+    "intransitive/rust_teacher/README.md": "bd5273833203d04cc94c1963744e477dfbbbc67a14df54e3dd1c3a97c8f5e815",
+    "intransitive/rust_teacher/__init__.py": "92f828619b7aa3a243ae8da9a026c0f2e6e5e14139a1a3e2f0cde522cf721632",
+    "intransitive/rust_teacher/src/lib.rs": "f6aa5c074959f2c46d5be82337641a4c493de3dc7cdd039d1ed31e454ea50520",
+    "intransitive/rust_teacher/src/main.rs": "4608fe4ab266e43d2547864bcce51d35bf05c38c79770abb4cc741178ce012b5",
+    "intransitive/tests/test_parallel_search.py": "01c5c6f61bb51dd1aa95262ec309c757a724413043614e7d9386fffe8a944bc8"
+  },
+  "toolchain": {
+    "cargo": "cargo 1.74.1 (ecb9851af 2023-10-18)",
+    "rustc": "rustc 1.74.1 (a28077b28 2023-12-04)"
+  }
+}

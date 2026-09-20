@@ -145,6 +145,11 @@ class Genome:
             raise ValueError('Native time/work limits exceed the unsigned 64-bit protocol')
         return dict(depth=config.max_depth, seconds=config.time_limit,
                     variable_material_enabled=config.variable_material_enabled,
+                    # A genome cannot carry a thread count. Evolved weights and
+                    # tournament results are only ever produced by the exact
+                    # single-threaded search, whatever #65 concluded about
+                    # branch-parallel search elsewhere.
+                    threads=1,
                     node_limit=config.node_limit, radius=config.pressure_radius,
                     weight=config.pressure_weight if config.pressure_enabled else 0.,
                     material=config.count_weight, advantage=config.advantage_weight,
