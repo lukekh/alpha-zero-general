@@ -13,6 +13,11 @@ first; equal victim values prefer the least valuable attacker. The final
 existing action tie-break remains deterministic. With flat material all types
 are 100, so these extra keys preserve the old move order.
 
+Material value does not decide who wins an exchange under a cyclic capture rule,
+so these keys are weak on their own. `see_ordering_enabled` adds an exchange key
+that ranks above the victim/attacker keys; see [EXCHANGE.md](EXCHANGE.md). The two
+are independent switches and either can be used without the other.
+
 Immediate wins, the preferred TT/PV move, previous root scores and corner defence
 retain priority. Enhanced ordering also retains its existing safe-capture and
 escape groups. MVV-LVA orders captures within those tactical groups, ahead of
