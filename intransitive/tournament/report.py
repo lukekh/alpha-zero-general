@@ -135,17 +135,31 @@ def report(spec, rows):
                     peak_candidate_rss_bytes=max([m['peak_rss_bytes'] for m in moves + startups], default=0))
 
     boards, firing, warnings = {}, {}, []
-    played = defaultdict(list)
+    # Candidates may carry their own search variant, so firing is a property of
+    # the entrant and not only of the protocol.
+    played = defaultdict(lambda: defaultdict(list))
     for task in spec['tasks']:
         row = by_id.get(task['id'])
         if row:
-            played[spec['protocols'][task['protocol']]['mode']].extend(row['moves'])
+            mode = spec['protocols'][task['protocol']]['mode']
+            for move in row['moves']:
+                played[mode][move['candidate']].append(move)
     for limits in spec['protocols']:
+        mode = limits['mode']
         # The engine that played is the authority on what the search could do, so
-        # read the preconditions off a candidate's own effective configuration.
-        firing[limits['mode']] = firing_report(effective_config(spec['candidates'][0], limits),
-                                               played[limits['mode']])
-        warnings.extend(f"{limits['mode']}: {text}" for text in firing[limits['mode']]['warnings'])
+        # read the preconditions off each candidate's own effective configuration.
+        firing[mode] = {item['name']: firing_report(effective_config(item, limits),
+                                                    played[mode].get(item['sha256'], []))
+                        for item in spec['candidates']}
+        # A warning every entrant raises is one fact about the protocol, not one
+        # fact per entrant; only a warning that distinguishes them names them.
+        raised = {}
+        for name, row in firing[mode].items():
+            for text in row['warnings']:
+                raised.setdefault(text, []).append(name)
+        for text, names in raised.items():
+            scope = mode if len(names) == len(firing[mode]) else f"{mode} ({', '.join(names)})"
+            warnings.append(f'{scope}: {text}')
         board = []
         for candidate in spec['candidates']:
             items = [i for i in entries if i['candidate'] == candidate['sha256'] and i['mode'] == limits['mode']]

@@ -235,6 +235,33 @@ legal move of nine positions. The node's static evaluation is also deferred:
 NMP needs it before the move loop, but a futility node computes it only once a
 candidate quiet child actually appears, instead of at every guarded node.
 
+### Calibrating the allowance instead of tuning it
+
+`heuristics.calibration` measures the quantity the allowance is supposed to
+bound, rather than leaving `futility_margin` to taste. For every position the
+guard admits it takes every move `quiet` admits and records the signed change in
+static score from the mover's view. That is exactly the right quantity at depth
+one, where the skipped child is evaluated statically; from depth two the child
+gets a search that may capture, which is why material and advantage are charged
+from that ply and sit outside the measurement.
+
+On the adopted genome, over 3,618 quiet moves from 183 guarded positions: mean
+gain **−15.51**, p99 **−3.40**, and a largest observed gain of **+12.81** against
+a charged allowance of **207.4**. Ninety-nine percent of quiet moves lose ground,
+because a quiet move cedes the tempo; the allowance is protecting against a tail
+event that tops out near thirteen units. The multiplier covering the largest
+observed gain is **0.0617**, so the configuration's floor of 1/16 is the tightest
+expressible margin and about one percent more generous than the measurement asks
+for.
+
+`calibrate(config, states, quantile=…)` returns the multiplier covering a given
+fraction of observed gains. A quantile is not a bound: futility is a heuristic
+and skipping a move in the tail is the risk it exists to take, so the function
+reports coverage and never safety. Recompute it per genome — these numbers
+belong to the route weights they were measured on, which is the whole reason the
+original allowance, carried over from a genome it was never calibrated for,
+pruned nothing.
+
 ### The probe guard, and what it is for
 
 `nmp_relaxed_guard_enabled` (default off) drops exactly one clause of the shared

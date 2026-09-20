@@ -22,6 +22,16 @@ SCHEMA = 'intransitive-tournament-v1'
 POOLS = ('search', 'validation', 'heldout')
 MODES = ('depth', 'wall', 'mcts')
 SCALES = tuple(('count' if name == 'material' else name) + '_weight' for name in GENES['python'])
+# A candidate may carry search overrides so two search policies can be scheduled
+# against each other on one genome. Only pruning and ordering policy is
+# overridable: depth, time, work, proof and table budgets stay with the protocol,
+# because a match where one side is given more resource measures nothing. These
+# overrides enter the candidate's identity, so a variant is a distinct entrant.
+VARIANT_FIELDS = tuple(name for name in SearchConfig().to_dict()
+                       if name not in EVALUATION_FIELDS and name not in (
+                           'search_version', 'max_depth', 'time_limit', 'node_limit',
+                           'proof_depth', 'proof_nodes', 'table_entries',
+                           'pressure_cache_entries'))
 
 
 def digest(value):
@@ -44,12 +54,19 @@ def runtime_versions():
                 llvmlite=llvmlite.__version__)
 
 
-def candidate(name, weights=None, *, role='population', backend='python', genome=None, variable_material_enabled=None):
+def candidate(name, weights=None, *, role='population', backend='python', genome=None,
+              variable_material_enabled=None, search=None):
     """Consume #53's serialized module-scale contract, restricted to Python.
 
     Material mode is a fixed per-candidate choice; signed scales are tunable.
     Optional zero scales disable their modules. Only Python match engines are
     supported by this harness.
+
+    `search` overrides the protocol's pruning and ordering policy for this
+    entrant only, and joins its identity, so the same genome under two search
+    policies is two candidates and the harness schedules them against each other
+    with everything else held equal. Resource limits are deliberately not
+    overridable; see VARIANT_FIELDS.
     """
     if not isinstance(name, str) or not name.strip():
         raise ValueError('Candidate name must be nonempty')
@@ -71,15 +88,25 @@ def candidate(name, weights=None, *, role='population', backend='python', genome
         variable_material_enabled = validated.variable_material_enabled
     elif validated.variable_material_enabled and not variable_material_enabled:
         raise ValueError('Variable genome cannot be overridden to flat material')
+    search = dict(search or {})
+    unsupported = sorted(set(search) - set(VARIANT_FIELDS))
+    if unsupported:
+        raise ValueError(f'Search overrides may not set {unsupported}; a variant changes how a '
+                         f'search prunes, never what it is given')
     genome = validated.to_dict()
     config = replace(validated.to_config(), variable_material_enabled=variable_material_enabled)
     evaluation = {k: v for k, v in config.to_dict().items() if k in EVALUATION_FIELDS}
-    identity = dict(backend=backend, backend_version=backend_version(), evaluation=evaluation)
+    # Validate the overrides now, against defaults, so a malformed variant is
+    # rejected where it is written rather than when a protocol is applied.
+    replace(SearchConfig(**evaluation), **search)
+    identity = dict(backend=backend, backend_version=backend_version(),
+                    evaluation=evaluation, search=search)
     return dict(name=name, role=role, genome=genome, **identity, sha256=digest(identity))
 
 
 def effective_config(item, protocol):
-    return SearchConfig(**item['evaluation'], **protocol['search'])
+    """The protocol's settings, with this candidate's own search variant on top."""
+    return SearchConfig(**item['evaluation'], **{**protocol['search'], **item.get('search', {})})
 
 
 def protocol(mode, *, depth=2, seconds=.05, node_limit=10**9, proof_depth=2,
@@ -236,7 +263,8 @@ def manifest(candidates, positions, protocols, *, pool='search', position_limit=
     names, hashes = set(), set()
     for item in candidates:
         rebuilt = candidate(item['name'], genome=item['genome'], role=item['role'], backend=item['backend'],
-                            variable_material_enabled=item['evaluation'].get('variable_material_enabled', False))
+                            variable_material_enabled=item['evaluation'].get('variable_material_enabled', False),
+                            search=item.get('search'))
         if rebuilt != item or item['name'] in names or item['sha256'] in hashes:
             raise ValueError('Invalid, stale or duplicate deterministic candidate')
         names.add(item['name'])

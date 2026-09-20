@@ -284,16 +284,19 @@ class TournamentTests(unittest.TestCase):
                                                 pvs_enabled=True)])
         row = self.play(spec)
         result = report(spec, [row])
-        firing = result['selective_firing']['wall']
+        firing = result['selective_firing']['wall']['A']
         self.assertEqual(firing['declared'], ['futility', 'lmr', 'mvv_lva', 'nmp'])
         self.assertEqual(firing['fired'], [])
         self.assertEqual(firing['silent'], firing['declared'])
-        self.assertEqual(firing['moves'], len(row['moves']))
+        # Firing is per entrant, so each accounts for the moves it played.
+        self.assertEqual(sum(row_['moves'] for row_ in result['selective_firing']['wall'].values()),
+                         len(row['moves']))
         # Flat-material candidates cannot reorder captures at all, so MVV-LVA is
         # reported as unable to take effect rather than merely silent.
         self.assertEqual(list(firing['unreachable']), ['mvv_lva'])
         self.assertEqual(len(result['warnings']), 4)
         for text in result['warnings']:
+            # Both entrants share the protocol here, so no warning names one.
             self.assertTrue(text.startswith('wall: '), text)
         self.assertEqual(sum('never fired' in text for text in result['warnings']), 3)
         self.assertEqual(sum('cannot take effect' in text for text in result['warnings']), 1)
@@ -305,6 +308,41 @@ class TournamentTests(unittest.TestCase):
         unreachable = firing_report(effective_config(manifest(entrants, start, [shallow])['candidates'][0],
                                                      shallow), [])['unreachable']
         self.assertIn('lmr_min_depth', unreachable['lmr'][0])
+
+    def test_a_search_variant_is_a_distinct_entrant_on_the_same_genome(self):
+        # Issue #66's open acceptance criterion: the harness could not schedule
+        # selective-on against selective-off, because a candidate's identity was
+        # its genome. A variant makes that a real match.
+        policy = dict(nmp_enabled=True, futility_enabled=True, lmr_enabled=True,
+                      pvs_enabled=True, selective_evaluator_enabled=True)
+        plain = candidate('plain')
+        variant = candidate('pruning', search=policy)
+        self.assertEqual(plain['genome'], variant['genome'])
+        self.assertNotEqual(plain['sha256'], variant['sha256'])
+        limits = protocol('depth', depth=4, max_plies=4, seconds=10.)
+        self.assertFalse(effective_config(plain, limits).nmp_enabled)
+        self.assertTrue(effective_config(variant, limits).nmp_enabled)
+        # Everything the match holds equal stays equal; only policy differs.
+        for field in ('max_depth', 'time_limit', 'node_limit', 'proof_depth',
+                      'proof_nodes', 'table_entries'):
+            self.assertEqual(getattr(effective_config(plain, limits), field),
+                             getattr(effective_config(variant, limits), field), field)
+        # A variant may not buy itself more resource, in any of those fields.
+        for field in ('max_depth', 'time_limit', 'node_limit', 'proof_nodes'):
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'never what it is given'):
+                candidate('greedy', search={field: 9})
+        # An override that is a real field but not a valid value is refused here,
+        # not when some protocol is later applied to it.
+        with self.assertRaises(ValueError):
+            candidate('broken', search=dict(lmr_reduction=99))
+        # The pair schedules, and the frozen manifest round-trips the variant.
+        spec = manifest([plain, variant], [position([], seed=54, stage='official', pool='search')],
+                        [limits])
+        self.assertEqual({c['name'] for c in spec['candidates']}, {'plain', 'pruning'})
+        self.assertEqual(len(spec['tasks']), 2)
+        rebuilt = json.loads(json.dumps(spec))
+        self.assertEqual(rebuilt['candidates'], spec['candidates'])
+        manifest(rebuilt['candidates'], rebuilt['positions'], rebuilt['protocols'])
 
     def test_preflight_predicts_a_technique_that_will_never_fire(self):
         # A protocol can declare a technique with no configuration blocker and

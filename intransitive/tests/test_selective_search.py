@@ -175,6 +175,35 @@ class SelectiveTests(unittest.TestCase):
                 checked += 1
         self.assertGreater(checked, 250)
 
+    def test_futility_allowance_is_calibrated_against_measured_quiet_plies(self):
+        """The allowance bounds the evaluation, not one ply of it.
+
+        That is why the default prunes nothing at evolved scales, and it is
+        measurable rather than a matter of taste (issue #66).
+        """
+        from intransitive.heuristics.calibration import calibrate, quiet_ply_gains
+        from intransitive.tests.test_attribution import random_positions
+        cfg = replace(CONFIG, selective_evaluator_enabled=True, futility_enabled=True,
+                      attack_enabled=True, defence_enabled=True)
+        states = random_positions(games=4, plies=60, seed=101)
+        sample = quiet_ply_gains(cfg, states)
+        self.assertGreater(sample['positions'], 0)
+        self.assertGreater(sample['moves'], 200)
+        full = calibrate(cfg, states, quantile=1.)
+        # A quiet ply moves the score by a small fraction of what is charged.
+        self.assertLess(full['max_gain'], full['allowance_at_unit_margin'] / 4)
+        self.assertLess(full['futility_margin'], .25)
+        self.assertGreaterEqual(full['covered_gain'], 0.)
+        # Covering more of the distribution can only ask for a larger margin.
+        part = calibrate(cfg, states, quantile=.99)
+        self.assertLessEqual(part['futility_margin'], full['futility_margin'])
+        for bad in (0., -1., 1.5):
+            with self.subTest(quantile=bad), self.assertRaises(ValueError):
+                calibrate(cfg, states, quantile=bad)
+        # Nothing to calibrate is an error, not a silent zero.
+        with self.assertRaisesRegex(ValueError, 'nothing to calibrate'):
+            calibrate(cfg, [position({'D4': 1, 'F6': -2})])
+
     def test_relaxed_probe_guard_only_drops_the_side_to_move_captures(self):
         """The relaxation is one clause, for one technique, in one direction."""
         from intransitive.tests.test_attribution import random_positions

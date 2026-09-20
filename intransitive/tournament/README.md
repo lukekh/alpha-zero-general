@@ -146,6 +146,26 @@ protocol that declares a technique those evolved scales cannot support fails
 before a single game is played, naming the candidate and
 `selective_evaluator_enabled`.
 
+## Comparing two search policies
+
+A candidate's identity was its genome, so selective-on against selective-off was
+not a schedulable match: both sides of a match share one protocol. A candidate
+may now carry `search` overrides, which join its identity, so one genome under
+two search policies is two entrants and the ordinary machinery — colour pairing,
+seed clustering, journals, the configuration handshake, resume — applies to the
+comparison unchanged.
+
+Only pruning and ordering policy is overridable. `max_depth`, `time_limit`,
+`node_limit`, `proof_depth`, `proof_nodes` and `table_entries` stay with the
+protocol and `VARIANT_FIELDS` excludes them, because a match where one side is
+given more resource measures nothing; asking for one is refused where the
+candidate is written. `prepare --selective --variant` builds the pair: the
+protocol stays plain and a `selective-variant` entrant carries the techniques.
+
+Firing and the depth probe are reported per entrant as a result. A warning every
+entrant raises is one fact about the protocol and is reported once; one that
+distinguishes them names them.
+
 `prepare --probe` answers the same question before a run rather than after it.
 `activation` reports what the configuration forbids outright; it cannot report
 the other half, which is a protocol that declares a technique with no blocker at

@@ -209,6 +209,47 @@ the divergent scores above need, and it is now a regression test
 (`test_composed_reductions_cost_no_certified_tactic`), which asserts that no
 tactic the plain scout search finds may be lost to a reduction.
 
+## Follow-ups measured on this branch
+
+Five things the attribution above exposed, each measured rather than assumed.
+Two of the five refuted the hypothesis that motivated them, which is recorded
+here because a negative result is the reason not to do the work again.
+
+**The allowance is calibrated, not guessed.** `heuristics.calibration` samples
+the quantity the margin bounds: over 3,618 quiet moves from 183 guarded
+positions, the largest gain is **+12.81** against a charged allowance of
+**207.4**, and 99% of quiet moves lose ground. The multiplier covering the
+largest observed gain is **0.0617**, so the 1/16 used in the arms above is
+within one percent of the measurement — arrived at arbitrarily, and only now
+defensible. The tool ships; the constant does not, because it belongs to the
+route weights it was measured on.
+
+**A search policy can now be scheduled against itself.** A candidate may carry
+`search` overrides that join its identity, so one genome under two policies is
+two entrants; resource limits are excluded by construction. `prepare --selective
+--variant` builds the pair. In [variant-report.json](evidence/variant-report.json)
+the two entrants share a genome, protocol, depth and budget while one prunes
+heavily — 3,508 NMP attempts, 65,852 futility prunes, 31,874 reductions — and
+the other not at all. **It settles no strength question**: at a 40-ply cap
+almost nothing finished, the head-to-head is 0/0/4 unfinished and every interval
+is [0.000, 1.000]. The mechanism is the result; the verdict needs a real budget.
+
+**A dead protocol is predicted, not discovered.** `prepare --probe` searches
+each selected position once per distinct search policy and reports that a wall
+protocol at 0.05 seconds a move will not fire NMP, which the run report had only
+been able to say after sixteen played moves.
+
+**The NMP guard gated firing, not value.** The shared guard refuses 58.3% of
+sampled positions for an available capture. Relaxing that one clause for a probe
+doubles attempts at depth 4 and raises cutoffs 14% at depth 6 with no change of
+move or score anywhere — and moves the node count within noise. Verification,
+6.1% of the whole tree at depth 6, is the cost worth attacking instead.
+
+**Quiescence proofs are not the problem.** A chain runs a bounded proof at every
+capture it resolves, which looked like a hidden cost. Measured, it is one proof
+node per capture and under 1% of wall time, because the proof gate rejects
+immediately. A chain's cost is its extra search nodes.
+
 ## Limitations
 
 - Six positions — opening, one seeded 24-ply midgame line and a synthetic sparse
