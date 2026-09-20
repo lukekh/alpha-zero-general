@@ -58,6 +58,20 @@ keep the requested flags in provenance but disable **both** pruning methods;
 unchanged. Python's legacy expanded-state/custom-game backend explicitly
 rejects selective options. Native's unsupported arguments raise errors.
 
+## Internal iterative reduction (issue #69)
+
+`iir_enabled` with `iir_mode='reduce'` searches a deep node that has no
+transposition-table move at `depth - iir_reduction` and stores the result at
+that reduced depth, so it returns a shallower value than the caller asked for
+and joins the selective family: `selective_mode_early` covers it, results report
+`selective_exact` and proof `unknown`, the table uses the selective namespace,
+and a mate-range score no longer ends iterative deepening early. It is refused
+at the root, inside null and verification subtrees, and — like a late-move
+reduction — on a node holding a clear-run certificate under
+`certificate_guard_enabled`. `iir_mode='deepen'` discards the shallow value and
+keeps only the move, so it is **not** selective. Both, and the three ordering
+tables that accompany them, are documented in [MOVE_ORDERING.md](MOVE_ORDERING.md).
+
 ## Shallow-depth cutoffs v1 (issue #68)
 
 Four more independently opt-in techniques, **all default false**. Three are

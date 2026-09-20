@@ -56,6 +56,15 @@ class SearchConfig:
     # Value preserving, so it is not part of the selective (heuristic) family.
     mate_distance_pruning_enabled: bool = False
     race_reduction_enabled: bool = False  # Reduce provably quiet branches on principle.
+    counter_move_enabled: bool = False  # Refutation indexed by the opponent's previous move.
+    continuation_enabled: bool = False  # History conditioned on the preceding move(s).
+    continuation_plies: int = 1  # Plies of preceding context: 1 = opponent's reply, 2 = adds our own.
+    history_aging_enabled: bool = False  # Bounded gravity update plus per-iteration decay.
+    history_max: int = 16384  # Gravity ceiling; |history| stays below it.
+    iir_enabled: bool = False  # Experimental internal iterative reduction/deepening.
+    iir_mode: str = 'reduce'  # 'reduce' shortens a moveless node; 'deepen' searches shallow first.
+    iir_min_depth: int = 4  # Shallower nodes keep their full depth and order.
+    iir_reduction: int = 1  # Plies removed, or removed before the ordering search.
     evaluator_version: str = 'intransitive-heuristics-v2'
     count_weight: float = 100.
     variable_material_enabled: bool = False  # Replace flat piece counts with BASE/REG values.
@@ -104,7 +113,9 @@ class SearchConfig:
                                 ('lmr_min_index', 1, 64), ('lmr_reduction', 1, 8),
                                 ('razoring_max_depth', 1, 4), ('reverse_futility_max_depth', 1, 6),
                                 ('move_count_max_depth', 1, 8), ('move_count_base', 1, 64),
-                                ('certificate_cutoff_min_depth', 1, 32)):
+                                ('certificate_cutoff_min_depth', 1, 32),
+                                ('continuation_plies', 1, 2), ('history_max', 256, 2**20),
+                                ('iir_min_depth', 3, 32), ('iir_reduction', 1, 8)):
             value = getattr(self, name)
             if type(value) is not int or not low <= value <= high:
                 raise ValueError(f'{name} must be an integer in {low}..{high}')
@@ -112,6 +123,13 @@ class SearchConfig:
             raise ValueError('NMP must retain at least one probe ply')
         if self.lmr_reduction > self.lmr_min_depth - 2:
             raise ValueError('LMR must retain at least one ply below the reduction')
+        if self.iir_mode not in ('reduce', 'deepen'):
+            raise ValueError("iir_mode must be 'reduce' or 'deepen'")
+        if self.iir_reduction > self.iir_min_depth - 2:
+            raise ValueError('IIR must retain at least one ply below the reduction')
+        if (self.counter_move_enabled or self.continuation_enabled) and not self.ordering_enabled:
+            # An explicitly enabled technique must never be silently inert (#66).
+            raise ValueError('counter_move_enabled/continuation_enabled require ordering_enabled')
         if (type(self.futility_margin) not in (int, float) or not math.isfinite(self.futility_margin)
                 or not 1 <= self.futility_margin <= 16):
             raise ValueError('futility_margin must be finite in 1..16')

@@ -541,3 +541,9 @@ target's neighbourhood. It supplies an optional capture-ordering key and two
 optional quiescence filters, alongside quiescence delta pruning whose margin is
 stated in evaluator units. All of them default off; the
 [bounded measurements](../benchmarks/exchange/README.md) carry the adoption decision.
+
+Four further opt-in ordering mechanisms — [counter moves, continuation history,
+history aging and internal iterative deepening/reduction](MOVE_ORDERING.md) —
+default off and are measured in the
+[ordering benchmark](../benchmarks/ordering/README.md). Only the reduction mode
+is selective; the rest leave a completed unpruned score unchanged.

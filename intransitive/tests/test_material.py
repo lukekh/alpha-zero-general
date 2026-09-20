@@ -113,11 +113,14 @@ class MaterialTests(unittest.TestCase):
         """One valid change per configuration field, with the field it belongs to.
 
         `value + 1` is not generally a configuration: `futility_max_depth` and
-        `pressure_radius` are bounded enums, `nmp_reduction` and `lmr_reduction`
-        are capped by a sibling depth, `variable_material_linear` requires
-        `variable_material_enabled`, `race_reduction_enabled` requires
-        `lmr_enabled`, and the two version strings have no neighbouring accepted
-        value at all. The two enums move within their own range; the four
+        `pressure_radius` are bounded enums, `nmp_reduction`, `lmr_reduction`
+        and `iir_reduction` are capped by a sibling depth,
+        `variable_material_linear` requires `variable_material_enabled`,
+        `race_reduction_enabled` requires `lmr_enabled`, `razoring_enabled`
+        requires `quiescence_enabled`, and `counter_move_enabled` and
+        `continuation_enabled` require `ordering_enabled`. `iir_mode` is a
+        two-valued enum, while the two version strings have no neighbouring
+        accepted value at all. The enums move within their own range; the
         constrained fields move their sibling with them. Every other field
         moves alone.
         """
@@ -125,17 +128,24 @@ class MaterialTests(unittest.TestCase):
             'futility_max_depth': dict(futility_max_depth=1),
             'nmp_reduction': dict(nmp_min_depth=4, nmp_reduction=2),
             'lmr_reduction': dict(lmr_min_depth=4, lmr_reduction=2),
+            'iir_reduction': dict(iir_min_depth=5, iir_reduction=2),
+            'iir_mode': dict(iir_mode='deepen'),
             'pressure_radius': dict(pressure_radius=3),
             'variable_material_linear': dict(variable_material_enabled=True,
                                              variable_material_linear=True),
             'race_reduction_enabled': dict(lmr_enabled=True, race_reduction_enabled=True),
             'razoring_enabled': dict(quiescence_enabled=True, razoring_enabled=True),
+            'counter_move_enabled': dict(ordering_enabled=True, counter_move_enabled=True),
+            'continuation_enabled': dict(ordering_enabled=True, continuation_enabled=True),
         }
         for name in self.config.to_dict():
+            if name in special:
+                yield name, special[name]
+                continue
             value = getattr(self.config, name)
             if type(value) is str:
                 continue
-            yield name, special.get(name, {name: not value if type(value) is bool else value + 1})
+            yield name, {name: not value if type(value) is bool else value + 1}
 
     def test_configuration_identity_clamping_and_bounded_cache(self):
         state = position({'D4': 1, 'E4': 3, 'F6': -2})
