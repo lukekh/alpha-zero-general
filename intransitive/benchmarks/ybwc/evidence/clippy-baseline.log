@@ -1,0 +1,28 @@
+    Checking intransitive-rust-teacher v0.1.0 (/private/tmp/claude-504/-Users-work-orca-workspaces-alpha-zero-general-intransitive-evaluate-ybwc-branch-parallel-searc/bb8aab17-f30f-410b-9278-a2238d0855ac/scratchpad/head/intransitive/rust_teacher)
+error: unnecessary `>= y + 1` or `x - 1 >=`
+  --> src/clear_run.rs:67:8
+   |
+67 |     if soonest[source] <= arrival(1, side, turn) - 1 {
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: change it to: `soonest[source] < arrival(1, side, turn)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#int_plus_one
+   = note: `-D clippy::int-plus-one` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::int_plus_one)]`
+
+error: the loop variable `square` is used to index `board`
+   --> src/routes.rs:452:31
+    |
+452 |                 for square in 0..81 {
+    |                               ^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_range_loop
+    = note: `-D clippy::needless-range-loop` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_range_loop)]`
+help: consider using an iterator and enumerate()
+    |
+452 |                 for (square, <item>) in board.iter().enumerate() {
+    |                     ~~~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~~~~~~
+
+error: could not compile `intransitive-rust-teacher` (lib) due to previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `intransitive-rust-teacher` (lib test) due to 2 previous errors

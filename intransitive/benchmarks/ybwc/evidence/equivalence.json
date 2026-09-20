@@ -1,0 +1,1553 @@
+{
+  "baseline": {
+    "binary_sha256": "3e91a6406516ee0c8d4873326b53bb46bca0d5a28387678511cecd154193f32c",
+    "revision": "8d22a1117f9fcb4fdc89057f13c5f48255ad5c26",
+    "source_diff_sha256": null
+  },
+  "baseline_equivalence": {
+    "exact": true,
+    "mismatches": [],
+    "rows": 84
+  },
+  "binary": "/Users/work/orca/workspaces/alpha-zero-general/intransitive-evaluate-ybwc-branch-parallel-searc/intransitive/rust_teacher/target/release/intransitive-rust-teacher",
+  "binary_sha256": "79d01893ccee54f3478b76e0062c6eaae594807a7e507c3b58296a3fdb0c5cd8",
+  "determinism": {
+    "reproducible": true,
+    "rows": [
+      {
+        "identical": true,
+        "nodes": [
+          541905,
+          541905,
+          541905
+        ],
+        "parallel": {
+          "chunks": 0,
+          "helper_nodes": 0,
+          "parallel_siblings": 0,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 0,
+          "threads": 1
+        },
+        "runs": 3,
+        "seconds": [
+          15.1029,
+          14.657,
+          11.3333
+        ],
+        "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+        "stage": "official",
+        "threads": 1
+      },
+      {
+        "identical": true,
+        "nodes": [
+          564118,
+          564118,
+          564118
+        ],
+        "parallel": {
+          "chunks": 110,
+          "helper_nodes": 247490,
+          "parallel_siblings": 105,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 2
+        },
+        "runs": 3,
+        "seconds": [
+          9.0722,
+          8.8146,
+          9.092
+        ],
+        "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+        "stage": "official",
+        "threads": 2
+      },
+      {
+        "identical": true,
+        "nodes": [
+          652732,
+          652732,
+          652732
+        ],
+        "parallel": {
+          "chunks": 74,
+          "helper_nodes": 424168,
+          "parallel_siblings": 141,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 3
+        },
+        "runs": 3,
+        "seconds": [
+          7.936,
+          7.4861,
+          6.6641
+        ],
+        "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+        "stage": "official",
+        "threads": 3
+      },
+      {
+        "identical": true,
+        "nodes": [
+          700102,
+          700102,
+          700102
+        ],
+        "parallel": {
+          "chunks": 56,
+          "helper_nodes": 541792,
+          "parallel_siblings": 159,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 4
+        },
+        "runs": 3,
+        "seconds": [
+          6.9399,
+          7.1178,
+          7.1174
+        ],
+        "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+        "stage": "official",
+        "threads": 4
+      },
+      {
+        "identical": true,
+        "nodes": [
+          1161138,
+          1161138,
+          1161138
+        ],
+        "parallel": {
+          "chunks": 0,
+          "helper_nodes": 0,
+          "parallel_siblings": 0,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 0,
+          "threads": 1
+        },
+        "runs": 3,
+        "seconds": [
+          30.8822,
+          32.3179,
+          34.6335
+        ],
+        "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b",
+        "stage": "opening",
+        "threads": 1
+      },
+      {
+        "identical": true,
+        "nodes": [
+          1190947,
+          1190947,
+          1190947
+        ],
+        "parallel": {
+          "chunks": 144,
+          "helper_nodes": 597028,
+          "parallel_siblings": 139,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 2
+        },
+        "runs": 3,
+        "seconds": [
+          24.76,
+          27.7029,
+          24.8218
+        ],
+        "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b",
+        "stage": "opening",
+        "threads": 2
+      },
+      {
+        "identical": true,
+        "nodes": [
+          1245558,
+          1245558,
+          1245558
+        ],
+        "parallel": {
+          "chunks": 96,
+          "helper_nodes": 724411,
+          "parallel_siblings": 186,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 3
+        },
+        "runs": 3,
+        "seconds": [
+          21.7704,
+          21.9228,
+          21.1564
+        ],
+        "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b",
+        "stage": "opening",
+        "threads": 3
+      },
+      {
+        "identical": true,
+        "nodes": [
+          1499341,
+          1499341,
+          1499341
+        ],
+        "parallel": {
+          "chunks": 72,
+          "helper_nodes": 1230508,
+          "parallel_siblings": 210,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 4
+        },
+        "runs": 3,
+        "seconds": [
+          26.0852,
+          26.5997,
+          26.2888
+        ],
+        "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b",
+        "stage": "opening",
+        "threads": 4
+      },
+      {
+        "identical": true,
+        "nodes": [
+          1095329,
+          1095329,
+          1095329
+        ],
+        "parallel": {
+          "chunks": 0,
+          "helper_nodes": 0,
+          "parallel_siblings": 0,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 0,
+          "threads": 1
+        },
+        "runs": 3,
+        "seconds": [
+          25.9851,
+          26.4279,
+          27.3352
+        ],
+        "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a",
+        "stage": "opening",
+        "threads": 1
+      },
+      {
+        "identical": true,
+        "nodes": [
+          1471181,
+          1471181,
+          1471181
+        ],
+        "parallel": {
+          "chunks": 151,
+          "helper_nodes": 493262,
+          "parallel_siblings": 151,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 2
+        },
+        "runs": 3,
+        "seconds": [
+          28.4644,
+          30.5499,
+          29.7948
+        ],
+        "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a",
+        "stage": "opening",
+        "threads": 2
+      },
+      {
+        "identical": true,
+        "nodes": [
+          1285432,
+          1285432,
+          1285432
+        ],
+        "parallel": {
+          "chunks": 104,
+          "helper_nodes": 760492,
+          "parallel_siblings": 198,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 3
+        },
+        "runs": 3,
+        "seconds": [
+          25.8741,
+          24.0745,
+          27.7255
+        ],
+        "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a",
+        "stage": "opening",
+        "threads": 3
+      },
+      {
+        "identical": true,
+        "nodes": [
+          1352957,
+          1352957,
+          1352957
+        ],
+        "parallel": {
+          "chunks": 77,
+          "helper_nodes": 1024511,
+          "parallel_siblings": 225,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 4
+        },
+        "runs": 3,
+        "seconds": [
+          22.0153,
+          23.2653,
+          20.8966
+        ],
+        "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a",
+        "stage": "opening",
+        "threads": 4
+      },
+      {
+        "identical": true,
+        "nodes": [
+          323962,
+          323962,
+          323962
+        ],
+        "parallel": {
+          "chunks": 0,
+          "helper_nodes": 0,
+          "parallel_siblings": 0,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 0,
+          "threads": 1
+        },
+        "runs": 3,
+        "seconds": [
+          7.0615,
+          6.7178,
+          6.2081
+        ],
+        "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80",
+        "stage": "midgame",
+        "threads": 1
+      },
+      {
+        "identical": true,
+        "nodes": [
+          370653,
+          370653,
+          370653
+        ],
+        "parallel": {
+          "chunks": 133,
+          "helper_nodes": 176949,
+          "parallel_siblings": 133,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 2
+        },
+        "runs": 3,
+        "seconds": [
+          5.3228,
+          5.7786,
+          5.4434
+        ],
+        "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80",
+        "stage": "midgame",
+        "threads": 2
+      },
+      {
+        "identical": true,
+        "nodes": [
+          386321,
+          386321,
+          386321
+        ],
+        "parallel": {
+          "chunks": 89,
+          "helper_nodes": 257450,
+          "parallel_siblings": 177,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 3
+        },
+        "runs": 3,
+        "seconds": [
+          4.112,
+          3.6336,
+          3.6487
+        ],
+        "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80",
+        "stage": "midgame",
+        "threads": 3
+      },
+      {
+        "identical": true,
+        "nodes": [
+          398566,
+          398566,
+          398566
+        ],
+        "parallel": {
+          "chunks": 68,
+          "helper_nodes": 287038,
+          "parallel_siblings": 198,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 4
+        },
+        "runs": 3,
+        "seconds": [
+          3.2197,
+          3.3895,
+          3.2612
+        ],
+        "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80",
+        "stage": "midgame",
+        "threads": 4
+      },
+      {
+        "identical": true,
+        "nodes": [
+          546091,
+          546091,
+          546091
+        ],
+        "parallel": {
+          "chunks": 0,
+          "helper_nodes": 0,
+          "parallel_siblings": 0,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 0,
+          "threads": 1
+        },
+        "runs": 3,
+        "seconds": [
+          10.801,
+          12.051,
+          12.794
+        ],
+        "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec",
+        "stage": "midgame",
+        "threads": 1
+      },
+      {
+        "identical": true,
+        "nodes": [
+          622193,
+          622193,
+          622193
+        ],
+        "parallel": {
+          "chunks": 156,
+          "helper_nodes": 306376,
+          "parallel_siblings": 154,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 2
+        },
+        "runs": 3,
+        "seconds": [
+          9.3745,
+          9.2441,
+          9.406
+        ],
+        "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec",
+        "stage": "midgame",
+        "threads": 2
+      },
+      {
+        "identical": true,
+        "nodes": [
+          612064,
+          612064,
+          612064
+        ],
+        "parallel": {
+          "chunks": 105,
+          "helper_nodes": 381311,
+          "parallel_siblings": 205,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 3
+        },
+        "runs": 3,
+        "seconds": [
+          7.2997,
+          7.2548,
+          7.2139
+        ],
+        "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec",
+        "stage": "midgame",
+        "threads": 3
+      },
+      {
+        "identical": true,
+        "nodes": [
+          633274,
+          633274,
+          633274
+        ],
+        "parallel": {
+          "chunks": 81,
+          "helper_nodes": 449772,
+          "parallel_siblings": 229,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 4
+        },
+        "runs": 3,
+        "seconds": [
+          6.102,
+          6.0032,
+          6.049
+        ],
+        "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec",
+        "stage": "midgame",
+        "threads": 4
+      },
+      {
+        "identical": true,
+        "nodes": [
+          224111,
+          224111,
+          224111
+        ],
+        "parallel": {
+          "chunks": 0,
+          "helper_nodes": 0,
+          "parallel_siblings": 0,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 0,
+          "threads": 1
+        },
+        "runs": 3,
+        "seconds": [
+          2.9787,
+          3.0919,
+          3.1548
+        ],
+        "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2",
+        "stage": "endgame",
+        "threads": 1
+      },
+      {
+        "identical": true,
+        "nodes": [
+          227352,
+          227352,
+          227352
+        ],
+        "parallel": {
+          "chunks": 113,
+          "helper_nodes": 102326,
+          "parallel_siblings": 111,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 2
+        },
+        "runs": 3,
+        "seconds": [
+          2.2515,
+          2.217,
+          2.1946
+        ],
+        "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2",
+        "stage": "endgame",
+        "threads": 2
+      },
+      {
+        "identical": true,
+        "nodes": [
+          232835,
+          232835,
+          232835
+        ],
+        "parallel": {
+          "chunks": 75,
+          "helper_nodes": 143563,
+          "parallel_siblings": 149,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 3
+        },
+        "runs": 3,
+        "seconds": [
+          1.6867,
+          1.723,
+          1.751
+        ],
+        "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2",
+        "stage": "endgame",
+        "threads": 3
+      },
+      {
+        "identical": true,
+        "nodes": [
+          238561,
+          238561,
+          238561
+        ],
+        "parallel": {
+          "chunks": 57,
+          "helper_nodes": 172282,
+          "parallel_siblings": 167,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 4
+        },
+        "runs": 3,
+        "seconds": [
+          1.534,
+          1.4466,
+          1.3919
+        ],
+        "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2",
+        "stage": "endgame",
+        "threads": 4
+      },
+      {
+        "identical": true,
+        "nodes": [
+          160124,
+          160124,
+          160124
+        ],
+        "parallel": {
+          "chunks": 0,
+          "helper_nodes": 0,
+          "parallel_siblings": 0,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 0,
+          "threads": 1
+        },
+        "runs": 3,
+        "seconds": [
+          1.9497,
+          2.0049,
+          1.9055
+        ],
+        "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4",
+        "stage": "endgame",
+        "threads": 1
+      },
+      {
+        "identical": true,
+        "nodes": [
+          190563,
+          190563,
+          190563
+        ],
+        "parallel": {
+          "chunks": 107,
+          "helper_nodes": 98548,
+          "parallel_siblings": 104,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 2
+        },
+        "runs": 3,
+        "seconds": [
+          1.8215,
+          1.7667,
+          1.8791
+        ],
+        "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4",
+        "stage": "endgame",
+        "threads": 2
+      },
+      {
+        "identical": true,
+        "nodes": [
+          203339,
+          203339,
+          203339
+        ],
+        "parallel": {
+          "chunks": 72,
+          "helper_nodes": 139673,
+          "parallel_siblings": 139,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 3
+        },
+        "runs": 3,
+        "seconds": [
+          1.4417,
+          1.4619,
+          1.5691
+        ],
+        "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4",
+        "stage": "endgame",
+        "threads": 3
+      },
+      {
+        "identical": true,
+        "nodes": [
+          208363,
+          208363,
+          208363
+        ],
+        "parallel": {
+          "chunks": 55,
+          "helper_nodes": 155988,
+          "parallel_siblings": 156,
+          "split_min_depth": 4,
+          "split_min_siblings": 2,
+          "split_nodes": 6,
+          "threads": 4
+        },
+        "runs": 3,
+        "seconds": [
+          1.1763,
+          1.1855,
+          1.0943
+        ],
+        "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4",
+        "stage": "endgame",
+        "threads": 4
+      }
+    ]
+  },
+  "machine": "arm64",
+  "native_startup_seconds": 0.002862083027139306,
+  "node_ratios": [
+    {
+      "node_ratio": 1.0,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "threads": 1
+    },
+    {
+      "node_ratio": 1.0409905795296224,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "threads": 2
+    },
+    {
+      "node_ratio": 1.2045137062769304,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "threads": 3
+    },
+    {
+      "node_ratio": 1.291927551877174,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "threads": 4
+    },
+    {
+      "node_ratio": 1.0,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b",
+      "threads": 1
+    },
+    {
+      "node_ratio": 1.025672228451743,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b",
+      "threads": 2
+    },
+    {
+      "node_ratio": 1.0727045364116927,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b",
+      "threads": 3
+    },
+    {
+      "node_ratio": 1.2912685658379968,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b",
+      "threads": 4
+    },
+    {
+      "node_ratio": 1.0,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a",
+      "threads": 1
+    },
+    {
+      "node_ratio": 1.3431407367101573,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a",
+      "threads": 2
+    },
+    {
+      "node_ratio": 1.1735578990422055,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a",
+      "threads": 3
+    },
+    {
+      "node_ratio": 1.2352060431158127,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a",
+      "threads": 4
+    },
+    {
+      "node_ratio": 1.0,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80",
+      "threads": 1
+    },
+    {
+      "node_ratio": 1.1441249282323236,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80",
+      "threads": 2
+    },
+    {
+      "node_ratio": 1.1924886252091296,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80",
+      "threads": 3
+    },
+    {
+      "node_ratio": 1.23028626814256,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80",
+      "threads": 4
+    },
+    {
+      "node_ratio": 1.0,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec",
+      "threads": 1
+    },
+    {
+      "node_ratio": 1.1393577260932701,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec",
+      "threads": 2
+    },
+    {
+      "node_ratio": 1.1208095354071024,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec",
+      "threads": 3
+    },
+    {
+      "node_ratio": 1.159649215973162,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec",
+      "threads": 4
+    },
+    {
+      "node_ratio": 1.0,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2",
+      "threads": 1
+    },
+    {
+      "node_ratio": 1.0144615837687574,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2",
+      "threads": 2
+    },
+    {
+      "node_ratio": 1.038927138783906,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2",
+      "threads": 3
+    },
+    {
+      "node_ratio": 1.064476977926117,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2",
+      "threads": 4
+    },
+    {
+      "node_ratio": 1.0,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4",
+      "threads": 1
+    },
+    {
+      "node_ratio": 1.1900964252704154,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4",
+      "threads": 2
+    },
+    {
+      "node_ratio": 1.2698845894431816,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4",
+      "threads": 3
+    },
+    {
+      "node_ratio": 1.3012602732882017,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4",
+      "threads": 4
+    }
+  ],
+  "plan": {
+    "acceptance": {
+      "null_outcome": "Keeping the feature implemented and disabled is a valid result.",
+      "primary": "Equal-time paired play against the same engine at one thread. Adopt (default on) only if the decisive win rate at four threads has a 95% Wilson lower bound above 0.5.",
+      "secondary": "Node throughput is reported for diagnosis only and can never carry the decision."
+    },
+    "baseline_revision": "8d22a1117f9fcb4fdc89057f13c5f48255ad5c26",
+    "equivalence": {
+      "determinism": "At each of threads 2, 3 and 4, repeated runs of the same request must agree on action, score, principal variation and node count. Determinism is claimed per thread count, not across thread counts, and not for a search that runs out of time.",
+      "rule": "At threads = 1 the new binary must reproduce the frozen baseline's action, score, principal variation, completed depth, node count and stop reason exactly, on every recorded row."
+    },
+    "fixed_depth": {
+      "depths": [
+        4,
+        5,
+        6
+      ],
+      "proof_nodes": 0,
+      "seconds_cap": 600
+    },
+    "fixed_time": {
+      "depth": 20,
+      "seconds": [
+        0.5,
+        2.0
+      ]
+    },
+    "hardware_note": "Measured on 4 performance + 4 efficiency cores. Thread counts above 4 are not measured and are not claimed.",
+    "issue": 65,
+    "not_measured": [
+      "Shared transposition tables. Measuring them would mean shipping a nondeterministic search path, which the determinism constraint rules out before any measurement.",
+      "Thread counts above the machine's performance-core count.",
+      "Parallel proof or certificate search. Those paths stay sequential by construction."
+    ],
+    "paired_protocol": {
+      "colours": "both",
+      "max_plies": 100,
+      "mode": "wall",
+      "note": "Both engines are deterministic, so a start played twice from the same colour is the same game. The sample size is the number of distinct starts, not a number of repeats.",
+      "seconds_per_move": 0.5,
+      "starts": "official start plus the first eight opening, midgame and endgame starts by state hash: 25 starts, 50 games per thread count",
+      "thread_counts": [
+        2,
+        4
+      ],
+      "unfinished": "counted as unresolved and worth zero, as in #54; the decisive interval uses wins and losses only"
+    },
+    "positions": {
+      "equivalence_and_overhead": "official start plus the first two opening, midgame and endgame starts by state hash",
+      "paired": "official start plus the first eight opening, midgame and endgame starts by state hash, each played from both colours",
+      "reason": "The #54 harness cannot run a native candidate: tournament.spec.candidate() rejects every backend but python. Its position generator, stage definitions, both-colour pairing and Wilson reporting are reused here against the native engine instead.",
+      "source": "intransitive.tournament.spec.generate_positions(seed=65, lines=9)"
+    },
+    "predeclared": "2026-09-20, before any measurement was taken",
+    "question": "Does YBWC branch-parallel search in the Rust teacher buy playing strength at equal wall clock, and can it be made reproducible enough for the #54 and #55 harnesses?",
+    "settings": {
+      "split_min_depth": 4,
+      "split_min_siblings": 2,
+      "table_entries": 50000
+    },
+    "threads": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "revision": "8d22a1117f9fcb4fdc89057f13c5f48255ad5c26",
+  "rows": [
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "4f00ec0ec927f03d545df3ac3a8a9e5cd287eb55f33cff5b29c3c436ca37017b"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "50e25ffd9d3bf0b2af66adcf497951b3b9f4c1a34fc72fb59a317c96ce18a91a"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "1a0350596f1cad24db03ab29e7dc3f7df0061a5de1d47ca18898eefe2bf3fb80"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "63ed68b30cb29df96a29ba68cf4d9b07b5512a5b81dc4a0aaf266c04233d39ec"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "045e9b875c3fe0fd687b148d480e14190fcb98a360b561df17459b04d4d351e2"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 0,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    },
+    {
+      "depth": 1,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    },
+    {
+      "depth": 2,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    },
+    {
+      "depth": 3,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    },
+    {
+      "depth": 4,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    },
+    {
+      "depth": 5,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    },
+    {
+      "depth": 6,
+      "differing": {},
+      "matches": true,
+      "proof_node_limit": 64,
+      "sha256": "0b1829498776e6fdabe5f5d8df6502d7ec3d95e40bd407799e142a418f58daf4"
+    }
+  ],
+  "source_diff_sha256": "0ef41544952bd2ee676dbd666ec74643077337246af2e8555b2647c2bd612c97",
+  "stage": "equivalence",
+  "total_seconds": 1200.3553668329841
+}
