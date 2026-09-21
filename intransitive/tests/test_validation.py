@@ -24,6 +24,9 @@ from intransitive.validation.spec import (Design, PRIOR_INCUMBENT, Thresholds,
 CANDIDATE = dict(name='candidate', genes={'advantage': 40., 'attack': 0., 'defence': 0.},
                  baseline='prior-incumbent', source='unit-test', source_version='test-v1',
                  source_sha256='0' * 64, note='A single changed gene keeps the schedule small.')
+# The shipped configuration, which is the only entrant a run may recommend
+# reverting. Decision tests use it so that path is actually exercised.
+SHIPPED = dict(CANDIDATE, genes=dict(DEFAULTS), note='The configuration in force today.')
 
 
 @lru_cache(maxsize=1)
@@ -33,7 +36,7 @@ def corpus():
 
 
 def small_design(**overrides):
-    return Design(**dict(dict(corpus_lines=9, strength_stages=('opening',),
+    return Design(**dict(dict(corpus_lines=9, starts_per_stage=1, strength_stages=('opening',),
                               ablation_stages=('opening',), fixed_depth=1, depth_seconds=10.,
                               wall_seconds=.05, max_plies=2, game_seconds=30., cost_depths=(1,),
                               cost_seconds=5., cost_positions=1, equal_time_budgets=(.05,),
@@ -107,6 +110,25 @@ class PlanTests(unittest.TestCase):
         # Everything that is not a match reads the search pool instead.
         for position in runner_module.search_states(spec, 2):
             self.assertEqual(position['pool'], 'search')
+
+    def test_only_the_shipped_configuration_is_marked_current(self):
+        spec = self.plan()
+        self.assertFalse(spec['candidates'][0]['current_default'])
+        shipped = plan(corpus(), candidates=[dict(CANDIDATE, genes=dict(DEFAULTS))],
+                       design=self.design(), revision='test-revision')
+        self.assertTrue(shipped['candidates'][0]['current_default'])
+
+    def test_a_variable_candidate_faces_the_configuration_it_would_displace(self):
+        variable = dict(CANDIDATE, name='variable-candidate', variable=True,
+                        genes=dict(DEFAULTS, material=7.), baseline='candidate', attribute=False)
+        spec = self.plan([CANDIDATE, variable])
+        item = next(e for e in spec['experiments']
+                    if e['name'] == 'strength-depth-variable-candidate')
+        names = {e['name']: e['role'] for e in item['entrants']}
+        self.assertEqual(names.get('candidate'), 'incumbent')
+        self.assertEqual(names.get('variable-initial-material-baseline'), 'archive')
+        self.assertEqual(sorted(spec['cost_targets']), ['candidate', 'prior-incumbent',
+                                                        'variable-candidate'])
 
     def test_entrants_ablations_and_baselines(self):
         spec = self.plan()
@@ -182,7 +204,7 @@ class PlanTests(unittest.TestCase):
 class DecisionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.plan = plan(corpus(), candidates=[CANDIDATE], design=small_design(),
+        cls.plan = plan(corpus(), candidates=[SHIPPED], design=small_design(),
                         revision='test-revision')
 
     def results(self, *, candidate_lower=.8, baseline_lower=.2, radius=.05, eligible=True,
@@ -247,6 +269,7 @@ class DecisionTests(unittest.TestCase):
                                                                  baseline_lower=.9))
         row = decision['candidates']['candidate']
         self.assertTrue(row['is_current_default'])
+        self.assertTrue(self.plan['candidates'][0]['current_default'])
         self.assertTrue(row['regressed'])
         self.assertLess(row['primary']['head_to_head']['net'], 0.)
         self.assertEqual(row['outcome'], 'revert-recommended')
@@ -288,7 +311,7 @@ class DecisionTests(unittest.TestCase):
             path = Path(folder) / 'preset.json'
             path.write_text(json.dumps(record['preset']))
             loaded = SearchConfig.from_file(path)
-        self.assertEqual(loaded.advantage_weight, 40.)
+        self.assertEqual(loaded.advantage_weight, DEFAULTS['advantage'])
         self.assertEqual(loaded.node_limit, record['measured_limits']['node_limit'])
 
 

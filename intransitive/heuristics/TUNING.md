@@ -3,8 +3,11 @@
 The v2 genome supports signed coefficients and tunable material for Python
 Minimax and heuristic-value MCTS experiments. At the user's explicit request,
 the defaults now adopt the [measured endgame candidate](../benchmarks/evolution/hour-search-20260917/README.md)
-in both Python and Rust. This adoption does not imply that separate held-out
-acceptance was performed. Future optimizer exports remain provisional.
+in both Python and Rust. That adoption was made without held-out acceptance;
+the [acceptance protocol](../validation/README.md) and its
+[measured run](../benchmarks/validation/README.md) examine it after the fact,
+including its practical cost under the shipped search limits. Future optimizer
+exports remain provisional.
 
 | Gene | Bounds | Default | SearchConfig field |
 | --- | --- | ---: | --- |

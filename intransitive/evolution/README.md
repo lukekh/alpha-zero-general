@@ -182,6 +182,10 @@ The benchmark contract publishes both per-run caps and number of runs, bounding
 the total allocation by their product. Run it explicitly; implementation of this
 issue does not authorize a day-long experiment or competing with live training.
 
+Exports are judged by the separate [held-out acceptance protocol](../validation/README.md),
+which freezes its own entrants, starts and thresholds and can recommend
+retaining or reverting the defaults as readily as adopting a candidate.
+
 `candidates.json` contains each generation's apparent winner, effective config,
 genome/config manifests, provenance, search and fresh validation components,
 eligibility and validation match keys. Even ineligible winners are exported as

@@ -91,7 +91,7 @@ class Design:
     corpus_lines: int = 24
     # Held-out starts per stage for the strength protocols, and for the cheaper
     # attribution protocol. Starts always come from distinct generated lines.
-    starts_per_stage: int = 1
+    starts_per_stage: int = 2
     strength_stages: tuple = STAGES
     ablation_starts_per_stage: int = 1
     ablation_stages: tuple = STAGES
@@ -203,7 +203,7 @@ def default_candidates():
     return rows
 
 
-CANDIDATE_FIELDS = ('name', 'genes', 'baseline', 'variable', 'attribute',
+CANDIDATE_FIELDS = ('name', 'genes', 'baseline', 'variable', 'attribute', 'current_default',
                     'source', 'source_sha256', 'source_version', 'note')
 
 
@@ -230,11 +230,27 @@ def normalize_candidate(row):
                   source=row.get('source'), source_sha256=row.get('source_sha256'),
                   source_version=row.get('source_version'), note=row.get('note'))
     result['attribute'] = bool(row.get('attribute', result['baseline'] == 'prior-incumbent'))
+    # Whether this candidate is the configuration currently shipped is a fact
+    # about its genes, not about which comparison it declared. Only the shipped
+    # configuration can be recommended for reverting.
+    result['current_default'] = bool(not variable and genes == DEFAULTS)
     return result
 
 
 def ablation_baseline(row):
     return VARIABLE_BASELINE if row.get('variable') else PRIOR_INCUMBENT
+
+
+def resolve_baseline(row, candidates):
+    """The entrant a candidate must displace, as (name, genes, variable).
+
+    A declared comparison that never plays the candidate is not a comparison,
+    so this is what the strength schedules are built from.
+    """
+    if row['baseline'] == 'prior-incumbent':
+        return ('prior-incumbent', PRIOR_INCUMBENT, False)
+    other = next(c for c in candidates if c['name'] == row['baseline'])
+    return (other['name'], other['genes'], other['variable'])
 
 
 def attributed(row):
@@ -369,14 +385,22 @@ def plan(corpus, *, candidates=None, design=Design(), thresholds=Thresholds(), r
                 references=references, limits=row, positions=starts,
                 question=f'Held-out strength of the flat candidates under the {mode} protocol.'))
         for item in variable:
+            # A variable entrant needs its own schedule, but it still has to
+            # face the configuration it would displace, plus the same fixed
+            # variable baseline the #55 runs used as historical opposition.
+            base_name, base_genes, base_variable = resolve_baseline(item, candidates)
             experiments.append(experiment(
                 f'strength-{mode}-{item["name"]}',
                 population=[entrant(item['name'], item['genes'], variable=True)],
-                references=references, limits=row, positions=starts,
-                gain=thresholds.practical_gain,
-                question=f'Held-out strength of {item["name"]} under the {mode} protocol. '
-                         f'Variable material is a fixed evaluator mode, not a scale, so it '
-                         f'never shares a schedule with the flat entrants.'))
+                references=[entrant(base_name, base_genes, role='incumbent',
+                                    variable=base_variable),
+                            entrant('variable-initial-material-baseline', VARIABLE_BASELINE,
+                                    role='archive', variable=True)],
+                limits=row, positions=starts, gain=thresholds.practical_gain,
+                question=f'Held-out strength of {item["name"]} against the configuration it '
+                         f'would displace, under the {mode} protocol. Variable material is a '
+                         f'fixed evaluator mode, not a scale, so it never shares a schedule '
+                         f'with another candidate.'))
     # Attribution runs at fixed depth only: an ablation answers 'which module
     # produced the difference', and mixing in a timing protocol would answer a
     # different question with half the games. Each gene gets its own schedule
@@ -403,6 +427,8 @@ def plan(corpus, *, candidates=None, design=Design(), thresholds=Thresholds(), r
                                                           sha256=r['sha256'], genome=r['genome'])
                                                      for r in references],
                   corpus=corpus, starts=[p['sha256'] for p in starts],
+                  cost_targets=sorted({row['name'] for row in candidates}
+                                      | {resolve_baseline(row, candidates)[0] for row in candidates}),
                   ablation_starts=[p['sha256'] for p in ablation_starts],
                   experiments=experiments,
                   policy=dict(

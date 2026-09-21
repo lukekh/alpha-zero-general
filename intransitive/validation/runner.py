@@ -218,8 +218,9 @@ class Run:
     def cost(self):
         """Price the candidates and their comparisons, one process each."""
         positions = search_states(self.plan, self.design.cost_positions)
-        wanted = [row['name'] for row in self.plan['candidates']]
-        wanted += [row['name'] for row in self.plan['references']]
+        # Every candidate and every comparison a candidate must displace. An
+        # archive nobody is compared against does not need a cost profile.
+        wanted = self.plan['cost_targets']
         available = configs(self.plan)
         for name in wanted:
             self.check()

@@ -195,16 +195,15 @@ def verdict(plan, results):
         if established and not blocking:
             outcome = 'adopt'
         elif regressed and not blocking:
-            outcome = ('revert-recommended' if item['baseline'] == 'prior-incumbent'
-                       else 'retain-defaults')
+            outcome = ('revert-recommended' if item['current_default'] else 'retain-defaults')
         elif blocking or head is None:
             outcome = 'inconclusive'
         else:
             outcome = 'retain-defaults'
-        if outcome == 'revert-recommended' and item['baseline'] != 'prior-incumbent':
+        if outcome == 'revert-recommended' and not item['current_default']:
             outcome = 'retain-defaults'
         rows[name] = dict(candidate=name, baseline=baseline_name, outcome=outcome,
-                          is_current_default=item['baseline'] == 'prior-incumbent',
+                          is_current_default=item['current_default'],
                           primary=head, strength=strengths,
                           gain=gain, separated=separated, established=established,
                           regressed=regressed, blocking=blocking, notes=reasons,
