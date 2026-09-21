@@ -48,9 +48,13 @@ class SelectiveTests(unittest.TestCase):
         for key, bad in [('nmp_enabled', 1), ('futility_enabled', None),
                          ('nmp_min_depth', 2), ('nmp_reduction', 2),
                          ('futility_max_depth', 3), ('futility_margin', float('nan')),
-                         ('futility_margin', .9), ('search_version', 'unknown')]:
+                         ('futility_margin', .05), ('futility_margin', 17.),
+                         ('search_version', 'unknown')]:
             with self.subTest(key=key), self.assertRaises(ValueError):
                 replace(CONFIG, **{key:bad})
+        # The allowance multiplier now reaches below one, so an evolved-scale
+        # margin can be shrunk to a value that actually prunes.
+        self.assertEqual(replace(CONFIG, futility_margin=1/16).futility_margin, 1/16)
         self.assertFalse(selective.supported(replace(CONFIG, variable_material_enabled=True)))
         self.assertFalse(selective.supported(SearchConfig()))
         self.assertFalse(selective.supported(replace(CONFIG, pressure_enabled=True, pressure_weight=-1)))
@@ -60,7 +64,270 @@ class SelectiveTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             AlphaBetaPlayer(config=replace(CONFIG, nmp_enabled=True), use_compact=False)._prepare()
 
-    def test_pressure_probes_and_evolved_scale_disable(self):
+    def test_unsupported_scales_refuse_rather_than_silently_disable(self):
+        # Issue #66: a technique that is explicitly enabled must never be turned
+        # off behind the caller's back by the evaluator-scale interlock.
+        for technique in ('nmp_enabled', 'futility_enabled'):
+            for field, value in (('advantage_weight', 75.), ('count_weight', 70.),
+                                 ('attack_enabled', True), ('variable_material_enabled', True),
+                                 ('pressure_weight', 21.)):
+                broken = dict({field: value}, **{technique: True})
+                if field == 'pressure_weight':
+                    broken['pressure_enabled'] = True
+                with self.subTest(technique=technique, field=field):
+                    with self.assertRaisesRegex(ValueError, 'selective_evaluator_enabled'):
+                        replace(CONFIG, **broken)
+                    accepted = replace(CONFIG, selective_evaluator_enabled=True, **broken)
+                    self.assertTrue(selective.supported(accepted))
+        # Unsupported scales alone remain loadable while both techniques are off.
+        inert = replace(CONFIG, advantage_weight=75.)
+        self.assertFalse(selective.supported(inert))
+        self.assertEqual(selective.unsupported_scales(inert), ['advantage_weight=75.0 (expected 25)'])
+
+    def test_activation_reports_unreachable_techniques(self):
+        # Every blocker the issue verified by experiment is now visible in the
+        # configuration itself, before a single node is searched.
+        cfg = replace(CONFIG, selective_evaluator_enabled=True, nmp_enabled=True,
+                      futility_enabled=True, lmr_enabled=True, max_depth=2, pvs_enabled=False)
+        report = selective.activation(cfg)
+        for technique in ('nmp', 'futility'):
+            self.assertTrue(any('pvs_enabled' in reason for reason in report[technique]['blockers']))
+        self.assertTrue(any('nmp_min_depth' in reason for reason in report['nmp']['blockers']))
+        self.assertTrue(any('lmr_min_depth' in reason for reason in report['lmr']['blockers']))
+        self.assertEqual(selective.activation(cfg, compact=False)['nmp']['blockers'][0],
+                         'requires the compact Python backend')
+        self.assertFalse(selective.activation(replace(cfg, lmr_enabled=False))['lmr']['enabled'])
+        self.assertEqual(selective.activation(replace(cfg, lmr_enabled=True, max_depth=4,
+            compiled_ordering_enabled=False, ordering_enabled=False))['lmr']['blockers'],
+            ['requires ordering_enabled or compiled_ordering_enabled'])
+        self.assertEqual(len(selective.blocked(cfg)), 3)
+        # A configuration where all three can fire reports no blocker at all.
+        working = replace(cfg, max_depth=4, pvs_enabled=True)
+        self.assertEqual(selective.blocked(working), [])
+        result = AlphaBetaPlayer(config=replace(working, proof_nodes=0)).analyze(quiet_state())
+        self.assertTrue(result.selective['effective'])
+        self.assertEqual(result.selective['unreachable'], {})
+        self.assertEqual(result.selective['declared'], ['futility', 'lmr', 'nmp'])
+        self.assertIsNone(result.selective['disabled_reason'])
+        for technique in result.selective['fired']:
+            self.assertGreater(result.selective[selective.TECHNIQUE_COUNTERS[technique]], 0)
+
+    def test_guards_match_their_reference_scans(self):
+        """The vectorised guards must answer exactly as the loops they replace."""
+        from intransitive.heuristics.selective import distance, quiet_context
+        from intransitive.IntransitiveConstants import action_destination
+        from intransitive.IntransitiveLogicNumba import raw_movement_mask
+
+        def guarded_reference(position, depth):
+            pieces = position.pieces.ravel()
+            if position.clock + depth + 1 >= 80 or any(n > 1 for n in position.occurrences.values()):
+                return False
+            if min(sum(position.counts[:3]), sum(position.counts[3:])) < 4:
+                return False
+            for square in np.flatnonzero(pieces):
+                side = int(pieces[square] < 0)
+                if distance(int(square), 80 if side == position.a1 else 0) <= max(3, (depth + 1)//2):
+                    return False
+            for side in (0, 1):
+                actions = np.flatnonzero(raw_movement_mask(position.pieces, side))
+                if len(actions) < 8:
+                    return False
+                for action in actions:
+                    x, y = action_destination(int(action))
+                    if position.pieces[y, x]:
+                        return False
+            return True
+
+        def quiet_reference(position, action):
+            pieces = position.pieces.ravel()
+            source, (x, y) = action // 8, action_destination(action)
+            target = y * 9 + x
+            if pieces[target]:
+                return False
+            side = position.side
+            goal = 80 if side == position.a1 else 0
+            own = [int(s) for s in np.flatnonzero(pieces) if int(pieces[s] < 0) == side]
+            if distance(source, goal) <= min(distance(s, goal) for s in own):
+                return False
+            enemy_goal = 80 - goal
+            for square in np.flatnonzero(pieces):
+                square = int(square)
+                if int(pieces[square] < 0) == side:
+                    continue
+                if min(distance(square, source), distance(square, target)) <= 2:
+                    return False
+                # Issue #68: vacating or taking a square on a shortest enemy
+                # route to its corner is defence, so it is never quiet.
+                if (selective.blocks(source, square, enemy_goal)
+                        or selective.blocks(target, square, enemy_goal)):
+                    return False
+            return distance(target, goal) > 3
+
+        from intransitive.tests.test_attribution import random_positions
+        states = [quiet_state(), position({'D4':1, 'F6':-2}),
+                  position({'A2':1,'B2':2,'A3':3,'B3':1,'D4':2,'E5':1,
+                            'H7':-1,'I7':-2,'H8':-3,'I8':-1,'F6':-2,'E4':-3})]
+        states += random_positions(games=2, plies=40, seed=101)[:6]
+        checked = 0
+        for state in states:
+            p = SearchPosition(state)
+            for depth in (1, 2, 3, 4):
+                self.assertEqual(selective.guarded(p, depth, budget()),
+                                 guarded_reference(p, depth), (depth,))
+            context = quiet_context(p)
+            for action in map(int, p.legal()):
+                expected = quiet_reference(p, action)
+                # Hoisting the shared scan must not change a single answer.
+                self.assertEqual(selective.quiet(p, action), expected, action)
+                self.assertEqual(selective.quiet(p, action, context), expected, action)
+                checked += 1
+        self.assertGreater(checked, 250)
+
+    def test_futility_allowance_is_calibrated_against_measured_quiet_plies(self):
+        """The allowance bounds the evaluation, not one ply of it.
+
+        That is why the default prunes nothing at evolved scales, and it is
+        measurable rather than a matter of taste (issue #66).
+        """
+        from intransitive.heuristics.calibration import calibrate, quiet_ply_gains
+        from intransitive.tests.test_attribution import random_positions
+        cfg = replace(CONFIG, selective_evaluator_enabled=True, futility_enabled=True,
+                      attack_enabled=True, defence_enabled=True)
+        states = random_positions(games=4, plies=60, seed=101)
+        sample = quiet_ply_gains(cfg, states)
+        self.assertGreater(sample['positions'], 0)
+        self.assertGreater(sample['moves'], 50)
+        full = calibrate(cfg, states, quantile=1.)
+        # A quiet ply moves the score by a small fraction of what is charged.
+        self.assertLess(full['max_gain'], full['allowance_at_unit_margin'] / 4)
+        self.assertLess(full['futility_margin'], .25)
+        self.assertGreaterEqual(full['covered_gain'], 0.)
+        # Covering more of the distribution can only ask for a larger margin.
+        part = calibrate(cfg, states, quantile=.99)
+        self.assertLessEqual(part['futility_margin'], full['futility_margin'])
+        for bad in (0., -1., 1.5):
+            with self.subTest(quantile=bad), self.assertRaises(ValueError):
+                calibrate(cfg, states, quantile=bad)
+        # Nothing to calibrate is an error, not a silent zero.
+        with self.assertRaisesRegex(ValueError, 'nothing to calibrate'):
+            calibrate(cfg, [position({'D4': 1, 'F6': -2})])
+
+    def test_relaxed_probe_guard_only_drops_the_side_to_move_captures(self):
+        """The relaxation is one clause, for one technique, in one direction."""
+        from intransitive.tests.test_attribution import random_positions
+        strict = relaxed = 0
+        for state in random_positions(games=4, plies=60, seed=101):
+            p = SearchPosition(state)
+            a = selective.guarded(p, 3, budget())
+            b = selective.guarded(p, 3, budget(), ignore_own_captures=True)
+            # Relaxing a refusal can only ever admit more positions.
+            self.assertFalse(a and not b)
+            strict += a
+            relaxed += b
+        self.assertGreater(relaxed, strict)
+        # The opponent's captures still refuse a probe: this is the threat a
+        # pass declines to answer, and it is why the clause is not simply gone.
+        p = SearchPosition(quiet_state())
+        self.assertTrue(selective.guarded(p, 3, budget(), ignore_own_captures=True))
+        with patch('intransitive.heuristics.selective.raw_movement_mask') as mask:
+            captures = np.zeros(648, dtype=np.int8)
+            captures[parse_move('B3 C4')] = 1
+            mask.side_effect = lambda pieces, side: (captures if side != p.side
+                                                     else np.ones(648, dtype=np.int8))
+            self.assertFalse(selective.guarded(p, 3, budget(), ignore_own_captures=True))
+        # The search only ever relaxes it for a probe, and only when asked.
+        self.assertFalse(replace(CONFIG, nmp_enabled=True).nmp_relaxed_guard_enabled)
+
+    def test_reductions_are_adaptive_and_keep_a_ply_below_them(self):
+        base = replace(CONFIG, lmr_enabled=True, selective_evaluator_enabled=True,
+                       nmp_enabled=True, max_depth=12)
+        player = AlphaBetaPlayer(config=base)
+        # A fixed single ply stays the default, for both techniques.
+        self.assertEqual(player._reduction(9, 9, False, 1, 0.), 1)
+        self.assertEqual(player._null_reduction(9), 1)
+        player.config = replace(base, lmr_depth_divisor=3, lmr_index_divisor=4,
+                                nmp_depth_divisor=3)
+        self.assertEqual(player._reduction(3, 3, False, 1, 0.), 1)
+        self.assertEqual(player._reduction(9, 3, False, 1, 0.), 3)
+        self.assertEqual(player._reduction(9, 11, False, 1, 0.), 5)
+        self.assertEqual(player._null_reduction(3), 1)
+        self.assertEqual(player._null_reduction(9), 3)
+        # One ply always survives below the reduction, whatever the divisors say.
+        player.config = replace(base, lmr_depth_divisor=1, nmp_depth_divisor=1)
+        for depth in range(3, 13):
+            self.assertLessEqual(player._reduction(depth, 9, False, 1, 0.), depth - 2)
+            self.assertLessEqual(player._null_reduction(depth), depth - 2)
+            self.assertGreaterEqual(player._null_reduction(depth), 1)
+        # Everything a reduction is refused for stays refused.
+        player.config = replace(base, lmr_depth_divisor=4)
+        for reason in (dict(depth=2), dict(index=2), dict(capture=True), dict(ply=0),
+                       dict(best=inf)):
+            arguments = {**dict(depth=9, index=9, capture=False, ply=1, best=0.), **reason}
+            self.assertEqual(player._reduction(**arguments), 0, reason)
+        for key, bad in (('lmr_depth_divisor', -1), ('lmr_index_divisor', 65),
+                         ('nmp_depth_divisor', 33), ('lmr_depth_divisor', 1.5)):
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                replace(CONFIG, **{key: bad})
+
+    def test_reductions_compose_with_scout_windows(self):
+        # Issue #66: a scout search used to win the branch outright, so late
+        # quiet moves were reduced only below an already-null window.
+        cfg = replace(CONFIG, selective_evaluator_enabled=True, lmr_enabled=True,
+                      pvs_enabled=True, aspiration_enabled=False, max_depth=5, proof_nodes=0)
+        composed = AlphaBetaPlayer(config=cfg).analyze(quiet_state())
+        self.assertGreater(composed.pvs_probes, 0)
+        self.assertGreater(composed.selective['lmr_reduced'], 0)
+        # Scout searches alone stay exactly as they were: no reduction applies
+        # when LMR is off, so PVS remains an exact-value optimization.
+        plain = AlphaBetaPlayer(config=replace(cfg, lmr_enabled=False)).analyze(quiet_state())
+        self.assertEqual(plain.selective['lmr_reduced'], 0)
+        exhaustive = AlphaBetaPlayer(config=replace(cfg, lmr_enabled=False,
+                                                    pvs_enabled=False)).analyze(quiet_state())
+        self.assertEqual(plain.score, exhaustive.score)
+
+    def test_composed_reductions_cost_no_certified_tactic(self):
+        """Reducing the scout is only worth it if the tactics still come back.
+
+        Composing the reduction with the scout search makes it strictly more
+        aggressive, so it has to be measured against the same corpus the
+        unreduced scout search solves, not merely against a node count.
+        """
+        from intransitive.tests.test_tactics import CASES
+        from intransitive.tests.tactical_oracle import load_case
+        base = replace(CONFIG, max_depth=4, proof_nodes=64, pvs_enabled=True,
+                       aspiration_enabled=False, selective_evaluator_enabled=True)
+        missed, nodes = {}, {}
+        for name, options in (('scout', {}), ('reduced', dict(lmr_enabled=True)),
+                              ('adaptive', dict(lmr_enabled=True, lmr_depth_divisor=3,
+                                                lmr_index_divisor=4))):
+            config = replace(base, **options)
+            missed[name], nodes[name] = [], 0
+            for case in CASES:
+                reference, expected = load_case(case)
+                result = AlphaBetaPlayer(config=config).analyze(reference.storage())
+                nodes[name] += result.nodes
+                if result.action != expected:
+                    missed[name].append(case['id'])
+        # No tactic that the plain scout search finds may be lost to a reduction.
+        for name in ('reduced', 'adaptive'):
+            self.assertLessEqual(set(missed[name]), set(missed['scout']),
+                                 (name, sorted(set(missed[name]) - set(missed['scout']))))
+            self.assertLess(nodes[name], nodes['scout'], name)
+
+    def test_verification_reuses_only_its_own_table_namespace(self):
+        player = self.player(nmp_enabled=True, max_depth=4)
+        p = SearchPosition(quiet_state())
+        player._search(p, 3, 0., nextafter(0., inf), 1, budget())
+        self.assertGreater(player._selective_stats['verification_searches'], 0)
+        namespaces = {key[0].split(b'\0')[0] for key in player.table}
+        self.assertIn(b'verified-v1', namespaces)
+        self.assertIn(b'selective-v1', namespaces)
+        # The context restores every switch it touched, including the namespace.
+        self.assertTrue(player.use_table)
+        self.assertEqual(player._table_namespace, b'selective-v1\0')
+        self.assertFalse(player._selective_disabled)
+
+    def test_pressure_probes_and_evolved_scale_refusal(self):
         from intransitive.teacher_learning import teacher_config
         from intransitive.supervised_minimax import valid_teacher_record
         for nmp, futility in MODES[1:]:
@@ -70,13 +337,17 @@ class SelectiveTests(unittest.TestCase):
             alpha = 0. if nmp else 500.
             player._search(p, 3 if nmp else 1, alpha, nextafter(alpha, inf), 1, budget())
             self.assertGreater(player._selective_stats['nmp_cutoffs' if nmp else 'futility_pruned'], 0)
-            player.config = replace(player.config, advantage_weight=75.)
-            result = player.analyze(quiet_state())
-            self.assertFalse(result.selective['effective'])
-            self.assertEqual(result.selective['nmp_attempts'], 0)
-            self.assertEqual(result.selective['futility_pruned'], 0)
+            with self.assertRaisesRegex(ValueError, 'selective_evaluator_enabled'):
+                replace(player.config, advantage_weight=75.)
+            # The same scales are accepted, and stay effective, once the
+            # experimental opt-in is recorded in the search identity.
+            evolved = replace(player.config, advantage_weight=75., selective_evaluator_enabled=True,
+                              max_depth=4)
+            self.assertIn('"selective_evaluator_enabled": true', evolved.identity())
+            result = AlphaBetaPlayer(config=evolved).analyze(quiet_state())
+            self.assertTrue(result.selective['effective'], result.selective['disabled_reason'])
             with self.assertRaises(ValueError):
-                teacher_config({'teacher': {'search': player.config.to_dict()}})
+                teacher_config({'teacher': {'search': evolved.to_dict()}})
         self.assertFalse(valid_teacher_record(dict(teacher_depth=6, teacher_reason='selective_result')))
 
     def test_experimental_evaluators_and_margin(self):
@@ -89,6 +360,17 @@ class SelectiveTests(unittest.TestCase):
                 node_limit=10**9, time_limit=60, pvs_enabled=True)
             self.assertTrue(selective.supported(cfg))
             self.assertGreater(selective.margin(cfg, 2, p), selective.margin(CONFIG, 2, p))
+            # A quiet first ply cannot change the piece counts, so material and
+            # advantage are charged only from the second ply onwards.
+            modules = SearchConfig(selective_evaluator_enabled=True, attack_enabled=False,
+                                   defence_enabled=False, overload_enabled=False)
+            self.assertEqual(selective.margin(modules, 1, p), 0.)
+            self.assertGreater(selective.margin(modules, 2, p), 0.)
+            self.assertGreater(selective.margin(cfg, 1, p), 0.)
+            self.assertGreater(selective.margin(cfg, 2, p), 2*selective.margin(cfg, 1, p))
+            # The validated original allowance is untouched.
+            plain = replace(CONFIG, selective_evaluator_enabled=False)
+            self.assertEqual(selective.margin(plain, 1), plain.count_weight/2 + plain.advantage_weight)
             signed = replace(cfg, count_weight=-100., advantage_weight=-25., attack_weight=-20., defence_weight=-30.)
             self.assertGreater(selective.margin(signed, 1, p), 0)
             player = AlphaBetaPlayer(config=cfg)
@@ -102,14 +384,26 @@ class SelectiveTests(unittest.TestCase):
                 np.testing.assert_array_equal(p.export(), state)
             if BINARY.exists():
                 with RustTeacher() as rust:
-                    for enabled in (False, True, False):
+                    # Toggling pruning across a reused native search must not leak
+                    # selective state between configurations.
+                    for pruning in (False, True, False):
                         native = rust.analyze(state, depth=2, seconds=60., proof_nodes=0,
-                            variable_material_enabled=variable, selective_evaluator_enabled=enabled,
-                            nmp_enabled=True, futility_enabled=True, reuse=True)
-                        py = AlphaBetaPlayer(config=replace(cfg, selective_evaluator_enabled=enabled)).analyze(state)
-                        self.assertEqual(native['selective']['effective'], enabled)
+                            variable_material_enabled=variable, selective_evaluator_enabled=True,
+                            nmp_enabled=pruning, futility_enabled=pruning, reuse=True)
+                        py = AlphaBetaPlayer(config=replace(cfg, nmp_enabled=pruning,
+                                                            futility_enabled=pruning)).analyze(state)
+                        self.assertEqual(native['selective']['enabled'], pruning)
+                        self.assertEqual(native['selective']['effective'], pruning)
                         self.assertAlmostEqual(py.score, native['score'])
                         self.assertEqual(native['completed_depth'], 2)
+                    # Both backends refuse experimental scales without the opt-in
+                    # rather than accepting the flags and pruning nothing.
+                    with self.assertRaises(ValueError):
+                        rust.analyze(state, depth=2, seconds=60., proof_nodes=0,
+                            variable_material_enabled=variable, selective_evaluator_enabled=False,
+                            nmp_enabled=True, futility_enabled=True, reuse=True)
+                    with self.assertRaisesRegex(ValueError, 'selective_evaluator_enabled'):
+                        replace(cfg, selective_evaluator_enabled=False)
         with self.assertRaises(ValueError):
             replace(CONFIG, selective_evaluator_enabled=1)
 

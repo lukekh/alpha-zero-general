@@ -140,6 +140,11 @@ class Genome:
             raise ValueError('Rust requires depth 1..32, proof_depth <= 2 and proof_nodes <= 64')
         if config.table_entries > 1_000_000:
             raise ValueError('Rust requires table_entries <= 1000000')
+        # Native has a fixed reduction schedule. Passing a divisor it cannot
+        # honour would repeat exactly the fault issue #66 exists to remove:
+        # a declared parameter governing code that never runs.
+        if config.nmp_depth_divisor or config.lmr_depth_divisor or config.lmr_index_divisor:
+            raise ValueError('Rust has no adaptive reduction schedule; leave the divisors at zero')
         if (config.razoring_enabled or config.reverse_futility_enabled
                 or config.move_count_pruning_enabled or config.mate_distance_pruning_enabled):
             # The issue #68 shallow-depth family is Python-only. Refuse the

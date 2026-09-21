@@ -19,7 +19,7 @@ from intransitive.heuristics.config import SearchConfig
 from intransitive.heuristics.search import SearchResult
 from intransitive.record import state_hash
 from intransitive.tests.test_draws import load_history, sparse_position
-from intransitive.tournament.report import report
+from intransitive.tournament.report import firing_report, report
 from intransitive.tournament.runner import (EngineProcess, MatchFailure,
                                            play_match, replay, run)
 from intransitive.tournament.spec import (candidate, effective_config, manifest,
@@ -262,6 +262,121 @@ class TournamentTests(unittest.TestCase):
         summary = report(spec, [row])['leaderboards']['depth'][0]
         self.assertEqual(summary['win_points_lower'], 0.)
         self.assertFalse(summary['eligible'])
+
+    def test_protocol_declares_selective_settings_and_report_flags_silence(self):
+        # Issue #66: a protocol can now declare the selective techniques, every
+        # candidate is checked against the scale interlock at freeze time, and a
+        # declared technique that never fires is flagged in the run report.
+        limits = protocol('wall', max_plies=4, seconds=10., lmr_enabled=True,
+                          nmp_enabled=True, futility_enabled=True, pvs_enabled=True,
+                          mvv_lva_enabled=True, selective_evaluator_enabled=True)
+        for name in ('nmp_enabled', 'futility_enabled', 'lmr_enabled', 'mvv_lva_enabled',
+                     'pvs_enabled', 'selective_evaluator_enabled'):
+            self.assertTrue(limits['search'][name], name)
+        entrants = [candidate('A'), candidate('B', {'advantage_weight': 50.})]
+        start = [position([], seed=54, stage='official', pool='search')]
+        spec = manifest(entrants, start, [limits])
+        self.assertEqual(effective_config(spec['candidates'][0], limits).nmp_enabled, True)
+        # The same protocol without the experimental opt-in names the candidate
+        # and the flag instead of searching without the techniques it declares.
+        with self.assertRaisesRegex(ValueError, 'selective_evaluator_enabled'):
+            manifest(entrants, start, [protocol('wall', max_plies=4, seconds=10., nmp_enabled=True,
+                                                pvs_enabled=True)])
+        row = self.play(spec)
+        result = report(spec, [row])
+        firing = result['selective_firing']['wall']['A']
+        self.assertEqual(firing['declared'], ['futility', 'lmr', 'mvv_lva', 'nmp'])
+        self.assertEqual(firing['fired'], [])
+        self.assertEqual(firing['silent'], firing['declared'])
+        # Firing is per entrant, so each accounts for the moves it played.
+        self.assertEqual(sum(row_['moves'] for row_ in result['selective_firing']['wall'].values()),
+                         len(row['moves']))
+        # Flat-material candidates cannot reorder captures at all, so MVV-LVA is
+        # reported as unable to take effect rather than merely silent.
+        self.assertEqual(list(firing['unreachable']), ['mvv_lva'])
+        self.assertEqual(len(result['warnings']), 4)
+        for text in result['warnings']:
+            # Both entrants share the protocol here, so no warning names one.
+            self.assertTrue(text.startswith('wall: '), text)
+        self.assertEqual(sum('never fired' in text for text in result['warnings']), 3)
+        self.assertEqual(sum('cannot take effect' in text for text in result['warnings']), 1)
+        self.assertEqual(firing['counters']['nmp_attempts'], 0)
+        self.assertIn('selective_counters', result['leaderboards']['wall'][0])
+        # A configuration blocker is named rather than left to be discovered by
+        # running the protocol and finding a zero counter.
+        shallow = protocol('depth', depth=2, max_plies=4, seconds=10., lmr_enabled=True)
+        unreachable = firing_report(effective_config(manifest(entrants, start, [shallow])['candidates'][0],
+                                                     shallow), [])['unreachable']
+        self.assertIn('lmr_min_depth', unreachable['lmr'][0])
+
+    def test_a_search_variant_is_a_distinct_entrant_on_the_same_genome(self):
+        # Issue #66's open acceptance criterion: the harness could not schedule
+        # selective-on against selective-off, because a candidate's identity was
+        # its genome. A variant makes that a real match.
+        policy = dict(nmp_enabled=True, futility_enabled=True, lmr_enabled=True,
+                      pvs_enabled=True, selective_evaluator_enabled=True)
+        plain = candidate('plain')
+        variant = candidate('pruning', search=policy)
+        self.assertEqual(plain['genome'], variant['genome'])
+        self.assertNotEqual(plain['sha256'], variant['sha256'])
+        limits = protocol('depth', depth=4, max_plies=4, seconds=10.)
+        self.assertFalse(effective_config(plain, limits).nmp_enabled)
+        self.assertTrue(effective_config(variant, limits).nmp_enabled)
+        # Everything the match holds equal stays equal; only policy differs.
+        for field in ('max_depth', 'time_limit', 'node_limit', 'proof_depth',
+                      'proof_nodes', 'table_entries'):
+            self.assertEqual(getattr(effective_config(plain, limits), field),
+                             getattr(effective_config(variant, limits), field), field)
+        # A variant may not buy itself more resource, in any of those fields.
+        for field in ('max_depth', 'time_limit', 'node_limit', 'proof_nodes'):
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'never what it is given'):
+                candidate('greedy', search={field: 9})
+        # An override that is a real field but not a valid value is refused here,
+        # not when some protocol is later applied to it.
+        with self.assertRaises(ValueError):
+            candidate('broken', search=dict(lmr_reduction=99))
+        # The pair schedules, and the frozen manifest round-trips the variant.
+        spec = manifest([plain, variant], [position([], seed=54, stage='official', pool='search')],
+                        [limits])
+        self.assertEqual({c['name'] for c in spec['candidates']}, {'plain', 'pruning'})
+        self.assertEqual(len(spec['tasks']), 2)
+        rebuilt = json.loads(json.dumps(spec))
+        self.assertEqual(rebuilt['candidates'], spec['candidates'])
+        manifest(rebuilt['candidates'], rebuilt['positions'], rebuilt['protocols'])
+
+    def test_preflight_predicts_a_technique_that_will_never_fire(self):
+        # A protocol can declare a technique with no configuration blocker and
+        # still never fire it, because no search under its time limit completes
+        # an iteration deep enough. That was only visible in the run report.
+        from intransitive.tournament.preflight import reachability, required_depth
+        entrant, states = candidate('A'), [IntransitiveGame().getInitBoard()]
+        common = dict(nmp_enabled=True, lmr_enabled=True, futility_enabled=True,
+                      pvs_enabled=True, selective_evaluator_enabled=True)
+        deep = protocol('depth', depth=4, seconds=60., **common)
+        report = reachability(effective_config(entrant, deep), states)
+        self.assertEqual(report['max_completed_depth'], 4)
+        self.assertEqual(report['warnings'], [])
+        for name in ('nmp', 'futility', 'lmr'):
+            self.assertEqual(report['techniques'][name]['positions_reaching'], 1, name)
+        # The root never prunes, so a technique needing d plies below it needs
+        # a completed iteration of d + 1.
+        config = effective_config(entrant, deep)
+        self.assertEqual(required_depth(config, 'nmp'), config.nmp_min_depth + 1)
+        self.assertEqual(required_depth(config, 'lmr'), config.lmr_min_depth + 1)
+        self.assertIsNone(required_depth(config, 'quiescence'))
+        # A wall protocol with a hopeless time limit is flagged before any game.
+        starved = protocol('wall', seconds=.001, **common)
+        report = reachability(effective_config(entrant, starved), states)
+        self.assertTrue(report['flagged'])
+        # Starved this hard, even futility's depth-two requirement goes unmet.
+        silent = {w.split()[0] for w in report['warnings']
+                  if 'will not fire under these limits' in w}
+        self.assertEqual(silent, {'nmp', 'lmr', 'futility'})
+        self.assertLess(report['max_completed_depth'], 2)
+        # A configuration blocker is reported as such, not as a depth shortfall.
+        shallow = protocol('depth', depth=2, seconds=60., **common)
+        report = reachability(effective_config(entrant, shallow), states)
+        self.assertTrue(any('never reaches nmp_min_depth' in w for w in report['warnings']))
 
     def test_red_canonical_goal_and_absolute_winner(self):
         spec = self.spec(max_plies=1)

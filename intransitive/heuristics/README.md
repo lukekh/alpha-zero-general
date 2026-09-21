@@ -526,6 +526,11 @@ change the active training run, official rules or modelling draw limits.
 Experimental [guarded null move and forward futility pruning](SELECTIVE_SEARCH.md)
 are independently configurable in Python/native search and default off. Their
 completed depths are selective; they are not exhaustive labels or certificates.
+Enabling one with evaluator scales its margins are not calibrated for is a
+configuration error rather than a silent no-op, and each search reports which
+declared technique could and did execute. The
+[activation measurement](../benchmarks/selective_activation/README.md) records
+the configuration in which they first run and attributes a node count to each.
 Issue #68 adds razoring, reverse futility and move-count pruning on the same
 guard (Python only, also off by default), plus value-preserving mate-distance
 pruning, which keeps ordinary bounds and certificates. The

@@ -217,6 +217,28 @@ starts, seeds and resource ceilings across comparisons, and give each selected
 genome fresh paired validation against the adopted default under its own search
 protocol. Different selected weights alone do not establish a depth effect.
 
+Selective search settings are protocol settings, not genes. A protocol that
+declares NMP, futility, LMR, quiescence or MVV-LVA must also declare the search
+shape those techniques need — `pvs_enabled` for the first two, and a depth above
+their minimum-depth settings — and must set `selective_evaluator_enabled`,
+because the conservative margins are not calibrated for evolved scales. Freezing
+a manifest checks every candidate against that interlock, and `report.json`
+warns about any declared technique that never fires. Tuning a parameter whose
+code executed zero times is not tuning; see
+[the activation measurement](../benchmarks/selective_activation/README.md).
+
+Depth mode and wall mode fail differently here. In depth mode the protocol's
+`max_depth` has to exceed `nmp_min_depth` and `lmr_min_depth`, which the
+activation report states directly, and `min_completed_depth` should be raised to
+match: a move that completes below it is a depth violation and costs the
+candidate its eligibility, so a depth chosen for the techniques and a minimum
+chosen for the old one disagree silently. In wall mode `max_depth` is 64 and no
+precondition applies, but only the moves whose deepest completed iteration
+reaches those minimums can fire at all, so the counters show partial firing that
+depends on the time limit and host load. Neither mode makes a selective result
+exempt from the minimum-depth rule: `stop_reason` is `selective_result`, never
+`proven_result`, and only proofs are exempt.
+
 Historical benchmark archives require their recorded code revisions; the signed
 genome, new defaults and additive mutation deliberately invalidate old manifests.
 

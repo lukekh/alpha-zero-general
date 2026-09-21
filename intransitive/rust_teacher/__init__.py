@@ -103,8 +103,17 @@ class RustTeacher:
             certificate_cutoff_enabled=certificate_cutoff_enabled,
             certificate_cutoff_min_depth=certificate_cutoff_min_depth,
             certificate_guard_enabled=certificate_guard_enabled)
+        # Validate the request against the scales it will actually search with,
+        # so the selective interlock decides the same way in both backends.
         SearchConfig(mvv_lva_enabled=mvv_lva_enabled,
-                     selective_evaluator_enabled=selective_evaluator_enabled, **runs, **settings)
+                     selective_evaluator_enabled=selective_evaluator_enabled,
+                     count_weight=material, advantage_weight=advantage,
+                     attack_weight=attack, attack_enabled=bool(attack),
+                     defence_weight=defence, defence_enabled=bool(defence),
+                     variable_material_enabled=variable_material_enabled,
+                     variable_material_linear=variable_material_linear,
+                     pressure_enabled=bool(weight), pressure_weight=weight or 1.,
+                     pressure_radius=radius, **runs, **settings)
         parallel = self.parallel_settings(threads, split_min_depth, split_min_siblings,
                                           table_entries, futility_max_depth)
         mode = self.material_mode(variable_material_enabled, variable_material_linear)

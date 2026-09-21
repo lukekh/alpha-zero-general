@@ -110,6 +110,8 @@
           <label><input id="overload" type="checkbox"> Overload</label>
           <label><input id="nmp" type="checkbox"> Null move (experimental)</label>
           <label><input id="futility" type="checkbox"> Futility (experimental)</label>
+          <label><input id="pvs" type="checkbox"> Scout windows (needed by the two above)</label>
+          <label><input id="selective_evaluator" type="checkbox"> Experimental margins for evolved weights</label>
           <button id="core" type="button">Core only</button>
           <button id="time-first" type="button">Time first · 5 seconds</button>
           <div class="search-limits">
@@ -192,6 +194,10 @@
   const coord = (x, y) => 'ABCDEFGHI'[x] + (y + 1);
   const same = (a, b) => a && b && a[0] === b[0] && a[1] === b[1];
   const searchFields = {'max_depth': 'max-depth', 'time_limit': 'time-limit', 'node_limit': 'node-limit'};
+  // Null move and futility only ever see a null window under a scout search, and
+  // refuse evolved evaluator weights unless their experimental margins are
+  // opted in to, so both switches belong beside them.
+  const toggles = ['attack', 'defence', 'overload', 'nmp', 'futility', 'pvs', 'selective_evaluator'];
 
   async function request(command, extra = {}) {
     if (busy) return;
@@ -214,7 +220,7 @@
       if (!command || command === 'restart') {
         $('colour').value = String(state.human_player);
         $('opponent').value = state.opponent;
-        for (const module of ['attack', 'defence', 'overload', 'nmp', 'futility']) $(module).checked = !!state.ab_options[module + '_enabled'];
+        for (const module of toggles) $(module).checked = !!state.ab_options[module + '_enabled'];
         for (const [name, id] of Object.entries(searchFields)) {
           if (state.ab_options[name] !== undefined) $(id).value = state.ab_options[name];
         }
@@ -559,13 +565,13 @@
     $('ai-options').hidden = $('opponent').value === 'local';
   }
   $('opponent').onchange = updateOptions;
-  $('core').onclick = () => { for (const module of ['attack', 'defence', 'overload', 'nmp', 'futility']) $(module).checked = false; };
+  $('core').onclick = () => { for (const module of toggles) $(module).checked = false; };
   $('time-first').onclick = () => {
     const preset = state.ab_presets.time_first;
     for (const [name, id] of Object.entries(searchFields)) $(id).value = preset[name];
   };
   $('restart').onclick = () => {
-    const options = Object.fromEntries(['attack', 'defence', 'overload', 'nmp', 'futility'].map(module => [module + '_enabled', $(module).checked]));
+    const options = Object.fromEntries(toggles.map(module => [module + '_enabled', $(module).checked]));
     if ($('opponent').value === 'alphabeta') {
       for (const [name, id] of Object.entries(searchFields)) {
         if (!$(id).reportValidity()) return;

@@ -3,6 +3,25 @@ from dataclasses import asdict, dataclass
 import json
 import math
 
+# Which counter proves that an opt-in technique actually executed. A technique
+# a protocol declares but which never increments its counter across a run is a
+# configuration fault, not a measurement: see activation() below.
+TECHNIQUE_COUNTERS = {'nmp': 'nmp_attempts', 'futility': 'futility_eligible',
+                      'lmr': 'lmr_reduced', 'quiescence': 'quiescence_captures',
+                      'mvv_lva': 'mvv_lva_captures'}
+# Every additive selective/ordering counter a search result reports, so a run
+# report can total them without summing depths or identities by accident.
+SELECTIVE_COUNTERS = ('selective_eligible',
+                      'nmp_attempts', 'nmp_cutoffs', 'nmp_skips', 'verification_searches',
+                      'verification_failures', 'futility_eligible', 'futility_pruned',
+                      'static_evaluations', 'null_nodes', 'verification_nodes',
+                      'quiescence_captures', 'quiescence_see_skips', 'quiescence_delta_skips',
+                      'quiescence_proof_nodes', 'lmr_reduced', 'lmr_researches',
+                      'razoring_eligible', 'razoring_applied', 'razoring_nodes',
+                      'reverse_futility_eligible', 'reverse_futility_pruned',
+                      'move_count_eligible', 'move_count_pruned',
+                      'mate_distance_eligible', 'mate_distance_pruned')
+ORDERING_COUNTERS = ('mvv_lva_nodes', 'mvv_lva_captures')
 
 TIME_FIRST_LIMITS = {
     'max_depth': 20,
@@ -20,6 +39,17 @@ class SearchConfig:
     nmp_enabled: bool = False
     nmp_min_depth: int = 3
     nmp_reduction: int = 1
+    # Extra probe plies per this many plies of remaining depth above the
+    # minimum; zero keeps the fixed reduction. `nmp_reduction` alone cannot
+    # exceed `nmp_min_depth - 2`, so at the default minimum it is pinned at one
+    # and a probe costs almost what the search it replaces would (issue #66).
+    nmp_depth_divisor: int = 0
+    # The shared guard refuses any position where either side has a capture
+    # available. For a null probe the side to move's own captures argue against
+    # the zugzwang that guard exists to prevent, rather than for it; this lets
+    # the probe ignore them and keep every other exclusion, the opponent's
+    # captures included. Off by default (issue #66).
+    nmp_relaxed_guard_enabled: bool = False
     futility_enabled: bool = False
     futility_max_depth: int = 2
     futility_margin: float = 1.
@@ -36,6 +66,8 @@ class SearchConfig:
     lmr_min_depth: int = 3  # Shallower nodes keep full-depth children.
     lmr_min_index: int = 3  # Moves before this keep full depth.
     lmr_reduction: int = 1  # Plies removed from a reduced child.
+    lmr_depth_divisor: int = 0  # Extra plies per this much remaining depth above the minimum.
+    lmr_index_divisor: int = 0  # Extra plies per this many late moves past the minimum index.
     # Issue #68 shallow-depth cutoffs. Each is independently opt-in and off by
     # default; every margin is a multiple of `selective.allowance()`, so a
     # re-tuned genome moves them together instead of stranding a constant.
@@ -111,6 +143,8 @@ class SearchConfig:
         for name, low, high in (('nmp_min_depth', 3, 32), ('nmp_reduction', 1, 8), ('futility_max_depth', 1, 2),
                                 ('quiescence_max_plies', 1, 32), ('lmr_min_depth', 2, 32),
                                 ('lmr_min_index', 1, 64), ('lmr_reduction', 1, 8),
+                                ('nmp_depth_divisor', 0, 32), ('lmr_depth_divisor', 0, 32),
+                                ('lmr_index_divisor', 0, 64),
                                 ('razoring_max_depth', 1, 4), ('reverse_futility_max_depth', 1, 6),
                                 ('move_count_max_depth', 1, 8), ('move_count_base', 1, 64),
                                 ('certificate_cutoff_min_depth', 1, 32),
@@ -130,9 +164,12 @@ class SearchConfig:
         if (self.counter_move_enabled or self.continuation_enabled) and not self.ordering_enabled:
             # An explicitly enabled technique must never be silently inert (#66).
             raise ValueError('counter_move_enabled/continuation_enabled require ordering_enabled')
+        # A symmetric allowance multiplier. Values below one are deliberately
+        # available: the original calibration is far too generous for evolved
+        # route/material scales, where it prunes nothing at all (issue #66).
         if (type(self.futility_margin) not in (int, float) or not math.isfinite(self.futility_margin)
-                or not 1 <= self.futility_margin <= 16):
-            raise ValueError('futility_margin must be finite in 1..16')
+                or not 1/16 <= self.futility_margin <= 16):
+            raise ValueError('futility_margin must be finite in 1/16..16')
         # The issue #68 margins admit fractions: the measured safe multiplier
         # on the adopted route genome is below one, because `allowance()` sums
         # weight ceilings rather than the swing those modules actually produce.
@@ -187,6 +224,15 @@ class SearchConfig:
             raise ValueError('aspiration_window must be finite and positive')
         if self.max_depth > 64 or self.proof_depth > 8:
             raise ValueError('Maximum search depth is 64; maximum proof depth is 8')
+        # An explicitly enabled technique must never be silently switched off by
+        # the evaluator-scale interlock. Refuse the configuration instead, and
+        # name the deliberate opt-in that covers evolved scales.
+        reasons = unsupported_scales(self)
+        if reasons and (self.nmp_enabled or self.futility_enabled):
+            raise ValueError(
+                'nmp_enabled/futility_enabled are not supported for these evaluator scales ('
+                + ', '.join(reasons) + '); set selective_evaluator_enabled=True to opt in to the '
+                'experimental margins, or leave both techniques disabled')
 
     def to_dict(self):
         return asdict(self)
@@ -207,3 +253,79 @@ class SearchConfig:
     def from_file(cls, path):
         with open(path) as handle:
             return cls(**json.load(handle))
+
+
+def unsupported_scales(config):
+    """Name every whitelist condition an evaluator configuration violates.
+
+    Empty means the conservative NMP/futility margins are calibrated for these
+    scales, or `selective_evaluator_enabled` accepts the experimental ones.
+    """
+    if config.selective_evaluator_enabled:
+        return []
+    reasons = []
+    if config.variable_material_enabled:
+        reasons.append('variable_material_enabled')
+    for name, expected in (('count_weight', 100), ('advantage_weight', 25),
+                           ('predator_zero_bonus', 1), ('predator_scarcity_bonus', .5),
+                           ('prey_bonus', .25)):
+        if getattr(config, name) != expected:
+            reasons.append(f'{name}={getattr(config, name)!r} (expected {expected})')
+    for name in ('attack', 'defence', 'overload'):
+        if getattr(config, name + '_enabled'):
+            reasons.append(name + '_enabled')
+    if config.pressure_enabled and not 0 <= config.pressure_weight <= 20:
+        reasons.append(f'pressure_weight={config.pressure_weight!r} outside 0..20')
+    return reasons
+
+
+def activation(config, *, compact=True):
+    """Configuration-only preconditions for each opt-in selective technique.
+
+    Reports, per technique, whether it is declared and what in the configuration
+    alone still stops it from ever executing. Runtime eligibility (board guards,
+    quiet moves, static score versus beta) cannot be predicted here; the search
+    counters report that instead. Root nodes never prune, so a technique needing
+    remaining depth `d` needs `max_depth > d`, not `max_depth >= d`.
+    """
+    # A parent's alpha can in principle rise to exactly one ulp below beta and
+    # produce a null window without PVS, but nothing a configuration controls
+    # makes that happen, so treat a scout search as the only reliable source.
+    null_window = 'needs a null window on entry, which only pvs_enabled reliably produces'
+    ordered = config.ordering_enabled or config.compiled_ordering_enabled
+    result = {}
+    for name in TECHNIQUE_COUNTERS:
+        blockers = []
+        if name in ('nmp', 'futility', 'quiescence') and not compact:
+            blockers.append('requires the compact Python backend')
+        if name == 'nmp':
+            if not config.pvs_enabled:
+                blockers.append(null_window)
+            if config.max_depth <= config.nmp_min_depth:
+                blockers.append(f'max_depth={config.max_depth} never reaches nmp_min_depth='
+                                f'{config.nmp_min_depth} below the root')
+        elif name == 'futility':
+            if not config.pvs_enabled:
+                blockers.append(null_window)
+            if config.max_depth < 2:
+                blockers.append(f'max_depth={config.max_depth} has no non-root frontier node')
+        elif name == 'lmr':
+            if not ordered:
+                blockers.append('requires ordering_enabled or compiled_ordering_enabled')
+            if config.max_depth <= config.lmr_min_depth:
+                blockers.append(f'max_depth={config.max_depth} never reaches lmr_min_depth='
+                                f'{config.lmr_min_depth} below the root')
+        elif name == 'mvv_lva' and not config.variable_material_enabled:
+            # Flat material values every type at BASE, so the victim/attacker
+            # keys are constant and the compiled sort returns the same order.
+            blockers.append('flat material values every piece type alike, so the capture keys '
+                            'cannot reorder anything; needs variable_material_enabled')
+        result[name] = dict(enabled=getattr(config, name + '_enabled'), blockers=blockers)
+    return result
+
+
+def blocked(config, *, compact=True):
+    """One summary line per declared technique that cannot fire as configured."""
+    return [f'{name}: {"; ".join(row["blockers"])}'
+            for name, row in activation(config, compact=compact).items()
+            if row['enabled'] and row['blockers']]

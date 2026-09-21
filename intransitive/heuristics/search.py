@@ -13,7 +13,7 @@ import sys
 import numpy as np
 from .budget import Budget, BudgetExpired
 from . import selective
-from .config import SearchConfig
+from .config import SELECTIVE_COUNTERS, SearchConfig
 from .evaluation import Evaluator, MATE, MATE_THRESHOLD, terminal_value
 from .kernels import (no_capture_in_horizon, no_terminal_win_in_horizon, winning_actions,
                       warm_search_kernels)
@@ -385,6 +385,8 @@ class AlphaBetaPlayer:
         self._path = []
         self._selective_disabled = False
         self._null_context = False
+        self._below_horizon = False
+        self._table_namespace = b''
         self._selective_stats = {}
         self._ordering_stats = dict.fromkeys(ORDERING_COUNTERS, 0)
         self._cutoffs_by_depth = np.zeros((65,3),dtype=np.int64)
@@ -398,15 +400,8 @@ class AlphaBetaPlayer:
     def _prepare(self, *, warm_proof=True):
         if selective_needs_compact(self.config) and not self.use_compact:
             raise ValueError("Selective search requires the compact Python backend")
-        self._selective_stats = dict.fromkeys(("nmp_attempts", "nmp_cutoffs", "nmp_skips",
-            "verification_searches", "verification_failures", "futility_eligible",
-            "futility_pruned", "static_evaluations", "null_nodes", "verification_nodes",
-            "quiescence_captures", "quiescence_see_skips", "quiescence_delta_skips",
-            "lmr_reduced", "lmr_researches",
-            "razoring_eligible", "razoring_applied", "razoring_nodes",
-            "reverse_futility_eligible", "reverse_futility_pruned",
-            "move_count_eligible", "move_count_pruned",
-            "mate_distance_eligible", "mate_distance_pruned"), 0)
+        self._selective_stats = dict.fromkeys(SELECTIVE_COUNTERS, 0)
+        self._table_namespace = b'selective-v1\0' if selective_mode_early(self.config) else b''
         self._certificate_stats = dict.fromkeys(("probes", "gated", "certified", "cutoffs",
             "guards", "unreduced", "race_probes", "race_quiet", "race_reductions"), 0)
         self._ordering_stats = dict.fromkeys(ORDERING_COUNTERS, 0)
@@ -457,9 +452,19 @@ class AlphaBetaPlayer:
         self._material_counts = None
 
     def _leaf(self, state, side, ply, budget):
-        proof = ({'status': 'unknown'} if self._null_context else
-                 prove(self.game, state, self.config, budget,
-                       stats=self._certificate_stats))
+        # A quiescence chain runs a bounded proof at every capture it resolves,
+        # not only at the horizon the search would have evaluated anyway. Charge
+        # those separately so the chain's real cost is visible (issue #66). Every
+        # ordinary leaf reaches this too, so it pays one boolean and no clock.
+        if self._below_horizon:
+            spent, started = budget.proof_nodes, perf_counter()
+            proof = prove(self.game, state, self.config, budget, stats=self._certificate_stats)
+            self._selective_stats['quiescence_proof_nodes'] += budget.proof_nodes - spent
+            budget.module_seconds['quiescence_proof'] += perf_counter() - started
+        else:
+            proof = ({'status': 'unknown'} if self._null_context else
+                     prove(self.game, state, self.config, budget,
+                           stats=self._certificate_stats))
         if proof['status'] == 'proven':
             return from_table(proof['score'], ply), proof['pv']
         return self.evaluator.score(state, side, budget, proof=proof, counts=self._material_counts), []
@@ -560,6 +565,8 @@ class AlphaBetaPlayer:
             state.push(action)
             counts = self._material_counts
             self._material_counts = state.counts
+            horizon = self._below_horizon
+            self._below_horizon = True
             try:
                 value, reply = self._quiesce(state, 1 - side, -beta, -alpha,
                                              ply + 1, budget, remaining - 1)
@@ -567,6 +574,7 @@ class AlphaBetaPlayer:
             finally:
                 state.pop()
                 self._material_counts = counts
+                self._below_horizon = horizon
             if value > best:
                 best, best_line = value, [action] + reply
             if value > alpha:
@@ -720,9 +728,7 @@ class AlphaBetaPlayer:
             return self._horizon(state, side, alpha, beta, ply, budget)
         # Fold positions only when all future-play/draw information agrees.
         # Different-depth heuristic scores remain ordering hints, not values.
-        key = position_key(state) if self.use_table else b''
-        if self.use_table and selective_mode_early(self.config):
-            key = b'selective-v1\0' + key
+        key = self._table_namespace + position_key(state) if self.use_table else b''
         progress = self._root_progress if ply == 0 else None
         entry = self.table.get((key, depth)) if self.use_table else None
         alpha_original, beta_original = alpha, beta
@@ -829,16 +835,23 @@ class AlphaBetaPlayer:
         candidate = null_move or futility or razoring or reverse or move_count
         if candidate and certified:
             self._certificate_stats['guards'] += 1
-        safe = candidate and not certified and selective.guarded(state, depth, budget)
-        # Move-count pruning asks the evaluator nothing, so a node eligible for
-        # it alone must not pay for a static evaluation.
-        if safe and (null_move or futility or razoring or reverse):
-            self._selective_stats['static_evaluations'] += 1
-            evaluation_start = perf_counter()
-            try:
-                static = self.evaluator.score(state, side, budget, proof={'status': 'unknown'}, counts=state.counts)
-            finally:
-                budget.module_seconds['selective_static'] += perf_counter() - evaluation_start
+        # Only a null probe may relax the own-capture clause, and only when it
+        # is the sole reason this node is eligible: the rest of the family are
+        # statements about a node, not about one quiet child, so the clause
+        # still means to them what it always did.
+        safe = candidate and not certified and selective.guarded(
+            state, depth, budget,
+            ignore_own_captures=(cfg.nmp_relaxed_guard_enabled and null_move
+                                 and not (futility or razoring or reverse or move_count)))
+        # Move-count pruning asks the evaluator nothing, and futility asks only
+        # once a candidate quiet child actually appears, so neither pays here.
+        if safe:
+            # What the guards actually control. A static evaluation used to
+            # stand in for this, but it is now deferred for the members that
+            # may never need one, so eligibility is counted for itself.
+            self._selective_stats['selective_eligible'] += 1
+        if safe and (null_move or razoring or reverse):
+            static = self._static(state, side, budget)
         if safe and reverse:
             self._selective_stats['reverse_futility_eligible'] += 1
             if static - selective.reverse_margin(cfg, depth, state) >= beta:
@@ -867,11 +880,12 @@ class AlphaBetaPlayer:
         if cfg.nmp_enabled:
             if safe and null_move and static >= beta:
                 self._selective_stats['nmp_attempts'] += 1
+                reduction = self._null_reduction(depth)
                 probe_nodes = budget.nodes
                 self._path.append(-1)
                 try:
                     with selective.unpruned(self, null=True), state.null_turn():
-                        value, _ = self._search(state, depth - 1 - cfg.nmp_reduction,
+                        value, _ = self._search(state, depth - 1 - reduction,
                                                 -beta, nextafter(-beta, inf), ply + 1, budget)
                 finally:
                     self._path.pop()
@@ -881,7 +895,7 @@ class AlphaBetaPlayer:
                     verification_nodes = budget.nodes
                     try:
                         with selective.unpruned(self):
-                            verified, line = self._search(state, depth - cfg.nmp_reduction,
+                            verified, line = self._search(state, depth - reduction,
                                                          nextafter(beta, -inf), beta, ply, budget)
                     finally:
                         self._selective_stats['verification_nodes'] += budget.nodes - verification_nodes
@@ -892,6 +906,8 @@ class AlphaBetaPlayer:
                     self._selective_stats['verification_failures'] += 1
             else:
                 self._selective_stats['nmp_skips'] += 1
+        # Every candidate move in this node shares the runner and enemy scan.
+        quiet_context = selective.quiet_context(state) if safe and (futility or move_count) else None
         best, pv = -inf, []
         self._ordering_stats['ordered_nodes'] += 1
         for index, (action, child) in enumerate(self._ordered(
@@ -903,11 +919,13 @@ class AlphaBetaPlayer:
                 # child has already returned, so no node can end up with zero
                 # searched moves and be mistaken for a stalemate.
                 self._selective_stats['move_count_eligible'] += 1
-                if selective.quiet(state, action):
+                if selective.quiet(state, action, quiet_context):
                     self._selective_stats['move_count_pruned'] += 1
                     continue
-            if safe and futility and index and selective.quiet(state, action):
+            if safe and futility and index and selective.quiet(state, action, quiet_context):
                 self._selective_stats['futility_eligible'] += 1
+                if static is None:
+                    static = self._static(state, side, budget)
                 if static + selective.margin(cfg, depth, state) <= alpha and abs(best) < MATE_THRESHOLD:
                     self._selective_stats['futility_pruned'] += 1
                     continue
@@ -931,25 +949,27 @@ class AlphaBetaPlayer:
                 # ordinary path. A probe is a bound until its challenger returns
                 # from a full re-search. Never publish an intermediate probe.
                 probe_beta = nextafter(alpha, inf)
-                if self.config.pvs_enabled and index and isfinite(alpha) and probe_beta < beta:
+                scout = self.config.pvs_enabled and index and isfinite(alpha) and probe_beta < beta
+                # A reduction applies to whichever narrow search happens first.
+                # Making these alternatives, as they once were, meant a scout
+                # always won and LMR only ever ran below one (issue #66).
+                reduction = self._reduction(depth, index, capture, ply, best,
+                                            certified=certified, quiet_horizon=quiet_horizon)
+                window = -probe_beta if scout else -beta
+                if scout:
                     budget.pvs_probes += 1
-                    value, line = self._search(child, depth - 1, -probe_beta, -alpha, ply + 1, budget)
-                    if alpha < -value < beta:
-                        budget.pvs_researches += 1
-                        value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
-                elif self._reducible(depth, index, capture, ply, best,
-                                     certified=certified, quiet_horizon=quiet_horizon):
+                if reduction:
                     # Late, quiet moves get a shallower look first; anything that
                     # beats alpha is re-searched at full depth before it counts.
                     self._selective_stats['lmr_reduced'] += 1
-                    reduction = min(self.config.lmr_reduction, depth - 2)
-                    value, line = self._search(child, depth - 1 - reduction,
-                                               -beta, -alpha, ply + 1, budget)
+                    value, line = self._search(child, depth - 1 - reduction, window, -alpha, ply + 1, budget)
                     if -value > alpha:
                         self._selective_stats['lmr_researches'] += 1
-                        value, line = self._search(child, depth - 1, -beta, -alpha,
-                                                   ply + 1, budget)
+                        value, line = self._search(child, depth - 1, window, -alpha, ply + 1, budget)
                 else:
+                    value, line = self._search(child, depth - 1, window, -alpha, ply + 1, budget)
+                if scout and alpha < -value < beta:
+                    budget.pvs_researches += 1
                     value, line = self._search(child, depth - 1, -beta, -alpha, ply + 1, budget)
             finally:
                 self._path.pop()
@@ -977,6 +997,24 @@ class AlphaBetaPlayer:
         bound = 'upper' if best <= alpha_original else 'lower' if best >= beta_original else 'exact'
         self._store(key, depth, best, bound, pv, ply)
         return best, pv
+
+    def _static(self, state, side, budget):
+        """The node's own evaluation, charged and timed as selective overhead."""
+        self._selective_stats['static_evaluations'] += 1
+        start = perf_counter()
+        try:
+            return self.evaluator.score(state, side, budget, proof={'status': 'unknown'},
+                                        counts=state.counts)
+        finally:
+            budget.module_seconds['selective_static'] += perf_counter() - start
+
+    def _null_reduction(self, depth):
+        """Probe plies to remove. One ply must always survive below the probe."""
+        cfg = self.config
+        reduction = cfg.nmp_reduction
+        if cfg.nmp_depth_divisor:
+            reduction += (depth - cfg.nmp_min_depth) // cfg.nmp_depth_divisor
+        return max(1, min(reduction, depth - 2))
 
     def _bonus(self, table, index, bonus):
         """One bounded ordering credit.
@@ -1121,6 +1159,26 @@ class AlphaBetaPlayer:
         if quiet:
             self._certificate_stats['race_quiet'] += 1
         return bool(quiet)
+
+    def _reduction(self, depth, index, capture, ply, best, *, certified=False,
+                   quiet_horizon=False):
+        """Plies to remove from this child, or zero to search it in full.
+
+        A fixed single ply makes every reduced child cost one ply less than the
+        full search and buys almost nothing; the divisors let the reduction grow
+        with remaining depth and with how late the move is. One ply below the
+        reduction always survives, so a reduced search is never a static leaf.
+        """
+        if not self._reducible(depth, index, capture, ply, best,
+                               certified=certified, quiet_horizon=quiet_horizon):
+            return 0
+        cfg = self.config
+        reduction = cfg.lmr_reduction
+        if cfg.lmr_depth_divisor:
+            reduction += (depth - cfg.lmr_min_depth) // cfg.lmr_depth_divisor
+        if cfg.lmr_index_divisor:
+            reduction += (index - cfg.lmr_min_index) // cfg.lmr_index_divisor
+        return max(1, min(reduction, depth - 2))
 
     def _store(self, key, depth, value, bound, pv, ply):
         if self.use_table and self.config.table_entries:
@@ -1318,9 +1376,21 @@ class AlphaBetaPlayer:
                               budget.pvs_probes, budget.pvs_researches,
                               budget.aspiration_researches, budget.aspiration_fail_highs,
                               budget.aspiration_fail_lows)
+        # Report what this configuration can actually execute, not merely what it
+        # declares. Unsupported evaluator scales are now a configuration error,
+        # so anything still unreachable here is a depth or window precondition.
+        preconditions = selective.activation(self.config, compact=compact)
+        declared = sorted(name for name, row in preconditions.items() if row['enabled'])
+        unreachable = {name: preconditions[name]['blockers'] for name in declared
+                       if preconditions[name]['blockers']}
+        counters = dict(self._selective_stats, mvv_lva_captures=self._mvv_lva_captures)
         result.selective = dict(self._selective_stats, enabled=selective_mode,
-            effective=selective_mode and selective.supported(self.config),
-            disabled_reason=None if selective.supported(self.config) else 'unsupported evaluator scales',
+            effective=selective_mode and not unreachable,
+            declared=declared, unreachable=unreachable,
+            fired=sorted(name for name in declared
+                         if counters[selective.TECHNIQUE_COUNTERS[name]]),
+            disabled_reason='; '.join(f'{name}: {"; ".join(reasons)}'
+                                      for name, reasons in unreachable.items()) or None,
             mate_distance_enabled=self.config.mate_distance_pruning_enabled,
             depth=selected_depth, identity=self.config.identity())
         result.certificate = dict(self._certificate_stats,

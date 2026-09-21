@@ -122,7 +122,9 @@ class MaterialTests(unittest.TestCase):
         two-valued enum, while the two version strings have no neighbouring
         accepted value at all. The enums move within their own range; the
         constrained fields move their sibling with them. Every other field
-        moves alone.
+        moves alone. The two pruning switches additionally require
+        `selective_evaluator_enabled`, because this configuration's evolved
+        scales are outside their calibrated margins.
         """
         special = {
             'futility_max_depth': dict(futility_max_depth=1),
@@ -134,6 +136,8 @@ class MaterialTests(unittest.TestCase):
             'variable_material_linear': dict(variable_material_enabled=True,
                                              variable_material_linear=True),
             'race_reduction_enabled': dict(lmr_enabled=True, race_reduction_enabled=True),
+            'nmp_enabled': dict(selective_evaluator_enabled=True, nmp_enabled=True),
+            'futility_enabled': dict(selective_evaluator_enabled=True, futility_enabled=True),
             'razoring_enabled': dict(quiescence_enabled=True, razoring_enabled=True),
             'counter_move_enabled': dict(ordering_enabled=True, counter_move_enabled=True),
             'continuation_enabled': dict(ordering_enabled=True, continuation_enabled=True),

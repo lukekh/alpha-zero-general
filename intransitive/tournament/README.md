@@ -135,8 +135,56 @@ Reference entries are included for context. Evolutionary callers select only
 Reports include each opponent and colour, W/L/unfinished, failures, pending
 games, completion, completed/selected depths, stopped searches, latency, work,
 search/startup CPU and wall time, and process peak memory. Complete JSON records
-include all moves and state hashes. Known child CPU covers worker warmup and
-searches; interpreter imports and work lost before a response are unavailable.
+include all moves and state hashes.
+
+A protocol may declare the opt-in selective techniques — `nmp_enabled`,
+`futility_enabled`, `lmr_enabled`, `quiescence_enabled`, `mvv_lva_enabled`, with
+`pvs_enabled` and the margins that govern them — and every one of them is part of
+the frozen protocol record and therefore of each candidate's search identity.
+`manifest` builds every candidate's effective configuration at freeze time, so a
+protocol that declares a technique those evolved scales cannot support fails
+before a single game is played, naming the candidate and
+`selective_evaluator_enabled`.
+
+## Comparing two search policies
+
+A candidate's identity was its genome, so selective-on against selective-off was
+not a schedulable match: both sides of a match share one protocol. A candidate
+may now carry `search` overrides, which join its identity, so one genome under
+two search policies is two entrants and the ordinary machinery — colour pairing,
+seed clustering, journals, the configuration handshake, resume — applies to the
+comparison unchanged.
+
+Only pruning and ordering policy is overridable. `max_depth`, `time_limit`,
+`node_limit`, `proof_depth`, `proof_nodes` and `table_entries` stay with the
+protocol and `VARIANT_FIELDS` excludes them, because a match where one side is
+given more resource measures nothing; asking for one is refused where the
+candidate is written. `prepare --selective --variant` builds the pair: the
+protocol stays plain and a `selective-variant` entrant carries the techniques.
+
+Firing and the depth probe are reported per entrant as a result. A warning every
+entrant raises is one fact about the protocol and is reported once; one that
+distinguishes them names them.
+
+`prepare --probe` answers the same question before a run rather than after it.
+`activation` reports what the configuration forbids outright; it cannot report
+the other half, which is a protocol that declares a technique with no blocker at
+all and still never fires it because no search under its time limit completes an
+iteration deep enough. The probe searches each selected position once per
+protocol and says so: a wall protocol at 0.05 seconds a move reports `nmp needs
+a completed depth of 4 and the deepest probe reached 2`. It distinguishes a
+configuration blocker, a shortfall on every probe position, and a shortfall on
+only some, and it reports rather than rejects — a technique that fires unevenly
+is a real protocol, just a less informative one than it looks.
+
+`report.json` then carries `selective_firing` per protocol: the totalled
+counters, which declared techniques actually fired, which stayed silent, and any
+precondition that made a declared technique unreachable. A declared technique
+that never fires across the whole run is listed in the report's top-level
+`warnings`, because a parameter governing code that executes zero times cannot
+be tuned and must not be mistaken for a measured one (issue #66).
+
+Known child CPU covers worker warmup and searches; interpreter imports and work lost before a response are unavailable.
 Parent wall time includes waiting, and the benchmark also measures total CLI
 wall time including parent initialization and input validation.
 

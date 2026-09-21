@@ -622,8 +622,16 @@ impl Config {
                 }
             }
         }
-        depth as f64 * self.futility_margin * (piece_scale/2.0 + 1.25*w.advantage.abs()
-            + 3.0*w.attack.abs() + 4.0*w.defence.abs() + 8.0*self.pressure_weight.abs())
+        // A quiet first ply cannot change the piece counts: the shared guard
+        // excludes every position where either side has a capture available and
+        // a quiet move never takes one. Material and advantage are therefore
+        // charged only from the second ply, where the skipped subtree can
+        // capture. Mirrors `selective.margin` (issue #66).
+        let material = piece_scale/2.0 + 1.25*w.advantage.abs();
+        let positional = 3.0*w.attack.abs() + 4.0*w.defence.abs()
+            + 8.0*self.pressure_weight.abs();
+        self.futility_margin
+            * (depth as f64 * positional + depth.saturating_sub(1) as f64 * material)
     }
     pub fn validate(&self) -> Result<(), String> {
         self.weights.validate()?;
@@ -634,7 +642,7 @@ impl Config {
             || !(1..=32).contains(&self.certificate_cutoff_min_depth)
             || !(1..=64).contains(&self.certificate_plies)
             || !self.futility_margin.is_finite()
-            || !(1.0..=16.0).contains(&self.futility_margin)
+            || !(0.0625..=16.0).contains(&self.futility_margin)
             || !(1..=32).contains(&self.depth)
             || !(3..=4).contains(&self.radius)
             || !self.pressure_weight.is_finite()
@@ -643,6 +651,13 @@ impl Config {
             || self.table_entries > 1000000
         {
             return Err("Unsupported configuration: depth 1..32, radius 3/4, proof depth <=2 and nodes <=64".into());
+        }
+        // An explicitly enabled technique is never silently switched off by the
+        // evaluator-scale interlock; refuse the configuration instead (issue #66).
+        if (self.nmp_enabled || self.futility_enabled) && !self.selective_supported() {
+            return Err("nmp_enabled/futility_enabled are not supported for these evaluator scales; \
+                        set selective_evaluator_enabled to opt in to the experimental margins"
+                .into());
         }
         // Parallel interlocks are checked here, at load, so an unsupported
         // thread count or table budget is a rejected configuration rather than
@@ -2357,6 +2372,33 @@ mod tests {
         assert_eq!(p.terminal(true), Some((Some(0), "corner")));
     }
     #[test]
+    fn unsupported_scales_refuse_selective_pruning() {
+        // Issue #66: the scale interlock must reject an explicitly enabled
+        // technique, never accept the flags and then prune nothing.
+        for technique in [0, 1] {
+            let evolved = Config {
+                nmp_enabled: technique == 0,
+                futility_enabled: technique == 1,
+                ..Config::default()
+            };
+            assert!(evolved.validate().is_err());
+            assert!(Config {selective_evaluator_enabled: true, ..evolved.clone()}.validate().is_ok());
+            // Whitelisted scales remain supported without the experimental flag.
+            assert!(Config {weights: Weights {advantage: 25.0, attack: 0.0, defence: 0.0,
+                ..Weights::default()}, ..evolved}.validate().is_ok());
+        }
+        // Unsupported scales alone stay loadable while both techniques are off.
+        assert!(Config::default().validate().is_ok());
+        assert!(!Config::default().selective_supported());
+        // The allowance multiplier now reaches below one, so an evolved-scale
+        // margin can be shrunk to a value that actually prunes.
+        let tuned = Config {selective_evaluator_enabled: true, futility_enabled: true,
+            futility_margin: 0.0625, ..Config::default()};
+        assert!(tuned.validate().is_ok());
+        assert!(Config {futility_margin: 0.05, ..tuned.clone()}.validate().is_err());
+        assert!(Config {futility_margin: 17.0, ..tuned}.validate().is_err());
+    }
+    #[test]
     fn experimental_selective_weights_and_restoration() {
         let original = fixture(&[(9,1),(10,2),(18,3),(19,1),(30,2),
             (61,-1),(62,-2),(70,-3),(71,-1)]);
@@ -2374,8 +2416,12 @@ mod tests {
                     }).fold(100.0_f64, f64::max);
                     max_value/2.0
                 } else {50.0};
-                assert!((cfg.selective_margin(&original,1) - (expected + 1.25*cfg.weights.advantage
-                    + 3.0*cfg.weights.attack + 4.0*cfg.weights.defence)).abs() < 1e-9);
+                // Only the module terms are charged for the first quiet ply;
+                // material and advantage join from the second.
+                let positional = 3.0*cfg.weights.attack + 4.0*cfg.weights.defence;
+                assert!((cfg.selective_margin(&original,1) - positional).abs() < 1e-9);
+                assert!((cfg.selective_margin(&original,2)
+                    - (2.0*positional + expected + 1.25*cfg.weights.advantage)).abs() < 1e-9);
                 let mut search = Search::new(cfg.clone()).unwrap();
                 let mut p = original.clone();
                 let alpha = if nmp {-9000.0} else {9000.0};

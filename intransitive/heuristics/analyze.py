@@ -102,6 +102,10 @@ def main():
                         help='Enable experimental guarded null move pruning')
     parser.add_argument('--futility', action=argparse.BooleanOptionalAction, default=None,
                         help='Enable experimental forward futility pruning')
+    parser.add_argument('--pvs', action=argparse.BooleanOptionalAction, default=None,
+                        help='Enable scout windows; without them neither technique above ever fires')
+    parser.add_argument('--selective-evaluator', action=argparse.BooleanOptionalAction, default=None,
+                        help='Opt in to the experimental margins, required for evolved evaluator weights')
     parser.add_argument('--razoring', action=argparse.BooleanOptionalAction, default=None,
                         help='Enable experimental razoring (needs quiescence)')
     parser.add_argument('--reverse-futility', action=argparse.BooleanOptionalAction, default=None,
@@ -122,14 +126,16 @@ def main():
         config = SearchConfig.from_file(args.config) if args.config else load_record(text).config
         overrides = {k: v for k, v in dict(max_depth=args.depth, time_limit=args.time,
                                           node_limit=args.work, nmp_enabled=args.nmp,
-                                          futility_enabled=args.futility,
+                                          futility_enabled=args.futility, pvs_enabled=args.pvs,
+                                          selective_evaluator_enabled=args.selective_evaluator,
                                           razoring_enabled=args.razoring,
                                           reverse_futility_enabled=args.reverse_futility,
                                           move_count_pruning_enabled=args.move_count,
                                           mate_distance_pruning_enabled=args.mate_distance,
                                           certificate_enabled=args.certificate,
                                           certificate_cutoff_enabled=args.certificate_cutoff,
-                                          certificate_guard_enabled=args.certificate_guard).items() if v is not None}
+                                          certificate_guard_enabled=args.certificate_guard).items()
+                     if v is not None}
         report = analyze_record(text, ply=args.ply, last_ai=args.last_ai,
                                 config=replace(config, **overrides), moves=args.move)
     except (ValueError, TypeError, OSError) as exc:

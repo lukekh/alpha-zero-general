@@ -1,0 +1,57 @@
+{
+  "version": "intransitive-selective-activation-v1",
+  "issue": 66,
+  "question": "Do NMP, futility, LMR and MVV-LVA execute at all in a tuning-shaped configuration, and what does each one contribute to the node count at fixed depth?",
+  "tuning": "No weight or margin tuning used these positions. The arms and the margin sweep were fixed before measurement.",
+  "genome": "The adopted default genome (material 100, advantage 23.967050360966205, attack 25.714516982666414, defence 32.5643023919054), i.e. exactly what the evolution harness produces and the frozen protocol scored.",
+  "arms": [
+    "baseline",
+    "pvs",
+    "nmp",
+    "futility",
+    "futility_tuned",
+    "lmr",
+    "mvv_lva",
+    "quiescence",
+    "all",
+    "variable_material",
+    "variable_mvv_lva",
+    "lmr_adaptive"
+  ],
+  "margin_sweep": [
+    1.0,
+    0.5,
+    0.25,
+    0.125,
+    0.0625
+  ],
+  "depths": [
+    4,
+    5
+  ],
+  "deep_stages": [
+    "opening",
+    "midgame"
+  ],
+  "stages": [
+    "opening",
+    "midgame",
+    "endgame"
+  ],
+  "symmetries": [
+    0,
+    6
+  ],
+  "fixed_depth_seconds_cap": 600.0,
+  "paired_plies_cap": 24,
+  "paired_depth": 4,
+  "held_out_seed": 600917,
+  "acceptance": {
+    "firing": "nmp_attempts, futility_eligible and lmr_reduced all nonzero in at least one documented arm",
+    "attribution": "Each technique's node count compared against the same-window reference arm on identical positions",
+    "adoption": "Node reduction alone is never acceptance; defaults stay off unless paired play is at least equal",
+    "insufficient_evidence": "Keep every technique disabled by default"
+  },
+  "attribution": "Each arm is compared with the arm it differs from by one switch: PVS against plain alpha-beta, every selective technique against PVS, and MVV-LVA additionally against a variable-material control where capture values are not all equal.",
+  "improvements": "Run this same script at 8d22a11 and at the branch head to attribute the search changes; arms the older revision cannot express record \"unavailable\" instead of failing."
+}

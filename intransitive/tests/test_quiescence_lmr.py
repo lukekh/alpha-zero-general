@@ -4,6 +4,7 @@ Both are selective, like null-move and futility: they change which move comes
 back, so they must declare themselves as non-certificates and must be exactly
 inert when switched off. Neither claims to preserve the minimax value.
 """
+from dataclasses import replace
 import unittest
 
 import numpy as np
@@ -137,6 +138,31 @@ class LateMoveReductionTests(unittest.TestCase):
     def setUpClass(cls):
         cls.game = IntransitiveGame()
         cls.states = random_positions(games=3, plies=60, seed=101)[:8]
+
+    def test_proof_work_below_the_horizon_is_charged_separately(self):
+        """A chain resolves captures the search would never have evaluated.
+
+        Each of those runs the same bounded proof an ordinary leaf runs, so the
+        chain's real cost is not only its extra search nodes. Charging it
+        separately is what makes that answerable (issue #66).
+        """
+        config = SearchConfig(quiescence_enabled=True, max_depth=4, time_limit=120.,
+                              node_limit=50_000_000, proof_depth=2, proof_nodes=64)
+        result = AlphaBetaPlayer(self.game, config).analyze(self.states[0])
+        below = result.selective['quiescence_proof_nodes']
+        self.assertGreater(result.selective['quiescence_captures'], 0)
+        self.assertGreater(below, 0)
+        # Proof work below the horizon is a subset of the search's proof work.
+        self.assertLessEqual(below, result.proof_nodes)
+        # The ordinary horizon leaf is not charged to the chain, so a search
+        # without one charges nothing at all.
+        plain = AlphaBetaPlayer(self.game, replace(config, quiescence_enabled=False)).analyze(self.states[0])
+        self.assertEqual(plain.selective['quiescence_proof_nodes'], 0)
+        self.assertGreater(plain.proof_nodes, 0)
+        # Disabling proofs removes the charge without disabling the chain.
+        unproven = AlphaBetaPlayer(self.game, replace(config, proof_nodes=0, proof_depth=0)).analyze(self.states[0])
+        self.assertEqual(unproven.selective['quiescence_proof_nodes'], 0)
+        self.assertGreater(unproven.selective['quiescence_captures'], 0)
 
     def test_reductions_need_a_move_order_to_trust(self):
         # Without ordering the reduction is refused, so nothing is reduced.
