@@ -153,9 +153,8 @@ def verdict(plan, results):
     for item in plan['candidates']:
         name, baseline_name = item['name'], item['baseline']
         strengths = strength(plan, results, name, baseline_name)
-        variable = next((e['name'] for e in plan['experiments']
-                         if e['name'].startswith('strength-depth-') and e['name'].endswith(name)), None)
-        head = strengths.get(variable or primary)
+        # A candidate with its own schedule is compared on that schedule.
+        head = strengths.get(f'{primary}-{name}') or strengths.get(primary)
         tact = tactical(results, name, baseline_name)
         cost = practical(results, name, baseline_name, thresholds)
         parity = results['parity'].get(name, {})
@@ -171,9 +170,12 @@ def verdict(plan, results):
         proven = [row for row in tact.values() if row['new_proven_failures']]
         if proven:
             blocking.append('New failures on fixtures whose certificate is a proof')
-        new_failures = sum(len(row['new_failures']) for row in tact.values())
+        # One fixture lost at both profiles is one lost fixture, not two.
+        regressions = sorted({identity for row in tact.values() for identity in row['new_failures']})
+        new_failures = len(regressions)
         if new_failures > thresholds['max_new_tactical_failures']:
-            blocking.append(f'{new_failures} newly failed certified tactical fixtures')
+            blocking.append(f'{new_failures} newly failed certified tactical fixtures: '
+                            + ', '.join(regressions))
         gain = head['difference'] if head else None
         separated = bool(head and head['disjoint'])
         established = bool(gain is not None and gain >= thresholds['practical_gain']
@@ -192,21 +194,30 @@ def verdict(plan, results):
             if not cost['shipped_reaches_default_depth']:
                 reasons.append('Under the shipped default limits this evaluation does not '
                                'complete the shipped default depth')
+        # A protocol this candidate also played can block adoption without
+        # destroying the primary comparison. Only an unusable primary
+        # comparison makes the candidate inconclusive; a safety finding there
+        # still has to be reported.
+        usable = bool(head and head['candidate_eligible'] and head['baseline_eligible'])
+        # Losing certified tactical fixtures the comparison solves is a
+        # regression finding in its own right. A strength margin does not buy
+        # it back: material savings must not be paid for with provable wins.
+        unsafe = bool(proven or new_failures > thresholds['max_new_tactical_failures'])
         if established and not blocking:
             outcome = 'adopt'
-        elif regressed and not blocking:
+        elif (regressed or unsafe) and usable:
             outcome = ('revert-recommended' if item['current_default'] else 'retain-defaults')
-        elif blocking or head is None:
+        elif not usable:
             outcome = 'inconclusive'
         else:
-            outcome = 'retain-defaults'
-        if outcome == 'revert-recommended' and not item['current_default']:
             outcome = 'retain-defaults'
         rows[name] = dict(candidate=name, baseline=baseline_name, outcome=outcome,
                           is_current_default=item['current_default'],
                           primary=head, strength=strengths,
                           gain=gain, separated=separated, established=established,
-                          regressed=regressed, blocking=blocking, notes=reasons,
+                          regressed=regressed, primary_usable=usable, unsafe=unsafe,
+                          tactical_regressions=regressions,
+                          blocking=blocking, notes=reasons,
                           attribution=attribution(plan, results, name, thresholds),
                           tactical=tact, cost=cost, parity_passed=parity.get('passed', False),
                           provenance=dict(source=item['source'], source_sha256=item['source_sha256'],
@@ -223,7 +234,8 @@ def verdict(plan, results):
                      'predeclared gain, its interval is separated from its comparison, every '
                      'protocol it played is eligible, correctness and tactical safety hold, and '
                      'the practical cost stays inside the declared allowance. Anything else '
-                     'retains existing defaults or is inconclusive. A regression is judged on '
+                     'retains existing defaults, or is inconclusive when the primary comparison '
+                     'itself is missing or ineligible. A regression is judged on '
                      'the point margin together with the direct paired head-to-head record, '
                      'because a safety finding must not need the evidence a promotion needs. '
                      'No export changes a default, the generator or the trainer.')

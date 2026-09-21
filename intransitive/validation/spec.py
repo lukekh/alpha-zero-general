@@ -341,7 +341,7 @@ def power(spec, gain):
     return rows
 
 
-def experiment(name, *, population, references, limits, positions, question, gain=.1):
+def experiment(name, *, population, references, limits, positions, question, gain):
     """One frozen tournament manifest, with the question it is allowed to answer."""
     spec = manifest(population + references, positions, [limits], pool='heldout',
                     position_limit=len(positions))
@@ -383,6 +383,7 @@ def plan(corpus, *, candidates=None, design=Design(), thresholds=Thresholds(), r
             experiments.append(experiment(
                 f'strength-{mode}', population=[entrant(c['name'], c['genes']) for c in flat],
                 references=references, limits=row, positions=starts,
+                gain=thresholds.practical_gain,
                 question=f'Held-out strength of the flat candidates under the {mode} protocol.'))
         for item in variable:
             # A variable entrant needs its own schedule, but it still has to

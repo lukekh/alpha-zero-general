@@ -254,15 +254,32 @@ class DecisionTests(unittest.TestCase):
         # Ineligible entrants block any conclusion at all.
         ineligible = report_module.verdict(self.plan, self.results(eligible=False))
         self.assertEqual(ineligible['outcomes']['candidate'], 'inconclusive')
-        # A newly failed proof fixture blocks adoption outright.
+        # A newly failed proof fixture is a regression whatever the margin says.
         unsafe = report_module.verdict(self.plan, self.results(tactical_extra=['t1'],
                                                                proven_extra=['t1']))
-        self.assertEqual(unsafe['outcomes']['candidate'], 'inconclusive')
+        self.assertEqual(unsafe['outcomes']['candidate'], 'revert-recommended')
+        self.assertTrue(unsafe['candidates']['candidate']['unsafe'])
         self.assertTrue(any('proof' in reason for reason in
                             unsafe['candidates']['candidate']['blocking']))
-        # Losing depth at equal time blocks adoption even with a strength gain.
+        # Losing depth at equal time blocks adoption but is not a regression.
         slow = report_module.verdict(self.plan, self.results(depth_loss=2))
-        self.assertEqual(slow['outcomes']['candidate'], 'inconclusive')
+        self.assertEqual(slow['outcomes']['candidate'], 'retain-defaults')
+        self.assertTrue(slow['candidates']['candidate']['blocking'])
+
+    def test_an_unsafe_challenger_is_never_adopted_and_never_reverts_a_default(self):
+        other = plan(corpus(), candidates=[dict(CANDIDATE, name='challenger')],
+                     design=small_design(), revision='test-revision')
+        results = self.results(tactical_extra=['t1'], proven_extra=['t1'])
+        for section in ('tactics', 'parity', 'cost'):
+            results[section]['challenger'] = results[section].pop('candidate')
+        for item in results['experiments'].values():
+            for board in item['report']['leaderboards'].values():
+                for row in board:
+                    if row['name'] == 'candidate':
+                        row['name'] = 'challenger'
+        decision = report_module.verdict(other, results)
+        self.assertEqual(decision['outcomes']['challenger'], 'retain-defaults')
+        self.assertFalse(decision['candidates']['challenger']['is_current_default'])
 
     def test_an_established_loss_by_the_current_default_recommends_reverting(self):
         decision = report_module.verdict(self.plan, self.results(candidate_lower=.1,
