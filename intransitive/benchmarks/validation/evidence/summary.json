@@ -1,0 +1,129 @@
+{
+  "configurations": [
+    "adopted-hour-search",
+    "adopted-hour-search-restore-advantage",
+    "adopted-hour-search-restore-attack",
+    "adopted-hour-search-restore-defence",
+    "endgame-provisional",
+    "pressure-10-archive",
+    "prior-incumbent",
+    "variable-initial-material-baseline",
+    "variable-material-selected"
+  ],
+  "elapsed_seconds": 5424.7566160840215,
+  "experiments": {
+    "ablation-adopted-hour-search-advantage": {
+      "child_peak_rss_bytes": 257540096,
+      "complete": true,
+      "distinct_starts": 3,
+      "distinct_trajectories": 4,
+      "duplicate_trajectories": 2,
+      "final": 6,
+      "known_child_cpu_seconds": 220.2022839999999,
+      "scheduled": 6,
+      "wall_seconds": 160.10244879091624,
+      "warnings": []
+    },
+    "ablation-adopted-hour-search-attack": {
+      "child_peak_rss_bytes": 302972928,
+      "complete": true,
+      "distinct_starts": 3,
+      "distinct_trajectories": 6,
+      "duplicate_trajectories": 0,
+      "final": 6,
+      "known_child_cpu_seconds": 175.63206900000012,
+      "scheduled": 6,
+      "wall_seconds": 101.27302904205862,
+      "warnings": []
+    },
+    "ablation-adopted-hour-search-defence": {
+      "child_peak_rss_bytes": 263782400,
+      "complete": true,
+      "distinct_starts": 3,
+      "distinct_trajectories": 6,
+      "duplicate_trajectories": 0,
+      "final": 6,
+      "known_child_cpu_seconds": 170.22799600000005,
+      "scheduled": 6,
+      "wall_seconds": 124.46573237504344,
+      "warnings": []
+    },
+    "strength-depth": {
+      "child_peak_rss_bytes": 300924928,
+      "complete": true,
+      "distinct_starts": 6,
+      "distinct_trajectories": 59,
+      "duplicate_trajectories": 1,
+      "final": 60,
+      "known_child_cpu_seconds": 1343.8881999999974,
+      "scheduled": 60,
+      "wall_seconds": 250.6238134590094,
+      "warnings": []
+    },
+    "strength-depth-variable-material-selected": {
+      "child_peak_rss_bytes": 299270144,
+      "complete": true,
+      "distinct_starts": 6,
+      "distinct_trajectories": 24,
+      "duplicate_trajectories": 0,
+      "final": 24,
+      "known_child_cpu_seconds": 1368.3017630000006,
+      "scheduled": 24,
+      "wall_seconds": 752.7368722080137,
+      "warnings": []
+    },
+    "strength-wall": {
+      "child_peak_rss_bytes": 328712192,
+      "complete": true,
+      "distinct_starts": 6,
+      "distinct_trajectories": 60,
+      "duplicate_trajectories": 0,
+      "final": 60,
+      "known_child_cpu_seconds": 1419.9314219999997,
+      "scheduled": 60,
+      "wall_seconds": 1715.8175439169281,
+      "warnings": []
+    },
+    "strength-wall-variable-material-selected": {
+      "child_peak_rss_bytes": 295698432,
+      "complete": true,
+      "distinct_starts": 6,
+      "distinct_trajectories": 24,
+      "duplicate_trajectories": 0,
+      "final": 24,
+      "known_child_cpu_seconds": 511.85159400000043,
+      "scheduled": 24,
+      "wall_seconds": 599.3768884169403,
+      "warnings": []
+    }
+  },
+  "note": "Held-out starts are played once, by these experiments. Parity, saturation and cost measurements use search-pool positions. No default, generator or trainer is changed by this run.",
+  "parent_peak_rss_bytes": 492060672,
+  "plan_sha256": "ebab4c1163cd8c58bd89f9e53a2e10c759a4e359bd4a69bf9607a865c219ed4c",
+  "platform": {
+    "platform": "macOS-15.6.1-arm64-arm-64bit",
+    "python": "3.11.4 (main, Nov 30 2023, 10:49:11) [Clang 15.0.0 (clang-1500.0.40.1)]"
+  },
+  "revision": "518401a",
+  "runtime": {
+    "llvmlite": "0.49.0",
+    "numba": "0.67.0",
+    "numpy": "2.4.6",
+    "python": "3.11.4"
+  },
+  "schema": "intransitive-validation-v1",
+  "stages": [
+    "parity",
+    "tactics",
+    "matches",
+    "cost"
+  ],
+  "status": "complete",
+  "tactical_profiles": [
+    "certified",
+    "shipped"
+  ],
+  "total_child_cpu_seconds": 5210.035327999998,
+  "total_final": 186,
+  "total_scheduled": 186
+}

@@ -53,12 +53,36 @@ stopped being held out.
 | `max_median_depth_loss` | 1 | Median completed depth at equal move time, against the comparison |
 | `min_label_throughput_ratio` | .2 | Share of the comparison's measured labels per hour required before a teacher proposal is even considered |
 
-`adopt` requires all of them, on every protocol the candidate played, with
-correctness and parity passing. An established loss by the current default is
-`revert-recommended`. Anything else is `retain-defaults`, or `inconclusive`
-when a protocol is ineligible, incomplete or unsafe. The rule is applied by
+The four legal outcomes and what each one needs:
+
+- **`adopt`** — the margin clears `practical_gain` on the primary fixed-depth
+  comparison, the two paired intervals are disjoint, every protocol the
+  candidate played is eligible, correctness and parity pass, no certified
+  tactical fixture is newly lost, and the equal-time depth allowance holds.
+- **`revert-recommended`** — the candidate *is* the configuration in force,
+  its primary comparison is usable, and it either loses by
+  `practical_regression` on both the leaderboard margin and the direct paired
+  head-to-head record, or newly fails a certified fixture its comparison
+  solves. A strength margin does not buy a lost proof back.
+- **`inconclusive`** — the primary comparison is missing, or one of its two
+  entrants failed harness eligibility. A second protocol's completion problem
+  blocks adoption but does not erase the primary comparison.
+- **`retain-defaults`** — everything else, including a positive margin that is
+  not separated, and a gain paid for with search depth.
+
+Separation is what keeps a promotion honest, and it is expensive: two intervals
+of radius *r* are disjoint only when the difference exceeds *2r*, so separating
+a .10 gain under the harness's conservative bound needs about **738 independent
+opening lines**. A bounded run has single digits. The plan therefore says in
+advance that it can confirm the existing defaults, recommend reverting them, or
+be inconclusive, and that it **cannot promote anything**; a null result there is
+a null result and not evidence of equivalence. The rule is applied by
 [report.py](report.py) to the recorded evidence, and `decide` re-applies it
 without starting an engine.
+
+A regression is judged on the point margin together with the direct paired
+record rather than on separation, because a safety finding must not need the
+evidence a promotion needs.
 
 Each candidate declares the configuration it must displace: the shipped default
 is measured against the weights it replaced, and everything else is measured

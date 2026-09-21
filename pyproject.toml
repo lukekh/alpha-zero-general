@@ -64,4 +64,5 @@ intransitive = [
     "benchmarks/process/fixture.pt", "benchmarks/process/fixture.json",
     "tournament/requirements.txt", "tournament/*.md",
     "evolution/*.json", "evolution/*.md",
+    "validation/*.md",
 ]

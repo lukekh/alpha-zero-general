@@ -1,0 +1,1541 @@
+{
+  "adopted-hour-search": {
+    "contract": {
+      "config_hash": "6a64ed3d23619a3ea06200c63fd85e3ffb8a8d4b8d8adbb6b2ae7ea647222c47",
+      "conservative_absolute_bound": 11704.730149182582,
+      "decisive_threshold": 90000.0,
+      "evaluation": {
+        "advantage_weight": 23.967050360966205,
+        "aspiration_enabled": false,
+        "attack_enabled": true,
+        "attack_weight": 25.714516982666414,
+        "certificate_cutoff_enabled": false,
+        "certificate_enabled": false,
+        "certificate_guard_enabled": false,
+        "compiled_ordering_enabled": true,
+        "compiled_see_enabled": true,
+        "continuation_enabled": false,
+        "count_weight": 100.0,
+        "counter_move_enabled": false,
+        "defence_enabled": true,
+        "defence_weight": 32.5643023919054,
+        "delta_pruning_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": false,
+        "history_aging_enabled": false,
+        "iir_enabled": false,
+        "lmr_enabled": false,
+        "mate_distance_pruning_enabled": false,
+        "move_count_pruning_enabled": false,
+        "mvv_lva_enabled": false,
+        "nmp_enabled": false,
+        "nmp_relaxed_guard_enabled": false,
+        "ordering_enabled": false,
+        "overload_enabled": false,
+        "overload_weight": 5.0,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": false,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "pvs_enabled": false,
+        "quiescence_enabled": false,
+        "race_reduction_enabled": false,
+        "race_weight": 0.0,
+        "razoring_enabled": false,
+        "reverse_futility_enabled": false,
+        "runner_enabled": false,
+        "runner_weight": 1.0,
+        "see_ordering_enabled": false,
+        "see_quiescence_ordering_enabled": false,
+        "see_quiescence_pruning_enabled": false,
+        "selective_evaluator_enabled": false,
+        "variable_material_enabled": false
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 23.967050360966205,
+          "attack": 25.714516982666414,
+          "defence": 32.5643023919054,
+          "material": 100.0,
+          "overload": 0.0,
+          "pressure": 0.0
+        },
+        "version": "intransitive-module-scales-v2"
+      },
+      "heuristic_limit": 10000.0,
+      "manifest_hash": "356720d56978eb19f55979cad7984eaf0eae2d7ef6f4082f1c5861e16141bdd8",
+      "round_trip": true,
+      "saturation_possible": true
+    },
+    "determinism": {
+      "mutated_inputs": 0,
+      "positions": [
+        {
+          "action": 241,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "repeatable": true,
+          "work": 666650
+        },
+        {
+          "action": 384,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "repeatable": true,
+          "work": 630229
+        },
+        {
+          "action": 404,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "repeatable": true,
+          "work": 738862
+        }
+      ],
+      "repeatable": true
+    },
+    "native": {
+      "action_agreement": 1.0,
+      "compared": 6,
+      "max_score_difference": 0.0,
+      "note": "Differing tied actions are an ordering difference, not an evaluation difference; the score comparison is the parity claim.",
+      "score_parity": true,
+      "searches": [
+        {
+          "depth": 1,
+          "native_action": 305,
+          "native_complete": true,
+          "native_score": 3.183702102615842,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 305,
+          "python_complete": true,
+          "python_score": 3.183702102615842,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 108.71500117532442,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 108.71500117532442,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 405,
+          "native_complete": true,
+          "native_score": -2.316347363121139,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 405,
+          "python_complete": true,
+          "python_score": -2.316347363121139,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 241,
+          "native_complete": true,
+          "native_score": 8.8565802955479,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 241,
+          "python_complete": true,
+          "python_score": 8.8565802955479,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 92.67404058137537,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 92.67404058137537,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 404,
+          "native_complete": true,
+          "native_score": 4.744940633706303,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 404,
+          "python_complete": true,
+          "python_score": 4.744940633706303,
+          "score_difference": 0.0
+        }
+      ],
+      "status": "compared"
+    },
+    "passed": true,
+    "saturation": {
+      "clipped_positions": 0,
+      "config_hash": "6a64ed3d23619a3ea06200c63fd85e3ffb8a8d4b8d8adbb6b2ae7ea647222c47",
+      "flagged": false,
+      "max_absolute_raw_score": 38.18401688457846,
+      "ordinary_positions": 3,
+      "saturated_positions": 0,
+      "saturation_fraction": 0.0
+    }
+  },
+  "adopted-hour-search-restore-advantage": {
+    "contract": {
+      "config_hash": "66ba5357346167e0e782882da62aac79c1c2d52a84a396221ad5306f8f50a507",
+      "conservative_absolute_bound": 11851.150760515622,
+      "decisive_threshold": 90000.0,
+      "evaluation": {
+        "advantage_weight": 25.0,
+        "aspiration_enabled": false,
+        "attack_enabled": true,
+        "attack_weight": 25.714516982666414,
+        "certificate_cutoff_enabled": false,
+        "certificate_enabled": false,
+        "certificate_guard_enabled": false,
+        "compiled_ordering_enabled": true,
+        "compiled_see_enabled": true,
+        "continuation_enabled": false,
+        "count_weight": 100.0,
+        "counter_move_enabled": false,
+        "defence_enabled": true,
+        "defence_weight": 32.5643023919054,
+        "delta_pruning_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": false,
+        "history_aging_enabled": false,
+        "iir_enabled": false,
+        "lmr_enabled": false,
+        "mate_distance_pruning_enabled": false,
+        "move_count_pruning_enabled": false,
+        "mvv_lva_enabled": false,
+        "nmp_enabled": false,
+        "nmp_relaxed_guard_enabled": false,
+        "ordering_enabled": false,
+        "overload_enabled": false,
+        "overload_weight": 5.0,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": false,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "pvs_enabled": false,
+        "quiescence_enabled": false,
+        "race_reduction_enabled": false,
+        "race_weight": 0.0,
+        "razoring_enabled": false,
+        "reverse_futility_enabled": false,
+        "runner_enabled": false,
+        "runner_weight": 1.0,
+        "see_ordering_enabled": false,
+        "see_quiescence_ordering_enabled": false,
+        "see_quiescence_pruning_enabled": false,
+        "selective_evaluator_enabled": false,
+        "variable_material_enabled": false
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 25.0,
+          "attack": 25.714516982666414,
+          "defence": 32.5643023919054,
+          "material": 100.0,
+          "overload": 0.0,
+          "pressure": 0.0
+        },
+        "version": "intransitive-module-scales-v2"
+      },
+      "heuristic_limit": 10000.0,
+      "manifest_hash": "89a09f183db12a54550c8e010856854c775aa775bbd0dcaa25f509afc7e6d6c7",
+      "round_trip": true,
+      "saturation_possible": true
+    },
+    "determinism": {
+      "mutated_inputs": 0,
+      "positions": [
+        {
+          "action": 241,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "repeatable": true,
+          "work": 666650
+        },
+        {
+          "action": 384,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "repeatable": true,
+          "work": 630229
+        },
+        {
+          "action": 404,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "repeatable": true,
+          "work": 738862
+        }
+      ],
+      "repeatable": true
+    },
+    "native": {
+      "action_agreement": 1.0,
+      "compared": 6,
+      "max_score_difference": 0.0,
+      "note": "Differing tied actions are an ordering difference, not an evaluation difference; the score comparison is the parity claim.",
+      "score_parity": true,
+      "searches": [
+        {
+          "depth": 1,
+          "native_action": 305,
+          "native_complete": true,
+          "native_score": 3.183702102615842,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 305,
+          "python_complete": true,
+          "python_score": 3.183702102615842,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 109.07653354898625,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 109.07653354898625,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 405,
+          "native_complete": true,
+          "native_score": -2.316347363121139,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 405,
+          "python_complete": true,
+          "python_score": -2.316347363121139,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 241,
+          "native_complete": true,
+          "native_score": 8.8565802955479,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 241,
+          "python_complete": true,
+          "python_score": 8.8565802955479,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 93.0355729550372,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 93.0355729550372,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 404,
+          "native_complete": true,
+          "native_score": 4.744940633706303,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 404,
+          "python_complete": true,
+          "python_score": 4.744940633706303,
+          "score_difference": 0.0
+        }
+      ],
+      "status": "compared"
+    },
+    "passed": true,
+    "saturation": {
+      "clipped_positions": 0,
+      "config_hash": "66ba5357346167e0e782882da62aac79c1c2d52a84a396221ad5306f8f50a507",
+      "flagged": false,
+      "max_absolute_raw_score": 38.18401688457846,
+      "ordinary_positions": 3,
+      "saturated_positions": 0,
+      "saturation_fraction": 0.0
+    }
+  },
+  "adopted-hour-search-restore-attack": {
+    "contract": {
+      "config_hash": "acbef44e1009b32b663453651c4ce5ba47c98be0998675884ff0b9960bb55a81",
+      "conservative_absolute_bound": 11627.586598234582,
+      "decisive_threshold": 90000.0,
+      "evaluation": {
+        "advantage_weight": 23.967050360966205,
+        "aspiration_enabled": false,
+        "attack_enabled": false,
+        "attack_weight": 25.714516982666414,
+        "certificate_cutoff_enabled": false,
+        "certificate_enabled": false,
+        "certificate_guard_enabled": false,
+        "compiled_ordering_enabled": true,
+        "compiled_see_enabled": true,
+        "continuation_enabled": false,
+        "count_weight": 100.0,
+        "counter_move_enabled": false,
+        "defence_enabled": true,
+        "defence_weight": 32.5643023919054,
+        "delta_pruning_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": false,
+        "history_aging_enabled": false,
+        "iir_enabled": false,
+        "lmr_enabled": false,
+        "mate_distance_pruning_enabled": false,
+        "move_count_pruning_enabled": false,
+        "mvv_lva_enabled": false,
+        "nmp_enabled": false,
+        "nmp_relaxed_guard_enabled": false,
+        "ordering_enabled": false,
+        "overload_enabled": false,
+        "overload_weight": 5.0,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": false,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "pvs_enabled": false,
+        "quiescence_enabled": false,
+        "race_reduction_enabled": false,
+        "race_weight": 0.0,
+        "razoring_enabled": false,
+        "reverse_futility_enabled": false,
+        "runner_enabled": false,
+        "runner_weight": 1.0,
+        "see_ordering_enabled": false,
+        "see_quiescence_ordering_enabled": false,
+        "see_quiescence_pruning_enabled": false,
+        "selective_evaluator_enabled": false,
+        "variable_material_enabled": false
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 23.967050360966205,
+          "attack": 0.0,
+          "defence": 32.5643023919054,
+          "material": 100.0,
+          "overload": 0.0,
+          "pressure": 0.0
+        },
+        "version": "intransitive-module-scales-v2"
+      },
+      "heuristic_limit": 10000.0,
+      "manifest_hash": "480a8c2f16642aae80cd8e9b6c4c302dbca96ac70ac7327515d4a664a19eb878",
+      "round_trip": true,
+      "saturation_possible": true
+    },
+    "determinism": {
+      "mutated_inputs": 0,
+      "positions": [
+        {
+          "action": 241,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "repeatable": true,
+          "work": 451702
+        },
+        {
+          "action": 384,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "repeatable": true,
+          "work": 593826
+        },
+        {
+          "action": 405,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "repeatable": true,
+          "work": 508246
+        }
+      ],
+      "repeatable": true
+    },
+    "native": {
+      "action_agreement": 1.0,
+      "compared": 6,
+      "max_score_difference": 0.0,
+      "note": "Differing tied actions are an ordering difference, not an evaluation difference; the score comparison is the parity claim.",
+      "score_parity": true,
+      "searches": [
+        {
+          "depth": 1,
+          "native_action": 241,
+          "native_complete": true,
+          "native_score": 0.0,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 241,
+          "python_complete": true,
+          "python_score": -0.0,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 108.38846762633817,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 108.38846762633817,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 405,
+          "native_complete": true,
+          "native_score": 0.0,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 405,
+          "python_complete": true,
+          "python_score": -0.0,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 241,
+          "native_complete": true,
+          "native_score": 0.0,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 241,
+          "python_complete": true,
+          "python_score": 0.0,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 108.38846762633817,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 108.38846762633817,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 405,
+          "native_complete": true,
+          "native_score": 0.0,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 405,
+          "python_complete": true,
+          "python_score": 0.0,
+          "score_difference": 0.0
+        }
+      ],
+      "status": "compared"
+    },
+    "passed": true,
+    "saturation": {
+      "clipped_positions": 0,
+      "config_hash": "acbef44e1009b32b663453651c4ce5ba47c98be0998675884ff0b9960bb55a81",
+      "flagged": false,
+      "max_absolute_raw_score": 0.0,
+      "ordinary_positions": 3,
+      "saturated_positions": 0,
+      "saturation_fraction": 0.0
+    }
+  },
+  "adopted-hour-search-restore-defence": {
+    "contract": {
+      "config_hash": "d20dc6ffdd23700282767acf55d565b44e5016c843239f484172ca12add03f87",
+      "conservative_absolute_bound": 11574.47293961496,
+      "decisive_threshold": 90000.0,
+      "evaluation": {
+        "advantage_weight": 23.967050360966205,
+        "aspiration_enabled": false,
+        "attack_enabled": true,
+        "attack_weight": 25.714516982666414,
+        "certificate_cutoff_enabled": false,
+        "certificate_enabled": false,
+        "certificate_guard_enabled": false,
+        "compiled_ordering_enabled": true,
+        "compiled_see_enabled": true,
+        "continuation_enabled": false,
+        "count_weight": 100.0,
+        "counter_move_enabled": false,
+        "defence_enabled": false,
+        "defence_weight": 32.5643023919054,
+        "delta_pruning_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": false,
+        "history_aging_enabled": false,
+        "iir_enabled": false,
+        "lmr_enabled": false,
+        "mate_distance_pruning_enabled": false,
+        "move_count_pruning_enabled": false,
+        "mvv_lva_enabled": false,
+        "nmp_enabled": false,
+        "nmp_relaxed_guard_enabled": false,
+        "ordering_enabled": false,
+        "overload_enabled": false,
+        "overload_weight": 5.0,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": false,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "pvs_enabled": false,
+        "quiescence_enabled": false,
+        "race_reduction_enabled": false,
+        "race_weight": 0.0,
+        "razoring_enabled": false,
+        "reverse_futility_enabled": false,
+        "runner_enabled": false,
+        "runner_weight": 1.0,
+        "see_ordering_enabled": false,
+        "see_quiescence_ordering_enabled": false,
+        "see_quiescence_pruning_enabled": false,
+        "selective_evaluator_enabled": false,
+        "variable_material_enabled": false
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 23.967050360966205,
+          "attack": 25.714516982666414,
+          "defence": 0.0,
+          "material": 100.0,
+          "overload": 0.0,
+          "pressure": 0.0
+        },
+        "version": "intransitive-module-scales-v2"
+      },
+      "heuristic_limit": 10000.0,
+      "manifest_hash": "34915a70330cc81105d1420c42659cb7578599d5dc33434e42b3bd5d84ee8a4b",
+      "round_trip": true,
+      "saturation_possible": true
+    },
+    "determinism": {
+      "mutated_inputs": 0,
+      "positions": [
+        {
+          "action": 241,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "repeatable": true,
+          "work": 523217
+        },
+        {
+          "action": 384,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "repeatable": true,
+          "work": 492091
+        },
+        {
+          "action": 404,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "repeatable": true,
+          "work": 580423
+        }
+      ],
+      "repeatable": true
+    },
+    "native": {
+      "action_agreement": 1.0,
+      "compared": 6,
+      "max_score_difference": 0.0,
+      "note": "Differing tied actions are an ordering difference, not an evaluation difference; the score comparison is the parity claim.",
+      "score_parity": true,
+      "searches": [
+        {
+          "depth": 1,
+          "native_action": 305,
+          "native_complete": true,
+          "native_score": 3.183702102615842,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 305,
+          "python_complete": true,
+          "python_score": 3.183702102615842,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 108.71500117532442,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 108.71500117532442,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 405,
+          "native_complete": true,
+          "native_score": -2.316347363121139,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 405,
+          "python_complete": true,
+          "python_score": -2.316347363121139,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 241,
+          "native_complete": true,
+          "native_score": 8.8565802955479,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 241,
+          "python_complete": true,
+          "python_score": 8.8565802955479,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 92.67404058137537,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 92.67404058137537,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 404,
+          "native_complete": true,
+          "native_score": 4.744940633706303,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 404,
+          "python_complete": true,
+          "python_score": 4.744940633706303,
+          "score_difference": 0.0
+        }
+      ],
+      "status": "compared"
+    },
+    "passed": true,
+    "saturation": {
+      "clipped_positions": 0,
+      "config_hash": "d20dc6ffdd23700282767acf55d565b44e5016c843239f484172ca12add03f87",
+      "flagged": false,
+      "max_absolute_raw_score": 38.18401688457846,
+      "ordinary_positions": 3,
+      "saturated_positions": 0,
+      "saturation_fraction": 0.0
+    }
+  },
+  "endgame-provisional": {
+    "contract": {
+      "config_hash": "aae53d6289bcc0d7173913b6674986b65ebbcfde61a240fc065df41f368da6d8",
+      "conservative_absolute_bound": 8234.40201050887,
+      "decisive_threshold": 90000.0,
+      "evaluation": {
+        "advantage_weight": 0.0,
+        "aspiration_enabled": false,
+        "attack_enabled": true,
+        "attack_weight": 44.59984687779922,
+        "certificate_cutoff_enabled": false,
+        "certificate_enabled": false,
+        "certificate_guard_enabled": false,
+        "compiled_ordering_enabled": true,
+        "compiled_see_enabled": true,
+        "continuation_enabled": false,
+        "count_weight": 100.0,
+        "counter_move_enabled": false,
+        "defence_enabled": false,
+        "defence_weight": 32.5643023919054,
+        "delta_pruning_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": false,
+        "history_aging_enabled": false,
+        "iir_enabled": false,
+        "lmr_enabled": false,
+        "mate_distance_pruning_enabled": false,
+        "move_count_pruning_enabled": false,
+        "mvv_lva_enabled": false,
+        "nmp_enabled": false,
+        "nmp_relaxed_guard_enabled": false,
+        "ordering_enabled": false,
+        "overload_enabled": true,
+        "overload_weight": 0.30123493773565047,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": false,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "pvs_enabled": false,
+        "quiescence_enabled": false,
+        "race_reduction_enabled": false,
+        "race_weight": 0.0,
+        "razoring_enabled": false,
+        "reverse_futility_enabled": false,
+        "runner_enabled": false,
+        "runner_weight": 1.0,
+        "see_ordering_enabled": false,
+        "see_quiescence_ordering_enabled": false,
+        "see_quiescence_pruning_enabled": false,
+        "selective_evaluator_enabled": false,
+        "variable_material_enabled": false
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 0.0,
+          "attack": 44.59984687779922,
+          "defence": 0.0,
+          "material": 100.0,
+          "overload": 0.30123493773565047,
+          "pressure": 0.0
+        },
+        "version": "intransitive-module-scales-v2"
+      },
+      "heuristic_limit": 10000.0,
+      "manifest_hash": "e5f70d0b7f2daf11461429fe3dc3362ef4be0382108b1b63f1fd4c98dd7b8d3e",
+      "round_trip": true,
+      "saturation_possible": false
+    },
+    "determinism": {
+      "mutated_inputs": 0,
+      "positions": [
+        {
+          "action": 241,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "repeatable": true,
+          "work": 593771
+        },
+        {
+          "action": 384,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "repeatable": true,
+          "work": 601962
+        },
+        {
+          "action": 404,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "repeatable": true,
+          "work": 659266
+        }
+      ],
+      "repeatable": true
+    },
+    "native": {
+      "reason": "Rust has no overload gene",
+      "status": "unsupported"
+    },
+    "passed": true,
+    "saturation": {
+      "clipped_positions": 0,
+      "config_hash": "aae53d6289bcc0d7173913b6674986b65ebbcfde61a240fc065df41f368da6d8",
+      "flagged": false,
+      "max_absolute_raw_score": 66.22723294314473,
+      "ordinary_positions": 3,
+      "saturated_positions": 0,
+      "saturation_fraction": 0.0
+    }
+  },
+  "pressure-10-archive": {
+    "contract": {
+      "config_hash": "b01b54dfdb1a7acaa5dc42bc4c749c0057a1f3bc480eefe6b6a73bb69d91fd07",
+      "conservative_absolute_bound": 44443.75,
+      "decisive_threshold": 90000.0,
+      "evaluation": {
+        "advantage_weight": 25.0,
+        "aspiration_enabled": false,
+        "attack_enabled": false,
+        "attack_weight": 25.714516982666414,
+        "certificate_cutoff_enabled": false,
+        "certificate_enabled": false,
+        "certificate_guard_enabled": false,
+        "compiled_ordering_enabled": true,
+        "compiled_see_enabled": true,
+        "continuation_enabled": false,
+        "count_weight": 100.0,
+        "counter_move_enabled": false,
+        "defence_enabled": false,
+        "defence_weight": 32.5643023919054,
+        "delta_pruning_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": false,
+        "history_aging_enabled": false,
+        "iir_enabled": false,
+        "lmr_enabled": false,
+        "mate_distance_pruning_enabled": false,
+        "move_count_pruning_enabled": false,
+        "mvv_lva_enabled": false,
+        "nmp_enabled": false,
+        "nmp_relaxed_guard_enabled": false,
+        "ordering_enabled": false,
+        "overload_enabled": false,
+        "overload_weight": 5.0,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": true,
+        "pressure_weight": 10.0,
+        "prey_bonus": 0.25,
+        "pvs_enabled": false,
+        "quiescence_enabled": false,
+        "race_reduction_enabled": false,
+        "race_weight": 0.0,
+        "razoring_enabled": false,
+        "reverse_futility_enabled": false,
+        "runner_enabled": false,
+        "runner_weight": 1.0,
+        "see_ordering_enabled": false,
+        "see_quiescence_ordering_enabled": false,
+        "see_quiescence_pruning_enabled": false,
+        "selective_evaluator_enabled": false,
+        "variable_material_enabled": false
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 25.0,
+          "attack": 0.0,
+          "defence": 0.0,
+          "material": 100.0,
+          "overload": 0.0,
+          "pressure": 10.0
+        },
+        "version": "intransitive-module-scales-v2"
+      },
+      "heuristic_limit": 10000.0,
+      "manifest_hash": "a92fca62315aca0a50348d9b010ce0da9c994fc36a76ba23677bc7e20a57db37",
+      "round_trip": true,
+      "saturation_possible": true
+    },
+    "determinism": {
+      "mutated_inputs": 0,
+      "positions": [
+        {
+          "action": 178,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "repeatable": true,
+          "work": 113913
+        },
+        {
+          "action": 384,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "repeatable": true,
+          "work": 111717
+        },
+        {
+          "action": 345,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "repeatable": true,
+          "work": 197834
+        }
+      ],
+      "repeatable": true
+    },
+    "native": {
+      "action_agreement": 1.0,
+      "compared": 6,
+      "max_score_difference": 0.0,
+      "note": "Differing tied actions are an ordering difference, not an evaluation difference; the score comparison is the parity claim.",
+      "score_parity": true,
+      "searches": [
+        {
+          "depth": 1,
+          "native_action": 178,
+          "native_complete": true,
+          "native_score": 1.5625,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 178,
+          "python_complete": true,
+          "python_score": 1.5625,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 105.0,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 105.0,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 342,
+          "native_complete": true,
+          "native_score": 0.625,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 342,
+          "python_complete": true,
+          "python_score": 0.625,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 178,
+          "native_complete": true,
+          "native_score": 0.0,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 178,
+          "python_complete": true,
+          "python_score": 0.0,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 93.75,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 93.75,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 345,
+          "native_complete": true,
+          "native_score": -1.5625,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 345,
+          "python_complete": true,
+          "python_score": -1.5625,
+          "score_difference": 0.0
+        }
+      ],
+      "status": "compared"
+    },
+    "passed": true,
+    "saturation": {
+      "clipped_positions": 0,
+      "config_hash": "b01b54dfdb1a7acaa5dc42bc4c749c0057a1f3bc480eefe6b6a73bb69d91fd07",
+      "flagged": false,
+      "max_absolute_raw_score": 21.40625,
+      "ordinary_positions": 3,
+      "saturated_positions": 0,
+      "saturation_fraction": 0.0
+    }
+  },
+  "prior-incumbent": {
+    "contract": {
+      "config_hash": "2b9869e9a37005926ac850a7bb151292aa0fcb203f265bfe134b6cb436556ec1",
+      "conservative_absolute_bound": 11643.75,
+      "decisive_threshold": 90000.0,
+      "evaluation": {
+        "advantage_weight": 25.0,
+        "aspiration_enabled": false,
+        "attack_enabled": false,
+        "attack_weight": 25.714516982666414,
+        "certificate_cutoff_enabled": false,
+        "certificate_enabled": false,
+        "certificate_guard_enabled": false,
+        "compiled_ordering_enabled": true,
+        "compiled_see_enabled": true,
+        "continuation_enabled": false,
+        "count_weight": 100.0,
+        "counter_move_enabled": false,
+        "defence_enabled": false,
+        "defence_weight": 32.5643023919054,
+        "delta_pruning_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": false,
+        "history_aging_enabled": false,
+        "iir_enabled": false,
+        "lmr_enabled": false,
+        "mate_distance_pruning_enabled": false,
+        "move_count_pruning_enabled": false,
+        "mvv_lva_enabled": false,
+        "nmp_enabled": false,
+        "nmp_relaxed_guard_enabled": false,
+        "ordering_enabled": false,
+        "overload_enabled": false,
+        "overload_weight": 5.0,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": false,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "pvs_enabled": false,
+        "quiescence_enabled": false,
+        "race_reduction_enabled": false,
+        "race_weight": 0.0,
+        "razoring_enabled": false,
+        "reverse_futility_enabled": false,
+        "runner_enabled": false,
+        "runner_weight": 1.0,
+        "see_ordering_enabled": false,
+        "see_quiescence_ordering_enabled": false,
+        "see_quiescence_pruning_enabled": false,
+        "selective_evaluator_enabled": false,
+        "variable_material_enabled": false
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 25.0,
+          "attack": 0.0,
+          "defence": 0.0,
+          "material": 100.0,
+          "overload": 0.0,
+          "pressure": 0.0
+        },
+        "version": "intransitive-module-scales-v2"
+      },
+      "heuristic_limit": 10000.0,
+      "manifest_hash": "4d86d59fdf2ee462d334d5020a2ca102c1d5136e4be60a6ab5d8aba7f8fa2451",
+      "round_trip": true,
+      "saturation_possible": true
+    },
+    "determinism": {
+      "mutated_inputs": 0,
+      "positions": [
+        {
+          "action": 241,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "repeatable": true,
+          "work": 5584
+        },
+        {
+          "action": 384,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "repeatable": true,
+          "work": 8430
+        },
+        {
+          "action": 405,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "repeatable": true,
+          "work": 6704
+        }
+      ],
+      "repeatable": true
+    },
+    "native": {
+      "action_agreement": 1.0,
+      "compared": 6,
+      "max_score_difference": 0.0,
+      "note": "Differing tied actions are an ordering difference, not an evaluation difference; the score comparison is the parity claim.",
+      "score_parity": true,
+      "searches": [
+        {
+          "depth": 1,
+          "native_action": 241,
+          "native_complete": true,
+          "native_score": 0.0,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 241,
+          "python_complete": true,
+          "python_score": -0.0,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 108.75,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 108.75,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 405,
+          "native_complete": true,
+          "native_score": 0.0,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 405,
+          "python_complete": true,
+          "python_score": -0.0,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 241,
+          "native_complete": true,
+          "native_score": 0.0,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 241,
+          "python_complete": true,
+          "python_score": 0.0,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 384,
+          "native_complete": true,
+          "native_score": 108.75,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 384,
+          "python_complete": true,
+          "python_score": 108.75,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 405,
+          "native_complete": true,
+          "native_score": 0.0,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 405,
+          "python_complete": true,
+          "python_score": 0.0,
+          "score_difference": 0.0
+        }
+      ],
+      "status": "compared"
+    },
+    "passed": true,
+    "saturation": {
+      "clipped_positions": 0,
+      "config_hash": "2b9869e9a37005926ac850a7bb151292aa0fcb203f265bfe134b6cb436556ec1",
+      "flagged": false,
+      "max_absolute_raw_score": 0.0,
+      "ordinary_positions": 3,
+      "saturated_positions": 0,
+      "saturation_fraction": 0.0
+    }
+  },
+  "variable-initial-material-baseline": {
+    "contract": {
+      "config_hash": "809375c9c182ab1db19809f71c303a621730b0a5199c679cd8699fcd4f1b69e8",
+      "conservative_absolute_bound": 1377810.0743845338,
+      "decisive_threshold": 90000.0,
+      "evaluation": {
+        "advantage_weight": 23.967050360966205,
+        "aspiration_enabled": false,
+        "attack_enabled": true,
+        "attack_weight": 25.714516982666414,
+        "certificate_cutoff_enabled": false,
+        "certificate_enabled": false,
+        "certificate_guard_enabled": false,
+        "compiled_ordering_enabled": true,
+        "compiled_see_enabled": true,
+        "continuation_enabled": false,
+        "count_weight": 5.0,
+        "counter_move_enabled": false,
+        "defence_enabled": true,
+        "defence_weight": 32.5643023919054,
+        "delta_pruning_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": false,
+        "history_aging_enabled": false,
+        "iir_enabled": false,
+        "lmr_enabled": false,
+        "mate_distance_pruning_enabled": false,
+        "move_count_pruning_enabled": false,
+        "mvv_lva_enabled": false,
+        "nmp_enabled": false,
+        "nmp_relaxed_guard_enabled": false,
+        "ordering_enabled": false,
+        "overload_enabled": false,
+        "overload_weight": 5.0,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": false,
+        "pressure_weight": 1.0,
+        "prey_bonus": 0.25,
+        "pvs_enabled": false,
+        "quiescence_enabled": false,
+        "race_reduction_enabled": false,
+        "race_weight": 0.0,
+        "razoring_enabled": false,
+        "reverse_futility_enabled": false,
+        "runner_enabled": false,
+        "runner_weight": 1.0,
+        "see_ordering_enabled": false,
+        "see_quiescence_ordering_enabled": false,
+        "see_quiescence_pruning_enabled": false,
+        "selective_evaluator_enabled": false,
+        "variable_material_enabled": true
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 23.967050360966205,
+          "attack": 25.714516982666414,
+          "defence": 32.5643023919054,
+          "material": 5.0,
+          "overload": 0.0,
+          "pressure": 0.0
+        },
+        "version": "intransitive-variable-module-scales-v3"
+      },
+      "heuristic_limit": 10000.0,
+      "manifest_hash": "aaeaf36fec75f450068cef90f9f1868ad52f0a5ebc713e09b71aa6bdae44da47",
+      "round_trip": true,
+      "saturation_possible": true
+    },
+    "determinism": {
+      "mutated_inputs": 0,
+      "positions": [
+        {
+          "action": 241,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "repeatable": true,
+          "work": 666650
+        },
+        {
+          "action": 177,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "repeatable": true,
+          "work": 1572364
+        },
+        {
+          "action": 404,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "repeatable": true,
+          "work": 738862
+        }
+      ],
+      "repeatable": true
+    },
+    "native": {
+      "action_agreement": 1.0,
+      "compared": 6,
+      "max_score_difference": 0.0,
+      "note": "Differing tied actions are an ordering difference, not an evaluation difference; the score comparison is the parity claim.",
+      "score_parity": true,
+      "searches": [
+        {
+          "depth": 1,
+          "native_action": 305,
+          "native_complete": true,
+          "native_score": 3.183702102615842,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 305,
+          "python_complete": true,
+          "python_score": 3.183702102615842,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 241,
+          "native_complete": true,
+          "native_score": 33.8157030147597,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 241,
+          "python_complete": true,
+          "python_score": 33.8157030147597,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 1,
+          "native_action": 405,
+          "native_complete": true,
+          "native_score": -2.316347363121139,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 405,
+          "python_complete": true,
+          "python_score": -2.316347363121139,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 241,
+          "native_complete": true,
+          "native_score": 8.8565802955479,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "python_action": 241,
+          "python_complete": true,
+          "python_score": 8.8565802955479,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 177,
+          "native_complete": true,
+          "native_score": 35.745219440587476,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "python_action": 177,
+          "python_complete": true,
+          "python_score": 35.745219440587476,
+          "score_difference": 0.0
+        },
+        {
+          "depth": 2,
+          "native_action": 404,
+          "native_complete": true,
+          "native_score": 4.744940633706303,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "python_action": 404,
+          "python_complete": true,
+          "python_score": 4.744940633706303,
+          "score_difference": 0.0
+        }
+      ],
+      "status": "compared"
+    },
+    "passed": true,
+    "saturation": {
+      "clipped_positions": 0,
+      "config_hash": "809375c9c182ab1db19809f71c303a621730b0a5199c679cd8699fcd4f1b69e8",
+      "flagged": false,
+      "max_absolute_raw_score": 38.18401688457846,
+      "ordinary_positions": 3,
+      "saturated_positions": 0,
+      "saturation_fraction": 0.0
+    }
+  },
+  "variable-material-selected": {
+    "contract": {
+      "config_hash": "3c3eee0116608b81931164728baa32137e281c9272e7b6c0f145404a224dcedf",
+      "conservative_absolute_bound": 10139314.019565606,
+      "decisive_threshold": 90000.0,
+      "evaluation": {
+        "advantage_weight": 69.73261445458894,
+        "aspiration_enabled": false,
+        "attack_enabled": true,
+        "attack_weight": 42.33762277619854,
+        "certificate_cutoff_enabled": false,
+        "certificate_enabled": false,
+        "certificate_guard_enabled": false,
+        "compiled_ordering_enabled": true,
+        "compiled_see_enabled": true,
+        "continuation_enabled": false,
+        "count_weight": -36.697281772317815,
+        "counter_move_enabled": false,
+        "defence_enabled": true,
+        "defence_weight": 29.31117881909708,
+        "delta_pruning_enabled": false,
+        "depth_replacement_enabled": false,
+        "futility_enabled": false,
+        "history_aging_enabled": false,
+        "iir_enabled": false,
+        "lmr_enabled": false,
+        "mate_distance_pruning_enabled": false,
+        "move_count_pruning_enabled": false,
+        "mvv_lva_enabled": false,
+        "nmp_enabled": false,
+        "nmp_relaxed_guard_enabled": false,
+        "ordering_enabled": false,
+        "overload_enabled": true,
+        "overload_weight": 82.71756110820638,
+        "predator_scarcity_bonus": 0.5,
+        "predator_zero_bonus": 1.0,
+        "pressure_enabled": true,
+        "pressure_weight": 13.140116669179605,
+        "prey_bonus": 0.25,
+        "pvs_enabled": false,
+        "quiescence_enabled": false,
+        "race_reduction_enabled": false,
+        "race_weight": 0.0,
+        "razoring_enabled": false,
+        "reverse_futility_enabled": false,
+        "runner_enabled": false,
+        "runner_weight": 1.0,
+        "see_ordering_enabled": false,
+        "see_quiescence_ordering_enabled": false,
+        "see_quiescence_pruning_enabled": false,
+        "selective_evaluator_enabled": false,
+        "variable_material_enabled": true
+      },
+      "genome": {
+        "backend": "python",
+        "genes": {
+          "advantage": 69.73261445458894,
+          "attack": 42.33762277619854,
+          "defence": 29.31117881909708,
+          "material": -36.697281772317815,
+          "overload": 82.71756110820638,
+          "pressure": 13.140116669179605
+        },
+        "version": "intransitive-variable-module-scales-v3"
+      },
+      "heuristic_limit": 10000.0,
+      "manifest_hash": "17037c14d8f3a8f714098feeca388e88b45d561dd312ddb4df4bad8f54051aba",
+      "round_trip": true,
+      "saturation_possible": true
+    },
+    "determinism": {
+      "mutated_inputs": 0,
+      "positions": [
+        {
+          "action": 241,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "repeatable": true,
+          "work": 820163
+        },
+        {
+          "action": 178,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "repeatable": true,
+          "work": 2076330
+        },
+        {
+          "action": 404,
+          "completed_depth": 2,
+          "mutated_input": false,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "repeatable": true,
+          "work": 1123276
+        }
+      ],
+      "repeatable": true
+    },
+    "native": {
+      "reason": "Rust has no overload gene",
+      "status": "unsupported"
+    },
+    "passed": true,
+    "saturation": {
+      "clipped_positions": 0,
+      "config_hash": "3c3eee0116608b81931164728baa32137e281c9272e7b6c0f145404a224dcedf",
+      "flagged": false,
+      "max_absolute_raw_score": 90.99607193882568,
+      "ordinary_positions": 3,
+      "saturated_positions": 0,
+      "saturation_fraction": 0.0
+    }
+  }
+}

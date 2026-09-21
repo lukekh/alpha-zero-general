@@ -1,0 +1,1931 @@
+{
+  "adopted-hour-search": {
+    "certified": {
+      "already_lost": [],
+      "budget_stopped": [
+        "blue_19_create_paper_fork",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 1
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 1
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 0
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 41,
+        "2": 21,
+        "3": 50
+      },
+      "failed": 2,
+      "failed_ids": [
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 2000000,
+        "time_limit": 30.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender"
+      ],
+      "passed": 110,
+      "proven_failures": [],
+      "strict_failed": 4,
+      "strict_failed_ids": [
+        "blue_19_create_paper_fork",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender"
+      ],
+      "strict_passed": 108,
+      "total_seconds": 1.9892407549195923,
+      "total_work": 15928357
+    },
+    "shipped": {
+      "already_lost": [],
+      "budget_stopped": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 1
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 0
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 0
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 45,
+        "2": 27,
+        "3": 40
+      },
+      "failed": 1,
+      "failed_ids": [
+        "red_31_keep_goal_defender"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "red_31_keep_goal_defender"
+      ],
+      "passed": 111,
+      "proven_failures": [],
+      "strict_failed": 13,
+      "strict_failed_ids": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "strict_passed": 99,
+      "total_seconds": 1.0271101247053593,
+      "total_work": 5431580
+    }
+  },
+  "adopted-hour-search-restore-advantage": {
+    "certified": {
+      "already_lost": [],
+      "budget_stopped": [
+        "blue_19_create_paper_fork",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 1
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 1
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 0
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 41,
+        "2": 21,
+        "3": 50
+      },
+      "failed": 2,
+      "failed_ids": [
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 2000000,
+        "time_limit": 30.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender"
+      ],
+      "passed": 110,
+      "proven_failures": [],
+      "strict_failed": 4,
+      "strict_failed_ids": [
+        "blue_19_create_paper_fork",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender"
+      ],
+      "strict_passed": 108,
+      "total_seconds": 1.920991409162525,
+      "total_work": 15928306
+    },
+    "shipped": {
+      "already_lost": [],
+      "budget_stopped": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 1
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 0
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 0
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 45,
+        "2": 27,
+        "3": 40
+      },
+      "failed": 1,
+      "failed_ids": [
+        "red_31_keep_goal_defender"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "red_31_keep_goal_defender"
+      ],
+      "passed": 111,
+      "proven_failures": [],
+      "strict_failed": 13,
+      "strict_failed_ids": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "strict_passed": 99,
+      "total_seconds": 1.0213587553007528,
+      "total_work": 5431580
+    }
+  },
+  "adopted-hour-search-restore-attack": {
+    "certified": {
+      "already_lost": [],
+      "budget_stopped": [
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 1
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 1
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 0
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 41,
+        "2": 22,
+        "3": 49
+      },
+      "failed": 2,
+      "failed_ids": [
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 2000000,
+        "time_limit": 30.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender"
+      ],
+      "passed": 110,
+      "proven_failures": [],
+      "strict_failed": 5,
+      "strict_failed_ids": [
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender"
+      ],
+      "strict_passed": 107,
+      "total_seconds": 1.8558582159457728,
+      "total_work": 15396277
+    },
+    "shipped": {
+      "already_lost": [],
+      "budget_stopped": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 0
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 0
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 1
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 1
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 46,
+        "2": 26,
+        "3": 40
+      },
+      "failed": 2,
+      "failed_ids": [
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "blue_19_create_paper_fork"
+      ],
+      "passed": 110,
+      "proven_failures": [
+        "blue_32_take_winning_run"
+      ],
+      "strict_failed": 13,
+      "strict_failed_ids": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "strict_passed": 99,
+      "total_seconds": 1.1454054567730054,
+      "total_work": 5011424
+    }
+  },
+  "adopted-hour-search-restore-defence": {
+    "certified": {
+      "already_lost": [],
+      "budget_stopped": [
+        "blue_19_create_paper_fork",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 3
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 1
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 2
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 41,
+        "2": 21,
+        "3": 50
+      },
+      "failed": 6,
+      "failed_ids": [
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 2000000,
+        "time_limit": 30.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "passed": 106,
+      "proven_failures": [],
+      "strict_failed": 8,
+      "strict_failed_ids": [
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "strict_passed": 104,
+      "total_seconds": 1.7786174578941427,
+      "total_work": 15154837
+    },
+    "shipped": {
+      "already_lost": [],
+      "budget_stopped": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 3
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 1
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 2
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 45,
+        "2": 27,
+        "3": 40
+      },
+      "failed": 6,
+      "failed_ids": [
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "passed": 106,
+      "proven_failures": [],
+      "strict_failed": 13,
+      "strict_failed_ids": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "strict_passed": 99,
+      "total_seconds": 0.9462128309533,
+      "total_work": 5246890
+    }
+  },
+  "endgame-provisional": {
+    "certified": {
+      "already_lost": [],
+      "budget_stopped": [
+        "blue_19_create_paper_fork",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 3
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 1
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 2
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 41,
+        "2": 21,
+        "3": 50
+      },
+      "failed": 6,
+      "failed_ids": [
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 2000000,
+        "time_limit": 30.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "passed": 106,
+      "proven_failures": [],
+      "strict_failed": 8,
+      "strict_failed_ids": [
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "strict_passed": 104,
+      "total_seconds": 2.051370321889408,
+      "total_work": 15936393
+    },
+    "shipped": {
+      "already_lost": [],
+      "budget_stopped": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 3
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 1
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 1
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 45,
+        "2": 27,
+        "3": 40
+      },
+      "failed": 5,
+      "failed_ids": [
+        "095_safe_capture_capture_forking_scissors_blue",
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "095_safe_capture_capture_forking_scissors_blue",
+        "red_14_preserve_material",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "passed": 107,
+      "proven_failures": [],
+      "strict_failed": 13,
+      "strict_failed_ids": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "strict_passed": 99,
+      "total_seconds": 1.0420957997557707,
+      "total_work": 5364485
+    }
+  },
+  "pressure-10-archive": {
+    "certified": {
+      "already_lost": [],
+      "budget_stopped": [],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 3
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 0
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 0
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 41,
+        "2": 18,
+        "3": 53
+      },
+      "failed": 3,
+      "failed_ids": [
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 2000000,
+        "time_limit": 30.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "passed": 109,
+      "proven_failures": [],
+      "strict_failed": 3,
+      "strict_failed_ids": [
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "strict_passed": 109,
+      "total_seconds": 1.2353054199484177,
+      "total_work": 6367366
+    },
+    "shipped": {
+      "already_lost": [],
+      "budget_stopped": [
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 3
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 0
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 0
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 41,
+        "2": 23,
+        "3": 48
+      },
+      "failed": 3,
+      "failed_ids": [
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "passed": 109,
+      "proven_failures": [],
+      "strict_failed": 7,
+      "strict_failed_ids": [
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "strict_passed": 105,
+      "total_seconds": 0.8192705010296777,
+      "total_work": 2587928
+    }
+  },
+  "prior-incumbent": {
+    "certified": {
+      "already_lost": [],
+      "budget_stopped": [],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 1
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 3
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 1
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 0
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 41,
+        "2": 18,
+        "3": 53
+      },
+      "failed": 5,
+      "failed_ids": [
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 2000000,
+        "time_limit": 30.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "passed": 107,
+      "proven_failures": [],
+      "strict_failed": 5,
+      "strict_failed_ids": [
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "strict_passed": 107,
+      "total_seconds": 0.9658907467965037,
+      "total_work": 879234
+    },
+    "shipped": {
+      "already_lost": [],
+      "budget_stopped": [],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 1
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 3
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 1
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 0
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 0
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 41,
+        "2": 18,
+        "3": 53
+      },
+      "failed": 5,
+      "failed_ids": [
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "passed": 107,
+      "proven_failures": [],
+      "strict_failed": 5,
+      "strict_failed_ids": [
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "strict_passed": 107,
+      "total_seconds": 0.9668200051528402,
+      "total_work": 879234
+    }
+  },
+  "variable-initial-material-baseline": {
+    "certified": {
+      "already_lost": [],
+      "budget_stopped": [
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 2
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 0
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 12
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 1
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 3
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 41,
+        "2": 23,
+        "3": 48
+      },
+      "failed": 18,
+      "failed_ids": [
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 2000000,
+        "time_limit": 30.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_19_create_paper_fork",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "passed": 94,
+      "proven_failures": [
+        "blue_32_take_winning_run"
+      ],
+      "strict_failed": 21,
+      "strict_failed_ids": [
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "strict_passed": 91,
+      "total_seconds": 2.5653478259337135,
+      "total_work": 19292641
+    },
+    "shipped": {
+      "already_lost": [],
+      "budget_stopped": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "093_safe_capture_capture_attacker_to_save_scissors_blue",
+        "094_safe_capture_capture_attacker_to_save_scissors_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 3
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 0
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 12
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 1
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 2
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 46,
+        "2": 34,
+        "3": 32
+      },
+      "failed": 18,
+      "failed_ids": [
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_32_take_winning_run",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "passed": 94,
+      "proven_failures": [
+        "blue_32_take_winning_run"
+      ],
+      "strict_failed": 29,
+      "strict_failed_ids": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "093_safe_capture_capture_attacker_to_save_scissors_blue",
+        "094_safe_capture_capture_attacker_to_save_scissors_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "strict_passed": 83,
+      "total_seconds": 1.3603970429394394,
+      "total_work": 6821073
+    }
+  },
+  "variable-material-selected": {
+    "certified": {
+      "already_lost": [],
+      "budget_stopped": [
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 0
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 16
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 1
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 2
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 41,
+        "2": 23,
+        "3": 48
+      },
+      "failed": 19,
+      "failed_ids": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "093_safe_capture_capture_attacker_to_save_scissors_blue",
+        "094_safe_capture_capture_attacker_to_save_scissors_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_32_take_winning_run",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 2000000,
+        "time_limit": 30.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "093_safe_capture_capture_attacker_to_save_scissors_blue",
+        "094_safe_capture_capture_attacker_to_save_scissors_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "passed": 93,
+      "proven_failures": [
+        "blue_32_take_winning_run"
+      ],
+      "strict_failed": 23,
+      "strict_failed_ids": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "093_safe_capture_capture_attacker_to_save_scissors_blue",
+        "094_safe_capture_capture_attacker_to_save_scissors_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "strict_passed": 89,
+      "total_seconds": 2.9199900868115947,
+      "total_work": 21654975
+    },
+    "shipped": {
+      "already_lost": [],
+      "budget_stopped": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "093_safe_capture_capture_attacker_to_save_scissors_blue",
+        "094_safe_capture_capture_attacker_to_save_scissors_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours",
+        "unique_paper_fork_exchanged_colours"
+      ],
+      "by_category": {
+        "avoid_fork": {
+          "cases": 1,
+          "failed": 0
+        },
+        "avoid_goal_run": {
+          "cases": 3,
+          "failed": 0
+        },
+        "avoid_material_loss": {
+          "cases": 1,
+          "failed": 0
+        },
+        "clear_run": {
+          "cases": 20,
+          "failed": 0
+        },
+        "goal_defence": {
+          "cases": 20,
+          "failed": 0
+        },
+        "immediate_goal": {
+          "cases": 21,
+          "failed": 0
+        },
+        "safe_capture": {
+          "cases": 20,
+          "failed": 12
+        },
+        "save_piece": {
+          "cases": 20,
+          "failed": 0
+        },
+        "win_goal_run": {
+          "cases": 3,
+          "failed": 1
+        },
+        "win_material": {
+          "cases": 3,
+          "failed": 2
+        }
+      },
+      "cases": 112,
+      "completed_depths": {
+        "1": 48,
+        "2": 35,
+        "3": 29
+      },
+      "failed": 15,
+      "failed_ids": [
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_32_take_winning_run",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "interpretation": "A proof failure is a missed forced win or a preventable forced loss. An obligation failure is a bounded material or survival mistake, not a game-theoretic verdict. Fixtures where no legal move meets the objective are listed as already lost and are never counted against a candidate.",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "mutated_inputs": [],
+      "obligation_failures": [
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "passed": 97,
+      "proven_failures": [
+        "blue_32_take_winning_run"
+      ],
+      "strict_failed": 29,
+      "strict_failed_ids": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "091_safe_capture_remove_last_paper_blue",
+        "092_safe_capture_remove_last_paper_red",
+        "093_safe_capture_capture_attacker_to_save_scissors_blue",
+        "094_safe_capture_capture_attacker_to_save_scissors_red",
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_19_create_paper_fork",
+        "blue_32_take_winning_run",
+        "red_14_preserve_material",
+        "red_18_prevent_paper_fork",
+        "red_31_keep_goal_defender",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "strict_passed": 83,
+      "total_seconds": 1.3548411629744805,
+      "total_work": 7087564
+    }
+  }
+}
