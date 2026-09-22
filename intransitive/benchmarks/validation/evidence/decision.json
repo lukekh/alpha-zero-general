@@ -1,0 +1,1352 @@
+{
+  "candidates": {
+    "adopted-hour-search": {
+      "attribution": {
+        "attributed": [
+          "attack",
+          "defence"
+        ],
+        "by_gene": {
+          "advantage": {
+            "baseline": "adopted-hour-search",
+            "baseline_eligible": false,
+            "baseline_interval": [
+              0.0,
+              1.0
+            ],
+            "baseline_lower": 0.16666666666666666,
+            "baseline_record": {
+              "completion_rate": 0.6666666666666666,
+              "distinct_trajectories": 4,
+              "failures": 0,
+              "losses": 3,
+              "scheduled": 6,
+              "unfinished": 2,
+              "wins": 1
+            },
+            "candidate": "adopted-hour-search-restore-advantage",
+            "candidate_eligible": false,
+            "candidate_interval": [
+              0.0,
+              1.0
+            ],
+            "candidate_lower": 0.5,
+            "candidate_record": {
+              "completion_rate": 0.6666666666666666,
+              "distinct_trajectories": 4,
+              "failures": 0,
+              "losses": 1,
+              "scheduled": 6,
+              "unfinished": 2,
+              "wins": 3
+            },
+            "difference": 0.33333333333333337,
+            "disjoint": false,
+            "head_to_head": {
+              "by_colour": {
+                "0": {
+                  "losses": 0,
+                  "scheduled": 3,
+                  "unfinished": 1,
+                  "wins": 2
+                },
+                "1": {
+                  "losses": 1,
+                  "scheduled": 3,
+                  "unfinished": 1,
+                  "wins": 1
+                }
+              },
+              "completion_rate": 0.6666666666666666,
+              "failures": 0,
+              "loss_points_lower": 0.16666666666666666,
+              "losses": 1,
+              "net": 0.3333333333333333,
+              "scheduled": 6,
+              "unfinished": 2,
+              "win_points_lower": 0.5,
+              "wins": 3
+            },
+            "module_carries_result": false
+          },
+          "attack": {
+            "baseline": "adopted-hour-search",
+            "baseline_eligible": true,
+            "baseline_interval": [
+              0.049233057633647936,
+              1.0
+            ],
+            "baseline_lower": 0.8333333333333334,
+            "baseline_record": {
+              "completion_rate": 1.0,
+              "distinct_trajectories": 6,
+              "failures": 0,
+              "losses": 1,
+              "scheduled": 6,
+              "unfinished": 0,
+              "wins": 5
+            },
+            "candidate": "adopted-hour-search-restore-attack",
+            "candidate_eligible": true,
+            "candidate_interval": [
+              0.0,
+              0.9507669423663521
+            ],
+            "candidate_lower": 0.16666666666666666,
+            "candidate_record": {
+              "completion_rate": 1.0,
+              "distinct_trajectories": 6,
+              "failures": 0,
+              "losses": 5,
+              "scheduled": 6,
+              "unfinished": 0,
+              "wins": 1
+            },
+            "difference": -0.6666666666666667,
+            "disjoint": false,
+            "head_to_head": {
+              "by_colour": {
+                "0": {
+                  "losses": 2,
+                  "scheduled": 3,
+                  "unfinished": 0,
+                  "wins": 1
+                },
+                "1": {
+                  "losses": 3,
+                  "scheduled": 3,
+                  "unfinished": 0,
+                  "wins": 0
+                }
+              },
+              "completion_rate": 1.0,
+              "failures": 0,
+              "loss_points_lower": 0.8333333333333334,
+              "losses": 5,
+              "net": -0.6666666666666666,
+              "scheduled": 6,
+              "unfinished": 0,
+              "win_points_lower": 0.16666666666666666,
+              "wins": 1
+            },
+            "module_carries_result": true
+          },
+          "defence": {
+            "baseline": "adopted-hour-search",
+            "baseline_eligible": true,
+            "baseline_interval": [
+              0.0,
+              1.0
+            ],
+            "baseline_lower": 0.6666666666666666,
+            "baseline_record": {
+              "completion_rate": 0.8333333333333334,
+              "distinct_trajectories": 6,
+              "failures": 0,
+              "losses": 1,
+              "scheduled": 6,
+              "unfinished": 1,
+              "wins": 4
+            },
+            "candidate": "adopted-hour-search-restore-defence",
+            "candidate_eligible": true,
+            "candidate_interval": [
+              0.0,
+              1.0
+            ],
+            "candidate_lower": 0.16666666666666666,
+            "candidate_record": {
+              "completion_rate": 0.8333333333333334,
+              "distinct_trajectories": 6,
+              "failures": 0,
+              "losses": 4,
+              "scheduled": 6,
+              "unfinished": 1,
+              "wins": 1
+            },
+            "difference": -0.5,
+            "disjoint": false,
+            "head_to_head": {
+              "by_colour": {
+                "0": {
+                  "losses": 2,
+                  "scheduled": 3,
+                  "unfinished": 1,
+                  "wins": 0
+                },
+                "1": {
+                  "losses": 2,
+                  "scheduled": 3,
+                  "unfinished": 0,
+                  "wins": 1
+                }
+              },
+              "completion_rate": 0.8333333333333334,
+              "failures": 0,
+              "loss_points_lower": 0.6666666666666666,
+              "losses": 4,
+              "net": -0.5,
+              "scheduled": 6,
+              "unfinished": 1,
+              "win_points_lower": 0.16666666666666666,
+              "wins": 1
+            },
+            "module_carries_result": true
+          }
+        },
+        "mode": "depth",
+        "status": "measured",
+        "unattributed": [
+          "advantage"
+        ]
+      },
+      "baseline": "prior-incumbent",
+      "blocking": [
+        "strength-wall: an entrant failed harness eligibility (completion, failures or unattempted games)"
+      ],
+      "candidate": "adopted-hour-search",
+      "cost": {
+        "baseline_shipped_median_depth": 3,
+        "depth_within_allowance": true,
+        "equal_time_depth": {
+          "0.05": {
+            "baseline": 2,
+            "candidate": 2,
+            "loss": 0
+          },
+          "0.25": {
+            "baseline": 3,
+            "candidate": 2,
+            "loss": 1
+          },
+          "1.0": {
+            "baseline": 4,
+            "candidate": 3,
+            "loss": 1
+          },
+          "5.0": {
+            "baseline": 5,
+            "candidate": 4,
+            "loss": 1
+          }
+        },
+        "label_throughput_ratio": 0.24320279694168775,
+        "shipped_median_depth": 1,
+        "shipped_reaches_default_depth": false,
+        "static_seconds_ratio": 13.057828415235447,
+        "status": "measured",
+        "teacher_throughput_acceptable": true,
+        "worst_median_depth_loss": 1
+      },
+      "established": false,
+      "gain": 0.38888888888888895,
+      "is_current_default": true,
+      "notes": [
+        "Under the shipped default limits this evaluation does not complete the shipped default depth"
+      ],
+      "outcome": "retain-defaults",
+      "parity_passed": true,
+      "primary": {
+        "baseline": "prior-incumbent",
+        "baseline_eligible": true,
+        "baseline_interval": [
+          0.0,
+          0.8461092887441557
+        ],
+        "baseline_lower": 0.16666666666666666,
+        "baseline_record": {
+          "completion_rate": 0.875,
+          "distinct_trajectories": 23,
+          "failures": 0,
+          "losses": 17,
+          "scheduled": 24,
+          "unfinished": 3,
+          "wins": 4
+        },
+        "candidate": "adopted-hour-search",
+        "candidate_eligible": true,
+        "candidate_interval": [
+          0.0011129334780665134,
+          1.0
+        ],
+        "candidate_lower": 0.5555555555555556,
+        "candidate_record": {
+          "completion_rate": 0.9444444444444444,
+          "distinct_trajectories": 36,
+          "failures": 0,
+          "losses": 14,
+          "scheduled": 36,
+          "unfinished": 2,
+          "wins": 20
+        },
+        "difference": 0.38888888888888895,
+        "disjoint": false,
+        "head_to_head": {
+          "by_colour": {
+            "0": {
+              "losses": 1,
+              "scheduled": 6,
+              "unfinished": 1,
+              "wins": 4
+            },
+            "1": {
+              "losses": 1,
+              "scheduled": 6,
+              "unfinished": 1,
+              "wins": 4
+            }
+          },
+          "completion_rate": 0.8333333333333334,
+          "failures": 0,
+          "loss_points_lower": 0.16666666666666666,
+          "losses": 2,
+          "net": 0.5,
+          "scheduled": 12,
+          "unfinished": 2,
+          "win_points_lower": 0.6666666666666666,
+          "wins": 8
+        },
+        "mode": "depth"
+      },
+      "primary_usable": true,
+      "provenance": {
+        "note": "Adopted as the Python and Rust default in 9424a35 at the user's explicit request, without held-out acceptance. This run is that acceptance.",
+        "source": "benchmarks/evolution/hour-search-20260917/provisional-genome.json",
+        "source_sha256": "b176b41a49ba81c81f442053559ce53743a1a29e63bea16a0dfac74ff0750c21",
+        "source_version": "intransitive-module-scales-v1"
+      },
+      "regressed": false,
+      "separated": false,
+      "strength": {
+        "strength-depth": {
+          "baseline": "prior-incumbent",
+          "baseline_eligible": true,
+          "baseline_interval": [
+            0.0,
+            0.8461092887441557
+          ],
+          "baseline_lower": 0.16666666666666666,
+          "baseline_record": {
+            "completion_rate": 0.875,
+            "distinct_trajectories": 23,
+            "failures": 0,
+            "losses": 17,
+            "scheduled": 24,
+            "unfinished": 3,
+            "wins": 4
+          },
+          "candidate": "adopted-hour-search",
+          "candidate_eligible": true,
+          "candidate_interval": [
+            0.0011129334780665134,
+            1.0
+          ],
+          "candidate_lower": 0.5555555555555556,
+          "candidate_record": {
+            "completion_rate": 0.9444444444444444,
+            "distinct_trajectories": 36,
+            "failures": 0,
+            "losses": 14,
+            "scheduled": 36,
+            "unfinished": 2,
+            "wins": 20
+          },
+          "difference": 0.38888888888888895,
+          "disjoint": false,
+          "head_to_head": {
+            "by_colour": {
+              "0": {
+                "losses": 1,
+                "scheduled": 6,
+                "unfinished": 1,
+                "wins": 4
+              },
+              "1": {
+                "losses": 1,
+                "scheduled": 6,
+                "unfinished": 1,
+                "wins": 4
+              }
+            },
+            "completion_rate": 0.8333333333333334,
+            "failures": 0,
+            "loss_points_lower": 0.16666666666666666,
+            "losses": 2,
+            "net": 0.5,
+            "scheduled": 12,
+            "unfinished": 2,
+            "win_points_lower": 0.6666666666666666,
+            "wins": 8
+          },
+          "mode": "depth"
+        },
+        "strength-wall": {
+          "baseline": "prior-incumbent",
+          "baseline_eligible": false,
+          "baseline_interval": [
+            0.0,
+            0.9294426220774891
+          ],
+          "baseline_lower": 0.16666666666666666,
+          "baseline_record": {
+            "completion_rate": 0.7916666666666666,
+            "distinct_trajectories": 24,
+            "failures": 0,
+            "losses": 15,
+            "scheduled": 24,
+            "unfinished": 5,
+            "wins": 4
+          },
+          "candidate": "adopted-hour-search",
+          "candidate_eligible": true,
+          "candidate_interval": [
+            0.0,
+            1.0
+          ],
+          "candidate_lower": 0.4444444444444444,
+          "candidate_record": {
+            "completion_rate": 0.8333333333333334,
+            "distinct_trajectories": 36,
+            "failures": 0,
+            "losses": 14,
+            "scheduled": 36,
+            "unfinished": 6,
+            "wins": 16
+          },
+          "difference": 0.2777777777777778,
+          "disjoint": false,
+          "head_to_head": {
+            "by_colour": {
+              "0": {
+                "losses": 1,
+                "scheduled": 6,
+                "unfinished": 1,
+                "wins": 4
+              },
+              "1": {
+                "losses": 1,
+                "scheduled": 6,
+                "unfinished": 1,
+                "wins": 4
+              }
+            },
+            "completion_rate": 0.8333333333333334,
+            "failures": 0,
+            "loss_points_lower": 0.16666666666666666,
+            "losses": 2,
+            "net": 0.5,
+            "scheduled": 12,
+            "unfinished": 2,
+            "win_points_lower": 0.6666666666666666,
+            "wins": 8
+          },
+          "mode": "wall"
+        }
+      },
+      "tactical": {
+        "certified": {
+          "baseline_failed": 5,
+          "baseline_passed": 107,
+          "baseline_strict_failed": 5,
+          "budget_stopped": 3,
+          "failed": 2,
+          "fixed": [
+            "red_18_prevent_paper_fork",
+            "unique_last_defender_exchanged_colours",
+            "unique_last_defender_original_colours"
+          ],
+          "new_failures": [],
+          "new_proven_failures": [],
+          "new_strict_failures": [
+            "blue_19_create_paper_fork"
+          ],
+          "passed": 110,
+          "proven_failures": [],
+          "strict_failed": 4
+        },
+        "shipped": {
+          "baseline_failed": 5,
+          "baseline_passed": 107,
+          "baseline_strict_failed": 5,
+          "budget_stopped": 13,
+          "failed": 1,
+          "fixed": [
+            "red_14_preserve_material",
+            "red_18_prevent_paper_fork",
+            "unique_last_defender_exchanged_colours",
+            "unique_last_defender_original_colours"
+          ],
+          "new_failures": [],
+          "new_proven_failures": [],
+          "new_strict_failures": [
+            "081_safe_capture_free_central_scissors_blue",
+            "082_safe_capture_free_central_scissors_red",
+            "091_safe_capture_remove_last_paper_blue",
+            "092_safe_capture_remove_last_paper_red",
+            "095_safe_capture_capture_forking_scissors_blue",
+            "096_safe_capture_capture_forking_scissors_red",
+            "blue_19_create_paper_fork",
+            "blue_32_take_winning_run"
+          ],
+          "passed": 111,
+          "proven_failures": [],
+          "strict_failed": 13
+        }
+      },
+      "tactical_regressions": [],
+      "unsafe": false
+    },
+    "endgame-provisional": {
+      "attribution": {
+        "reason": "No attribution experiment is scheduled for this candidate",
+        "status": "not-scheduled"
+      },
+      "baseline": "adopted-hour-search",
+      "blocking": [
+        "5 newly failed certified tactical fixtures: 095_safe_capture_capture_forking_scissors_blue, 096_safe_capture_capture_forking_scissors_red, red_14_preserve_material, unique_last_defender_exchanged_colours, unique_last_defender_original_colours"
+      ],
+      "candidate": "endgame-provisional",
+      "cost": {
+        "baseline_shipped_median_depth": 1,
+        "depth_within_allowance": true,
+        "equal_time_depth": {
+          "0.05": {
+            "baseline": 2,
+            "candidate": 2,
+            "loss": 0
+          },
+          "0.25": {
+            "baseline": 2,
+            "candidate": 2,
+            "loss": 0
+          },
+          "1.0": {
+            "baseline": 3,
+            "candidate": 3,
+            "loss": 0
+          },
+          "5.0": {
+            "baseline": 4,
+            "candidate": 4,
+            "loss": 0
+          }
+        },
+        "label_throughput_ratio": 0.9164842539510287,
+        "shipped_median_depth": 1,
+        "shipped_reaches_default_depth": false,
+        "static_seconds_ratio": 1.3638453435998685,
+        "status": "measured",
+        "teacher_throughput_acceptable": true,
+        "worst_median_depth_loss": 0
+      },
+      "established": false,
+      "gain": -0.02777777777777779,
+      "is_current_default": false,
+      "notes": [
+        "Under the shipped default limits this evaluation does not complete the shipped default depth"
+      ],
+      "outcome": "retain-defaults",
+      "parity_passed": true,
+      "primary": {
+        "baseline": "adopted-hour-search",
+        "baseline_eligible": true,
+        "baseline_interval": [
+          0.0011129334780665134,
+          1.0
+        ],
+        "baseline_lower": 0.5555555555555556,
+        "baseline_record": {
+          "completion_rate": 0.9444444444444444,
+          "distinct_trajectories": 36,
+          "failures": 0,
+          "losses": 14,
+          "scheduled": 36,
+          "unfinished": 2,
+          "wins": 20
+        },
+        "candidate": "endgame-provisional",
+        "candidate_eligible": true,
+        "candidate_interval": [
+          0.0,
+          1.0
+        ],
+        "candidate_lower": 0.5277777777777778,
+        "candidate_record": {
+          "completion_rate": 0.9444444444444444,
+          "distinct_trajectories": 36,
+          "failures": 0,
+          "losses": 15,
+          "scheduled": 36,
+          "unfinished": 2,
+          "wins": 19
+        },
+        "difference": -0.02777777777777779,
+        "disjoint": false,
+        "head_to_head": {
+          "by_colour": {
+            "0": {
+              "losses": 2,
+              "scheduled": 6,
+              "unfinished": 0,
+              "wins": 4
+            },
+            "1": {
+              "losses": 5,
+              "scheduled": 6,
+              "unfinished": 0,
+              "wins": 1
+            }
+          },
+          "completion_rate": 1.0,
+          "failures": 0,
+          "loss_points_lower": 0.5833333333333334,
+          "losses": 7,
+          "net": -0.16666666666666666,
+          "scheduled": 12,
+          "unfinished": 0,
+          "win_points_lower": 0.4166666666666667,
+          "wins": 5
+        },
+        "mode": "depth"
+      },
+      "primary_usable": true,
+      "provenance": {
+        "note": "Provisional endgame winner; tied defaults 3-3 on its own fresh validation.",
+        "source": "benchmarks/evolution/endgame-search-20260917/provisional-genome.json",
+        "source_sha256": "5e6d331798426989f43d7f57b380a32cb1e0ac7baf6fd758d9ef21a523208970",
+        "source_version": "intransitive-module-scales-v1"
+      },
+      "regressed": false,
+      "separated": false,
+      "strength": {
+        "strength-depth": {
+          "baseline": "adopted-hour-search",
+          "baseline_eligible": true,
+          "baseline_interval": [
+            0.0011129334780665134,
+            1.0
+          ],
+          "baseline_lower": 0.5555555555555556,
+          "baseline_record": {
+            "completion_rate": 0.9444444444444444,
+            "distinct_trajectories": 36,
+            "failures": 0,
+            "losses": 14,
+            "scheduled": 36,
+            "unfinished": 2,
+            "wins": 20
+          },
+          "candidate": "endgame-provisional",
+          "candidate_eligible": true,
+          "candidate_interval": [
+            0.0,
+            1.0
+          ],
+          "candidate_lower": 0.5277777777777778,
+          "candidate_record": {
+            "completion_rate": 0.9444444444444444,
+            "distinct_trajectories": 36,
+            "failures": 0,
+            "losses": 15,
+            "scheduled": 36,
+            "unfinished": 2,
+            "wins": 19
+          },
+          "difference": -0.02777777777777779,
+          "disjoint": false,
+          "head_to_head": {
+            "by_colour": {
+              "0": {
+                "losses": 2,
+                "scheduled": 6,
+                "unfinished": 0,
+                "wins": 4
+              },
+              "1": {
+                "losses": 5,
+                "scheduled": 6,
+                "unfinished": 0,
+                "wins": 1
+              }
+            },
+            "completion_rate": 1.0,
+            "failures": 0,
+            "loss_points_lower": 0.5833333333333334,
+            "losses": 7,
+            "net": -0.16666666666666666,
+            "scheduled": 12,
+            "unfinished": 0,
+            "win_points_lower": 0.4166666666666667,
+            "wins": 5
+          },
+          "mode": "depth"
+        },
+        "strength-wall": {
+          "baseline": "adopted-hour-search",
+          "baseline_eligible": true,
+          "baseline_interval": [
+            0.0,
+            1.0
+          ],
+          "baseline_lower": 0.4444444444444444,
+          "baseline_record": {
+            "completion_rate": 0.8333333333333334,
+            "distinct_trajectories": 36,
+            "failures": 0,
+            "losses": 14,
+            "scheduled": 36,
+            "unfinished": 6,
+            "wins": 16
+          },
+          "candidate": "endgame-provisional",
+          "candidate_eligible": true,
+          "candidate_interval": [
+            0.0,
+            1.0
+          ],
+          "candidate_lower": 0.3888888888888889,
+          "candidate_record": {
+            "completion_rate": 0.8055555555555556,
+            "distinct_trajectories": 36,
+            "failures": 0,
+            "losses": 15,
+            "scheduled": 36,
+            "unfinished": 7,
+            "wins": 14
+          },
+          "difference": -0.055555555555555525,
+          "disjoint": false,
+          "head_to_head": {
+            "by_colour": {
+              "0": {
+                "losses": 1,
+                "scheduled": 6,
+                "unfinished": 3,
+                "wins": 2
+              },
+              "1": {
+                "losses": 4,
+                "scheduled": 6,
+                "unfinished": 0,
+                "wins": 2
+              }
+            },
+            "completion_rate": 0.75,
+            "failures": 0,
+            "loss_points_lower": 0.4166666666666667,
+            "losses": 5,
+            "net": -0.08333333333333333,
+            "scheduled": 12,
+            "unfinished": 3,
+            "win_points_lower": 0.3333333333333333,
+            "wins": 4
+          },
+          "mode": "wall"
+        }
+      },
+      "tactical": {
+        "certified": {
+          "baseline_failed": 2,
+          "baseline_passed": 110,
+          "baseline_strict_failed": 4,
+          "budget_stopped": 3,
+          "failed": 6,
+          "fixed": [],
+          "new_failures": [
+            "095_safe_capture_capture_forking_scissors_blue",
+            "096_safe_capture_capture_forking_scissors_red",
+            "unique_last_defender_exchanged_colours",
+            "unique_last_defender_original_colours"
+          ],
+          "new_proven_failures": [],
+          "new_strict_failures": [
+            "095_safe_capture_capture_forking_scissors_blue",
+            "096_safe_capture_capture_forking_scissors_red",
+            "unique_last_defender_exchanged_colours",
+            "unique_last_defender_original_colours"
+          ],
+          "passed": 106,
+          "proven_failures": [],
+          "strict_failed": 8
+        },
+        "shipped": {
+          "baseline_failed": 1,
+          "baseline_passed": 111,
+          "baseline_strict_failed": 13,
+          "budget_stopped": 13,
+          "failed": 5,
+          "fixed": [],
+          "new_failures": [
+            "095_safe_capture_capture_forking_scissors_blue",
+            "red_14_preserve_material",
+            "unique_last_defender_exchanged_colours",
+            "unique_last_defender_original_colours"
+          ],
+          "new_proven_failures": [],
+          "new_strict_failures": [],
+          "passed": 107,
+          "proven_failures": [],
+          "strict_failed": 13
+        }
+      },
+      "tactical_regressions": [
+        "095_safe_capture_capture_forking_scissors_blue",
+        "096_safe_capture_capture_forking_scissors_red",
+        "red_14_preserve_material",
+        "unique_last_defender_exchanged_colours",
+        "unique_last_defender_original_colours"
+      ],
+      "unsafe": true
+    },
+    "variable-material-selected": {
+      "attribution": {
+        "reason": "No attribution experiment is scheduled for this candidate",
+        "status": "not-scheduled"
+      },
+      "baseline": "adopted-hour-search",
+      "blocking": [
+        "New failures on fixtures whose certificate is a proof",
+        "19 newly failed certified tactical fixtures: 081_safe_capture_free_central_scissors_blue, 082_safe_capture_free_central_scissors_red, 083_safe_capture_free_edge_paper_blue, 084_safe_capture_free_edge_paper_red, 085_safe_capture_scissors_safe_or_poisoned_blue, 086_safe_capture_scissors_safe_or_poisoned_red, 087_safe_capture_rocks_safe_or_poisoned_blue, 088_safe_capture_rocks_safe_or_poisoned_red, 089_safe_capture_papers_safe_or_poisoned_blue, 090_safe_capture_papers_safe_or_poisoned_red, 093_safe_capture_capture_attacker_to_save_scissors_blue, 094_safe_capture_capture_attacker_to_save_scissors_red, 097_safe_capture_horizontal_rocks_safe_or_poisoned_blue, 098_safe_capture_horizontal_rocks_safe_or_poisoned_red, 099_safe_capture_horizontal_papers_safe_or_poisoned_blue, 100_safe_capture_horizontal_papers_safe_or_poisoned_red, blue_32_take_winning_run, unique_paper_fork_exchanged_colours, unique_paper_fork_original_colours"
+      ],
+      "candidate": "variable-material-selected",
+      "cost": {
+        "baseline_shipped_median_depth": 1,
+        "depth_within_allowance": true,
+        "equal_time_depth": {
+          "0.05": {
+            "baseline": 2,
+            "candidate": 1,
+            "loss": 1
+          },
+          "0.25": {
+            "baseline": 2,
+            "candidate": 2,
+            "loss": 0
+          },
+          "1.0": {
+            "baseline": 3,
+            "candidate": 3,
+            "loss": 0
+          },
+          "5.0": {
+            "baseline": 4,
+            "candidate": 4,
+            "loss": 0
+          }
+        },
+        "label_throughput_ratio": 0.7092785269838386,
+        "shipped_median_depth": 0,
+        "shipped_reaches_default_depth": false,
+        "static_seconds_ratio": 1.5436379009426393,
+        "status": "measured",
+        "teacher_throughput_acceptable": true,
+        "worst_median_depth_loss": 1
+      },
+      "established": false,
+      "gain": -0.7916666666666666,
+      "is_current_default": false,
+      "notes": [
+        "Under the shipped default limits this evaluation does not complete the shipped default depth"
+      ],
+      "outcome": "retain-defaults",
+      "parity_passed": true,
+      "primary": {
+        "baseline": "adopted-hour-search",
+        "baseline_eligible": true,
+        "baseline_interval": [
+          0.36222404458917756,
+          1.0
+        ],
+        "baseline_lower": 0.9166666666666666,
+        "baseline_record": {
+          "completion_rate": 1.0,
+          "distinct_trajectories": 12,
+          "failures": 0,
+          "losses": 1,
+          "scheduled": 12,
+          "unfinished": 0,
+          "wins": 11
+        },
+        "candidate": "variable-material-selected",
+        "candidate_eligible": true,
+        "candidate_interval": [
+          0.0,
+          0.6794426220774891
+        ],
+        "candidate_lower": 0.125,
+        "candidate_record": {
+          "completion_rate": 1.0,
+          "distinct_trajectories": 24,
+          "failures": 0,
+          "losses": 21,
+          "scheduled": 24,
+          "unfinished": 0,
+          "wins": 3
+        },
+        "difference": -0.7916666666666666,
+        "disjoint": false,
+        "head_to_head": {
+          "by_colour": {
+            "0": {
+              "losses": 5,
+              "scheduled": 6,
+              "unfinished": 0,
+              "wins": 1
+            },
+            "1": {
+              "losses": 6,
+              "scheduled": 6,
+              "unfinished": 0,
+              "wins": 0
+            }
+          },
+          "completion_rate": 1.0,
+          "failures": 0,
+          "loss_points_lower": 0.9166666666666666,
+          "losses": 11,
+          "net": -0.8333333333333334,
+          "scheduled": 12,
+          "unfinished": 0,
+          "win_points_lower": 0.08333333333333333,
+          "wins": 1
+        },
+        "mode": "depth"
+      },
+      "primary_usable": true,
+      "provenance": {
+        "note": "Variable-material v3 selection; lost 2-5 to flat defaults after consensus.",
+        "source": "benchmarks/evolution/variable-material-20260917/selected-genome.json",
+        "source_sha256": "639b0f963b0fdd6bb7aace0a9407a15df0f25ab99ae2893e412502161eed7947",
+        "source_version": "intransitive-variable-module-scales-v3"
+      },
+      "regressed": true,
+      "separated": false,
+      "strength": {
+        "strength-depth-variable-material-selected": {
+          "baseline": "adopted-hour-search",
+          "baseline_eligible": true,
+          "baseline_interval": [
+            0.36222404458917756,
+            1.0
+          ],
+          "baseline_lower": 0.9166666666666666,
+          "baseline_record": {
+            "completion_rate": 1.0,
+            "distinct_trajectories": 12,
+            "failures": 0,
+            "losses": 1,
+            "scheduled": 12,
+            "unfinished": 0,
+            "wins": 11
+          },
+          "candidate": "variable-material-selected",
+          "candidate_eligible": true,
+          "candidate_interval": [
+            0.0,
+            0.6794426220774891
+          ],
+          "candidate_lower": 0.125,
+          "candidate_record": {
+            "completion_rate": 1.0,
+            "distinct_trajectories": 24,
+            "failures": 0,
+            "losses": 21,
+            "scheduled": 24,
+            "unfinished": 0,
+            "wins": 3
+          },
+          "difference": -0.7916666666666666,
+          "disjoint": false,
+          "head_to_head": {
+            "by_colour": {
+              "0": {
+                "losses": 5,
+                "scheduled": 6,
+                "unfinished": 0,
+                "wins": 1
+              },
+              "1": {
+                "losses": 6,
+                "scheduled": 6,
+                "unfinished": 0,
+                "wins": 0
+              }
+            },
+            "completion_rate": 1.0,
+            "failures": 0,
+            "loss_points_lower": 0.9166666666666666,
+            "losses": 11,
+            "net": -0.8333333333333334,
+            "scheduled": 12,
+            "unfinished": 0,
+            "win_points_lower": 0.08333333333333333,
+            "wins": 1
+          },
+          "mode": "depth"
+        },
+        "strength-wall-variable-material-selected": {
+          "baseline": "adopted-hour-search",
+          "baseline_eligible": true,
+          "baseline_interval": [
+            0.2788907112558443,
+            1.0
+          ],
+          "baseline_lower": 0.8333333333333334,
+          "baseline_record": {
+            "completion_rate": 1.0,
+            "distinct_trajectories": 12,
+            "failures": 0,
+            "losses": 2,
+            "scheduled": 12,
+            "unfinished": 0,
+            "wins": 10
+          },
+          "candidate": "variable-material-selected",
+          "candidate_eligible": true,
+          "candidate_interval": [
+            0.0,
+            0.7211092887441557
+          ],
+          "candidate_lower": 0.125,
+          "candidate_record": {
+            "completion_rate": 0.9583333333333334,
+            "distinct_trajectories": 24,
+            "failures": 0,
+            "losses": 20,
+            "scheduled": 24,
+            "unfinished": 1,
+            "wins": 3
+          },
+          "difference": -0.7083333333333334,
+          "disjoint": false,
+          "head_to_head": {
+            "by_colour": {
+              "0": {
+                "losses": 5,
+                "scheduled": 6,
+                "unfinished": 0,
+                "wins": 1
+              },
+              "1": {
+                "losses": 5,
+                "scheduled": 6,
+                "unfinished": 0,
+                "wins": 1
+              }
+            },
+            "completion_rate": 1.0,
+            "failures": 0,
+            "loss_points_lower": 0.8333333333333334,
+            "losses": 10,
+            "net": -0.6666666666666666,
+            "scheduled": 12,
+            "unfinished": 0,
+            "win_points_lower": 0.16666666666666666,
+            "wins": 2
+          },
+          "mode": "wall"
+        }
+      },
+      "tactical": {
+        "certified": {
+          "baseline_failed": 2,
+          "baseline_passed": 110,
+          "baseline_strict_failed": 4,
+          "budget_stopped": 5,
+          "failed": 19,
+          "fixed": [
+            "red_14_preserve_material",
+            "red_31_keep_goal_defender"
+          ],
+          "new_failures": [
+            "081_safe_capture_free_central_scissors_blue",
+            "082_safe_capture_free_central_scissors_red",
+            "083_safe_capture_free_edge_paper_blue",
+            "084_safe_capture_free_edge_paper_red",
+            "085_safe_capture_scissors_safe_or_poisoned_blue",
+            "086_safe_capture_scissors_safe_or_poisoned_red",
+            "087_safe_capture_rocks_safe_or_poisoned_blue",
+            "088_safe_capture_rocks_safe_or_poisoned_red",
+            "089_safe_capture_papers_safe_or_poisoned_blue",
+            "090_safe_capture_papers_safe_or_poisoned_red",
+            "093_safe_capture_capture_attacker_to_save_scissors_blue",
+            "094_safe_capture_capture_attacker_to_save_scissors_red",
+            "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+            "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+            "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+            "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+            "blue_32_take_winning_run",
+            "unique_paper_fork_exchanged_colours",
+            "unique_paper_fork_original_colours"
+          ],
+          "new_proven_failures": [
+            "blue_32_take_winning_run"
+          ],
+          "new_strict_failures": [
+            "081_safe_capture_free_central_scissors_blue",
+            "082_safe_capture_free_central_scissors_red",
+            "083_safe_capture_free_edge_paper_blue",
+            "084_safe_capture_free_edge_paper_red",
+            "085_safe_capture_scissors_safe_or_poisoned_blue",
+            "086_safe_capture_scissors_safe_or_poisoned_red",
+            "087_safe_capture_rocks_safe_or_poisoned_blue",
+            "088_safe_capture_rocks_safe_or_poisoned_red",
+            "089_safe_capture_papers_safe_or_poisoned_blue",
+            "090_safe_capture_papers_safe_or_poisoned_red",
+            "093_safe_capture_capture_attacker_to_save_scissors_blue",
+            "094_safe_capture_capture_attacker_to_save_scissors_red",
+            "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+            "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+            "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+            "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+            "blue_32_take_winning_run",
+            "unique_paper_fork_exchanged_colours",
+            "unique_paper_fork_original_colours"
+          ],
+          "passed": 93,
+          "proven_failures": [
+            "blue_32_take_winning_run"
+          ],
+          "strict_failed": 23
+        },
+        "shipped": {
+          "baseline_failed": 1,
+          "baseline_passed": 111,
+          "baseline_strict_failed": 13,
+          "budget_stopped": 24,
+          "failed": 15,
+          "fixed": [
+            "red_31_keep_goal_defender"
+          ],
+          "new_failures": [
+            "083_safe_capture_free_edge_paper_blue",
+            "084_safe_capture_free_edge_paper_red",
+            "085_safe_capture_scissors_safe_or_poisoned_blue",
+            "086_safe_capture_scissors_safe_or_poisoned_red",
+            "087_safe_capture_rocks_safe_or_poisoned_blue",
+            "088_safe_capture_rocks_safe_or_poisoned_red",
+            "089_safe_capture_papers_safe_or_poisoned_blue",
+            "090_safe_capture_papers_safe_or_poisoned_red",
+            "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+            "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+            "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+            "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+            "blue_32_take_winning_run",
+            "unique_paper_fork_exchanged_colours",
+            "unique_paper_fork_original_colours"
+          ],
+          "new_proven_failures": [
+            "blue_32_take_winning_run"
+          ],
+          "new_strict_failures": [
+            "083_safe_capture_free_edge_paper_blue",
+            "084_safe_capture_free_edge_paper_red",
+            "085_safe_capture_scissors_safe_or_poisoned_blue",
+            "086_safe_capture_scissors_safe_or_poisoned_red",
+            "087_safe_capture_rocks_safe_or_poisoned_blue",
+            "088_safe_capture_rocks_safe_or_poisoned_red",
+            "089_safe_capture_papers_safe_or_poisoned_blue",
+            "090_safe_capture_papers_safe_or_poisoned_red",
+            "093_safe_capture_capture_attacker_to_save_scissors_blue",
+            "094_safe_capture_capture_attacker_to_save_scissors_red",
+            "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+            "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+            "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+            "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+            "unique_paper_fork_exchanged_colours",
+            "unique_paper_fork_original_colours"
+          ],
+          "passed": 97,
+          "proven_failures": [
+            "blue_32_take_winning_run"
+          ],
+          "strict_failed": 29
+        }
+      },
+      "tactical_regressions": [
+        "081_safe_capture_free_central_scissors_blue",
+        "082_safe_capture_free_central_scissors_red",
+        "083_safe_capture_free_edge_paper_blue",
+        "084_safe_capture_free_edge_paper_red",
+        "085_safe_capture_scissors_safe_or_poisoned_blue",
+        "086_safe_capture_scissors_safe_or_poisoned_red",
+        "087_safe_capture_rocks_safe_or_poisoned_blue",
+        "088_safe_capture_rocks_safe_or_poisoned_red",
+        "089_safe_capture_papers_safe_or_poisoned_blue",
+        "090_safe_capture_papers_safe_or_poisoned_red",
+        "093_safe_capture_capture_attacker_to_save_scissors_blue",
+        "094_safe_capture_capture_attacker_to_save_scissors_red",
+        "097_safe_capture_horizontal_rocks_safe_or_poisoned_blue",
+        "098_safe_capture_horizontal_rocks_safe_or_poisoned_red",
+        "099_safe_capture_horizontal_papers_safe_or_poisoned_blue",
+        "100_safe_capture_horizontal_papers_safe_or_poisoned_red",
+        "blue_32_take_winning_run",
+        "unique_paper_fork_exchanged_colours",
+        "unique_paper_fork_original_colours"
+      ],
+      "unsafe": true
+    }
+  },
+  "defects": [
+    {
+      "configuration": "adopted-hour-search",
+      "detail": "adopted-hour-search cannot complete the shipped default depth 3 inside the shipped default work limit 200000; the search stops at a median completed depth of 1.",
+      "kind": "shipped-budget-starves-search",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "median_completed_depth": 1,
+      "positions": 3,
+      "reached_requested_depth": 0
+    },
+    {
+      "configuration": "endgame-provisional",
+      "detail": "endgame-provisional cannot complete the shipped default depth 3 inside the shipped default work limit 200000; the search stops at a median completed depth of 1.",
+      "kind": "shipped-budget-starves-search",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "median_completed_depth": 1,
+      "positions": 3,
+      "reached_requested_depth": 0
+    },
+    {
+      "configuration": "variable-material-selected",
+      "detail": "variable-material-selected cannot complete the shipped default depth 3 inside the shipped default work limit 200000; the search stops at a median completed depth of 0.",
+      "kind": "shipped-budget-starves-search",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "median_completed_depth": 0,
+      "positions": 3,
+      "reached_requested_depth": 0
+    },
+    {
+      "cases": 112,
+      "configuration": "adopted-hour-search",
+      "detail": "13 of 112 certified tactical fixtures exhaust the shipped default work budget for adopted-hour-search.",
+      "kind": "tactical-fixtures-budget-stopped",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "stopped": 13
+    },
+    {
+      "cases": 112,
+      "configuration": "adopted-hour-search-restore-advantage",
+      "detail": "13 of 112 certified tactical fixtures exhaust the shipped default work budget for adopted-hour-search-restore-advantage.",
+      "kind": "tactical-fixtures-budget-stopped",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "stopped": 13
+    },
+    {
+      "cases": 112,
+      "configuration": "adopted-hour-search-restore-attack",
+      "detail": "13 of 112 certified tactical fixtures exhaust the shipped default work budget for adopted-hour-search-restore-attack.",
+      "kind": "tactical-fixtures-budget-stopped",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "stopped": 13
+    },
+    {
+      "cases": 112,
+      "configuration": "adopted-hour-search-restore-defence",
+      "detail": "13 of 112 certified tactical fixtures exhaust the shipped default work budget for adopted-hour-search-restore-defence.",
+      "kind": "tactical-fixtures-budget-stopped",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "stopped": 13
+    },
+    {
+      "cases": 112,
+      "configuration": "endgame-provisional",
+      "detail": "13 of 112 certified tactical fixtures exhaust the shipped default work budget for endgame-provisional.",
+      "kind": "tactical-fixtures-budget-stopped",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "stopped": 13
+    },
+    {
+      "cases": 112,
+      "configuration": "pressure-10-archive",
+      "detail": "5 of 112 certified tactical fixtures exhaust the shipped default work budget for pressure-10-archive.",
+      "kind": "tactical-fixtures-budget-stopped",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "stopped": 5
+    },
+    {
+      "cases": 112,
+      "configuration": "variable-initial-material-baseline",
+      "detail": "21 of 112 certified tactical fixtures exhaust the shipped default work budget for variable-initial-material-baseline.",
+      "kind": "tactical-fixtures-budget-stopped",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "stopped": 21
+    },
+    {
+      "cases": 112,
+      "configuration": "variable-material-selected",
+      "detail": "24 of 112 certified tactical fixtures exhaust the shipped default work budget for variable-material-selected.",
+      "kind": "tactical-fixtures-budget-stopped",
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "stopped": 24
+    }
+  ],
+  "legal_outcomes": [
+    "adopt",
+    "retain-defaults",
+    "revert-recommended",
+    "inconclusive"
+  ],
+  "outcomes": {
+    "adopted-hour-search": "retain-defaults",
+    "endgame-provisional": "retain-defaults",
+    "variable-material-selected": "retain-defaults"
+  },
+  "plan_sha256": "ebab4c1163cd8c58bd89f9e53a2e10c759a4e359bd4a69bf9607a865c219ed4c",
+  "rule": "A candidate is adopted only when its paired held-out margin clears the predeclared gain, its interval is separated from its comparison, every protocol it played is eligible, correctness and tactical safety hold, and the practical cost stays inside the declared allowance. Anything else retains existing defaults, or is inconclusive when the primary comparison itself is missing or ineligible. A regression is judged on the point margin together with the direct paired head-to-head record, because a safety finding must not need the evidence a promotion needs. No export changes a default, the generator or the trainer.",
+  "schema": "intransitive-validation-v1",
+  "separation": "Adoption requires disjoint paired intervals. The plan publishes the cluster count that would be needed to separate the declared gain under the harness's conservative bound; a schedule below it cannot promote anything, and a null result there is a null result and not evidence of equivalence.",
+  "thresholds": {
+    "max_median_depth_loss": 1,
+    "max_new_tactical_failures": 0,
+    "max_proven_win_failures": 0,
+    "min_completion": 0.8,
+    "min_label_throughput_ratio": 0.2,
+    "practical_gain": 0.1,
+    "practical_regression": 0.1,
+    "require_disjoint_intervals": true
+  }
+}

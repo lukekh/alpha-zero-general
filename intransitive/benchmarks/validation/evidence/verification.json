@@ -1,0 +1,57 @@
+[
+  {
+    "decision_reproduced": true,
+    "defects": [
+      "shipped-budget-starves-search",
+      "shipped-budget-starves-search",
+      "shipped-budget-starves-search",
+      "tactical-fixtures-budget-stopped",
+      "tactical-fixtures-budget-stopped",
+      "tactical-fixtures-budget-stopped",
+      "tactical-fixtures-budget-stopped",
+      "tactical-fixtures-budget-stopped",
+      "tactical-fixtures-budget-stopped",
+      "tactical-fixtures-budget-stopped",
+      "tactical-fixtures-budget-stopped"
+    ],
+    "experiments": {
+      "ablation-adopted-hour-search-advantage": {
+        "scheduled": 6,
+        "verified": 6
+      },
+      "ablation-adopted-hour-search-attack": {
+        "scheduled": 6,
+        "verified": 6
+      },
+      "ablation-adopted-hour-search-defence": {
+        "scheduled": 6,
+        "verified": 6
+      },
+      "strength-depth": {
+        "scheduled": 60,
+        "verified": 60
+      },
+      "strength-depth-variable-material-selected": {
+        "scheduled": 24,
+        "verified": 24
+      },
+      "strength-wall": {
+        "scheduled": 60,
+        "verified": 60
+      },
+      "strength-wall-variable-material-selected": {
+        "scheduled": 24,
+        "verified": 24
+      }
+    },
+    "outcomes": {
+      "adopted-hour-search": "retain-defaults",
+      "endgame-provisional": "retain-defaults",
+      "variable-material-selected": "retain-defaults"
+    },
+    "plan_sha256": "ebab4c1163cd8c58bd89f9e53a2e10c759a4e359bd4a69bf9607a865c219ed4c",
+    "revision": "518401a",
+    "run": "/private/tmp/claude-504/-Users-work-orca-workspaces-alpha-zero-general-issue-56-intransitive-validate-evolved/541aa80b-6737-479c-a337-242b763035d5/final3",
+    "verified_games": 186
+  }
+]

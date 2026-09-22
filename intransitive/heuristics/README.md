@@ -38,7 +38,9 @@ remain authoritative. Reuse the existing exact rules engine and action encoding.
 
 The opt-in [versioned module-scale contract](TUNING.md) provides validated genomes,
 backend capability manifests and saturation reporting for future tuning experiments.
-It does not change these defaults or start a tuning run.
+It does not change these defaults or start a tuning run. Whether a tuned
+configuration should become a default is decided by the
+[held-out acceptance protocol](../validation/README.md).
 
 ## Evaluation modules
 
