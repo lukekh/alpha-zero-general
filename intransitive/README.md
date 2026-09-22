@@ -24,6 +24,15 @@ match fitness for frozen heuristic candidates, with separate completed-depth
 and equal-time leaderboards, colour pairs, held-out position pools, and explicit
 unfinished/failure outcomes. It includes a bounded smoke and concurrency benchmark.
 
+The [held-out acceptance protocol](validation/README.md) decides whether an
+evolved configuration should be adopted. It freezes entrants, held-out starts,
+protocols and thresholds before any engine starts, then measures paired
+held-out games, per-module ablations, certified tactical safety, correctness
+and parity, and practical cost from static evaluation to teacher label
+throughput. It exports an opt-in preset and a decision; it never changes a
+default, the generator or the trainer, and "retain existing defaults" is a
+valid outcome.
+
 ## Setup, training, evaluation and human play
 
 Run commands from the repository root. The uv project pins Python 3.11.4 and the

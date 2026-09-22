@@ -1,0 +1,82 @@
+{
+  "acceptance": {
+    "baseline": "prior-incumbent",
+    "blocking": [
+      "strength-wall: an entrant failed harness eligibility (completion, failures or unattempted games)"
+    ],
+    "established": false,
+    "gain": 0.38888888888888895,
+    "outcome": "retain-defaults",
+    "separated": false
+  },
+  "backend_version": "b797f35e4d7d3d799329d1b06cbab047b74949875d56e8d04725dd2c1c54d48e",
+  "config_hash": "0bc4e1768193ffd7edd6198cd14685ba730c54b484f35f64bbe1838896a7f7df",
+  "genome": {
+    "backend": "python",
+    "genes": {
+      "advantage": 23.967050360966205,
+      "attack": 25.714516982666414,
+      "defence": 32.5643023919054,
+      "material": 100.0,
+      "overload": 0.0,
+      "pressure": 0.0
+    },
+    "version": "intransitive-module-scales-v2"
+  },
+  "measured_limits": {
+    "max_depth": 3,
+    "measured_worst_seconds": 1.18176841607783,
+    "measured_worst_work": 26938337,
+    "node_limit": 80900000,
+    "positions": 3,
+    "time_limit": 5.0
+  },
+  "name": "adopted-hour-search",
+  "plan_sha256": "ebab4c1163cd8c58bd89f9e53a2e10c759a4e359bd4a69bf9607a865c219ed4c",
+  "preset": {
+    "advantage_weight": 23.967050360966205,
+    "attack_enabled": true,
+    "attack_weight": 25.714516982666414,
+    "count_weight": 100.0,
+    "defence_enabled": true,
+    "defence_weight": 32.5643023919054,
+    "evaluator_version": "intransitive-heuristics-v2",
+    "max_depth": 3,
+    "node_limit": 80900000,
+    "overload_enabled": false,
+    "overload_weight": 5.0,
+    "predator_scarcity_bonus": 0.5,
+    "predator_zero_bonus": 1.0,
+    "pressure_enabled": false,
+    "pressure_radius": 4,
+    "pressure_weight": 1.0,
+    "prey_bonus": 0.25,
+    "proof_depth": 2,
+    "proof_nodes": 64,
+    "race_weight": 0.0,
+    "runner_enabled": false,
+    "runner_weight": 1.0,
+    "table_entries": 10000,
+    "time_limit": 5.0,
+    "variable_material_enabled": false,
+    "variable_material_linear": false
+  },
+  "preset_sha256": "39344ee952cd173c2ed0f2efe2baaec00a5a9558997dcacad98f8b37ab76e09d",
+  "preset_version": "intransitive-heuristic-preset-v1",
+  "provenance": {
+    "note": "Adopted as the Python and Rust default in 9424a35 at the user's explicit request, without held-out acceptance. This run is that acceptance.",
+    "source": "benchmarks/evolution/hour-search-20260917/provisional-genome.json",
+    "source_sha256": "b176b41a49ba81c81f442053559ce53743a1a29e63bea16a0dfac74ff0750c21",
+    "source_version": "intransitive-module-scales-v1"
+  },
+  "record_sha256": "7936818f1d62f0d8fddda93c39b5a69c8872c762d902f56f43e3fc3528cd7b54",
+  "revision": "518401a",
+  "runtime": {
+    "llvmlite": "0.49.0",
+    "numba": "0.67.0",
+    "numpy": "2.4.6",
+    "python": "3.11.4"
+  },
+  "teacher": "Using this preset as a training teacher additionally requires the label-provenance decision in the acceptance report: new labels must record the evaluator/config identity that produced them, and the boundary with existing labels must be recorded rather than mixed.",
+  "usage": "Opt-in only: load with SearchConfig.from_file or intransitive --ab-config. Exporting a preset does not adopt it. This file never changes the application defaults, the training generator, the teacher or existing training labels."
+}

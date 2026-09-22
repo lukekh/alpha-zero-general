@@ -1,0 +1,1549 @@
+{
+  "adopted-hour-search": {
+    "cpu_seconds": 564.355749,
+    "equal_time": {
+      "by_budget": {
+        "0.05": {
+          "median_completed_depth": 2,
+          "median_work": 1074392,
+          "min_completed_depth": 2
+        },
+        "0.25": {
+          "median_completed_depth": 2,
+          "median_work": 5595948,
+          "min_completed_depth": 2
+        },
+        "1.0": {
+          "median_completed_depth": 3,
+          "median_work": 22797460,
+          "min_completed_depth": 2
+        },
+        "5.0": {
+          "median_completed_depth": 4,
+          "median_work": 105288141,
+          "min_completed_depth": 4
+        }
+      },
+      "searches": [
+        {
+          "completed_depth": 2,
+          "elapsed": 0.05053791694808751,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.05,
+          "selected_depth": 2,
+          "stop_reason": "time",
+          "work": 1132624
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.25071066594682634,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.25,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 5791407
+        },
+        {
+          "completed_depth": 3,
+          "elapsed": 1.0010335419792682,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 1.0,
+          "selected_depth": 4,
+          "stop_reason": "time",
+          "work": 22873977
+        },
+        {
+          "completed_depth": 4,
+          "elapsed": 5.003306915983558,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 5.0,
+          "selected_depth": 5,
+          "stop_reason": "time",
+          "work": 112124368
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.050699915969744325,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.05,
+          "selected_depth": 2,
+          "stop_reason": "time",
+          "work": 1025531
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.25073816697113216,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.25,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 5595948
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 1.0009502910543233,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 1.0,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 22797460
+        },
+        {
+          "completed_depth": 4,
+          "elapsed": 5.00876816699747,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 5.0,
+          "selected_depth": 4,
+          "stop_reason": "time",
+          "work": 105288141
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.05060908303130418,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.05,
+          "selected_depth": 2,
+          "stop_reason": "time",
+          "work": 1074392
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.2507402920164168,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.25,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 5438205
+        },
+        {
+          "completed_depth": 3,
+          "elapsed": 1.00095404102467,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 1.0,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 21974274
+        },
+        {
+          "completed_depth": 4,
+          "elapsed": 5.004593708086759,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 5.0,
+          "selected_depth": 5,
+          "stop_reason": "time",
+          "work": 104544463
+        }
+      ]
+    },
+    "labels": {
+      "attempted": 3,
+      "completed": 3,
+      "depth": 5,
+      "labels_per_hour": 119.70960295852659,
+      "median_seconds_per_label": 30.072775374981575,
+      "note": "Measured at the cost ladder cap, which is shorter than the teacher's own time limit; an unfinished depth means no label at that depth, not a slow one.",
+      "teacher_protocol": {
+        "max_depth": 5,
+        "node_limit": 1000000000,
+        "time_limit": 120.0
+      }
+    },
+    "ladder": {
+      "by_depth": {
+        "3": {
+          "attempted": 3,
+          "completed": 3,
+          "median_seconds": 0.5844452920136973,
+          "median_work": 12758650,
+          "skipped": 0,
+          "unfinished_seconds": []
+        },
+        "4": {
+          "attempted": 3,
+          "completed": 3,
+          "median_seconds": 2.437882125028409,
+          "median_work": 54075473,
+          "skipped": 0,
+          "unfinished_seconds": []
+        },
+        "5": {
+          "attempted": 3,
+          "completed": 3,
+          "median_seconds": 30.072775374981575,
+          "median_work": 651812302,
+          "skipped": 0,
+          "unfinished_seconds": []
+        },
+        "6": {
+          "attempted": 3,
+          "completed": 1,
+          "median_seconds": 118.33689975005109,
+          "median_work": 2532551184,
+          "skipped": 0,
+          "unfinished_seconds": [
+            120.00927087489981,
+            120.00589270796627
+          ]
+        }
+      },
+      "cap_seconds": 120.0,
+      "searches": [
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 5205,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.4713512499583885,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 10989680
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 27201,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 2.437882125028409,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 54075473
+        },
+        {
+          "complete": true,
+          "completed_depth": 5,
+          "depth": 5,
+          "nodes": 256668,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 23.38278862508014,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 529952188
+        },
+        {
+          "complete": true,
+          "completed_depth": 6,
+          "depth": 6,
+          "nodes": 1336442,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 118.33689975005109,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 2532551184
+        },
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 12464,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 1.18176841607783,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 26938337
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 43236,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 3.892836458981037,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 82544862
+        },
+        {
+          "complete": true,
+          "completed_depth": 5,
+          "depth": 5,
+          "nodes": 1178288,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 111.63113654102199,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 2487293055
+        },
+        {
+          "complete": false,
+          "completed_depth": 5,
+          "depth": 6,
+          "nodes": 1280717,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 120.00927087489981,
+          "stop_reason": "time",
+          "stopped": true,
+          "work": 2657505556
+        },
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 6046,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.5844452920136973,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 12758650
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 18612,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 1.7338402500608936,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 35953601
+        },
+        {
+          "complete": true,
+          "completed_depth": 5,
+          "depth": 5,
+          "nodes": 312645,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 30.072775374981575,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 651812302
+        },
+        {
+          "complete": false,
+          "completed_depth": 5,
+          "depth": 6,
+          "nodes": 1270612,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 120.00589270796627,
+          "stop_reason": "time",
+          "stopped": true,
+          "work": 2563109448
+        }
+      ]
+    },
+    "peak_rss_bytes": 435503104,
+    "positions": [
+      "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+      "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5"
+    ],
+    "shipped": {
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "median_completed_depth": 1,
+      "positions": 3,
+      "reached_requested_depth": 0,
+      "searches": [
+        {
+          "completed_depth": 1,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.008845417061820626,
+          "stop_reason": "work",
+          "stopped": true,
+          "work": 199914
+        },
+        {
+          "completed_depth": 0,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.008983250008895993,
+          "stop_reason": "work",
+          "stopped": true,
+          "work": 199904
+        },
+        {
+          "completed_depth": 1,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.009327290928922594,
+          "stop_reason": "work",
+          "stopped": true,
+          "work": 199901
+        }
+      ]
+    },
+    "startup_seconds": 8.328120541060343,
+    "static": {
+      "median_seconds": 0.00011892415815964341,
+      "median_work": 4550.0,
+      "positions": [
+        {
+          "evaluations": 50,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds_per_evaluation": 0.00012271082028746604,
+          "work_per_evaluation": 4550.0
+        },
+        {
+          "evaluations": 50,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds_per_evaluation": 0.00011892415815964341,
+          "work_per_evaluation": 4583.0
+        },
+        {
+          "evaluations": 50,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds_per_evaluation": 0.00011853166157379746,
+          "work_per_evaluation": 4498.0
+        }
+      ],
+      "repeats": 50
+    }
+  },
+  "endgame-provisional": {
+    "cpu_seconds": 468.155172,
+    "equal_time": {
+      "by_budget": {
+        "0.05": {
+          "median_completed_depth": 2,
+          "median_work": 813591,
+          "min_completed_depth": 2
+        },
+        "0.25": {
+          "median_completed_depth": 2,
+          "median_work": 4229281,
+          "min_completed_depth": 2
+        },
+        "1.0": {
+          "median_completed_depth": 3,
+          "median_work": 15492027,
+          "min_completed_depth": 2
+        },
+        "5.0": {
+          "median_completed_depth": 4,
+          "median_work": 80846576,
+          "min_completed_depth": 3
+        }
+      },
+      "searches": [
+        {
+          "completed_depth": 2,
+          "elapsed": 0.05062595894560218,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.05,
+          "selected_depth": 2,
+          "stop_reason": "time",
+          "work": 830576
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.2515317089855671,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.25,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 4281942
+        },
+        {
+          "completed_depth": 3,
+          "elapsed": 1.0008564590243623,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 1.0,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 15587241
+        },
+        {
+          "completed_depth": 4,
+          "elapsed": 5.008114124997519,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 5.0,
+          "selected_depth": 5,
+          "stop_reason": "time",
+          "work": 82989844
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.05068954196758568,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.05,
+          "selected_depth": 2,
+          "stop_reason": "time",
+          "work": 813591
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.2507018749602139,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.25,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 4229281
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 1.0011454580817372,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 1.0,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 14919298
+        },
+        {
+          "completed_depth": 3,
+          "elapsed": 5.003965000039898,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 5.0,
+          "selected_depth": 4,
+          "stop_reason": "time",
+          "work": 80846576
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.050583167001605034,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.05,
+          "selected_depth": 2,
+          "stop_reason": "time",
+          "work": 809230
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.25071520905476063,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.25,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 4115822
+        },
+        {
+          "completed_depth": 3,
+          "elapsed": 1.0009432919323444,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 1.0,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 15492027
+        },
+        {
+          "completed_depth": 4,
+          "elapsed": 5.004875583923422,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 5.0,
+          "selected_depth": 4,
+          "stop_reason": "time",
+          "work": 78162336
+        }
+      ]
+    },
+    "labels": {
+      "attempted": 3,
+      "completed": 2,
+      "depth": 5,
+      "labels_per_hour": 109.7119661582191,
+      "median_seconds_per_label": 32.81319372955477,
+      "note": "Measured at the cost ladder cap, which is shorter than the teacher's own time limit; an unfinished depth means no label at that depth, not a slow one.",
+      "teacher_protocol": {
+        "max_depth": 5,
+        "node_limit": 1000000000,
+        "time_limit": 120.0
+      }
+    },
+    "ladder": {
+      "by_depth": {
+        "3": {
+          "attempted": 3,
+          "completed": 3,
+          "median_seconds": 0.6813718329649419,
+          "median_work": 11339653,
+          "skipped": 0,
+          "unfinished_seconds": []
+        },
+        "4": {
+          "attempted": 3,
+          "completed": 3,
+          "median_seconds": 2.8721339169424027,
+          "median_work": 48197302,
+          "skipped": 0,
+          "unfinished_seconds": []
+        },
+        "5": {
+          "attempted": 3,
+          "completed": 2,
+          "median_seconds": 32.81319372955477,
+          "median_work": 549796179.5,
+          "skipped": 0,
+          "unfinished_seconds": [
+            120.00685858400539
+          ]
+        },
+        "6": {
+          "attempted": 2,
+          "completed": 0,
+          "median_seconds": null,
+          "median_work": null,
+          "skipped": 1,
+          "unfinished_seconds": [
+            120.00594383303542,
+            120.01101616595406
+          ]
+        }
+      },
+      "cap_seconds": 120.0,
+      "searches": [
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 5205,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.5634213750017807,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 9804196
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 27203,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 2.8721339169424027,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 48197302
+        },
+        {
+          "complete": true,
+          "completed_depth": 5,
+          "depth": 5,
+          "nodes": 239949,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 25.745556417037733,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 443633150
+        },
+        {
+          "complete": false,
+          "completed_depth": 5,
+          "depth": 6,
+          "nodes": 1124092,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 120.00594383303542,
+          "stop_reason": "time",
+          "stopped": true,
+          "work": 2016907832
+        },
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 12584,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 1.4117978329304606,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 24394188
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 48196,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 5.078358166967519,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 83146024
+        },
+        {
+          "complete": false,
+          "completed_depth": 4,
+          "depth": 5,
+          "nodes": 1070792,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 120.00685858400539,
+          "stop_reason": "time",
+          "stopped": true,
+          "work": 2019312296
+        },
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 6028,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.6813718329649419,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 11339653
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 22882,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 2.526085916091688,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 40244472
+        },
+        {
+          "complete": true,
+          "completed_depth": 5,
+          "depth": 5,
+          "nodes": 350597,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 39.880831042071804,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 655959209
+        },
+        {
+          "complete": false,
+          "completed_depth": 5,
+          "depth": 6,
+          "nodes": 1054841,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 120.01101616595406,
+          "stop_reason": "time",
+          "stopped": true,
+          "work": 1913676520
+        }
+      ]
+    },
+    "peak_rss_bytes": 383500288,
+    "positions": [
+      "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+      "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5"
+    ],
+    "shipped": {
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "median_completed_depth": 1,
+      "positions": 3,
+      "reached_requested_depth": 0,
+      "searches": [
+        {
+          "completed_depth": 1,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.011575790937058628,
+          "stop_reason": "work",
+          "stopped": true,
+          "work": 199968
+        },
+        {
+          "completed_depth": 0,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.011820500018075109,
+          "stop_reason": "work",
+          "stopped": true,
+          "work": 199850
+        },
+        {
+          "completed_depth": 1,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.012372500030323863,
+          "stop_reason": "work",
+          "stopped": true,
+          "work": 199847
+        }
+      ]
+    },
+    "startup_seconds": 8.400834749918431,
+    "static": {
+      "median_seconds": 0.00016219415934756398,
+      "median_work": 4032.0,
+      "positions": [
+        {
+          "evaluations": 50,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds_per_evaluation": 0.0002014325000345707,
+          "work_per_evaluation": 4032.0
+        },
+        {
+          "evaluations": 50,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds_per_evaluation": 0.00015517499996349217,
+          "work_per_evaluation": 4046.0
+        },
+        {
+          "evaluations": 50,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds_per_evaluation": 0.00016219415934756398,
+          "work_per_evaluation": 4003.0
+        }
+      ],
+      "repeats": 50
+    }
+  },
+  "prior-incumbent": {
+    "cpu_seconds": 120.19301,
+    "equal_time": {
+      "by_budget": {
+        "0.05": {
+          "median_completed_depth": 2,
+          "median_work": 35298,
+          "min_completed_depth": 2
+        },
+        "0.25": {
+          "median_completed_depth": 3,
+          "median_work": 204458,
+          "min_completed_depth": 3
+        },
+        "1.0": {
+          "median_completed_depth": 4,
+          "median_work": 787469,
+          "min_completed_depth": 4
+        },
+        "5.0": {
+          "median_completed_depth": 5,
+          "median_work": 3330497,
+          "min_completed_depth": 4
+        }
+      },
+      "searches": [
+        {
+          "completed_depth": 2,
+          "elapsed": 0.05070841696579009,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.05,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 33270
+        },
+        {
+          "completed_depth": 3,
+          "elapsed": 0.25121162505820394,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.25,
+          "selected_depth": 4,
+          "stop_reason": "time",
+          "work": 210865
+        },
+        {
+          "completed_depth": 4,
+          "elapsed": 1.003033708082512,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 1.0,
+          "selected_depth": 5,
+          "stop_reason": "time",
+          "work": 765307
+        },
+        {
+          "completed_depth": 5,
+          "elapsed": 5.0050873750587925,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 5.0,
+          "selected_depth": 5,
+          "stop_reason": "time",
+          "work": 3347081
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.050652500009164214,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.05,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 36075
+        },
+        {
+          "completed_depth": 3,
+          "elapsed": 0.2509520420571789,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.25,
+          "selected_depth": 4,
+          "stop_reason": "time",
+          "work": 173093
+        },
+        {
+          "completed_depth": 4,
+          "elapsed": 1.0034162090159953,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 1.0,
+          "selected_depth": 5,
+          "stop_reason": "time",
+          "work": 872825
+        },
+        {
+          "completed_depth": 4,
+          "elapsed": 5.005650417064317,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 5.0,
+          "selected_depth": 5,
+          "stop_reason": "time",
+          "work": 3274916
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.05061520799063146,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.05,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 35298
+        },
+        {
+          "completed_depth": 3,
+          "elapsed": 0.25105158402584493,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.25,
+          "selected_depth": 4,
+          "stop_reason": "time",
+          "work": 204458
+        },
+        {
+          "completed_depth": 4,
+          "elapsed": 1.0032380839111283,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 1.0,
+          "selected_depth": 5,
+          "stop_reason": "time",
+          "work": 787469
+        },
+        {
+          "completed_depth": 5,
+          "elapsed": 5.013542041997425,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 5.0,
+          "selected_depth": 5,
+          "stop_reason": "time",
+          "work": 3330497
+        }
+      ]
+    },
+    "labels": {
+      "attempted": 3,
+      "completed": 3,
+      "depth": 5,
+      "labels_per_hour": 492.2213250172,
+      "median_seconds_per_label": 7.313783082994632,
+      "note": "Measured at the cost ladder cap, which is shorter than the teacher's own time limit; an unfinished depth means no label at that depth, not a slow one.",
+      "teacher_protocol": {
+        "max_depth": 5,
+        "node_limit": 1000000000,
+        "time_limit": 120.0
+      }
+    },
+    "ladder": {
+      "by_depth": {
+        "3": {
+          "attempted": 3,
+          "completed": 3,
+          "median_seconds": 0.13340670801699162,
+          "median_work": 61113,
+          "skipped": 0,
+          "unfinished_seconds": []
+        },
+        "4": {
+          "attempted": 3,
+          "completed": 3,
+          "median_seconds": 0.4922064580023289,
+          "median_work": 331370,
+          "skipped": 0,
+          "unfinished_seconds": []
+        },
+        "5": {
+          "attempted": 3,
+          "completed": 3,
+          "median_seconds": 7.313783082994632,
+          "median_work": 2978360,
+          "skipped": 0,
+          "unfinished_seconds": []
+        },
+        "6": {
+          "attempted": 3,
+          "completed": 3,
+          "median_seconds": 21.28384470799938,
+          "median_work": 17681220,
+          "skipped": 0,
+          "unfinished_seconds": []
+        }
+      },
+      "cap_seconds": 120.0,
+      "searches": [
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 3286,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.18261558399535716,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 52429
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 10432,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.7958196250256151,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 265937
+        },
+        {
+          "complete": true,
+          "completed_depth": 5,
+          "depth": 5,
+          "nodes": 141354,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 7.328675291966647,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 2304696
+        },
+        {
+          "complete": true,
+          "completed_depth": 6,
+          "depth": 6,
+          "nodes": 494771,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 15.578432208974846,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 11862475
+        },
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 5587,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.13340670801699162,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 88527
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 16905,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.4922064580023289,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 446050
+        },
+        {
+          "complete": true,
+          "completed_depth": 5,
+          "depth": 5,
+          "nodes": 291587,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 7.313783082994632,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 4714736
+        },
+        {
+          "complete": true,
+          "completed_depth": 6,
+          "depth": 6,
+          "nodes": 951030,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 28.90241033292841,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 24416736
+        },
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 3768,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.09142183396033943,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 61113
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 12346,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.365504416055046,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 331370
+        },
+        {
+          "complete": true,
+          "completed_depth": 5,
+          "depth": 5,
+          "nodes": 180589,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 4.424678499926813,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 2978360
+        },
+        {
+          "complete": true,
+          "completed_depth": 6,
+          "depth": 6,
+          "nodes": 701492,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 21.28384470799938,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 17681220
+        }
+      ]
+    },
+    "peak_rss_bytes": 348618752,
+    "positions": [
+      "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+      "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5"
+    ],
+    "shipped": {
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "median_completed_depth": 3,
+      "positions": 3,
+      "reached_requested_depth": 3,
+      "searches": [
+        {
+          "completed_depth": 3,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.08057733299210668,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 52429
+        },
+        {
+          "completed_depth": 3,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.1337443330558017,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 88527
+        },
+        {
+          "completed_depth": 3,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.09171149996109307,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 61113
+        }
+      ]
+    },
+    "startup_seconds": 13.246428375015967,
+    "static": {
+      "median_seconds": 9.107498917728663e-06,
+      "median_work": 22.0,
+      "positions": [
+        {
+          "evaluations": 50,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds_per_evaluation": 1.2171680573374033e-05,
+          "work_per_evaluation": 22.0
+        },
+        {
+          "evaluations": 50,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds_per_evaluation": 8.834998589009046e-06,
+          "work_per_evaluation": 22.0
+        },
+        {
+          "evaluations": 50,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds_per_evaluation": 9.107498917728663e-06,
+          "work_per_evaluation": 22.0
+        }
+      ],
+      "repeats": 50
+    }
+  },
+  "variable-material-selected": {
+    "cpu_seconds": 493.588526,
+    "equal_time": {
+      "by_budget": {
+        "0.05": {
+          "median_completed_depth": 1,
+          "median_work": 987270,
+          "min_completed_depth": 1
+        },
+        "0.25": {
+          "median_completed_depth": 2,
+          "median_work": 4831547,
+          "min_completed_depth": 2
+        },
+        "1.0": {
+          "median_completed_depth": 3,
+          "median_work": 19796619,
+          "min_completed_depth": 2
+        },
+        "5.0": {
+          "median_completed_depth": 4,
+          "median_work": 95841644,
+          "min_completed_depth": 3
+        }
+      },
+      "searches": [
+        {
+          "completed_depth": 2,
+          "elapsed": 0.05059187510050833,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.05,
+          "selected_depth": 2,
+          "stop_reason": "time",
+          "work": 987270
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.2506314170313999,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.25,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 5106124
+        },
+        {
+          "completed_depth": 3,
+          "elapsed": 1.0009208749979734,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 1.0,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 20245463
+        },
+        {
+          "completed_depth": 4,
+          "elapsed": 5.002373791998252,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 5.0,
+          "selected_depth": 4,
+          "stop_reason": "time",
+          "work": 98927137
+        },
+        {
+          "completed_depth": 1,
+          "elapsed": 0.05058629100676626,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.05,
+          "selected_depth": 2,
+          "stop_reason": "time",
+          "work": 997789
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.250782374991104,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.25,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 4831547
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 1.0009480419103056,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 1.0,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 19796619
+        },
+        {
+          "completed_depth": 3,
+          "elapsed": 5.001720541971736,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 5.0,
+          "selected_depth": 4,
+          "stop_reason": "time",
+          "work": 95841644
+        },
+        {
+          "completed_depth": 1,
+          "elapsed": 0.050511499983258545,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.05,
+          "selected_depth": 2,
+          "stop_reason": "time",
+          "work": 974955
+        },
+        {
+          "completed_depth": 2,
+          "elapsed": 0.25066795793827623,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.25,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 4821360
+        },
+        {
+          "completed_depth": 3,
+          "elapsed": 1.0008316249586642,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 1.0,
+          "selected_depth": 3,
+          "stop_reason": "time",
+          "work": 19495033
+        },
+        {
+          "completed_depth": 4,
+          "elapsed": 5.002284291898832,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 5.0,
+          "selected_depth": 4,
+          "stop_reason": "time",
+          "work": 94801041
+        }
+      ]
+    },
+    "labels": {
+      "attempted": 3,
+      "completed": 2,
+      "depth": 5,
+      "labels_per_hour": 84.90745085224391,
+      "median_seconds_per_label": 42.39910589548526,
+      "note": "Measured at the cost ladder cap, which is shorter than the teacher's own time limit; an unfinished depth means no label at that depth, not a slow one.",
+      "teacher_protocol": {
+        "max_depth": 5,
+        "node_limit": 1000000000,
+        "time_limit": 120.0
+      }
+    },
+    "ladder": {
+      "by_depth": {
+        "3": {
+          "attempted": 3,
+          "completed": 3,
+          "median_seconds": 0.8832047079922631,
+          "median_work": 17069073,
+          "skipped": 0,
+          "unfinished_seconds": []
+        },
+        "4": {
+          "attempted": 3,
+          "completed": 3,
+          "median_seconds": 4.183653749991208,
+          "median_work": 77398749,
+          "skipped": 0,
+          "unfinished_seconds": []
+        },
+        "5": {
+          "attempted": 3,
+          "completed": 2,
+          "median_seconds": 42.39910589548526,
+          "median_work": 813120442.5,
+          "skipped": 0,
+          "unfinished_seconds": [
+            120.00648650003131
+          ]
+        },
+        "6": {
+          "attempted": 2,
+          "completed": 0,
+          "median_seconds": null,
+          "median_work": null,
+          "skipped": 1,
+          "unfinished_seconds": [
+            120.01080375001766,
+            120.00951762497425
+          ]
+        }
+      },
+      "cap_seconds": 120.0,
+      "searches": [
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 5645,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.6957895830273628,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 13982513
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 27486,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 3.261399915907532,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 63994323
+        },
+        {
+          "complete": true,
+          "completed_depth": 5,
+          "depth": 5,
+          "nodes": 270290,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 33.048635000013746,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 662495926
+        },
+        {
+          "complete": false,
+          "completed_depth": 5,
+          "depth": 6,
+          "nodes": 947386,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 120.01080375001766,
+          "stop_reason": "time",
+          "stopped": true,
+          "work": 2306811606
+        },
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 9825,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 1.366390666924417,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 24496078
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 96138,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 12.164527166984044,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 231935858
+        },
+        {
+          "complete": false,
+          "completed_depth": 4,
+          "depth": 5,
+          "nodes": 908477,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 120.00648650003131,
+          "stop_reason": "time",
+          "stopped": true,
+          "work": 2211983644
+        },
+        {
+          "complete": true,
+          "completed_depth": 3,
+          "depth": 3,
+          "nodes": 6878,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.8832047079922631,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 17069073
+        },
+        {
+          "complete": true,
+          "completed_depth": 4,
+          "depth": 4,
+          "nodes": 32648,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 4.183653749991208,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 77398749
+        },
+        {
+          "complete": true,
+          "completed_depth": 5,
+          "depth": 5,
+          "nodes": 392259,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 51.74957679095678,
+          "stop_reason": "maximum_depth",
+          "stopped": false,
+          "work": 963744959
+        },
+        {
+          "complete": false,
+          "completed_depth": 5,
+          "depth": 6,
+          "nodes": 894800,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 120.00951762497425,
+          "stop_reason": "time",
+          "stopped": true,
+          "work": 2180274558
+        }
+      ]
+    },
+    "peak_rss_bytes": 390103040,
+    "positions": [
+      "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+      "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+      "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5"
+    ],
+    "shipped": {
+      "limits": {
+        "max_depth": 3,
+        "node_limit": 200000,
+        "time_limit": 1.0
+      },
+      "median_completed_depth": 0,
+      "positions": 3,
+      "reached_requested_depth": 0,
+      "searches": [
+        {
+          "completed_depth": 1,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds": 0.010123666026629508,
+          "stop_reason": "work",
+          "stopped": true,
+          "work": 199848
+        },
+        {
+          "completed_depth": 0,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds": 0.010348374955356121,
+          "stop_reason": "work",
+          "stopped": true,
+          "work": 199897
+        },
+        {
+          "completed_depth": 0,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds": 0.010582000017166138,
+          "stop_reason": "work",
+          "stopped": true,
+          "work": 199852
+        }
+      ]
+    },
+    "startup_seconds": 8.580231667030603,
+    "static": {
+      "median_seconds": 0.00018357583787292241,
+      "median_work": 5302.0,
+      "positions": [
+        {
+          "evaluations": 50,
+          "position": "b51cd9cf8eaef1e46d21e809655d2c01d7c1e7a07a5c6a622f2c416873affcec",
+          "seconds_per_evaluation": 0.00018530499888584019,
+          "work_per_evaluation": 5302.0
+        },
+        {
+          "evaluations": 50,
+          "position": "04d0a7b6efe03841bb3c614abb6ca52d415d27316bd0f4348a207ebdcc13c53a",
+          "seconds_per_evaluation": 0.00018172916024923326,
+          "work_per_evaluation": 5335.0
+        },
+        {
+          "evaluations": 50,
+          "position": "10389144d98a9c826fe3f8fb56abe89fb125dba60fcb51ad552f2ed64897b6f5",
+          "seconds_per_evaluation": 0.00018357583787292241,
+          "work_per_evaluation": 5250.0
+        }
+      ],
+      "repeats": 50
+    }
+  }
+}
