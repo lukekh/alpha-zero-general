@@ -51,16 +51,40 @@ class SearchPerformanceTests(unittest.TestCase):
                 self.assertEqual(state.tobytes(), before)
 
     def test_core_search_never_builds_routes_or_route_explanations(self):
+        # The evolved defaults adopted in 9424a35 enable attack and defence,
+        # which are route-based, so the core-only evaluator this test is named
+        # for has to be asked for explicitly. Both the warm-up in _prepare and
+        # the leaf evaluator must stay clear of routes when nothing reads them.
+        core = SearchConfig(max_depth=2, time_limit=60, attack_enabled=False,
+                            defence_enabled=False, overload_enabled=False)
         with (patch('intransitive.heuristics.geometry.distance_map', side_effect=AssertionError('unused route')),
               patch('intransitive.heuristics.evaluation.race_candidates', side_effect=AssertionError('unused diagnostic'))):
-            result = AlphaBetaPlayer(config=SearchConfig(max_depth=2, time_limit=60)).analyze(self.states[1])
+            result = AlphaBetaPlayer(config=core).analyze(self.states[1])
         self.assertEqual(result.completed_depth, 2)
         self.assertEqual(result.module_calls.get('routes', 0), 0)
         self.assertEqual(result.module_calls.get('clear_run', 0), 0)
 
-    def test_saved_games_keep_original_fixed_depth_scores_and_moves(self):
+    def test_adopted_defaults_do_build_routes(self):
+        # The counterpart: routes are a deliberate cost of the adopted defaults,
+        # not an accident, and they dominate module time. If this ever stops
+        # holding, the default evaluator has silently changed.
+        result = AlphaBetaPlayer(
+            config=SearchConfig(max_depth=2, time_limit=60)).analyze(self.states[1])
+        self.assertGreater(result.module_calls.get('routes', 0), 0)
+
+    def test_saved_games_keep_fixed_depth_scores_and_moves(self):
+        """Change detector for the shipping evaluator, not a claim these are best.
+
+        Recorded against the evolved defaults adopted in 9424a35. The previous
+        expectations (406/0.0 and 469/1.979166666666654) were taken before that
+        commit enabled the route-based attack and defence terms; the moves are
+        still reproducible with those terms switched off, but the second score
+        is not, so other adopted scales moved too. Re-record deliberately when
+        the default evaluator changes again, and never to make a red test pass.
+        """
         config = SearchConfig(max_depth=3, time_limit=60, node_limit=10**8)
-        for state, action, score in zip(self.states[1:], (406, 469), (0., 1.979166666666654)):
+        for state, action, score in zip(self.states[1:], (482, 263),
+                                        (-27.442661245798035, 19.94182480689151)):
             result = AlphaBetaPlayer(config=config).analyze(state)
             self.assertEqual(result.completed_depth, 3)
             self.assertEqual(result.action, action)

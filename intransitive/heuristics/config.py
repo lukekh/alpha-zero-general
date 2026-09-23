@@ -8,7 +8,14 @@ import math
 # configuration fault, not a measurement: see activation() below.
 TECHNIQUE_COUNTERS = {'nmp': 'nmp_attempts', 'futility': 'futility_eligible',
                       'lmr': 'lmr_reduced', 'quiescence': 'quiescence_captures',
-                      'mvv_lva': 'mvv_lva_captures'}
+                      'mvv_lva': 'mvv_lva_captures',
+                      # These three share the null-window family's eligibility
+                      # shape, so they share its preconditions and belong in the
+                      # same report; without them a declared razoring, reverse
+                      # futility or move-count run looks reachable when it is not.
+                      'razoring': 'razoring_eligible',
+                      'reverse_futility': 'reverse_futility_eligible',
+                      'move_count_pruning': 'move_count_eligible'}
 # Every additive selective/ordering counter a search result reports, so a run
 # report can total them without summing depths or identities by accident.
 SELECTIVE_COUNTERS = ('selective_eligible',
@@ -296,7 +303,8 @@ def activation(config, *, compact=True):
     result = {}
     for name in TECHNIQUE_COUNTERS:
         blockers = []
-        if name in ('nmp', 'futility', 'quiescence') and not compact:
+        if name in ('nmp', 'futility', 'quiescence', 'razoring', 'reverse_futility',
+                    'move_count_pruning') and not compact:
             blockers.append('requires the compact Python backend')
         if name == 'nmp':
             if not config.pvs_enabled:
@@ -305,6 +313,13 @@ def activation(config, *, compact=True):
                 blockers.append(f'max_depth={config.max_depth} never reaches nmp_min_depth='
                                 f'{config.nmp_min_depth} below the root')
         elif name == 'futility':
+            if not config.pvs_enabled:
+                blockers.append(null_window)
+            if config.max_depth < 2:
+                blockers.append(f'max_depth={config.max_depth} has no non-root frontier node')
+        elif name in ('razoring', 'reverse_futility', 'move_count_pruning'):
+            # Same shape as futility: a null window on entry, and a non-root
+            # node shallow enough to be a candidate.
             if not config.pvs_enabled:
                 blockers.append(null_window)
             if config.max_depth < 2:

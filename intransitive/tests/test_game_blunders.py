@@ -9,6 +9,8 @@ import unittest
 
 import numpy as np
 
+from dataclasses import replace
+
 from intransitive.heuristics import AlphaBetaPlayer, SearchConfig
 from intransitive.record import load_record, parse_record_move, legacy_state_hash as state_hash
 from intransitive.tests.reference_rules import Position, map_action, position
@@ -17,7 +19,23 @@ from intransitive.tests.tactical_oracle import material, move_name, tactical_pro
 
 DATA = json.loads((Path(__file__).parents[1] / 'heuristics' /
                    'game_blunders.json').read_text())
-CONFIG = SearchConfig(max_depth=3, node_limit=2_000_000, time_limit=30)
+# Each case records the horizon its tactic needs; searching shallower than that
+# asks the engine to find something it cannot see. A flat depth 3 silently
+# mis-specified red_14 (needs 4) and red_31 (needs 5), which both then chose the
+# fixture's own recorded bad move.
+#
+# The work ceiling is the deterministic bound and the clock is only a runaway
+# guard, so that this file keeps its promise of no machine-dependent timing
+# assertions. Measured worst case is red_18 at depth 5: 409,882,387 work in
+# 21.2s, so the cap sits at ~2.4x that and the clock far above it. Before
+# 9424a35 adopted the route-based attack and defence terms these searches cost
+# ~57k work, which is why 2,000,000 once fit and now does not.
+CONFIG = SearchConfig(max_depth=3, node_limit=1_000_000_000, time_limit=300)
+
+
+def config_for(case):
+    """The shared limits, deepened to the horizon this case's tactic needs."""
+    return replace(CONFIG, max_depth=max(CONFIG.max_depth, case['horizon_after_move']))
 
 
 def meets_objective(board, action, case):
@@ -48,7 +66,7 @@ def meets_objective(board, action, case):
 def choose(test, board, case):
     state = board.storage()
     before = state.copy()
-    result = AlphaBetaPlayer(config=CONFIG).analyze(state)
+    result = AlphaBetaPlayer(config=config_for(case)).analyze(state)
     detail = (f"{case['id']}: {case['reason']}\n"
               f"Selected {move_name(result.action)}; score={result.score}, "
               f"depth={result.completed_depth}, work={result.work}, "

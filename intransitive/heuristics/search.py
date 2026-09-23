@@ -170,8 +170,13 @@ class ProofLimit(Exception):
     pass
 
 
-def prove_reference(game, state, config, budget, *, compiled_order=False):
+def prove_reference(game, state, config, budget, *, compiled_order=False, stats=None):
     """Terminal-only bounded adversarial search; exhausted/horizon = unknown.
+
+    Substituted for `prove` by the compiled-proof tests and the proof benchmark,
+    so it carries `prove`'s keyword surface. `stats` is accepted and ignored
+    because this path runs no run certificate: substituting it under
+    `certificate_enabled` compares terminal proofs only, not certificates.
 
     Unknown leaves have neutral utility only inside this proof search. They can
     never become exact draws or ordinary heuristic cutoffs. A nonzero mate score
