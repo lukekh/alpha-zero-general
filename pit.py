@@ -45,6 +45,15 @@ def create_player(name, args):
 		from intransitive.flybrain import FlybrainPlayer
 		return FlybrainPlayer(game, bank_path=getattr(args, 'flybrain_bank', None),
 		                      seed=getattr(args, 'flybrain_seed', None)).play
+	if name == 'rust':
+		if args.game != 'intransitive':
+			raise ValueError('rust is available for Intransitive')
+		from intransitive.rust_teacher.player import RustTeacherPlayer
+		settings = {key: value for key, value in dict(
+			depth=getattr(args, 'rust_depth', None), seconds=getattr(args, 'rust_time', None),
+			node_limit=getattr(args, 'rust_nodes', None),
+			threads=getattr(args, 'rust_threads', None)).items() if value is not None}
+		return RustTeacherPlayer(game, binary=getattr(args, 'rust_binary', None), **settings).play
 	if name == 'alphabeta':
 		if args.game != 'intransitive':
 			raise ValueError('alphabeta is available for Intransitive')
@@ -268,6 +277,11 @@ def main():
 	parser.add_argument('--ab-nodes', '--ab-work', dest='ab_nodes', type=int,
 	                    help='Work units per alpha-beta move (zero uses a legal fallback)')
 	parser.add_argument('--ab-time', type=float, help='Seconds per alpha-beta move')
+	parser.add_argument('--rust-depth', type=int, help='Native teacher depth ceiling')
+	parser.add_argument('--rust-nodes', type=int, help='Native teacher work ceiling per move')
+	parser.add_argument('--rust-time', type=float, help='Seconds per native teacher move')
+	parser.add_argument('--rust-threads', type=int, help='Native teacher search threads')
+	parser.add_argument('--rust-binary', help='Alternative native teacher binary')
 	for module in ('attack', 'defence', 'overload'):
 		parser.add_argument('--ab-' + module, action=argparse.BooleanOptionalAction, default=None)
 	args = parser.parse_args()
