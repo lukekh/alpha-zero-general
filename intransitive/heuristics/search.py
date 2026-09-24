@@ -59,6 +59,21 @@ def position_key(state):
             b''.join(item + bytes((count,)) for item, count in sorted(occurrences.items())))
 
 
+def board_key(state):
+    """Board, side to move and corner ownership: identity ignoring the path.
+
+    Deliberately not a future-play identity -- it drops the draw clock and the
+    occurrence counts that `position_key` keeps -- so an entry found this way
+    can order moves and must never supply a bound. Legality depends only on the
+    board and the side to move, so a move stored under this key is legal at
+    every position sharing it.
+    """
+    if isinstance(state, SearchPosition):
+        return state.pieces.tobytes() + bytes((state.side, state.a1))
+    meta = state[:, :, 82:84].ravel()
+    return state[:, :, 0].tobytes() + bytes((int(meta[1]), int(meta[2])))
+
+
 def to_table(score, ply):
     return score + ply if score > MATE_THRESHOLD else score - ply if score < -MATE_THRESHOLD else score
 
@@ -371,6 +386,7 @@ class AlphaBetaPlayer:
         self.use_compact = use_compact
         self.table = {}
         self._hints = {}
+        self._board_hints = {}
         self._identity = None
         self.last_result = None
         self._root_progress = None
@@ -400,6 +416,7 @@ class AlphaBetaPlayer:
     def reload(self):
         self.table.clear()
         self._hints.clear()
+        self._board_hints.clear()
         self.last_result = None
 
     def _prepare(self, *, warm_proof=True):
@@ -437,6 +454,7 @@ class AlphaBetaPlayer:
         if identity != self._identity:
             self.table = OrderedDict() if self.config.depth_replacement_enabled else {}
             self._hints.clear()
+            self._board_hints.clear()
             self._identity = identity
         self._killers.fill(-1)
         self._history.fill(0)
@@ -754,7 +772,7 @@ class AlphaBetaPlayer:
             # A quiescence value is bounded by the window it was searched in,
             # so it is not a reusable exact score for this key.
             if not self._quiescence_active():
-                self._store(key, depth, value, 'exact', line, ply)
+                self._store(key, depth, value, 'exact', line, ply, state)
             return value, line
         cfg = self.config
         if cfg.mate_distance_pruning_enabled and ply and not self._selective_disabled:
@@ -789,7 +807,7 @@ class AlphaBetaPlayer:
             # defender does — and never as an exact score.
             self._certificate_stats['cutoffs'] += 1
             value = from_table(run, ply)
-            self._store(key, depth, value, 'lower' if run > 0 else 'upper', [], ply)
+            self._store(key, depth, value, 'lower' if run > 0 else 'upper', [], ply, state)
             return value, []
         hint = entry or (self.table.get((key, self._hints.get(key, -1)))
                          if self.use_table else None)
@@ -822,6 +840,16 @@ class AlphaBetaPlayer:
                 else:
                     self._ordering_stats['iir_reduced_plies'] += cfg.iir_reduction
                     depth -= cfg.iir_reduction
+        # Last resort, after IIR: an entry for the same board reached by another
+        # route. Ordering only, see board_key. It runs here rather than with the
+        # draw-safe hint above so that it fills a gap instead of pre-empting the
+        # shallow pass -- IIR fires only where no move is preferred, so looking
+        # this up earlier made iir_enabled a flag that could never fire.
+        if preferred is None and self.use_table and cfg.board_hints_enabled:
+            shared = self._board_hints.get(board_key(state))
+            if shared is not None:
+                preferred = shared[1]
+                budget.tt_hits += 1
         # One shared eligibility shape for the whole family: non-root, non-PV
         # on entry, finite window strictly inside the evaluator's clipping
         # range, a supported evaluator scale, and the Intransitive board guard.
@@ -863,7 +891,7 @@ class AlphaBetaPlayer:
                 # The mirror of a null move without the move: no hypothetical
                 # pass is made, so zugzwang is not a failure mode here.
                 self._selective_stats['reverse_futility_pruned'] += 1
-                self._store(key, depth, beta, 'lower', [], ply)
+                self._store(key, depth, beta, 'lower', [], ply, state)
                 return beta, []
         if safe and razoring:
             self._selective_stats['razoring_eligible'] += 1
@@ -880,7 +908,7 @@ class AlphaBetaPlayer:
                     self._selective_stats['razoring_nodes'] += budget.nodes - razor_nodes
                 if value <= alpha and abs(value) < MATE_THRESHOLD:
                     self._selective_stats['razoring_applied'] += 1
-                    self._store(key, depth, value, 'upper', line, ply)
+                    self._store(key, depth, value, 'upper', line, ply, state)
                     return value, line
         if cfg.nmp_enabled:
             if safe and null_move and static >= beta:
@@ -906,7 +934,7 @@ class AlphaBetaPlayer:
                         self._selective_stats['verification_nodes'] += budget.nodes - verification_nodes
                     if verified >= beta and abs(verified) < MATE_THRESHOLD:
                         self._selective_stats['nmp_cutoffs'] += 1
-                        self._store(key, depth, beta, 'lower', line, ply)
+                        self._store(key, depth, beta, 'lower', line, ply, state)
                         return beta, line
                     self._selective_stats['verification_failures'] += 1
             else:
@@ -1000,7 +1028,7 @@ class AlphaBetaPlayer:
             progress.finished = alpha_original < best < beta_original
         budget.check()
         bound = 'upper' if best <= alpha_original else 'lower' if best >= beta_original else 'exact'
-        self._store(key, depth, best, bound, pv, ply)
+        self._store(key, depth, best, bound, pv, ply, state)
         return best, pv
 
     def _static(self, state, side, budget):
@@ -1185,7 +1213,7 @@ class AlphaBetaPlayer:
             reduction += (index - cfg.lmr_min_index) // cfg.lmr_index_divisor
         return max(1, min(reduction, depth - 2))
 
-    def _store(self, key, depth, value, bound, pv, ply):
+    def _store(self, key, depth, value, bound, pv, ply, state=None):
         if self.use_table and self.config.table_entries:
             if ((key, depth) not in self.table
                     and len(self.table) >= self.config.table_entries):
@@ -1203,6 +1231,10 @@ class AlphaBetaPlayer:
                                              pv[0] if pv else -1, tuple(pv))
             if pv and depth >= self._hints.get(key, -1):
                 self._hints[key] = depth
+            if pv and state is not None and self.config.board_hints_enabled:
+                shared = board_key(state)
+                if depth >= self._board_hints.get(shared, (-1,))[0]:
+                    self._board_hints[shared] = (depth, pv[0])
 
     def analyze(self, state, budget=None, *, exact_root=False):
         self._prepare(warm_proof=budget is None)

@@ -142,6 +142,24 @@ class SearchConfig:
     ordering_enabled: bool = False
     compiled_ordering_enabled: bool = True
     depth_replacement_enabled: bool = False
+    # Let an entry for the same board under a different history supply a
+    # move-ordering hint. The board alone is not a draw-safe identity, so such
+    # an entry may never supply a bound; it changes the order moves are tried
+    # and nothing else. position_key hits 4-5% of probes, the board 31-35%.
+    #
+    # Depth five over 38 distinct positions: median CPU -31.9%, by stage
+    # -28.1% opening, -28.8% midgame, -47.0% late, against a measured noise
+    # floor of about five points. Three positions regressed; the worst, +20.1%,
+    # is explained by its ordering already being better than the hint (90.8%
+    # first-move cutoffs without, 87.5% with), so the hint pre-empts a killer
+    # that was the better move there.
+    #
+    # Consulted after IIR, not before it. IIR fires only where no move is
+    # preferred, so looking this up first suppressed it entirely and made
+    # iir_enabled a flag that could never fire. Ordered this way the two
+    # compose: on the midgame position above, 277,111 nodes with hints alone,
+    # 245,075 with IIR alone and 242,207 with both.
+    board_hints_enabled: bool = True
     pressure_cache_entries: int = 0
 
     def __post_init__(self):
