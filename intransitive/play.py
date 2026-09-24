@@ -48,26 +48,46 @@ class BaselineOpponent:
 
 
 class OpponentFactory:
-    def __init__(self, checkpoint=None, simulations=32, config=None, flybrain_bank=None):
+    def __init__(self, checkpoint=None, simulations=32, config=None, flybrain_bank=None,
+                 rust_settings=None):
         from .heuristics import SearchConfig
         self.checkpoint, self.simulations = checkpoint, simulations
         self.config = config or SearchConfig()
         self.flybrain_bank = flybrain_bank
+        self.rust_settings = dict(rust_settings or {})
 
     @property
     def choices(self):
         from .flybrain import DEFAULT_BANK
+        from .rust_teacher import BINARY
         flybrain = ['flybrain'] if Path(self.flybrain_bank or DEFAULT_BANK).is_file() else []
-        return ['local', 'alphabeta', 'greedy', 'reference-greedy', 'random'] + flybrain + (['model'] if self.checkpoint else [])
+        # The native binary is a gitignored build artefact, so it is offered
+        # only when it is actually present.
+        native = ['rust'] if Path(self.rust_settings.get('binary') or BINARY).is_file() else []
+        return (['local', 'alphabeta', 'greedy', 'reference-greedy', 'random'] + flybrain
+                + native + (['model'] if self.checkpoint else []))
 
     def create(self, kind, options=None):
         from .heuristics import AlphaBetaPlayer
         if kind not in self.choices:
-            raise ValueError('Choose an available opponent')
+            # Say why rather than let a gated opponent vanish from the menu:
+            # the native binary is a build artefact, so its absence is the
+            # usual reason and the only actionable one.
+            if kind == 'rust':
+                from .rust_teacher import BINARY
+                raise ValueError(
+                    'The native teacher binary is missing, so the rust opponent is '
+                    f"unavailable: {self.rust_settings.get('binary') or BINARY}. Build it "
+                    'with: cargo build --release --offline --manifest-path '
+                    'intransitive/rust_teacher/Cargo.toml')
+            raise ValueError(f'Choose an available opponent: {", ".join(self.choices)}')
         if kind == 'local':
             return None
         if kind == 'model':
             return ModelOpponent(self.checkpoint, self.simulations)
+        if kind == 'rust':
+            from .rust_teacher.player import RustTeacherPlayer
+            return RustTeacherPlayer(**self.rust_settings)
         if kind == 'flybrain':
             from .flybrain import FlybrainPlayer
             from .IntransitiveGame import IntransitiveGame
@@ -416,7 +436,13 @@ def main():
     parser.add_argument("--checkpoint", type=Path, help="Model to play against; reloaded for each new game")
     parser.add_argument("--human-colour", choices=('blue', 'red'), default='blue')
     parser.add_argument("--simulations", type=int, default=32)
-    parser.add_argument('--opponent', choices=('local', 'alphabeta', 'greedy', 'reference-greedy', 'random', 'model', 'flybrain'))
+    parser.add_argument('--opponent', choices=('local', 'alphabeta', 'greedy', 'reference-greedy',
+                                               'random', 'model', 'flybrain', 'rust'))
+    parser.add_argument('--rust-depth', type=int, default=None, help='native search depth ceiling')
+    parser.add_argument('--rust-time', type=float, default=None, help='native seconds per move')
+    parser.add_argument('--rust-nodes', type=int, default=None, help='native work ceiling per move')
+    parser.add_argument('--rust-threads', type=int, default=None, help='native search threads')
+    parser.add_argument('--rust-binary', type=Path, default=None)
     parser.add_argument('--flybrain-bank', type=Path)
     parser.add_argument('--ab-config', type=Path)
     args = parser.parse_args()
@@ -430,7 +456,11 @@ def main():
     warmup.update("undo", {"revision": 1})
     from .heuristics import SearchConfig
     config = SearchConfig.from_file(args.ab_config) if args.ab_config else SearchConfig()
-    factory = OpponentFactory(args.checkpoint, args.simulations, config, args.flybrain_bank)
+    rust_settings = {name: value for name, value in dict(
+        depth=args.rust_depth, seconds=args.rust_time, node_limit=args.rust_nodes,
+        threads=args.rust_threads, binary=args.rust_binary).items() if value is not None}
+    factory = OpponentFactory(args.checkpoint, args.simulations, config, args.flybrain_bank,
+                              rust_settings)
     opponent = factory.create(args.opponent or ('model' if args.checkpoint else 'local'))
     game = GameSession(opponent, human_player=0 if args.human_colour == 'blue' else 1,
                        opponent_factory=factory)

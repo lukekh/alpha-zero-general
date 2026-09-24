@@ -8,7 +8,14 @@ import math
 # configuration fault, not a measurement: see activation() below.
 TECHNIQUE_COUNTERS = {'nmp': 'nmp_attempts', 'futility': 'futility_eligible',
                       'lmr': 'lmr_reduced', 'quiescence': 'quiescence_captures',
-                      'mvv_lva': 'mvv_lva_captures'}
+                      'mvv_lva': 'mvv_lva_captures',
+                      # These three share the null-window family's eligibility
+                      # shape, so they share its preconditions and belong in the
+                      # same report; without them a declared razoring, reverse
+                      # futility or move-count run looks reachable when it is not.
+                      'razoring': 'razoring_eligible',
+                      'reverse_futility': 'reverse_futility_eligible',
+                      'move_count_pruning': 'move_count_eligible'}
 # Every additive selective/ordering counter a search result reports, so a run
 # report can total them without summing depths or identities by accident.
 SELECTIVE_COUNTERS = ('selective_eligible',
@@ -135,6 +142,24 @@ class SearchConfig:
     ordering_enabled: bool = False
     compiled_ordering_enabled: bool = True
     depth_replacement_enabled: bool = False
+    # Let an entry for the same board under a different history supply a
+    # move-ordering hint. The board alone is not a draw-safe identity, so such
+    # an entry may never supply a bound; it changes the order moves are tried
+    # and nothing else. position_key hits 4-5% of probes, the board 31-35%.
+    #
+    # Depth five over 38 distinct positions: median CPU -31.9%, by stage
+    # -28.1% opening, -28.8% midgame, -47.0% late, against a measured noise
+    # floor of about five points. Three positions regressed; the worst, +20.1%,
+    # is explained by its ordering already being better than the hint (90.8%
+    # first-move cutoffs without, 87.5% with), so the hint pre-empts a killer
+    # that was the better move there.
+    #
+    # Consulted after IIR, not before it. IIR fires only where no move is
+    # preferred, so looking this up first suppressed it entirely and made
+    # iir_enabled a flag that could never fire. Ordered this way the two
+    # compose: on the midgame position above, 277,111 nodes with hints alone,
+    # 245,075 with IIR alone and 242,207 with both.
+    board_hints_enabled: bool = True
     pressure_cache_entries: int = 0
 
     def __post_init__(self):
@@ -296,7 +321,8 @@ def activation(config, *, compact=True):
     result = {}
     for name in TECHNIQUE_COUNTERS:
         blockers = []
-        if name in ('nmp', 'futility', 'quiescence') and not compact:
+        if name in ('nmp', 'futility', 'quiescence', 'razoring', 'reverse_futility',
+                    'move_count_pruning') and not compact:
             blockers.append('requires the compact Python backend')
         if name == 'nmp':
             if not config.pvs_enabled:
@@ -305,6 +331,13 @@ def activation(config, *, compact=True):
                 blockers.append(f'max_depth={config.max_depth} never reaches nmp_min_depth='
                                 f'{config.nmp_min_depth} below the root')
         elif name == 'futility':
+            if not config.pvs_enabled:
+                blockers.append(null_window)
+            if config.max_depth < 2:
+                blockers.append(f'max_depth={config.max_depth} has no non-root frontier node')
+        elif name in ('razoring', 'reverse_futility', 'move_count_pruning'):
+            # Same shape as futility: a null window on entry, and a non-root
+            # node shallow enough to be a candidate.
             if not config.pvs_enabled:
                 blockers.append(null_window)
             if config.max_depth < 2:

@@ -225,6 +225,8 @@ class SettingsTests(unittest.TestCase):
         for path in sorted(Path(__file__).parents[1].joinpath('heuristics/configs').glob('*.json')):
             if path.name.startswith('tuning-'):
                 continue  # module-scale genomes, read by heuristics.tuning
+            if path.name.endswith('.record.json'):
+                continue  # experiment records: provenance and decision, not a config
             with self.subTest(config=path.name):
                 loaded = SearchConfig.from_file(path)
                 self.assertFalse(loaded.see_ordering_enabled or loaded.delta_pruning_enabled
