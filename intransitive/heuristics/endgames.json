@@ -1,0 +1,408 @@
+{
+ "schema": "intransitive-endgames-1",
+ "certification": {
+  "oracle": "intransitive.tests.tactical_oracle.tactical_proof",
+  "method": "Exhaustive AND/OR proof over the independent reference rules. No evaluator, no production search and no node or time cutoff takes part in deciding what these positions are worth.",
+  "objectives": {
+   "win": "The side to move forces a corner win within plies.",
+   "hold": "After this move the opponent cannot force a win within plies - 1."
+  },
+  "uniqueness": "Every case states how many legal moves meet its objective. All but one have exactly one, so a test can name the move; block_without_tempo_fails has none and is a proven loss.",
+  "symmetries": "Each case is re-certified under all twelve symmetries. The group includes cyclic piece-type rotation, so a matchup proved for one pairing is proved for the other two, and colour exchange proves it for the other side."
+ },
+ "cases": [
+  {
+   "id": "lone_runner",
+   "traits": [
+    "simple",
+    "offence"
+   ],
+   "pieces": {
+    "F6": 3,
+    "A5": -1
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "win",
+   "expected": "F6-G7",
+   "solutions": 1,
+   "legal": 8,
+   "why": "A free paper takes the only fastest route to the corner."
+  },
+  {
+   "id": "lone_runner__far_pieces",
+   "traits": [
+    "simple",
+    "offence",
+    "transposition"
+   ],
+   "pieces": {
+    "F6": 3,
+    "A5": -1,
+    "I1": 1,
+    "A9": -1
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "win",
+   "expected": "F6-G7",
+   "solutions": 1,
+   "legal": 11,
+   "why": "A free paper takes the only fastest route to the corner."
+  },
+  {
+   "id": "paper_outruns_rock_racer",
+   "traits": [
+    "simple",
+    "offence",
+    "race"
+   ],
+   "pieces": {
+    "F6": 3,
+    "D4": -1
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "win",
+   "expected": "F6-G7",
+   "solutions": 1,
+   "legal": 8,
+   "why": "Equal distances, so the side to move wins the race by one tempo."
+  },
+  {
+   "id": "capture_the_blocker",
+   "traits": [
+    "offence",
+    "capture"
+   ],
+   "pieces": {
+    "G7": 2,
+    "H8": -3,
+    "D4": -1
+   },
+   "player": 0,
+   "plies": 3,
+   "objective": "win",
+   "expected": "G7-H8",
+   "solutions": 1,
+   "legal": 8,
+   "why": "H8 is the only square a step from the corner, so the blocker must go."
+  },
+  {
+   "id": "capture_the_blocker__far_pieces",
+   "traits": [
+    "offence",
+    "capture",
+    "transposition"
+   ],
+   "pieces": {
+    "G7": 2,
+    "H8": -3,
+    "D4": -1,
+    "I1": 1,
+    "A9": -1
+   },
+   "player": 0,
+   "plies": 3,
+   "objective": "win",
+   "expected": "G7-H8",
+   "solutions": 1,
+   "legal": 11,
+   "why": "H8 is the only square a step from the corner, so the blocker must go."
+  },
+  {
+   "id": "scissors_eats_the_paper",
+   "traits": [
+    "defence",
+    "capture"
+   ],
+   "pieces": {
+    "C3": 2,
+    "B2": -3
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "hold",
+   "expected": "C3-B2",
+   "solutions": 1,
+   "legal": 8,
+   "why": "Only taking the runner saves the corner."
+  },
+  {
+   "id": "scissors_eats_the_paper__far_pieces",
+   "traits": [
+    "defence",
+    "capture",
+    "transposition"
+   ],
+   "pieces": {
+    "C3": 2,
+    "B2": -3,
+    "I1": 1,
+    "A9": -1
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "hold",
+   "expected": "C3-B2",
+   "solutions": 1,
+   "legal": 11,
+   "why": "Only taking the runner saves the corner."
+  },
+  {
+   "id": "rock_eats_the_scissors",
+   "traits": [
+    "defence",
+    "capture"
+   ],
+   "pieces": {
+    "C3": 1,
+    "B2": -2
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "hold",
+   "expected": "C3-B2",
+   "solutions": 1,
+   "legal": 8,
+   "why": "The same refutation with the other winning matchup."
+  },
+  {
+   "id": "block_needs_a_tempo",
+   "traits": [
+    "defence",
+    "block",
+    "zugzwang"
+   ],
+   "pieces": {
+    "B1": 3,
+    "I1": 1,
+    "B2": -3
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "hold",
+   "expected": "B1-A1",
+   "solutions": 1,
+   "legal": 7,
+   "why": "Paper cannot take paper, so occupying the corner holds -- but only while a spare piece supplies waiting moves."
+  },
+  {
+   "id": "block_without_tempo_fails",
+   "traits": [
+    "defence",
+    "zugzwang",
+    "no-defence"
+   ],
+   "pieces": {
+    "B1": 3,
+    "B2": -3
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "hold",
+   "expected": null,
+   "solutions": 0,
+   "legal": 4,
+   "why": "The same block with nothing else to move: the blocker must vacate and loses."
+  },
+  {
+   "id": "paper_cannot_stop_scissors",
+   "traits": [
+    "wrong-defender",
+    "race"
+   ],
+   "pieces": {
+    "G7": 3,
+    "B2": 3,
+    "C3": -2
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "win",
+   "expected": "G7-H8",
+   "solutions": 1,
+   "legal": 15,
+   "why": "Scissors eats paper, so the defender is useless; the runner is closer, so race."
+  },
+  {
+   "id": "paper_cannot_stop_scissors__far_pieces",
+   "traits": [
+    "wrong-defender",
+    "race",
+    "transposition"
+   ],
+   "pieces": {
+    "G7": 3,
+    "B2": 3,
+    "C3": -2,
+    "I1": 1,
+    "A9": -1
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "win",
+   "expected": "G7-H8",
+   "solutions": 1,
+   "legal": 18,
+   "why": "Scissors eats paper, so the defender is useless; the runner is closer, so race."
+  },
+  {
+   "id": "rock_cannot_stop_paper",
+   "traits": [
+    "wrong-defender",
+    "race"
+   ],
+   "pieces": {
+    "G7": 2,
+    "B2": 1,
+    "C3": -3
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "win",
+   "expected": "G7-H8",
+   "solutions": 1,
+   "legal": 15,
+   "why": "Paper eats rock, so the defender is useless; race instead."
+  },
+  {
+   "id": "rock_cannot_stop_paper__far_pieces",
+   "traits": [
+    "wrong-defender",
+    "race",
+    "transposition"
+   ],
+   "pieces": {
+    "G7": 2,
+    "B2": 1,
+    "C3": -3,
+    "I1": 1,
+    "A9": -1
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "win",
+   "expected": "G7-H8",
+   "solutions": 1,
+   "legal": 18,
+   "why": "Paper eats rock, so the defender is useless; race instead."
+  },
+  {
+   "id": "paper_vs_paper_race",
+   "traits": [
+    "like-vs-like",
+    "race"
+   ],
+   "pieces": {
+    "F6": 3,
+    "D4": -3
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "win",
+   "expected": "F6-G7",
+   "solutions": 1,
+   "legal": 8,
+   "why": "Neither can capture the other, so the tempo decides."
+  },
+  {
+   "id": "paper_vs_paper_race__far_pieces",
+   "traits": [
+    "like-vs-like",
+    "race",
+    "transposition"
+   ],
+   "pieces": {
+    "F6": 3,
+    "D4": -3,
+    "I1": 1,
+    "A9": -1
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "win",
+   "expected": "F6-G7",
+   "solutions": 1,
+   "legal": 11,
+   "why": "Neither can capture the other, so the tempo decides."
+  },
+  {
+   "id": "scissors_vs_scissors_race",
+   "traits": [
+    "like-vs-like",
+    "race"
+   ],
+   "pieces": {
+    "F6": 2,
+    "D4": -2
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "win",
+   "expected": "F6-G7",
+   "solutions": 1,
+   "legal": 8,
+   "why": "Like against like, scissors."
+  },
+  {
+   "id": "rock_vs_rock_race",
+   "traits": [
+    "like-vs-like",
+    "race"
+   ],
+   "pieces": {
+    "F6": 1,
+    "D4": -1
+   },
+   "player": 0,
+   "plies": 5,
+   "objective": "win",
+   "expected": "F6-G7",
+   "solutions": 1,
+   "legal": 8,
+   "why": "Like against like, rock."
+  },
+  {
+   "id": "centre_advance_not_retreat",
+   "traits": [
+    "like-vs-like",
+    "centre",
+    "race"
+   ],
+   "pieces": {
+    "E5": 3,
+    "D5": -3
+   },
+   "player": 0,
+   "plies": 7,
+   "objective": "win",
+   "expected": "E5-F6",
+   "solutions": 1,
+   "legal": 7,
+   "why": "Both four steps out in the middle. Turning back to guard the corner loses the tempo that wins the race."
+  },
+  {
+   "id": "centre_advance_not_retreat__far_pieces",
+   "traits": [
+    "like-vs-like",
+    "centre",
+    "race",
+    "transposition"
+   ],
+   "pieces": {
+    "E5": 3,
+    "D5": -3,
+    "I1": 1,
+    "A9": -1
+   },
+   "player": 0,
+   "plies": 7,
+   "objective": "win",
+   "expected": "E5-F6",
+   "solutions": 1,
+   "legal": 10,
+   "why": "Both four steps out in the middle. Turning back to guard the corner loses the tempo that wins the race."
+  }
+ ]
+}
